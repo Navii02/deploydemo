@@ -41,8 +41,8 @@ function FeeReminders() {
 
   const sendEmail = async (student) => {
     try {
+      // eslint-disable-next-line
       const { email } = student;
-
       const response = await axios.post("/api/send-email", { student });
       console.log("Email sent successfully!");
       console.log("Response:", response.data);
