@@ -1,0 +1,108 @@
+.data-editing-container {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-sizing: content-box;
+}
+
+.data-editing-container .form-group {
+  width: 100%;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
+.data-editing-container .student-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-left: 0px;
+  align-items: center;
+  text-align: center;
+}
+
+.data-editing-container form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.data-editing-container .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.data-editing-container .form-group input,
+.data-editing-container .form-group textarea,
+.data-editing-container .form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.data-editing-container .submit-button,
+.data-editing-container .clear-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4caf50;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.data-editing-container .submit-button{
+  margin-left: 10px;
+}
+
+.data-editing-container .clear-button {
+  background-color: #f44336;
+  margin-left: 10px;
+}
+
+.data-editing-container .student-table th,
+.data-editing-container .student-table td {
+  padding: 1px;
+  border: 1px solid #ccc;
+  text-align: center;
+  align-items: center;
+}
+
+.data-editing-container .student-table th {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: auto;
+  word-wrap: break-word;
+  width: 100%;
+  height: auto;
+  line-height: 1;
+  max-width: fit-content;
+  text-align: center;
+  position: justify;
+}
+
+.data-editing-container .student-table td button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #337ab7;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.data-editing-container .student-table td button:last-child {
+  margin-right: 0;
+}
+
+.data-editing-container .table-layout {
+  width: 100%;
+}
