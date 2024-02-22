@@ -1,0 +1,58 @@
+
+
+
+.reminder-page-container {
+    width: 95vw;
+    height: 70vh;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+
+  
+  .reminder-page-container .reminder-category {
+    margin-bottom: 20px;
+  }
+  
+  .reminder-page-container h2 {
+    color: #3498db;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+  }
+  
+  .reminder-page-container ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .reminder-page-container li {
+    margin-bottom: 12px;
+    padding: 12px;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .reminder-page-container li:hover {
+    background-color: #3498db;
+    color: #fff;
+  }
+  
+  .reminder-page-container p {
+    color: #555;
+  }
+  
+  /* Add animation for a subtle hover effect */
+  .reminder-page-container .reminder-category li {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .reminder-page-container .reminder-category li:hover {
+    background-color: #3498db;
+    transform: scale(1.02);
+    color: #fff;
+  }
+  

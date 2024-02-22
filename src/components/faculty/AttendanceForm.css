@@ -1,0 +1,38 @@
+/* AttendanceForm.css */
+
+.attendance-form .selections {
+    margin-bottom: 20px;
+  }
+  
+  .attendance-form .selections label {
+    display: inline-block;
+    margin-right: 20px;
+  }
+  
+  .attendance-form .attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .attendance-form .attendance-table th,
+  .attendance-form .attendance-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .attendance-form .attendance-table th {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .attendance-form .attendance-table td {
+    white-space: nowrap;
+  }
+  
+  .attendance-form .attendance-table button {
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  
