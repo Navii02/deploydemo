@@ -1,6 +1,6 @@
-// ForgotPassword.js
 import React, { useState } from 'react';
-import './ForgotPassword.css'
+import { useNavigate } from 'react-router-dom';
+import './ForgotPassword.css';
 
 function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -8,11 +8,13 @@ function ForgotPassword() {
   const [newPassword, setNewPassword] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [verificationCodeSent, setVerificationCodeSent] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleSendVerificationCode = async () => {
     try {
-      // Send a request to the server to send the verification code
       const res = await fetch('/api/sendverificationcode', {
         method: 'POST',
         headers: {
@@ -29,19 +31,17 @@ function ForgotPassword() {
         return;
       }
 
-      // Display a success message to the user
       setEmailSent(true);
       setVerificationCodeSent(true);
+      setSuccessMessage('Verification code sent successfully');
     } catch (error) {
       console.error('There was an error:', error);
-      // Handle unexpected errors
       setError('Something went wrong. Please try again later.');
     }
   };
 
   const handleVerifyCodeAndChangePassword = async () => {
     try {
-      // Send a request to the server to verify the code and update the password
       const res = await fetch('/api/verifycodeandchangepassword', {
         method: 'POST',
         headers: {
@@ -60,15 +60,17 @@ function ForgotPassword() {
         return;
       }
 
-      // Display a success message to the user
       setEmailSent(false);
       setVerificationCodeSent(false);
-      setError(null); // Reset error state
-      // Redirect the user to the login page or another relevant page
-      // Navigate('/login');
+      setError(null);
+      setSuccessMessage('Password changed successfully');
+
+      // Redirect to the verification code entry page using navigate
+      setTimeout(() => {
+        navigate('/verification-code-entry');
+      }, 1000); // Redirect after 1 second (adjust as needed)
     } catch (error) {
       console.error('There was an error:', error);
-      // Handle unexpected errors
       setError('Something went wrong. Please try again later.');
     }
   };
@@ -93,6 +95,11 @@ function ForgotPassword() {
           {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
       )}
+      {emailSent && verificationCodeSent && !successMessage && (
+        <div>
+          <p>Verification code sent to your email. Please check your inbox.</p>
+        </div>
+      )}
       {emailSent && verificationCodeSent && (
         <form>
           <label>
@@ -116,6 +123,7 @@ function ForgotPassword() {
           <button type="button" onClick={handleVerifyCodeAndChangePassword}>
             Verify Code and Change Password
           </button>
+          {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
           {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
       )}
