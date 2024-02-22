@@ -1,0 +1,38 @@
+/* InternalMarksForm.css */
+
+.selections {
+    margin-top: 10px;
+    margin-bottom: 40px;
+  }
+
+  .selections label {
+    display: inline-block;
+    margin-right: 20px;
+  }
+  
+  .marks-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .marks-table th, .marks-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .marks-table th {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .marks-table td {
+    white-space: nowrap;
+  }
+  
+  .marks-table button {
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  

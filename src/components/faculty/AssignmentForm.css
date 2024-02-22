@@ -1,0 +1,40 @@
+/* AssignmentForm.css */
+
+.assignment-form-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .assignment-form-container label {
+    display: block;
+    margin-bottom: 15px;
+  }
+  
+  .assignment-form-container select,
+  .assignment-form-container input,
+  .assignment-form-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .assignment-form-container button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .assignment-form-container button:hover {
+    background-color: #45a049;
+  }
+  

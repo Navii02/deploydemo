@@ -1,0 +1,102 @@
+/* CertificateRequest.css */
+
+.certificate-request-form {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.form-header {
+  text-align: center;
+}
+
+.certificate-request-form h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.certificate-request-form h2 {
+  color: #20b9d8;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.certificate-request-form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.certificate-request-form textarea,
+.certificate-request-form input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.certificate-request-form .document-selection .checkbox-list {
+  list-style: none;
+  padding: 0;
+}
+
+.certificate-request-form .document-selection .checkbox-list li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.certificate-request-form .document-selection .custom-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.certificate-request-form .document-selection .custom-checkbox.checked {
+  background-color: #20b9d8; /* Color when checkbox is checked */
+  border-color: black;
+}
+
+.submit-button {
+  display: block;
+  margin: 0 auto; /* Center the button */
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.submit-button:hover {
+  background-color: #45a049;
+}
+
+.success-message,
+.error-message {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.success-message {
+  background-color: #dff0d8;
+  color: #3c763d;
+  border: 1px solid #d6e9c6;
+}
+
+.error-message {
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px solid #ebccd1;
+}

@@ -1,0 +1,32 @@
+.officer-payment-page-container {
+    margin: 20px;
+  }
+  
+  .payment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .payment-table th, .payment-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .payment-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .mark-received-btn {
+    background-color: #4caf50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .mark-received-btn:hover {
+    background-color: #45a049;
+  }

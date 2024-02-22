@@ -1,0 +1,58 @@
+/* FacultyHome.css */
+
+.faculty-home-container {
+    max-width: 100%;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    background-image: url('D:\Main Project\edited\tryme\public\images\WhatsApp Image 2024-02-01 at 14.57.55_0b5938a6.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 100vh; /* Set a minimum height to ensure it covers the screen */
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .overlay {
+    background: rgba(255, 255, 255, 0.9); /* White background with less transparency */
+    border-radius: 8px;
+    padding: 20px;
+    width: 80%; /* Adjust the width as needed */
+    max-width: 800px; /* Set a maximum width for better readability */
+  }
+  
+  .welcome-header {
+    color: #333; /* Adjust the text color for better visibility */
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .welcome-text {
+    color: #333; /* Adjust the text color for better visibility */
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  
+  .associated-data {
+    margin-top: 40px;
+  }
+  
+  .associated-data h2 {
+    color: #333; /* Adjust the text color for better visibility */
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .associated-data p {
+    color: #333; /* Adjust the text color for better visibility */
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  
+  /* Additional styles for interactive and attractive elements can be added here */
+  
