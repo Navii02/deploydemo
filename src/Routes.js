@@ -42,7 +42,7 @@ import CertificateRecieve from './components/student/CertificateRecieve'
 import AdminOfficersPage from './components/admin/AdminOfficersPage'
 import AdminTeachersPage from './components/admin/AdminTeachersPage'
 import PaymentAndReminders from './components/officer/PaymentAndReminders'
-
+import ForgotPassword from './components/ForgotPassword'
 
 
 
@@ -96,6 +96,7 @@ function RoutesComp() {
             <Route path='/officer-details' element={<AdminOfficersPage/>}/> 
             <Route path='/teacher-details' element={<AdminTeachersPage/>}/> 
             <Route path='/payment' element={<PaymentAndReminders/>}/> 
+            <Route path='/forgotpassword' element={<ForgotPassword/>}/>
           </>
         )}
       </Routes>
