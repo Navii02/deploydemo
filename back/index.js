@@ -24,6 +24,7 @@ const certificate = require('./api/officer/certificate')
 const TeachersDetail=require('./api/Admin/TeachersDetails')
 const OfficerDetail=require('./api/Admin/OfficerDetails')
 const FacultyProfile=require('./api/faculity/faculityhome')
+const AdminForget=require('./api/Admin/AdminForgot')
 const app = express();
 const MAX_AGE = 1000 * 60 * 60 * 3 //3hrs
 const corsOptions = {
@@ -85,6 +86,7 @@ app.use('/api',certificate)
 app.use('/api',TeachersDetail)
 app.use('/api',OfficerDetail)
 app.use('/api',FacultyProfile)
+app.use('/api',AdminForget)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));
