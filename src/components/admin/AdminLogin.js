@@ -41,6 +41,11 @@ function AdminLogin() {
     });
   };
 
+  const handleForgotPassword = () => {
+    // Navigate to the Forgot Password page
+    Navigate('/forgotpassword');
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -150,6 +155,9 @@ function AdminLogin() {
                 >
                   Login
                 </button>
+                <button type="button" onClick={handleForgotPassword}>
+          Forgot Password
+        </button>
               </div>
               <div className="signup-link">
                 <p>Not yet registered? <Link to="/adminsignup">Sign up</Link></p>
