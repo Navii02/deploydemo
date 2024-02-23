@@ -142,3 +142,18 @@
   .signup-link p a:hover {
     text-decoration: underline; /* Add underline on hover if desired */
   }
+
+  .forgot-password-link {
+    color: rgb(85, 145, 240);
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .forgot-password-link:hover {
+   color: #0056b3;
+  }
+  

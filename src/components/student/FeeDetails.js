@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import './FeeDetails.css';
+import './FeeDetails.css';  // Import your CSS file
 import Navbar from './UserNavbar';
 
 const FeeDetails = () => {
   const [paymentStatus, setPaymentStatus] = useState({});
-  const userEmail = localStorage.getItem('email'); // Get the user's email from localStorage
+  const userEmail = localStorage.getItem('email');
 
   const handlePayment = async (year, type) => {
     try {
-      // Replace the following fetch call with your actual payment processing logic
-      const response = await fetch('/api/payment', {
+      const response = await fetch('http://localhost:3001/api/paytm/payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -22,17 +21,16 @@ const FeeDetails = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Payment failed');
+        throw new Error('Payment initiation failed');
       }
 
-      // Update the payment status in the state
-      setPaymentStatus((prevStatus) => ({
-        ...prevStatus,
-        [`${type}-${year}`]: `Payment for ${year} successful!`,
-      }));
+      const paymentInitiationResponse = await response.json();
+
+      // Redirect to the Paytm payment page
+      window.location.href = paymentInitiationResponse.paymentUrl;
     } catch (error) {
-      console.error('Payment error:', error);
-      // Handle payment error, display a message, etc.
+      console.error('Payment initiation error:', error);
+      // Handle payment initiation error, display a message, etc.
     }
   };
 
