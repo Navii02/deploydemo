@@ -76,6 +76,7 @@ function ForgotPassword() {
   };
 
   return (
+    <div className='forgot-password-body'>
     <div className="forgot-password-container">
       {!emailSent && (
         <form>
@@ -126,6 +127,7 @@ function ForgotPassword() {
           {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
       )}
+    </div>
     </div>
   );
 }
