@@ -67,7 +67,7 @@ function ForgotPassword() {
 
       // Redirect to the verification code entry page using navigate
       setTimeout(() => {
-        navigate('/verification-code-entry');
+        navigate('/adminlogin');
       }, 1000); // Redirect after 1 second (adjust as needed)
     } catch (error) {
       console.error('There was an error:', error);
