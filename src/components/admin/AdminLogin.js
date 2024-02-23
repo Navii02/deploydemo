@@ -146,8 +146,10 @@ function AdminLogin() {
                     {values.showPassword}
                   </span>
                 </div>
+                <a href="/forgotpassword" onClick={handleForgotPassword} class="forgot-password-link">
+  Forgot Password?
+</a>
               </div>
-
               <div className="login-button-container">
                 <button
                   type="submit"
@@ -155,9 +157,6 @@ function AdminLogin() {
                 >
                   Login
                 </button>
-                <button type="button" onClick={handleForgotPassword}>
-          Forgot Password
-        </button>
               </div>
               <div className="signup-link">
                 <p>Not yet registered? <Link to="/adminsignup">Sign up</Link></p>
