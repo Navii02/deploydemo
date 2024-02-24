@@ -41,6 +41,11 @@ function TutorLogin() {
     });
   };
 
+  const handleForgotPassword = () => {
+    // Navigate to the Forgot Password page
+    Navigate('/tforgot');
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -140,8 +145,10 @@ function TutorLogin() {
                     {values.showPassword}
                   </span>
                 </div>
+                <a href="/tforgot" onClick={handleForgotPassword} class="forgot-password-link">
+  Forgot Password?
+</a>
               </div>
-
               <div className="login-button-container">
                 <button
                   type="submit"

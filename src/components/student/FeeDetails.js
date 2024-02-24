@@ -3,7 +3,7 @@ import './FeeDetails.css';  // Import your CSS file
 import Navbar from './UserNavbar';
 
 const FeeDetails = () => {
-  const [paymentStatus, setPaymentStatus] = useState({});
+  const [paymentStatus] = useState({});
   const userEmail = localStorage.getItem('email');
 
   const handlePayment = async (year, type) => {

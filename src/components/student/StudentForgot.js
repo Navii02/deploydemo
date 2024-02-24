@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ForgotPassword.css';
+import '.././ForgotPassword.css';
 
-function ForgotPassword() {
+function SForgotPassword() {
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -15,7 +15,7 @@ function ForgotPassword() {
 
   const handleSendVerificationCode = async () => {
     try {
-      const res = await fetch('/api/sendverificationcode', {
+      const res = await fetch('/api/student/sendverificationcode', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ function ForgotPassword() {
 
   const handleVerifyCodeAndChangePassword = async () => {
     try {
-      const res = await fetch('/api/verifycodeandchangepassword', {
+      const res = await fetch('/api/student/verifycodeandchangepassword', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ function ForgotPassword() {
 
       // Redirect to the verification code entry page using navigate
       setTimeout(() => {
-        navigate('/adminlogin');
+        navigate('/studentlogin');
       }, 1000); // Redirect after 1 second (adjust as needed)
     } catch (error) {
       console.error('There was an error:', error);
@@ -132,4 +132,4 @@ function ForgotPassword() {
   );
 }
 
-export default ForgotPassword;
+export default SForgotPassword;

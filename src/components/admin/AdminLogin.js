@@ -43,7 +43,7 @@ function AdminLogin() {
 
   const handleForgotPassword = () => {
     // Navigate to the Forgot Password page
-    Navigate('/forgotpassword');
+    Navigate('/aforgot');
   };
 
   const handleSubmit = async (event) => {
@@ -146,7 +146,7 @@ function AdminLogin() {
                     {values.showPassword}
                   </span>
                 </div>
-                <a href="/forgotpassword" onClick={handleForgotPassword} class="forgot-password-link">
+                <a href="/aforgot" onClick={handleForgotPassword} class="forgot-password-link">
   Forgot Password?
 </a>
               </div>

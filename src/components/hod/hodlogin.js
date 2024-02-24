@@ -41,6 +41,12 @@ function HODLogin() {
     });
   };
 
+  const handleForgotPassword = () => {
+    // Navigate to the Forgot Password page
+    Navigate('/hforgot');
+  };
+
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -140,8 +146,11 @@ function HODLogin() {
                     {values.showPassword}
                   </span>
                 </div>
+              
+              <a href="/hforgot" onClick={handleForgotPassword} class="forgot-password-link">
+  Forgot Password?
+</a>
               </div>
-
               <div className="login-button-container">
                 <button
                   type="submit"

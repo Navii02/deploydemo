@@ -41,6 +41,11 @@ function OfficerLogin() {
     });
   };
 
+  const handleForgotPassword = () => {
+    // Navigate to the Forgot Password page
+    Navigate('/oforgot');
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -140,6 +145,9 @@ function OfficerLogin() {
                     {values.showPassword}
                   </span>
                 </div>
+                <a href="/oforgot" onClick={handleForgotPassword} class="forgot-password-link">
+  Forgot Password?
+</a>
               </div>
 
               <div className="login-button-container">

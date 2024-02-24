@@ -42,9 +42,13 @@ import CertificateRecieve from './components/student/CertificateRecieve'
 import AdminOfficersPage from './components/admin/AdminOfficersPage'
 import AdminTeachersPage from './components/admin/AdminTeachersPage'
 import PaymentAndReminders from './components/officer/PaymentAndReminders'
-import ForgotPassword from './components/ForgotPassword'
-
-
+import AForgotPassword from './components/admin/AdminForgot'
+import FForgotPassword from './components/faculty/FacultyForgot'
+import HForgotPassword from './components/hod/hodForgot'
+import OForgotPassword from './components/officer/OfficerForgot'
+import PForgotPassword from './components/principal/PrinciForgot'
+import SForgotPassword from './components/student/StudentForgot'
+import TForgotPassword from './components/tutor/TutorForgot'
 
 function RoutesComp() {
   const userContext = useContext(UserContext)
@@ -96,7 +100,13 @@ function RoutesComp() {
             <Route path='/officer-details' element={<AdminOfficersPage/>}/> 
             <Route path='/teacher-details' element={<AdminTeachersPage/>}/> 
             <Route path='/payment' element={<PaymentAndReminders/>}/> 
-            <Route path='/forgotpassword' element={<ForgotPassword/>}/>
+            <Route path='/aforgot' element={<AForgotPassword/>}/>
+            <Route path='/fforgot' element={<FForgotPassword/>}/>
+            <Route path='/hforgot' element={<HForgotPassword/>}/>
+            <Route path='/oforgot' element={<OForgotPassword/>}/>
+            <Route path='/pforgot' element={<PForgotPassword/>}/>
+            <Route path='/sforgot' element={<SForgotPassword/>}/>
+            <Route path='/tforgot' element={<TForgotPassword/>}/>
           </>
         )}
       </Routes>

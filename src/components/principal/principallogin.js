@@ -39,6 +39,11 @@ function PrincipalLogin() {
     });
   };
 
+  const handleForgotPassword = () => {
+    // Navigate to the Forgot Password page
+    Navigate('/pforgot');
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -134,10 +139,11 @@ function PrincipalLogin() {
                 {values.showPassword}
               </span>
             </div>
-                </div>
-            
-            
+            <a href="/pforgot" onClick={handleForgotPassword} class="forgot-password-link">
+  Forgot Password?
+</a>
 
+            </div>
               <div className="login-button-container">
                 <button
                   type="submit"
