@@ -7,6 +7,7 @@ import OfficerNavbar from './OfficerNavbar';
 function CertificateDistribution() {
   const [approvedRequests, setApprovedRequests] = useState([]);
   const [file, setFile] = useState(null);
+  const [declineReason, setDeclineReason] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -45,6 +46,17 @@ function CertificateDistribution() {
     }
   };
 
+  const handleDecline = async (requestId) => {
+    try {
+      await axios.post(`/api/officer/declineRequest/${requestId}`, { declineReason });
+
+      setSuccessMessage('Request declined successfully!');
+      fetchApprovedRequests();
+    } catch (error) {
+      setErrorMessage(error.response.data.message);
+    }
+  };
+
   return (
     <>
       <OfficerNavbar />
@@ -56,6 +68,12 @@ function CertificateDistribution() {
               {/* ... Display approved request details as needed */}
               <input type="file" onChange={handleFileChange} />
               <button onClick={() => handleSendDocuments(request._id)}>Send Documents</button>
+              <textarea
+                placeholder="Decline Reason"
+                value={declineReason}
+                onChange={(e) => setDeclineReason(e.target.value)}
+              />
+              <button onClick={() => handleDecline(request._id)}>Decline</button>
             </div>
           ))}
         </div>

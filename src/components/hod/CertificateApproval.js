@@ -6,7 +6,6 @@ import HodNavbar from './HodNavbar';
 
 function CertificateApproval() {
   const [requests, setRequests] = useState([]);
-  const [file, setFile] = useState(null);
   const [declineReason, setDeclineReason] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -24,20 +23,9 @@ function CertificateApproval() {
     }
   };
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
   const handleApprove = async (requestId) => {
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      await axios.post(`/api/hod/approveRequest/${requestId}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      await axios.post(`/api/hod/approveRequest/${requestId}`);
 
       setSuccessMessage('Request approved by HOD successfully!');
       fetchRequests();
@@ -66,7 +54,6 @@ function CertificateApproval() {
           {requests.map((request) => (
             <div key={request._id}>
               {/* ... Display request details as before */}
-              <input type="file" onChange={handleFileChange} />
               <button onClick={() => handleApprove(request._id)}>Approve</button>
               <textarea
                 placeholder="Decline Reason"
@@ -85,3 +72,4 @@ function CertificateApproval() {
 }
 
 export default CertificateApproval;
+
