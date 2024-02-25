@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import '../signup.css';
 
 function useOfficerSignup() {
+  const navigate = useNavigate();
+
   const [values, setValues] = useState({
     name: '',
     email: '',
@@ -91,7 +93,12 @@ function useOfficerSignup() {
         showPassword: false,
         showRepeatPassword: false,
       });
+
+
+      // Registration successful, navigate to login page
+      navigate('/officerlogin');
     } catch (error) {
+      // Handle error
       setErrors({
         ...errors,
         fetchError: true,

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Updated import statement
 import validator from 'validator';
 import '../signup.css';
 
 function useFacultySignup() {
+  const navigate = useNavigate(); // Updated hook
+
   const [values, setValues] = useState({
     name: '',
     email: '',
@@ -91,6 +93,9 @@ function useFacultySignup() {
         showPassword: false,
         showRepeatPassword: false,
       });
+
+      // Redirect to the login page after successful registration
+      navigate('/faculitylogin');
     } catch (error) {
       setErrors({
         ...errors,

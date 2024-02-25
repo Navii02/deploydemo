@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import '../signup.css';
 
 function useStudentSignup() {
+  const navigate = useNavigate(); // Updated hook
+
   const [values, setValues] = useState({
     name: '',
     email: '',
@@ -91,12 +93,14 @@ function useStudentSignup() {
         showPassword: false,
         showRepeatPassword: false,
       });
+
+      // Redirect to the login page after successful registration
+      navigate('/studentlogin');
     } catch (error) {
       setErrors({
         ...errors,
         fetchError: true,
-        fetchErrorMsg:
-          'There was a problem with our server, please try again later',
+        fetchErrorMsg: 'There was a problem with our server, please try again later',
       });
     }
   };

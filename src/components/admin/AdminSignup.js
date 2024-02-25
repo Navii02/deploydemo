@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';  // Updated import statement
 import validator from 'validator';
 import '../signup.css';
 
 function useAdminSignup() {
+  const navigate = useNavigate();  // Updated hook
+
   const [values, setValues] = useState({
     name: '',
     email: '',
@@ -91,6 +93,9 @@ function useAdminSignup() {
         showPassword: false,
         showRepeatPassword: false,
       });
+
+      // Redirect to the login page
+      navigate('/adminlogin');
     } catch (error) {
       setErrors({
         ...errors,
