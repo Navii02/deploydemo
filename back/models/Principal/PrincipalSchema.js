@@ -14,6 +14,10 @@ const PrincipalSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  verificationCode: {
+    type: String,
+    default: '',
+  },
   date: {
     type: Date,
     default: Date.now,
