@@ -25,6 +25,13 @@ const TeachersDetail=require('./api/Admin/TeachersDetails')
 const OfficerDetail=require('./api/Admin/OfficerDetails')
 const FacultyProfile=require('./api/faculity/faculityhome')
 const AdminForget=require('./api/Admin/AdminForgot')
+const FaculityForget=require('./api/faculity/FaculityForgot')
+const hodForget=require('./api/hod/hodForgot')
+const officerForget=require('./api/officer/officerForgot')
+const principalForget=require('./api/principal/principalForgot')
+const studentForget=require('./api/student/studentForgot')
+const tutorForget=require('./api/tutor/tutorForgot');
+const Tutor = require('./models/Tutor/TutorSchema');
 const app = express();
 const MAX_AGE = 1000 * 60 * 60 * 3 //3hrs
 const corsOptions = {
@@ -87,6 +94,12 @@ app.use('/api',TeachersDetail)
 app.use('/api',OfficerDetail)
 app.use('/api',FacultyProfile)
 app.use('/api',AdminForget)
+app.use('/api',FaculityForget)
+app.use('/api',hodForget)
+app.use('/api',officerForget)
+app.use('/api',principalForget)
+app.use('/api',studentForget)
+app.use('/api',tutorForget)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));
