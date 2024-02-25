@@ -139,3 +139,8 @@
   .login-link p a:hover {
     text-decoration: underline; /* Add underline on hover if desired */
   }
+
+  .password-input-container p{
+    font-size: small;
+    color: #5b5b5b;
+  }

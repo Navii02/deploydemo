@@ -119,7 +119,7 @@ function AForgotPassword() {
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
-          </label>
+            </label>
           <button type="button" onClick={handleVerifyCodeAndChangePassword}>
             Verify Code and Change Password
           </button>
