@@ -19,7 +19,7 @@ const PrincipalRoutes = require('./api/principal/PrincipalRoutes')
 const adminRouter = require('./api/Admin/AdminRoutes')
 const classtutorRoutes = require('./api/tutor/classtutorroutes')
 const Dashboard=require('./api/student/studentdashboard')
-const ImageGallery=require('./api/imagegalary')
+
 const certificate = require('./api/officer/certificate')
 const TeachersDetail=require('./api/Admin/TeachersDetails')
 const OfficerDetail=require('./api/Admin/OfficerDetails')
@@ -31,7 +31,6 @@ const officerForget=require('./api/officer/officerForgot')
 const principalForget=require('./api/principal/principalForgot')
 const studentForget=require('./api/student/studentForgot')
 const tutorForget=require('./api/tutor/tutorForgot');
-const Tutor = require('./models/Tutor/TutorSchema');
 const app = express();
 const MAX_AGE = 1000 * 60 * 60 * 3 //3hrs
 const corsOptions = {
@@ -88,7 +87,7 @@ app.use('/api',Notice)
 app.use('/api',CertificateUser)
 app.use('/api',Feereminder)
 app.use('/api',Dashboard)
-app.use('/api',ImageGallery)
+
 app.use('/api',certificate)
 app.use('/api',TeachersDetail)
 app.use('/api',OfficerDetail)

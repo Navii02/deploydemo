@@ -2,6 +2,7 @@ const AdminSchema = require('../../models/Admin/AdminSchema');
 const bcrypt = require('bcrypt');
 const express = require('express');
 const router = express.Router();
+const emailTransporter = require('../../nodemailer');
 
 router.post('/adminregister', async (req, res) => {
   const { name, email, password } = req.body;
@@ -19,16 +20,38 @@ router.post('/adminregister', async (req, res) => {
   if (user) return res.status(400).json({ msg: 'User already exists' });
 
   const newUser = new AdminSchema({ name, email, password });
-
   bcrypt.hash(password, 7, async (err, hash) => {
     if (err)
       return res.status(400).json({ msg: 'Error while saving the password' });
 
     newUser.password = hash;
-    const savedUserRes = await newUser.save();
 
-    if (savedUserRes)
-      return res.status(200).json({ msg: 'User is successfully saved' });
+    try {
+      const savedUserRes = await newUser.save();
+
+      if (savedUserRes) {
+        // Send confirmation email to the user
+        const mailOptions = {
+          from:  emailTransporter.options.auth.user,
+          to: email,
+          subject: 'Registration Successful',
+          text: 'Thank you for registering. You have successfully signed up!',
+        };
+
+        emailTransporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error(error);
+            return res.status(500).json({ msg: 'Error sending confirmation email' });
+          } else {
+            console.log('Email sent: ' + info.response);
+            return res.status(200).json({ msg: 'User is successfully saved' });
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ msg: 'Error saving user to the database' });
+    }
   });
 });
 
