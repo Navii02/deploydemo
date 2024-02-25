@@ -47,17 +47,17 @@ function TutorNavbar() {
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
             <li className='nav-item'>
               <Link to='/thome' className='nav-links' onClick={closeMobileMenu}>
-                Internal Marks
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/thome' className='nav-links' onClick={closeMobileMenu}>
-                Attendance
+                Student Data
               </Link>
             </li>
             <li className='nav-item'>
               <Link to='/thome' className='nav-links' onClick={closeMobileMenu}>
                 Performance
+              </Link>
+            </li>
+            <li className='nav-item'>
+              <Link to='/thome' className='nav-links' onClick={closeMobileMenu}>
+                Updates
               </Link>
             </li>
           </ul>

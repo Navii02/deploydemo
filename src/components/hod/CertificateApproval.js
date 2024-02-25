@@ -53,7 +53,11 @@ function CertificateApproval() {
         <div className="request-list">
           {requests.map((request) => (
             <div key={request._id}>
-              {/* ... Display request details as before */}
+              <h3>{request.studentName}</h3>
+              <p>Student ID: {request.registerNumber}</p>
+              <p>Reason: {request.reason}</p>
+              <p>selected option:{request.selectedDocuments}</p>
+              <p>Status: {request.status}</p>
               <button onClick={() => handleApprove(request._id)}>Approve</button>
               <textarea
                 placeholder="Decline Reason"
