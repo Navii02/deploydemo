@@ -14,10 +14,18 @@ router.post('/student/submitRequest', async (req, res) => {
       return res.status(400).json({ message: 'Invalid request data' });
     }
 
-    // Save to MongoDB
+    // Check if email matches the email in StudentData
+    const studentData = await Student.findOne({ email: userEmail });
+
+    if (!studentData) {
+      return res.status(400).json({ message: 'Student not found with the provided email' });
+    }
+
+    // Save to MongoDB with student's name
     const newCertificateRequest = new CertificateRequest({
       registerNumber,
       userEmail,
+      studentName: studentData.name, // Save student's name in the request
       reason,
       selectedDocuments,
     });

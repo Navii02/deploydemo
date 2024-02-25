@@ -54,11 +54,11 @@ const CertificateRequestsPage = () => {
         <ul>
           {requests.map((request) => (
             <li key={request._id}>
-              
               <p>Request ID: {request._id}</p>
               <p>Student ID: {request.registerNumber}</p>
               <p>Reason: {request.reason}</p>
-              <p>Status: {request.status}</p>
+              <p>HodStatus: {request.hodDecision}</p>
+              <p>officerStatus: {request.officerstatus}</p>
               <p>selected option:{request.selectedDocuments}</p>
               {request.status === 'Approved' && (
                 <button onClick={() => handleDownload(request.fileUrl)}>Download</button>

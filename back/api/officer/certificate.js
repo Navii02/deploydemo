@@ -1,3 +1,5 @@
+// routes/officerRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -16,7 +18,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const requestId = req.params.id;
-    const fileName = `${requestId}.pdf`;
+    const fileName = `certificate${requestId}.pdf`;
     cb(null, fileName);
   },
 });
@@ -25,7 +27,8 @@ const upload = multer({ storage });
 
 router.get('/officer/certificateRequests', async (req, res) => {
   try {
-    const requests = await CertificateRequest.find().sort({ createdAt: -1 });
+    // Retrieve only approved requests
+    const requests = await CertificateRequest.find({ hodDecision: 'approved' }).sort({ createdAt: -1 });
 
     const requestsWithStudentData = await Promise.all(
       requests.map(async (request) => {
@@ -49,9 +52,9 @@ router.post('/officer/approveRequest/:id', upload.single('file'), async (req, re
     const requestId = req.params.id;
     const fileUrl = req.file ? `/certificate/${req.file.filename}` : null;
 
-    await CertificateRequest.findByIdAndUpdate(requestId, { status: 'Approved', fileUrl });
+    await CertificateRequest.findByIdAndUpdate(requestId, { officerstatus: 'Approved', fileUrl });
 
-    res.json({ message: 'Request approved successfully!' });
+    res.json({ message: 'Request approved successfully!', status: 'Approved' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -63,9 +66,9 @@ router.post('/officer/declineRequest/:id', async (req, res) => {
     const requestId = req.params.id;
     const { declineReason } = req.body;
 
-    await CertificateRequest.findByIdAndUpdate(requestId, { status: 'Declined', declineReason });
+    await CertificateRequest.findByIdAndUpdate(requestId, { officerstatus: 'Declined', declineReason });
 
-    res.json({ message: 'Request declined successfully!' });
+    res.json({ message: 'Request declined successfully!', status: 'Declined' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
