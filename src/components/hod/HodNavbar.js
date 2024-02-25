@@ -46,18 +46,18 @@ function HodNavbar() {
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
             <li className='nav-item'>
-              <Link to='/hodhome' className='nav-links' onClick={closeMobileMenu}>
-                Internal Marks
+              <Link to='/certificate-approval' className='nav-links' onClick={closeMobileMenu}>
+                Requests
               </Link>
             </li>
             <li className='nav-item'>
               <Link to='/hodhome' className='nav-links' onClick={closeMobileMenu}>
-                Attendance
+               Faaculty 
               </Link>
             </li>
             <li className='nav-item'>
               <Link to='/hodhome' className='nav-links' onClick={closeMobileMenu}>
-                Performance
+                Student
               </Link>
             </li>
           </ul>

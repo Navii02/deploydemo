@@ -1,54 +1,63 @@
 
 import { useContext } from 'react'
 import { Route,Routes } from 'react-router-dom'
+import { UserContext } from './App'
+import HomePage from './components/home'
+
 import Login from './components/student/studentlogin'
 import Signup from './components/student/studentsignup'
-import OfficerSignup from './components/officer/OfficerSignup'
-import Officerlogin from './components/officer/Officerlogin'
-import HomePage from './components/home'
-import DataEditing from './components/officer/DataEditing'
-import FeeReminders from './components/officer/FeeReminders'
-import NoticeUpdates from './components/officer/NoticeUpdates'
-import OfficeHome from './components/officer/OfficeHome'
 import UserHome from './components/student/UserHome'
 import Dashboard from './components/student/Dashboard'
 import AboutUs from './components/student/AboutUs'
 import ContactUs from './components/student/ContactUs'
 import Certificates from './components/student/CertificateRequest'
-import AdminPage from './components/officer/CertificateDistribution'
 import FeeDetails from './components/student/FeeDetails'
 import ScholarshipDetails from './components/student/ScholarshipDetails'
+import Reminders from './components/student/reminders'
+import CertificateRecieve from './components/student/CertificateRecieve'
+import SForgotPassword from './components/student/StudentForgot'
+
+import OfficerSignup from './components/officer/OfficerSignup'
+import Officerlogin from './components/officer/Officerlogin'
+import DataEditing from './components/officer/DataEditing'
+import FeeReminders from './components/officer/FeeReminders'
+import NoticeUpdates from './components/officer/NoticeUpdates'
+import OfficeHome from './components/officer/OfficeHome'
+import PaymentAndReminders from './components/officer/PaymentAndReminders'
+import OForgotPassword from './components/officer/OfficerForgot'
+import CertificateDistribution from './components/officer/CertificateDistribution'
+
 import AdminDashboard from './components/admin/AdminDashboard'
+import AForgotPassword from './components/admin/AdminForgot'
+import AdminSignup from './components/admin/AdminSignup'
+import AdminLogin from './components/admin/AdminLogin'
+import AdminOfficersPage from './components/admin/AdminOfficersPage'
+import AdminTeachersPage from './components/admin/AdminTeachersPage'
+
+
 import FacultyHome from './components/faculty/FacultyHome'
 import FaculitySignup from './components/faculty/faculitysignup'
 import FaculityLogin from './components/faculty/faculitylogin'
-import TutorHome from './components/tutor/TutorHome'
-import HodHome from './components/hod/HodHome'
-import PrinciHome from './components/principal/PrinciHome'
-import { UserContext } from './App'
-import PrincipalSignup from './components/principal/principalsignup'
-import ClasstutorSignup from './components/tutor/classtututorsignup'
-import ClasstutorLogin from './components/tutor/classtutorlogin'
-import HodSignup from './components/hod/hodsignup'
-import PrincipalLogin from './components/principal/principallogin'
-import HodLogin from './components/hod/hodlogin'
-import AdminSignup from './components/admin/AdminSignup'
-import AdminLogin from './components/admin/AdminLogin'
-import Reminders from './components/student/reminders'
 import InternalMarksForm from './components/faculty/InternalMarksForm'
 import AttendanceForm from './components/faculty/AttendanceForm'
 import AssignmentForm from './components/faculty/AssignmentForm'
-import CertificateRecieve from './components/student/CertificateRecieve'
-import AdminOfficersPage from './components/admin/AdminOfficersPage'
-import AdminTeachersPage from './components/admin/AdminTeachersPage'
-import PaymentAndReminders from './components/officer/PaymentAndReminders'
-import AForgotPassword from './components/admin/AdminForgot'
 import FForgotPassword from './components/faculty/FacultyForgot'
-import HForgotPassword from './components/hod/hodForgot'
-import OForgotPassword from './components/officer/OfficerForgot'
-import PForgotPassword from './components/principal/PrinciForgot'
-import SForgotPassword from './components/student/StudentForgot'
+
+import TutorHome from './components/tutor/TutorHome'
+import ClasstutorSignup from './components/tutor/classtututorsignup'
+import ClasstutorLogin from './components/tutor/classtutorlogin'
 import TForgotPassword from './components/tutor/TutorForgot'
+
+import HodHome from './components/hod/HodHome'
+import HodSignup from './components/hod/hodsignup'
+import HodLogin from './components/hod/hodlogin'
+import HForgotPassword from './components/hod/hodForgot'
+import CertificateApproval from './components/hod/CertificateApproval'
+
+import PrinciHome from './components/principal/PrinciHome'
+import PrincipalSignup from './components/principal/principalsignup'
+import PrincipalLogin from './components/principal/principallogin'
+import PForgotPassword from './components/principal/PrinciForgot'
 
 function RoutesComp() {
   const userContext = useContext(UserContext)
@@ -84,7 +93,7 @@ function RoutesComp() {
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/certificates-user" element={<Certificates />} />
-            <Route path='/certificate-distribution' element={<AdminPage/>}/>
+            <Route path='/certificate-distribution' element={<CertificateDistribution/>}/>
             <Route path='/fee-details' element ={<FeeDetails/>}/>
             <Route path='/scholarships' element ={<ScholarshipDetails/>}/>
             <Route path='/dash' element ={<AdminDashboard/>}/>
@@ -107,6 +116,7 @@ function RoutesComp() {
             <Route path='/pforgot' element={<PForgotPassword/>}/>
             <Route path='/sforgot' element={<SForgotPassword/>}/>
             <Route path='/tforgot' element={<TForgotPassword/>}/>
+            <Route path='/certificate-approval' element={<CertificateApproval/>}/>
           </>
         )}
       </Routes>
