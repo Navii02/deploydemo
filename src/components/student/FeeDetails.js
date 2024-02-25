@@ -3,6 +3,7 @@ import './FeeDetails.css';  // Import your CSS file
 import Navbar from './UserNavbar';
 
 const FeeDetails = () => {
+ // eslint-disable-next-line
   const [paymentStatus] = useState({});
   const userEmail = localStorage.getItem('email');
 
