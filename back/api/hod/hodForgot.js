@@ -6,7 +6,7 @@ const emailTransporter = require('../../nodemailer');
 const app = express();
 app.use(bodyParser.json());
 
-app.post('hod/sendverificationcode', async (req, res) => {
+app.post('/hod/sendverificationcode', async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -18,7 +18,7 @@ app.post('hod/sendverificationcode', async (req, res) => {
 
     // Check if the verification code is older than 1 minute
     const currentTime = new Date();
-    const oneMinuteAgo = new Date(currentTime - 60000); // 60000 milliseconds = 1 minute
+    const oneMinuteAgo = new Date(currentTime - 120000); // 60000 milliseconds = 1 minute
 
     if (user.verificationCode && user.verificationCodeDate > oneMinuteAgo) {
       return res.status(400).json({ msg: 'Verification code is still valid. Please wait before requesting a new one.' });
@@ -49,7 +49,7 @@ app.post('hod/sendverificationcode', async (req, res) => {
   }
 });
 
-app.post('hod/verifycodeandchangepassword', async (req, res) => {
+app.post('/hod/verifycodeandchangepassword', async (req, res) => {
   const { email, verificationCode, newPassword } = req.body;
 
   try {

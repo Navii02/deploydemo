@@ -32,6 +32,7 @@ const principalForget=require('./api/principal/principalForgot')
 const studentForget=require('./api/student/studentForgot')
 const tutorForget=require('./api/tutor/tutorForgot');
 const hodcertificaterequest=require('./api/hod/Hodcertificaterequest');
+const AssigmentNotification =require('./api/faculity/Assignmentnotification');
 const app = express();
 const MAX_AGE = 1000 * 60 * 60 * 3 //3hrs
 const corsOptions = {
@@ -101,6 +102,7 @@ app.use('/api',principalForget)
 app.use('/api',studentForget)
 app.use('/api',tutorForget)
 app.use('/api',hodcertificaterequest)
+app.use('/api',AssigmentNotification)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));
