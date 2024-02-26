@@ -1,5 +1,3 @@
-// routes/officerRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -18,7 +16,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const requestId = req.params.id;
-    const fileName = `certificate${requestId}.pdf`;
+    const fileName = `${requestId}.pdf`;
     cb(null, fileName);
   },
 });
@@ -27,8 +25,7 @@ const upload = multer({ storage });
 
 router.get('/officer/certificateRequests', async (req, res) => {
   try {
-    // Retrieve only approved requests
-    const requests = await CertificateRequest.find({ hodDecision: 'approved' }).sort({ createdAt: -1 });
+    const requests = await CertificateRequest.find({HoDstatus:'Accepted'}).sort({ createdAt: -1 });
 
     const requestsWithStudentData = await Promise.all(
       requests.map(async (request) => {
@@ -52,9 +49,9 @@ router.post('/officer/approveRequest/:id', upload.single('file'), async (req, re
     const requestId = req.params.id;
     const fileUrl = req.file ? `/certificate/${req.file.filename}` : null;
 
-    await CertificateRequest.findByIdAndUpdate(requestId, { officerstatus: 'Approved', fileUrl });
+    await CertificateRequest.findByIdAndUpdate(requestId, { status: 'Approved', fileUrl });
 
-    res.json({ message: 'Request approved successfully!', status: 'Approved' });
+    res.json({ message: 'Request approved successfully!' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -66,9 +63,9 @@ router.post('/officer/declineRequest/:id', async (req, res) => {
     const requestId = req.params.id;
     const { declineReason } = req.body;
 
-    await CertificateRequest.findByIdAndUpdate(requestId, { officerstatus: 'Declined', declineReason });
+    await CertificateRequest.findByIdAndUpdate(requestId, { status: 'Declined', declineReason });
 
-    res.json({ message: 'Request declined successfully!', status: 'Declined' });
+    res.json({ message: 'Request declined successfully!' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });

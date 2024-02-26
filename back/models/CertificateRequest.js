@@ -3,19 +3,16 @@
 const mongoose = require('mongoose');
 
 const certificateRequestSchema = new mongoose.Schema({
-  registerNumber: String,
+  registerNumber:  { type: String },
   userEmail: String,
   reason: String,
   selectedDocuments: [String],
-  officerstatus: { type: String, default: 'Pending' },
-  studentName: {
-    type: String,
-    required: true,},
+  HoDstatus: { type: String, default: 'Pending' },
+  status: { type: String, default: 'Pending' },
+  studentName: { type: String },
   fileUrl: { type: String },
-  declineReason: { type: String },
-  hodDecision: { type: String, default: 'Pending' },
-  hoddeclineReason: String,
-  
+  declineReason: String,
+  acceptedBy: String,
 }, { timestamps: true });
 
 const CertificateRequest = mongoose.model('CertificateRequest', certificateRequestSchema);

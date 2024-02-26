@@ -1,12 +1,11 @@
-// CertificateApproval.js
+// HodCertificateRequestsPage.js
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import HodNavbar from './HodNavbar';
 
-function CertificateApproval() {
+function HodCertificateRequestsPage() {
   const [requests, setRequests] = useState([]);
-  const [declineReason, setDeclineReason] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -17,17 +16,17 @@ function CertificateApproval() {
   const fetchRequests = async () => {
     try {
       const response = await axios.get('/api/hod/certificateRequests');
-      setRequests(response.data.requests);
+      setRequests(response.data.requests.reverse()); // Reverse the order
     } catch (error) {
       setErrorMessage(error.response.data.message);
     }
   };
 
-  const handleApprove = async (requestId) => {
+  const handleAccept = async (requestId) => {
     try {
-      await axios.post(`/api/hod/approveRequest/${requestId}`);
+      await axios.post(`/api/hod/acceptRequest/${requestId}`);
 
-      setSuccessMessage('Request approved by HOD successfully!');
+      setSuccessMessage('Request accepted successfully!');
       fetchRequests();
     } catch (error) {
       setErrorMessage(error.response.data.message);
@@ -36,9 +35,9 @@ function CertificateApproval() {
 
   const handleDecline = async (requestId) => {
     try {
-      await axios.post(`/api/hod/declineRequest/${requestId}`, { declineReason });
+      await axios.post(`/api/hod/declineRequest/${requestId}`);
 
-      setSuccessMessage('Request declined by HOD successfully!');
+      setSuccessMessage('Request declined successfully!');
       fetchRequests();
     } catch (error) {
       setErrorMessage(error.response.data.message);
@@ -49,22 +48,19 @@ function CertificateApproval() {
     <>
       <HodNavbar />
       <div className="certificate-requests">
-        <h2>Certificate Requests (HOD)</h2>
+        <h2>Certificate Requests</h2>
         <div className="request-list">
           {requests.map((request) => (
             <div key={request._id}>
               <h3>{request.studentName}</h3>
+              <p>Request ID: {request._id}</p>
               <p>Student ID: {request.registerNumber}</p>
               <p>Reason: {request.reason}</p>
-              <p>selected option:{request.selectedDocuments}</p>
-              <p>Status: {request.status}</p>
-              <button onClick={() => handleApprove(request._id)}>Approve</button>
-              <textarea
-                placeholder="Decline Reason"
-                value={declineReason}
-                onChange={(e) => setDeclineReason(e.target.value)}
-              />
-              <button onClick={() => handleDecline(request._id)}>Decline</button>
+              <p>selected option: {request.selectedDocuments}</p>
+              <p>Status: {request.HoDstatus}</p>
+              {request.status === 'Accepted' && <p>Accepted By: {request.acceptedBy}</p>}
+              <input type="button" value="Accept" onClick={() => handleAccept(request._id)} />
+              <input type="button" value="Decline" onClick={() => handleDecline(request._id)} />
             </div>
           ))}
         </div>
@@ -75,5 +71,4 @@ function CertificateApproval() {
   );
 }
 
-export default CertificateApproval;
-
+export default HodCertificateRequestsPage;
