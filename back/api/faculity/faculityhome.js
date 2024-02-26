@@ -1,7 +1,5 @@
 // teachers-profile.js
 const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const FacultyProfile = require('../../models/Admin/TeachersDetailSchema');
 
 const app = express();
