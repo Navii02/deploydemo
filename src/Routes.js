@@ -19,7 +19,8 @@ import SForgotPassword from './components/student/StudentForgot'
 
 import OfficerSignup from './components/officer/OfficerSignup'
 import Officerlogin from './components/officer/Officerlogin'
-import DataEditing from './components/officer/DataEditing'
+import DataEntryForm from './components/officer/DataEditing'
+import DataViewEdit from './components/officer/DataTable'
 import FeeReminders from './components/officer/FeeReminders'
 import NoticeUpdates from './components/officer/NoticeUpdates'
 import OfficeHome from './components/officer/OfficeHome'
@@ -59,6 +60,7 @@ import PrincipalSignup from './components/principal/principalsignup'
 import PrincipalLogin from './components/principal/principallogin'
 import PForgotPassword from './components/principal/PrinciForgot'
 
+
 function RoutesComp() {
   const userContext = useContext(UserContext)
   return (
@@ -85,7 +87,8 @@ function RoutesComp() {
             <Route path="/office" element= {<OfficeHome/>}/>
             <Route path='/principallogin' element={<PrincipalLogin />} />
             <Route path='/principalsignup' element={<PrincipalSignup />} />
-            <Route path="/data-editing" element={<DataEditing />} />
+            <Route path="/data-editing" element={<DataEntryForm />} />
+            <Route path="/data-table" element={<DataViewEdit/>} />
             <Route path="/fee-reminders" element={<FeeReminders />} />
             <Route path="/notice-updates" element={<NoticeUpdates />} />
             <Route path="/user" element={<UserHome />} />

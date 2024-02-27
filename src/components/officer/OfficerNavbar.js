@@ -45,25 +45,47 @@ function OfficerNavbar() {
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            <li className='nav-item'>
+          <li className='nav-item dropdown'>
               <Link to='/data-editing' className='nav-links' onClick={closeMobileMenu}>
-                Student Data
+                Admission<i className='fas fa-caret-down' />
               </Link>
+              <div className='dropdown-content'>
+                <Link to='/data-editing' className='dropdown-link' onClick={closeMobileMenu}>
+                  Data Entry
+                </Link>
+                <Link to='/data-table' className='dropdown-link' onClick={closeMobileMenu}>
+                  Data Table
+                </Link>
+              </div>
             </li>
-            <li className='nav-item'>
+            <li className='nav-item dropdown'>
+              <Link to='/' className='nav-links' onClick={closeMobileMenu}>
+                Student Data<i className='fas fa-caret-down' />
+              </Link>
+              <div className='dropdown-content'>
+                <Link to='/' className='dropdown-link' onClick={closeMobileMenu}>
+                  Data Entry
+                </Link>
+                <Link to='/' className='dropdown-link' onClick={closeMobileMenu}>
+                  Data Table
+                </Link>
+              </div>
+            </li>
+          <li className='nav-item dropdown'>
+            <Link to='/certificate-distribution' className='nav-links' onClick={closeMobileMenu}>
+                Services<i className='fas fa-caret-down' />
+              </Link>
+            <div className='dropdown-content'>
               <Link to='/certificate-distribution' className='nav-links' onClick={closeMobileMenu}>
                 Certificates
               </Link>
-            </li>
-            <li className='nav-item'>
               <Link to='/payment' className='nav-links' onClick={closeMobileMenu}>
                 Payments
               </Link>
-            </li>
-            <li className='nav-item'>
               <Link to='/notice-updates' className='nav-links' onClick={closeMobileMenu}>
                 Noticeboard
               </Link>
+            </div>
             </li>
           </ul>
           <div className='nav-out'>

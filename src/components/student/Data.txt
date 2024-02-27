@@ -1,4 +1,168 @@
-// DataEntryForm.js
+1.Admission ID
+2.Allotment Category
+    Merit
+    Management 
+3.Fee Category 
+    Merit High Fees
+    Merit Low Fees
+    NRI
+4.Name 
+5.Photo
+6.Address
+7.Religion	
+8.Community	
+9.Gender
+    Male
+    Female 
+    Transgender
+10.Date Of Birth 
+11.Blood Group
+12.Mobile No
+13.Email
+14.Entrance Roll No
+15.Entrance Rank	
+16.Aadhar No	
+17.Course
+18.Plus Two 
+    Board
+    Register No
+    Month and Year of Exam
+    Percentage 
+    Name Of School
+    Physics (Mark/Total)
+    Chemistry (Mark/Total)
+    Mathematics(Mark/Total)
+19.Tenth 
+    Board
+    Register No
+    Month and Year of Exam
+    Percentage 
+    Name Of School
+    Physics (Mark/Total)
+    Chemistry (Mark/Total)
+    Mathematics(Mark/Total)
+20.Parent Details
+    Father
+        Name
+        Occupation 
+        Mobile No
+    Mother
+        Name
+        Occupation 
+        Mobile No
+    Address for Communication 
+21.Annual Income
+22.Nativity
+23.Joint Bank Account(if any)
+
+
+
+
+/* DataEntryForm.css */
+
+.data-entry-container {
+    margin-top: 20px;
+  }
+  
+  .data-entry-container .container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .data-entry-container  .form {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .data-entry-container .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .data-entry-container  .photo-preview {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+  }
+  
+  .data-entry-container  .box-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .data-entry-container h4{
+    color: #000000ee;
+  }
+  
+  .data-entry-container .box {
+    width: 48%;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+  }
+  
+  .data-entry-container .button-container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+  }
+  
+  .data-entry-container  .submit-button,
+  .clear-button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+  }
+
+  .data-entry-container .submit-button {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .data-entry-container .clear-button {
+    background-color: #f44336;
+    color: #fff;
+  }
+
+  .data-entry-container label {
+    display: block;
+    font-weight: bold;
+    color: #000000ee;
+    margin-bottom: 5px;
+  }
+  
+  .data-entry-container input,
+  select,
+  textarea {
+    margin-top: 5px;
+    height: 40px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .data-entry-container select {
+    color: #000000ee;
+    height: 40px; /* Adjust the height based on your design */
+  }
+  /* Add any other styling as needed */
+
+
+
+  // DataEntryForm.js
 import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "./OfficerNavbar";
@@ -12,17 +176,17 @@ function DataEntryForm({ fetchStudents }) {
     name: "",
     photo: null,
     address: "",
-    pincode: "",
+    pincode:"",
     religion: "",
     community: "",
     gender: "",
     dateOfBirth: "",
     bloodGroup: "",
     mobileNo: "",
-    whatsappNo: "",
+    whatsappNo:"",
     email: "",
     entranceExam: {
-      name: "keam",
+      name: "keam", 
       other: "",
     },
     entranceRollNo: "",
@@ -30,6 +194,16 @@ function DataEntryForm({ fetchStudents }) {
     aadharNo: "",
     course: "",
     plusTwo: {
+      board: "",
+      registerNo: "",
+      examMonthYear: "",
+      percentage: "",
+      schoolName: "",
+      physics: "",
+      chemistry: "",
+      mathematics: "",
+    },
+    tenth: {
       board: "",
       registerNo: "",
       examMonthYear: "",
@@ -68,25 +242,25 @@ function DataEntryForm({ fetchStudents }) {
     if (name === "photo") {
       setFormData({ ...formData, [name]: files[0] });
     } else if (name.includes("plusTwo") || name.includes("tenth")) {
-      const [, subField] = name.split(".");
+      const [field, subField] = name.split(".");
       setFormData({
         ...formData,
         parentDetails: {
           ...formData.parentDetails,
-          [name.split(".")[0]]: {
-            ...formData[name.split(".")[0]],
-            [subField]: value,
-          },
+        [field]: {
+          ...formData[field],
+          [subField]: value,
         },
+      },
       });
     } else if (name.includes("father") || name.includes("mother")) {
-      const [, subField] = name.split(".");
+      const [field, subField] = name.split(".");
       setFormData({
         ...formData,
         parentDetails: {
           ...formData.parentDetails,
-          [name.split(".")[0]]: {
-            ...formData.parentDetails[name.split(".")[0]],
+          [field]: {
+            ...formData.parentDetails[field],
             [subField]: value,
           },
         },
@@ -108,7 +282,7 @@ function DataEntryForm({ fetchStudents }) {
           name: value,
         },
       });
-    } else if (name.startsWith("bankDetails")) {
+    } else  if (name.startsWith("bankDetails")) {
       const [, subField] = name.split(".");
       setFormData({
         ...formData,
@@ -117,6 +291,7 @@ function DataEntryForm({ fetchStudents }) {
           [subField]: value,
         },
       });
+
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -145,24 +320,23 @@ function DataEntryForm({ fetchStudents }) {
       });
 
       setFormData({
-        admissionType:"",
         admissionId: "",
         allotmentCategory: "",
         feeCategory: "",
         name: "",
         photo: null,
         address: "",
-        pincode: "",
+        pincode:"",
         religion: "",
         community: "",
         gender: "",
         dateOfBirth: "",
         bloodGroup: "",
         mobileNo: "",
-        whatsappNo: "",
+        whatsappNo:"",
         email: "",
         entranceExam: {
-          name: "keam",
+          name: "keam", 
           other: "",
         },
         entranceRollNo: "",
@@ -170,6 +344,16 @@ function DataEntryForm({ fetchStudents }) {
         aadharNo: "",
         course: "",
         plusTwo: {
+          board: "",
+          registerNo: "",
+          examMonthYear: "",
+          percentage: "",
+          schoolName: "",
+          physics: "",
+          chemistry: "",
+          mathematics: "",
+        },
+        tenth: {
           board: "",
           registerNo: "",
           examMonthYear: "",
@@ -214,20 +398,6 @@ function DataEntryForm({ fetchStudents }) {
       <div className="data-entry-container">
         <div className="container">
           <form className="form" onSubmit={handleSubmit}>
-          <div className="form-group">
-              <label>Admission Type:</label>
-              <select
-                name="admissionType"
-                value={formData.admissionType}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Admission Type</option>
-                <option value="KEAM">KEAM</option>
-                <option value="SPOT">SPOT</option>
-                <option value="LET">LET</option>
-              </select>
-            </div>
             <div className="form-group">
               <label>Admission ID:</label>
               <input
@@ -271,12 +441,10 @@ function DataEntryForm({ fetchStudents }) {
                 value={formData.course}
                 onChange={handleChange}
                 required
-              >
+                >
                 <option value="">Select Course</option>
                 <option value="computerScience">CSE</option>
                 <option value="electronicsAndCommunication">ECE</option>
-                <option value="mechanical">ME</option>
-                <option value="electricalAndElectronics">EEE</option>
               </select>
             </div>
             <div className="form-group">
@@ -381,28 +549,23 @@ function DataEntryForm({ fetchStudents }) {
             <div className="form-group">
               <label>Mobile No:</label>
               <input
-                type="tel"
+                type="text"
                 name="mobileNo"
                 value={formData.mobileNo}
                 onChange={handleChange}
                 required
-                pattern="[0-9]{10}"  // Specify a pattern for a 10-digit phone number
-    title="Please enter a valid 10-digit phone number"
               />
             </div>
             <div className="form-group">
-  <label>WhatsApp No:</label>
-  <input
-    type="tel"  // Use "tel" type for phone numbers
-    name="whatsappNo"
-    value={formData.whatsappNo}
-    onChange={handleChange}
-    required
-    pattern="[0-9]{10}"  // Specify a pattern for a 10-digit phone number
-    title="Please enter a valid 10-digit phone number"
-  />
-</div>
-
+              <label>WhatsApp No:</label>
+              <input
+                type="text"
+                name="whatsappNo"
+                value={formData.whatsappNo}
+                onChange={handleChange}
+                required
+              />
+            </div>
             <div className="form-group">
               <label>Email:</label>
               <input
@@ -578,12 +741,10 @@ function DataEntryForm({ fetchStudents }) {
             <div className="form-group">
               <label>Mobile No:</label>
               <input
-                type="tel"
+                type="text"
                 name="parentDetails.father.mobileNo"
                 value={formData.parentDetails.father.mobileNo}
                 onChange={handleChange}
-                pattern="[0-9]{10}"  // Specify a pattern for a 10-digit phone number
-    title="Please enter a valid 10-digit phone number"
                 
               />
             </div>
@@ -613,12 +774,11 @@ function DataEntryForm({ fetchStudents }) {
             <div className="form-group">
               <label>Mobile No:</label>
               <input
-                type="tel"
+                type="text"
                 name="parentDetails.mother.mobileNo"
                 value={formData.parentDetails.mother.mobileNo}
                 onChange={handleChange}
-                pattern="[0-9]{10}"  // Specify a pattern for a 10-digit phone number
-    title="Please enter a valid 10-digit phone number"
+                
               />
             </div>
               </div>
@@ -653,7 +813,7 @@ function DataEntryForm({ fetchStudents }) {
                 required
               />
             </div>
-            
+            <div className="box-container">
   <div className="box">
     <h4>Bank Account Details</h4>
     <div className="form-group">
@@ -695,72 +855,85 @@ function DataEntryForm({ fetchStudents }) {
         onChange={handleChange}
         required
       />
+    </div>
   </div>
 </div>
 
             <div className="button-container">
               <button type="submit" className="submit-button">
-                Submit
+                Enter
               </button>
               <button
                 type="button"
                 className="clear-button"
-                onClick={() => setFormData({ 
-                admissionType:"",
-                admissionId: "",
-                allotmentCategory: "",
-                feeCategory: "",
-                name: "",
-                photo: null,
-                address: "",
-                pincode: "",
-                religion: "",
-                community: "",
-                gender: "",
-                dateOfBirth: "",
-                bloodGroup: "",
-                mobileNo: "",
-                whatsappNo: "",
-                email: "",
-                entranceExam: {
-                  name: "keam",
-                  other: "",
-                },
-                entranceRollNo: "",
-                entranceRank: "",
-                aadharNo: "",
-                course: "",
-                plusTwo: {
-                  board: "",
-                  registerNo: "",
-                  examMonthYear: "",
-                  percentage: "",
-                  schoolName: "",
-                  physics: "",
-                  chemistry: "",
-                  mathematics: "",
-                },
-                parentDetails: {
-                  father: {
+                onClick={() =>
+                  setFormData({
+                    admissionId: "",
+                    allotmentCategory: "",
+                    feeCategory: "",
                     name: "",
-                    occupation: "",
+                    photo: null,
+                    address: "",
+                    pincode:"",
+                    religion: "",
+                    community: "",
+                    gender: "",
+                    dateOfBirth: "",
+                    bloodGroup: "",
                     mobileNo: "",
-                  },
-                  mother: {
-                    name: "",
-                    occupation: "",
-                    mobileNo: "",
-                  },
-                  communicationAddress: "",
-                },
-                annualIncome: "",
-                nativity: "",
-                bankDetails: {
-                  bankName: "",
-                  branch: "",
-                  accountNo: "",
-                  ifscCode: "",
-                },})}
+                    whatsappNo:"",
+                    email: "",
+                    entranceExam: {
+                      name: "keam", 
+                      other: "",
+                    },
+                    entranceRollNo: "",
+                    entranceRank: "",
+                    aadharNo: "",
+                    course: "",
+                    plusTwo: {
+                      board: "",
+                      registerNo: "",
+                      examMonthYear: "",
+                      percentage: "",
+                      schoolName: "",
+                      physics: "",
+                      chemistry: "",
+                      mathematics: "",
+                    },
+                    tenth: {
+                      board: "",
+                      registerNo: "",
+                      examMonthYear: "",
+                      percentage: "",
+                      schoolName: "",
+                      physics: "",
+                      chemistry: "",
+                      mathematics: "",
+                    },
+                    parentDetails: {
+                      father: {
+                        name: "",
+                        occupation: "",
+                        mobileNo: "",
+                      },
+                      mother: {
+                        name: "",
+                        occupation: "",
+                        mobileNo: "",
+                      },
+                      communicationAddress: "",
+                    },
+                    annualIncome: "",
+                    nativity: "",
+                    bankDetails: {
+                      bankName: "",
+                      branch: "",
+                      accountNo: "",
+                      ifscCode: "",
+                    },
+                  })
+                }
               >
                 Clear
               </button>
@@ -773,3 +946,154 @@ function DataEntryForm({ fetchStudents }) {
 }
 
 export default DataEntryForm;
+
+
+
+// DataViewEdit.js
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Navbar from "./OfficerNavbar";
+import './DataEditing.css'
+
+function DataViewEdit() {
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = async () => {
+    try {
+      const response = await axios.get("/api/students");
+      setStudents(response.data);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    }
+  };
+
+  const updateStudentFee = async (studentId, field, value) => {
+    try {
+      await axios.put(`/api/students/${studentId}`, {
+        [field]: value,
+      });
+      fetchStudents();
+    } catch (error) {
+      console.error("Error updating student fee:", error);
+    }
+  };
+
+  const handleFeeChange = (studentId, field, event) => {
+    const { value } = event.target;
+    if (value) {
+      updateStudentFee(studentId, field, value.toLowerCase());
+    } else {
+      updateStudentFee(studentId, field, value);
+    }
+  };
+
+  const handleDelete = async (studentId) => {
+    try {
+      await axios.delete(`/api/students/${studentId}`);
+      fetchStudents();
+    } catch (error) {
+      console.error("Error deleting student:", error);
+    }
+  };
+
+  return (
+    <div>
+      <Navbar />
+      <div className="table-layout">
+        <table className="student-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Register Number</th>
+              <th>Date of Birth</th>
+              <th>Age</th>
+              <th>Branch</th>
+              <th>Semester</th>
+              <th>Address</th>
+              <th>Gender</th>
+              <th>Religion</th>
+              <th>Caste</th>
+              <th>Category</th>
+              <th>Plus Two Mark Percentage</th>
+              <th>Tenth Mark Percentage</th>
+              <th>First Year Fees</th>
+              <th>Second Year Fees</th>
+              <th>Third Year Fees</th>
+              <th>Fourth Year Fees</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {students.map((student) => (
+              <tr key={student._id}>
+                <td>{student.name}</td>
+                <td>{student.email}</td>
+                <td>{student.registerNumber}</td>
+                <td>{student.dateOfBirth}</td>
+                <td>{student.age}</td>
+                <td>{student.branch}</td>
+                <td>{student.semester}</td>
+                <td>{student.address}</td>
+                <td>{student.gender}</td>
+                <td>{student.religion}</td>
+                <td>{student.caste}</td>
+                <td>{student.category}</td>
+                <td>{student.plusTwoPercentage}</td>
+                <td>{student.tenthPercentage}</td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.firstYearFees || ""}
+                    onChange={(event) =>
+                      handleFeeChange(student._id, "firstYearFees", event)
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.secondYearFees || ""}
+                    onChange={(event) =>
+                      handleFeeChange(student._id, "secondYearFees", event)
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.thirdYearFees || ""}
+                    onChange={(event) =>
+                      handleFeeChange(student._id, "thirdYearFees", event)
+                    }
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.fourthYearFees || ""}
+                    onChange={(event) =>
+                      handleFeeChange(student._id, "fourthYearFees", event)
+                    }
+                  />
+                </td>
+                <td>
+                  <button onClick={() => handleDelete(student._id)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+export default DataViewEdit;
