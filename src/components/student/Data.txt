@@ -1097,3 +1097,204 @@ function DataViewEdit() {
 }
 
 export default DataViewEdit;
+
+
+// DataEntryPage.js
+import React, { useState, useEffect, useCallback } from "react";
+import DataEntryForm from "./DataEditing.js";
+import axios from "axios";
+import StudentList from "./StudentList";
+
+function DataViewEdit() {
+  const [students, setStudents] = useState([]);
+  const [acceptedStudents, setAcceptedStudents] = useState([]);
+  const [notAcceptedStudents, setNotAcceptedStudents] = useState([]);
+
+  const fetchStudents = async () => {
+    try {
+      const response = await axios.get("/api/students");
+      setStudents(response.data);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudents();
+  }, []); // Fetch students on component mount
+
+  const updateStudentStatus = async (studentId, status) => {
+    try {
+      await axios.put(`/api/students/${studentId}`, { status });
+      fetchStudents();
+    } catch (error) {
+      console.error("Error updating student status:", error);
+    }
+  };
+
+  const filterStudents = useCallback(() => {
+    const accepted = students.filter((student) => student.status === "accepted");
+    const notAccepted = students.filter((student) => student.status !== "accepted");
+    setAcceptedStudents(accepted);
+    setNotAcceptedStudents(notAccepted);
+  }, [students]);
+
+  useEffect(() => {
+    filterStudents();
+  }, [students,filterStudents]);
+
+  return (
+    <div>
+      <DataEntryForm fetchStudents={fetchStudents} />
+      <StudentList
+        title="Accepted Students"
+        students={acceptedStudents}
+        updateStudentStatus={updateStudentStatus}
+      />
+      <StudentList
+        title="Not Accepted Students"
+        students={notAcceptedStudents}
+        updateStudentStatus={updateStudentStatus}
+      />
+    </div>
+  );
+}
+
+export default DataViewEdit;
+
+
+// StudentList.js
+import React from "react";
+
+function StudentList({ title, students, updateStudentStatus }) {
+  const handleStatusChange = (studentId, status) => {
+    updateStudentStatus(studentId, status);
+  };
+
+  return (
+    <div>
+      <h2>{title}</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.map((student) => (
+            <tr key={student.id}>
+              <td>{student.name}</td>
+              <td>
+                <button onClick={() => handleStatusChange(student.id, "accepted")}>
+                  Approve
+                </button>
+                <button onClick={() => handleStatusChange(student.id, "rejected")}>
+                  Reject
+                </button>
+                {/* Add Edit and Remove buttons with appropriate handlers */}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default StudentList;
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+function DataViewEdit() {
+  const [students, setStudents] = useState([]);
+  const [showApproved, setShowApproved] = useState(true);
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = async () => {
+    try {
+      const response = await axios.get("/api/students");
+      setStudents(response.data);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    }
+  };
+
+  const handleEdit = (studentId) => {
+    // Redirect to the edit page or show a modal for editing the student with ID: studentId
+    console.log(`Edit student with ID: ${studentId}`);
+  };
+
+  const handleRemove = (studentId) => {
+    // Implement logic to remove the student with ID: studentId
+    console.log(`Remove student with ID: ${studentId}`);
+  };
+
+  const handleApprove = (studentId) => {
+    // Update the local state to mark the student as approved
+    setStudents((prevStudents) =>
+      prevStudents.map((student) =>
+        student.id === studentId ? { ...student, approved: true } : student
+      )
+    );
+  };
+
+  const handleViewDetails = (studentId) => {
+    // Redirect to a page or show a modal to view the full details of the student with ID: studentId
+    console.log(`View details of student with ID: ${studentId}`);
+  };
+
+  const handleShowApprovedChange = () => {
+    setShowApproved(!showApproved);
+  };
+
+  return (
+    <div>
+      <h1>Student List</h1>
+      <div>
+        <label>Show Approved Students:</label>
+        <input
+          type="checkbox"
+          checked={showApproved}
+          onChange={handleShowApprovedChange}
+        />
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Admission ID</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.map((student) => (
+            (showApproved || student.approved) && (
+              <tr key={student.id}>
+                <td>{student.name}</td>
+                <td>{student.admissionId}</td>
+                <td>
+                  <button onClick={() => handleEdit(student.id)}>Edit</button>
+                  <button onClick={() => handleRemove(student.id)}>Remove</button>
+                  {!student.approved && (
+                    <button onClick={() => handleApprove(student.id)}>Approve</button>
+                  )}
+                  <select onChange={() => handleViewDetails(student.id)}>
+                    <option value="">Select</option>
+                    <option value="view">View Details</option>
+                  </select>
+                </td>
+              </tr>
+            )
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default DataViewEdit;

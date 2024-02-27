@@ -4,8 +4,9 @@ import axios from "axios";
 import Navbar from "./OfficerNavbar";
 import './DataEntry.css';
 
-function DataEntryForm({ fetchStudents }) {
+function DataEntryForm({ fetchStudents, onDataEntered }) {
   const [formData, setFormData] = useState({
+    admissionType: "",
     admissionId: "",
     allotmentCategory: "",
     feeCategory: "",
@@ -22,6 +23,7 @@ function DataEntryForm({ fetchStudents }) {
     whatsappNo: "",
     email: "",
     entranceExam: {
+      type: "",
       name: "keam",
       other: "",
     },
@@ -50,7 +52,6 @@ function DataEntryForm({ fetchStudents }) {
         occupation: "",
         mobileNo: "",
       },
-      communicationAddress: "",
     },
     annualIncome: "",
     nativity: "",
@@ -67,26 +68,23 @@ function DataEntryForm({ fetchStudents }) {
 
     if (name === "photo") {
       setFormData({ ...formData, [name]: files[0] });
-    } else if (name.includes("plusTwo") || name.includes("tenth")) {
+    } else if (name.includes("plusTwo")) {
       const [, subField] = name.split(".");
       setFormData({
         ...formData,
-        parentDetails: {
-          ...formData.parentDetails,
-          [name.split(".")[0]]: {
-            ...formData[name.split(".")[0]],
-            [subField]: value,
-          },
+        plusTwo: {
+          ...formData.plusTwo,
+          [subField]: value,
         },
       });
     } else if (name.includes("father") || name.includes("mother")) {
-      const [, subField] = name.split(".");
+      const [, parentField, subField] = name.split(".");
       setFormData({
         ...formData,
         parentDetails: {
           ...formData.parentDetails,
-          [name.split(".")[0]]: {
-            ...formData.parentDetails[name.split(".")[0]],
+          [parentField]: {
+            ...formData.parentDetails[parentField],
             [subField]: value,
           },
         },
@@ -145,7 +143,7 @@ function DataEntryForm({ fetchStudents }) {
       });
 
       setFormData({
-        admissionType:"",
+        admissionType: "",
         admissionId: "",
         allotmentCategory: "",
         feeCategory: "",
@@ -162,6 +160,7 @@ function DataEntryForm({ fetchStudents }) {
         whatsappNo: "",
         email: "",
         entranceExam: {
+          type: "",
           name: "keam",
           other: "",
         },
@@ -190,7 +189,6 @@ function DataEntryForm({ fetchStudents }) {
             occupation: "",
             mobileNo: "",
           },
-          communicationAddress: "",
         },
         annualIncome: "",
         nativity: "",
@@ -202,7 +200,8 @@ function DataEntryForm({ fetchStudents }) {
         },
       });
 
-      fetchStudents();
+      fetchStudents(); // Fetch updated student list after data submission
+      onDataEntered(formData); // Callback to pass entered data
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -214,7 +213,7 @@ function DataEntryForm({ fetchStudents }) {
       <div className="data-entry-container">
         <div className="container">
           <form className="form" onSubmit={handleSubmit}>
-          <div className="form-group">
+            <div className="form-group">
               <label>Admission Type:</label>
               <select
                 name="admissionType"
@@ -275,8 +274,6 @@ function DataEntryForm({ fetchStudents }) {
                 <option value="">Select Course</option>
                 <option value="computerScience">CSE</option>
                 <option value="electronicsAndCommunication">ECE</option>
-                <option value="mechanical">ME</option>
-                <option value="electricalAndElectronics">EEE</option>
               </select>
             </div>
             <div className="form-group">
@@ -386,23 +383,22 @@ function DataEntryForm({ fetchStudents }) {
                 value={formData.mobileNo}
                 onChange={handleChange}
                 required
-                pattern="[0-9]{10}"  // Specify a pattern for a 10-digit phone number
-    title="Please enter a valid 10-digit phone number"
+                pattern="[0-9]{10}"
+                title="Please enter a valid 10-digit phone number"
               />
             </div>
             <div className="form-group">
-  <label>WhatsApp No:</label>
-  <input
-    type="tel"  // Use "tel" type for phone numbers
-    name="whatsappNo"
-    value={formData.whatsappNo}
-    onChange={handleChange}
-    required
-    pattern="[0-9]{10}"  // Specify a pattern for a 10-digit phone number
-    title="Please enter a valid 10-digit phone number"
-  />
-</div>
-
+              <label>WhatsApp No:</label>
+              <input
+                type="tel"
+                name="whatsappNo"
+                value={formData.whatsappNo}
+                onChange={handleChange}
+                required
+                pattern="[0-9]{10}"
+                title="Please enter a valid 10-digit phone number"
+              />
+            </div>
             <div className="form-group">
               <label>Email:</label>
               <input
@@ -467,171 +463,155 @@ function DataEntryForm({ fetchStudents }) {
               />
             </div>
             <div className="box">
-      
-        <h4>Plus Two Details</h4>
-        <div className="form-group">
-          <label>Board:</label>
-          <input
-            type="text"
-            name="plusTwo.board"
-            value={formData.plusTwo.board}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Register No:</label>
-          <input
-            type="text"
-            name="plusTwo.registerNo"
-            value={formData.plusTwo.registerNo}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Exam Month and Year:</label>
-          <input
-            type="text"
-            name="plusTwo.examMonthYear"
-            value={formData.plusTwo.examMonthYear}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Percentage:</label>
-          <input
-            type="text"
-            name="plusTwo.percentage"
-            value={formData.plusTwo.percentage}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>School Name:</label>
-          <input
-            type="text"
-            name="plusTwo.schoolName"
-            value={formData.plusTwo.schoolName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Physics (Mark/Total):</label>
-          <input
-            type="text"
-            name="plusTwo.physics"
-            value={formData.plusTwo.physics}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Chemistry (Mark/Total):</label>
-          <input
-            type="text"
-            name="plusTwo.chemistry"
-            value={formData.plusTwo.chemistry}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Mathematics (Mark/Total):</label>
-          <input
-            type="text"
-            name="plusTwo.mathematics"
-            value={formData.plusTwo.mathematics}
-            onChange={handleChange}
-            required
-          />
-        </div>
-    
-            </div>
-            
-            <div className="box-container">
-              <div className="box">
-                <h4>Father's Details</h4>
-                <div className="form-group">
-                  <label>Name:</label>
-                  <input
-                    type="text"
-                    name="parentDetails.father.name"
-                    value={formData.parentDetails.father.name}
-                    onChange={handleChange}
-                    
-                  />
-                </div>
-                <div className="form-group">
-              <label>Occupation:</label>
-              <input
-                type="text"
-                name="parentDetails.father.occupation"
-                value={formData.parentDetails.father.occupation}
-                onChange={handleChange}
-                
-              />
-            </div> 
-            <div className="form-group">
-              <label>Mobile No:</label>
-              <input
-                type="tel"
-                name="parentDetails.father.mobileNo"
-                value={formData.parentDetails.father.mobileNo}
-                onChange={handleChange}
-                pattern="[0-9]{10}"  // Specify a pattern for a 10-digit phone number
-    title="Please enter a valid 10-digit phone number"
-                
-              />
-            </div>
+              <h4>Plus Two Details</h4>
+              <div className="form-group">
+                <label>Board:</label>
+                <input
+                  type="text"
+                  name="plusTwo.board"
+                  value={formData.plusTwo.board}
+                  onChange={handleChange}
+                  required
+                />
               </div>
-              <div className="box">
-                <h4>Mother's Details</h4>
-                <div className="form-group">
-                  <label>Name:</label>
-                  <input
-                    type="text"
-                    name="parentDetails.mother.name"
-                    value={formData.parentDetails.mother.name}
-                    onChange={handleChange}
-                    
-                  />
-                </div>
-                <div className="form-group">
-              <label>Occupation:</label>
-              <input
-                type="text"
-                name="parentDetails.mother.occupation"
-                value={formData.parentDetails.mother.occupation}
-                onChange={handleChange}
-                
-              />
-            </div> 
-            <div className="form-group">
-              <label>Mobile No:</label>
-              <input
-                type="tel"
-                name="parentDetails.mother.mobileNo"
-                value={formData.parentDetails.mother.mobileNo}
-                onChange={handleChange}
-                pattern="[0-9]{10}"  // Specify a pattern for a 10-digit phone number
-    title="Please enter a valid 10-digit phone number"
-              />
-            </div>
+              <div className="form-group">
+                <label>Register No:</label>
+                <input
+                  type="text"
+                  name="plusTwo.registerNo"
+                  value={formData.plusTwo.registerNo}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Exam Month and Year:</label>
+                <input
+                  type="text"
+                  name="plusTwo.examMonthYear"
+                  value={formData.plusTwo.examMonthYear}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Percentage:</label>
+                <input
+                  type="text"
+                  name="plusTwo.percentage"
+                  value={formData.plusTwo.percentage}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>School Name:</label>
+                <input
+                  type="text"
+                  name="plusTwo.schoolName"
+                  value={formData.plusTwo.schoolName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Physics:</label>
+                <input
+                  type="text"
+                  name="plusTwo.physics"
+                  value={formData.plusTwo.physics}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Chemistry:</label>
+                <input
+                  type="text"
+                  name="plusTwo.chemistry"
+                  value={formData.plusTwo.chemistry}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Mathematics:</label>
+                <input
+                  type="text"
+                  name="plusTwo.mathematics"
+                  value={formData.plusTwo.mathematics}
+                  onChange={handleChange}
+                  required
+                />
               </div>
             </div>
-
-            <div className="form-group">
-              <label>Parent's Communication Address:</label>
-              <textarea
-                name="parentDetails.communicationAddress"
-                value={formData.parentDetails.communicationAddress}
-                onChange={handleChange}
-                
-              ></textarea>
+            <div className="box">
+              <h4>Parent Details</h4>
+              <div className="form-group">
+                <label>Father's Name:</label>
+                <input
+                  type="text"
+                  name="parentDetails.father.name"
+                  value={formData.parentDetails.father.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Occupation:</label>
+                <input
+                  type="text"
+                  name="parentDetails.father.occupation"
+                  value={formData.parentDetails.father.occupation}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Mobile No:</label>
+                <input
+                  type="tel"
+                  name="parentDetails.father.mobileNo"
+                  value={formData.parentDetails.father.mobileNo}
+                  onChange={handleChange}
+                  required
+                  pattern="[0-9]{10}"
+                  title="Please enter a valid 10-digit phone number"
+                />
+              </div>
+              <div className="form-group">
+                <label>Mother's Name:</label>
+                <input
+                  type="text"
+                  name="parentDetails.mother.name"
+                  value={formData.parentDetails.mother.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Occupation:</label>
+                <input
+                  type="text"
+                  name="parentDetails.mother.occupation"
+                  value={formData.parentDetails.mother.occupation}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Mobile No:</label>
+                <input
+                  type="tel"
+                  name="parentDetails.mother.mobileNo"
+                  value={formData.parentDetails.mother.mobileNo}
+                  onChange={handleChange}
+                  required
+                  pattern="[0-9]{10}"
+                  title="Please enter a valid 10-digit phone number"
+                />
+              </div>
+              
             </div>
             <div className="form-group">
               <label>Annual Income:</label>
@@ -653,51 +633,49 @@ function DataEntryForm({ fetchStudents }) {
                 required
               />
             </div>
-            
-  <div className="box">
-    <h4>Bank Account Details</h4>
-    <div className="form-group">
-      <label>Bank Name:</label>
-      <input
-        type="text"
-        name="bankDetails.bankName"
-        value={formData.bankDetails.bankName}
-        onChange={handleChange}
-        required
-      />
-    </div>
-    <div className="form-group">
-      <label>Branch:</label>
-      <input
-        type="text"
-        name="bankDetails.branch"
-        value={formData.bankDetails.branch}
-        onChange={handleChange}
-        required
-      />
-    </div>
-    <div className="form-group">
-      <label>Account No:</label>
-      <input
-        type="text"
-        name="bankDetails.accountNo"
-        value={formData.bankDetails.accountNo}
-        onChange={handleChange}
-        required
-      />
-    </div>
-    <div className="form-group">
-      <label>IFSC Code:</label>
-      <input
-        type="text"
-        name="bankDetails.ifscCode"
-        value={formData.bankDetails.ifscCode}
-        onChange={handleChange}
-        required
-      />
-  </div>
-</div>
-
+            <div className="box">
+              <h4>Bank Details</h4>
+              <div className="form-group">
+                <label>Bank Name:</label>
+                <input
+                  type="text"
+                  name="bankDetails.bankName"
+                  value={formData.bankDetails.bankName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Branch:</label>
+                <input
+                  type="text"
+                  name="bankDetails.branch"
+                  value={formData.bankDetails.branch}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Account No:</label>
+                <input
+                  type="text"
+                  name="bankDetails.accountNo"
+                  value={formData.bankDetails.accountNo}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>IFSC Code:</label>
+                <input
+                  type="text"
+                  name="bankDetails.ifscCode"
+                  value={formData.bankDetails.ifscCode}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
             <div className="button-container">
               <button type="submit" className="submit-button">
                 Submit
@@ -751,7 +729,6 @@ function DataEntryForm({ fetchStudents }) {
                     occupation: "",
                     mobileNo: "",
                   },
-                  communicationAddress: "",
                 },
                 annualIncome: "",
                 nativity: "",
@@ -773,3 +750,4 @@ function DataEntryForm({ fetchStudents }) {
 }
 
 export default DataEntryForm;
+
