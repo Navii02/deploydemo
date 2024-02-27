@@ -33,6 +33,7 @@ const studentForget=require('./api/student/studentForgot')
 const tutorForget=require('./api/tutor/tutorForgot');
 const hodcertificaterequest=require('./api/hod/Hodcertificaterequest');
 const AssigmentNotification =require('./api/faculity/Assignmentnotification');
+const StudentAdmission =require('./api/officer/StudentAdmission');
 const app = express();
 const MAX_AGE = 1000 * 60 * 60 * 3 //3hrs
 const corsOptions = {
@@ -49,7 +50,7 @@ mongoose.connect(process.env.DATABASE_CONNECTION_STRING,{
 // setting up connect-mongodb-session store
 const mongoDBstore = new MongoDBStore({
     uri: process.env.DATABASE_CONNECTION_STRING,
-    collection: 'studentData',
+    
     
     
   })
@@ -103,10 +104,11 @@ app.use('/api',studentForget)
 app.use('/api',tutorForget)
 app.use('/api',hodcertificaterequest)
 app.use('/api',AssigmentNotification)
+app.use('/api',StudentAdmission)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));
-
+app.use('/StudentsPhoto', express.static('StudentsPhoto'));
 
 // Serve the images
 app.use('/images', express.static(path.join(__dirname, 'uploads'), {

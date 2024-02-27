@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://naveenshaji02:naveen@collegeofficedata.scsxkdd.mongodb.net/OfficeData',{useNewUrlParser:true,useUnifiedTopology:true},
+mongoose.connect('mongodb+srv://naveenshaji02:naveen@collegeofficedata.scsxkdd.mongodb.net/Office',{useNewUrlParser:true,useUnifiedTopology:true},
     err => {
         if (!err)
             console.log('Mongodb connection succeeded.')

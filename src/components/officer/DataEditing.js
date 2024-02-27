@@ -33,7 +33,7 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
     course: "",
     plusTwo: {
       board: "",
-      registerNo: "",
+      regNo: "",
       examMonthYear: "",
       percentage: "",
       schoolName: "",
@@ -136,7 +136,7 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
         }
       }
 
-      await axios.post("/api/students", sendData, {
+      await axios.post("/api/studentadmission", sendData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -170,7 +170,7 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
         course: "",
         plusTwo: {
           board: "",
-          registerNo: "",
+          regNo: "",
           examMonthYear: "",
           percentage: "",
           schoolName: "",
@@ -478,8 +478,8 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
                 <label>Register No:</label>
                 <input
                   type="text"
-                  name="plusTwo.registerNo"
-                  value={formData.plusTwo.registerNo}
+                  name="plusTwo.regNo"
+                  value={formData.plusTwo.regNo}
                   onChange={handleChange}
                   required
                 />
@@ -710,7 +710,7 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
                 course: "",
                 plusTwo: {
                   board: "",
-                  registerNo: "",
+                  regNo: "",
                   examMonthYear: "",
                   percentage: "",
                   schoolName: "",
