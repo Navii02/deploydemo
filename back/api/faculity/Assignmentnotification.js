@@ -12,7 +12,7 @@ router.post('/assignments', async (req, res) => {
   const { branch, semester, subject, teacherName, assignmentDetails } = req.body;
 
   try {
-    console.log('Received Branch Value:', branch); 
+   
     const newAssignment = new Assignment({
       branch,
       semester,

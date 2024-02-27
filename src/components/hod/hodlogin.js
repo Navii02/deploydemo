@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import validator from 'validator';
 import { regexPassword } from '../../utils';
 import '../Login.css'; // Add your CSS file if needed
 
-function HODLogin() {
+function HodLogin() {
   const Navigate = useNavigate();
 
   const [values, setValues] = useState({
@@ -43,10 +44,9 @@ function HODLogin() {
 
   const handleForgotPassword = () => {
     // Navigate to the Forgot Password page
-    Navigate('/hforgot');
+    Navigate('/oforgot');
   };
 
-  
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -82,7 +82,7 @@ function HODLogin() {
         console.log('User Email:', userEmail);
 
 
-        // Redirect the user to the dashboard page
+        // Redirect the officer to the office page
         Navigate('/hodhome');
       } else {
         alert('Login failed');
@@ -146,11 +146,11 @@ function HODLogin() {
                     {values.showPassword}
                   </span>
                 </div>
-              
-              <a href="/hforgot" onClick={handleForgotPassword} class="forgot-password-link">
+                <a href="/hforgot" onClick={handleForgotPassword} class="forgot-password-link">
   Forgot Password?
 </a>
               </div>
+
               <div className="login-button-container">
                 <button
                   type="submit"
@@ -171,4 +171,4 @@ function HODLogin() {
   );
 }
 
-export default HODLogin;
+export default HodLogin;
