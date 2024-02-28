@@ -108,7 +108,7 @@ app.use('/api',StudentAdmission)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));
-app.use('/StudentsPhoto', express.static('StudentsPhoto'));
+app.use('/studentsphoto', express.static('StudentsPhoto'));
 
 // Serve the images
 app.use('/images', express.static(path.join(__dirname, 'uploads'), {

@@ -1,8 +1,10 @@
+// Your React component file (e.g., StudentList.js)
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     // Fetch students from the server
@@ -18,7 +20,7 @@ const StudentList = () => {
   const handleApprove = (_id) => {
     axios.post(`/api/approve/${_id}`)
       .then(response => {
-        console.log(response.data);
+        setMessage(response.data.message);
         // Reload the students after approval
         window.location.reload();
       })
@@ -30,7 +32,7 @@ const StudentList = () => {
   const handleDecline = (_id) => {
     axios.post(`/api/decline/${_id}`)
       .then(response => {
-        console.log(response.data);
+        setMessage(response.data.message);
         // Reload the students after declining
         window.location.reload();
       })
@@ -42,6 +44,7 @@ const StudentList = () => {
   return (
     <div>
       <h1>Student List</h1>
+      {message && <p>{message}</p>}
       <table>
         <thead>
           <tr>
