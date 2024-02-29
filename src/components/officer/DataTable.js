@@ -1,4 +1,3 @@
-// StudentList.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -56,6 +55,7 @@ const StudentList = () => {
         }
 
         const { parentDetails } = studentDetails;
+        const { bankDetails } = studentDetails;
 
         // Open a new tab with the student details for print preview
         const printWindow = window.open('', '_blank');
@@ -63,6 +63,17 @@ const StudentList = () => {
           <html>
             <head>
               <title>${studentDetails.name}'s Details</title>
+              <style>
+                @media print {
+                  body {
+                    font-size: 12pt;
+                  }
+                  /* Add more print-specific styles as needed */
+                  .hide-on-print {
+                    display: none;
+                  }
+                }
+              </style>
             </head>
             <body>
               <h1>${studentDetails.name}'s Details</h1>
@@ -75,13 +86,15 @@ const StudentList = () => {
               <!-- ... -->
               <p>Parent Details:</p>
               <ul>
-                <li>Father: ${parentDetails.father.name}</li>
+                <li>Father Name: ${parentDetails.father.name}</li>
                 <li>Father Occupation: ${parentDetails.father.occupation}</li>
                 <li>Father Mobile No: ${parentDetails.father.mobileNo}</li>
                 <li>Mother: ${parentDetails.mother.name}</li>
                 <li>Mother Occupation: ${parentDetails.mother.occupation}</li>
                 <li>Mother Mobile No: ${parentDetails.mother.mobileNo}</li>
+                <li>Bank: ${bankDetails.bankName}</li>
               </ul>
+              <button class="hide-on-print" onclick="window.print()">Print</button>
             </body>
           </html>
         `);
@@ -113,7 +126,7 @@ const StudentList = () => {
               <td>
                 <button onClick={() => handleApprove(student._id)}>Approve</button>
                 <button onClick={() => handleDecline(student._id)}>Decline</button>
-                <button onClick={() => handlePrintPreview(student._id)}>Print Preview</button>
+                <button className="hide-on-print" onClick={() => handlePrintPreview(student._id)}>Print Preview</button>
               </td>
             </tr>
           ))}

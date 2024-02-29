@@ -73,6 +73,7 @@ router.get('/studentDetails/:id', async (req, res) => {
     // Extract necessary details for print preview
     const { name, admissionType, admissionId, allotmentCategory, feeCategory, address, /* add more fields as needed */ } = student;
     const { parentDetails } = student;
+    const {bankDetails }= student;
 
     res.json({
       studentDetails: {
@@ -89,6 +90,9 @@ router.get('/studentDetails/:id', async (req, res) => {
           father: parentDetails.father,
           mother: parentDetails.mother,
         },
+        bankDetails: {
+          bankName:bankDetails.bankName,
+        }
       },
     });
   } catch (error) {
