@@ -16,6 +16,7 @@ import ScholarshipDetails from './components/student/ScholarshipDetails'
 import Reminders from './components/student/reminders'
 import CertificateRecieve from './components/student/CertificateRecieve'
 import SForgotPassword from './components/student/StudentForgot'
+import StudentInformation from './components/student/hi'
 
 import OfficerSignup from './components/officer/OfficerSignup'
 import Officerlogin from './components/officer/Officerlogin'
