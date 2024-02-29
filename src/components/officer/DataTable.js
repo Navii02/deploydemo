@@ -39,6 +39,76 @@ const StudentList = () => {
       });
   };
 
+  const handlePrintPreview = (_id) => {
+    // Log the student ID when clicking on "Print Preview"
+    console.log('Student ID for Print Preview:', _id);
+
+    // Fetch the details of the selected student
+    axios.get(`/api/studentDetails/${_id}`)
+      .then(response => {
+        const studentDetails = response.data.studentDetails;
+
+        // Check if the response contains studentDetails and parentDetails
+        if (!studentDetails || !studentDetails.parentDetails) {
+          console.error('Error: Invalid student details received');
+          return;
+        }
+
+        const { parentDetails } = studentDetails;
+        const { bankDetails } = studentDetails;
+
+        // Open a new tab with the student details for print preview
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>${studentDetails.name}'s Details</title>
+              <style>
+                @media print {
+                  body {
+                    font-size: 12pt;
+                  }
+                  /* Add more print-specific styles as needed */
+                  .hide-on-print {
+                    display: none;
+                  }
+                }
+              </style>
+            </head>
+            <body>
+              <h1>${studentDetails.name}'s Details</h1>
+              <p>Admission Type: ${studentDetails.admissionType}</p>
+              <p>Admission ID: ${studentDetails.admissionId}</p>
+              <p>Allotment Category: ${studentDetails.allotmentCategory}</p>
+              <p>Fee Category: ${studentDetails.feeCategory}</p>
+              <p>Address: ${studentDetails.address}</p>
+              <!-- Add more details as needed -->
+              <!-- ... -->
+              <p>Parent Details:</p>
+              <ul>
+                <li>Father Name: ${parentDetails.father.name}</li>
+                <li>Father Occupation: ${parentDetails.father.occupation}</li>
+                <li>Father Mobile No: ${parentDetails.father.mobileNo}</li>
+                <li>Mother: ${parentDetails.mother.name}</li>
+                <li>Mother Occupation: ${parentDetails.mother.occupation}</li>
+                <li>Mother Mobile No: ${parentDetails.mother.mobileNo}</li>
+                <li>Bank: ${bankDetails.bankName}</li>
+              </ul>
+              <button class="hide-on-print" onclick="window.print()">Print</button>
+            </body>
+          </html>
+        `);
+      })
+      .catch(error => {
+        console.error('Error fetching student details:', error);
+
+        // Log the specific error message received from the server
+        if (error.response && error.response.data) {
+          console.error('Server Error:', error.response.data);
+        }
+      });
+  };
+
   return (
     <div>
       <h1>Student List</h1>
@@ -56,7 +126,7 @@ const StudentList = () => {
               <td>
                 <button onClick={() => handleApprove(student._id)}>Approve</button>
                 <button onClick={() => handleDecline(student._id)}>Decline</button>
-                {/* Add a button for previewing */}
+                <button className="hide-on-print" onClick={() => handlePrintPreview(student._id)}>Print Preview</button>
               </td>
             </tr>
           ))}
