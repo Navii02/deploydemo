@@ -56,6 +56,8 @@ const StudentList = () => {
 
         const { parentDetails } = studentDetails;
         const { bankDetails } = studentDetails;
+        //const {entranceExam} = studentDetails;
+        //const{plusTwo} = studentDetails;
 
         // Open a new tab with the student details for print preview
         const printWindow = window.open('', '_blank');

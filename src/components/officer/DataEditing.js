@@ -1,5 +1,5 @@
 // DataEntryForm.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./OfficerNavbar";
 import './DataEntry.css';
@@ -62,6 +62,19 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
       ifscCode: "",
     },
   });
+
+  const [lastAdmissionNumber, setLastAdmissionNumber] = useState(0);
+
+  useEffect(() => {
+    // Fetch last admission number from the backend
+    axios.get("/api/getLastAdmissionNumber")
+      .then(response => {
+        setLastAdmissionNumber(response.data.lastAdmissionNumber);
+      })
+      .catch(error => {
+        console.error("Error fetching last admission number:", error);
+      });
+  }, []);
 
   const handleChange = (event) => {
     const { name, value, files } = event.target;
@@ -144,7 +157,6 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
 
       setFormData({
         admissionType: "",
-        admissionId: "",
         allotmentCategory: "",
         feeCategory: "",
         name: "",
@@ -200,8 +212,11 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
         },
       });
 
-      fetchStudents(); // Fetch updated student list after data submission
-      onDataEntered(formData); // Callback to pass entered data
+      // Fetch updated student list after data submission
+      fetchStudents();
+
+      // Callback to pass entered data
+      onDataEntered(formData);
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -234,7 +249,7 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
                 name="admissionId"
                 value={formData.admissionId}
                 onChange={handleChange}
-                required
+                readOnly
               />
             </div>
             <div className="form-group">

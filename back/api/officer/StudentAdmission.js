@@ -71,9 +71,12 @@ router.get('/studentDetails/:id', async (req, res) => {
     }
 
     // Extract necessary details for print preview
-    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address, /* add more fields as needed */ } = student;
+    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,/*pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity, */} = student;
     const { parentDetails } = student;
+   
     const {bankDetails }= student;
+    /* const {entranceExam} = student;
+    const{plusTwo} = student;*/
 
     res.json({
       studentDetails: {
@@ -82,10 +85,56 @@ router.get('/studentDetails/:id', async (req, res) => {
         admissionId,
         allotmentCategory,
         feeCategory,
-        address,
-        // Add more fields as needed
-        // ...
-
+        address,/*
+        pincode,
+        religion,
+        community,
+        gender,
+        dateOfBirth,
+        bloodGroup,
+        mobileNo,
+        whatsappNo,
+        email,
+        entranceRollNo,
+        entranceRank,
+        aadharNo,
+        course,
+        annualIncome,
+        nativity,
+    
+        entranceExam: {
+          type:entranceExam.type,
+          name:entranceExam.name,
+          other:entranceExam.other,
+        },*//*
+        plusTwo: {
+          board:plusTwo.board,
+          regNo:plusTwo.regNo,
+          examMonthYear: plusTwo.examMonthYear,
+          percentage:plusTwo.percentage,
+          schoolName:plusTwo.schoolName,
+          physics:plusTwo.physics,
+          chemistry:plusTwo.chemistry,
+          mathematics:plusTwo.mathematics,
+        },*//*
+        parentDetails: {
+          father: {
+            name:parentDetails.father.name,
+            occupation: parentDetails.father.occupation,
+            mobileNo: parentDetails.father.mobileNo,
+          },
+          mother: {
+            name:parentDetails.mother.name,
+            occupation:parentDetails.mother.occupation,
+            mobileNo: parentDetails.mother.mobileNo,
+          },
+        },*//*
+        bankDetails: {
+          bankName:bankDetails.bankName,
+          branch: bankDetails.branch,
+          accountNo: bankDetails.accountNo,
+          ifscCode: bankDetails.ifscCode,
+        },*/
         parentDetails: {
           father: parentDetails.father,
           mother: parentDetails.mother,
@@ -93,7 +142,7 @@ router.get('/studentDetails/:id', async (req, res) => {
         bankDetails: {
           bankName:bankDetails.bankName,
         }
-      },
+      }
     });
   } catch (error) {
     console.error('Error fetching student details:', error);
