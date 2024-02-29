@@ -16,6 +16,7 @@ import ScholarshipDetails from './components/student/ScholarshipDetails'
 import Reminders from './components/student/reminders'
 import CertificateRecieve from './components/student/CertificateRecieve'
 import SForgotPassword from './components/student/StudentForgot'
+import StudentInformation from './components/student/hi'
 
 import OfficerSignup from './components/officer/OfficerSignup'
 import Officerlogin from './components/officer/Officerlogin'
@@ -120,6 +121,7 @@ function RoutesComp() {
             <Route path='/sforgot' element={<SForgotPassword/>}/>
             <Route path='/tforgot' element={<TForgotPassword/>}/>
             <Route path='/certificate-approval' element={<CertificateApproval/>}/>
+            <Route path='/hi' element={<StudentInformation/>}/>
           </>
         )}
       </Routes>
