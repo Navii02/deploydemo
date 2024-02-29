@@ -136,7 +136,7 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
         }
       }
 
-      await axios.post("/api/studentAdmission", sendData, {
+      await axios.post("/api/studentadmission", sendData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
