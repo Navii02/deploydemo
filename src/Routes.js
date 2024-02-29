@@ -27,6 +27,7 @@ import OfficeHome from './components/officer/OfficeHome'
 import PaymentAndReminders from './components/officer/PaymentAndReminders'
 import OForgotPassword from './components/officer/OfficerForgot'
 import CertificateDistribution from './components/officer/CertificateDistribution'
+import PrintPreview from './components/officer/PrintPreview';
 
 import AdminDashboard from './components/admin/AdminDashboard'
 import AForgotPassword from './components/admin/AdminForgot'
@@ -43,6 +44,7 @@ import InternalMarksForm from './components/faculty/InternalMarksForm'
 import AttendanceForm from './components/faculty/AttendanceForm'
 import AssignmentForm from './components/faculty/AssignmentForm'
 import FForgotPassword from './components/faculty/FacultyForgot'
+
 
 import TutorHome from './components/tutor/TutorHome'
 import ClasstutorSignup from './components/tutor/classtututorsignup'
@@ -120,6 +122,7 @@ function RoutesComp() {
             <Route path='/sforgot' element={<SForgotPassword/>}/>
             <Route path='/tforgot' element={<TForgotPassword/>}/>
             <Route path='/certificate-approval' element={<CertificateApproval/>}/>
+            <Route path="/print-preview/:id" component={PrintPreview} />
           </>
         )}
       </Routes>

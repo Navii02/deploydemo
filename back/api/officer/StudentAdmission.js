@@ -33,7 +33,7 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
     formData.admissionId = `${startingNumber}/${currentYear}`;
 
     if (formData.plusTwo && formData.plusTwo.registerNo) {
-      const existingStudent = await Student.findOne({ 'plusTwo.registerNo': formData.plusTwo.registerNo });
+      const existingStudent = await Student.findOne({ 'plusTwo.regNo': formData.plusTwo.regNo });
 
       if (existingStudent) {
         return res.status(400).json({ error: 'Duplicate registerNumber' });
@@ -55,6 +55,44 @@ router.get('/studentAdmission', async (req, res) => {
     const students = await Student.find();
     res.json(students);
   } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.get('/studentDetails/:id', async (req, res) => {
+  try {
+    const studentId = req.params.id;
+
+    // Fetch student details including parentDetails from the database
+    const student = await Student.findById(studentId);
+
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Extract necessary details for print preview
+    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address, /* add more fields as needed */ } = student;
+    const { parentDetails } = student;
+
+    res.json({
+      studentDetails: {
+        name,
+        admissionType,
+        admissionId,
+        allotmentCategory,
+        feeCategory,
+        address,
+        // Add more fields as needed
+        // ...
+
+        parentDetails: {
+          father: parentDetails.father,
+          mother: parentDetails.mother,
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching student details:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
