@@ -1,5 +1,5 @@
 // DataEntryForm.js
-import React, { useState, useEffect } from "react";
+import React, { useState,} from "react";
 import axios from "axios";
 import Navbar from "./OfficerNavbar";
 import './DataEntry.css';
@@ -60,22 +60,11 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
       branch: "",
       accountNo: "",
       ifscCode: "",
+      
     },
   });
 
-  const [lastAdmissionNumber, setLastAdmissionNumber] = useState(0);
-
-  useEffect(() => {
-    // Fetch last admission number from the backend
-    axios.get("/api/getLastAdmissionNumber")
-      .then(response => {
-        setLastAdmissionNumber(response.data.lastAdmissionNumber);
-      })
-      .catch(error => {
-        console.error("Error fetching last admission number:", error);
-      });
-  }, []);
-
+ 
   const handleChange = (event) => {
     const { name, value, files } = event.target;
 
@@ -700,7 +689,7 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
                 className="clear-button"
                 onClick={() => setFormData({ 
                 admissionType:"",
-                admissionId: "",
+                admissionId:"",
                 allotmentCategory: "",
                 feeCategory: "",
                 name: "",

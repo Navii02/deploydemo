@@ -28,9 +28,18 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
     const formData = req.body;
     formData.photoPath = req.file ? req.file.path : null;
 
-    const startingNumber = 1000;
-    const currentYear = new Date().getFullYear();
-    formData.admissionId = `${startingNumber}/${currentYear}`;
+    const lastStudent = await Student.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
+
+    let nextAdmissionId;
+    if (lastStudent) {
+      // Extract the last admission ID and increment it by one
+      const lastAdmissionId = parseInt(lastStudent.admissionId.split('/')[0], 10);
+      nextAdmissionId = `${lastAdmissionId + 1}/${new Date().getFullYear()}`;
+    } else {
+      // If no previous admission, start from a default number
+      nextAdmissionId = '1000/' + new Date().getFullYear();
+    }
+    formData.admissionId = nextAdmissionId;
 
     if (formData.plusTwo && formData.plusTwo.registerNo) {
       const existingStudent = await Student.findOne({ 'plusTwo.regNo': formData.plusTwo.regNo });
