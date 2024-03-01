@@ -56,6 +56,9 @@ function OfficerNavbar() {
                 <Link to='/data-table' className='dropdown-link' onClick={closeMobileMenu}>
                   Data Table
                 </Link>
+                <Link to='/ar' className='dropdown-link' onClick={closeMobileMenu}>
+                  Student List
+                </Link>
               </div>
             </li>
             <li className='nav-item dropdown'>
