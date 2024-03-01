@@ -80,7 +80,7 @@ router.get('/studentDetails/:id', async (req, res) => {
     }
 
     // Extract necessary details for print preview
-    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,/*pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity, */} = student;
+    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity,} = student;
     const { parentDetails } = student;
    
     const {bankDetails }= student;
@@ -94,7 +94,7 @@ router.get('/studentDetails/:id', async (req, res) => {
         admissionId,
         allotmentCategory,
         feeCategory,
-        address,/*
+        address,
         pincode,
         religion,
         community,
@@ -110,7 +110,7 @@ router.get('/studentDetails/:id', async (req, res) => {
         course,
         annualIncome,
         nativity,
-    
+    /*
         entranceExam: {
           type:entranceExam.type,
           name:entranceExam.name,
