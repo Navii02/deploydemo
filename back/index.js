@@ -1,39 +1,59 @@
 const express =require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const mongoose = require('mongoose')
-const path = require('path');
-
 const session = require('express-session')
-const MongoDBStore = require('connect-mongodb-session')(session) 
+const bodyParser = require('body-parser');
+const path = require('path');
+const cors = require('cors');
 require('dotenv').config()
+const mongoose = require('mongoose')
+const MongoDBStore = require('connect-mongodb-session')(session) 
+
+
+
+
+
+
 const StudentData = require('./api/student/studentData')
-const Notice = require('./api/officer/Notice')
-const Feereminder = require('./api/feereminder')
 const CertificateUser=require('./api/student/usercertificaterequest')
 const loginRouter = require('./api/student/studentRoutes')
-const HodRoutes = require('./api/hod/HodRoutes')
-const FaculityRoutes = require('./api/faculity/faculityRoutes')
-const OfficerRoutes = require('./api/officer/OfficerRoutes')
-const PrincipalRoutes = require('./api/principal/PrincipalRoutes')
-const adminRouter = require('./api/Admin/AdminRoutes')
-const classtutorRoutes = require('./api/tutor/classtutorroutes')
 const Dashboard=require('./api/student/studentdashboard')
+const studentForget=require('./api/student/studentForgot')
 
+
+const Notice = require('./api/officer/Notice')
+const OfficerRoutes = require('./api/officer/OfficerRoutes')
 const certificate = require('./api/officer/certificate')
+const StudentAdmission =require('./api/officer/StudentAdmission');
+const officerForget=require('./api/officer/officerForgot')
+
+
+const FaculityRoutes = require('./api/faculity/faculityRoutes')
+const FacultyProfile=require('./api/faculity/faculityhome')
+const FaculityForget=require('./api/faculity/FaculityForgot')
+const AssigmentNotification =require('./api/faculity/Assignmentnotification');
+
+
+const HodRoutes = require('./api/hod/HodRoutes')
+const hodForget=require('./api/hod/hodForgot')
+const hodcertificaterequest=require('./api/hod/Hodcertificaterequest');
+
+
+const tutorForget=require('./api/tutor/tutorForgot')
+const classtutorRoutes = require('./api/tutor/classtutorroutes')
+
+
+const PrincipalRoutes = require('./api/principal/PrincipalRoutes')
+const principalForget=require('./api/principal/principalForgot')
+
+
+const adminRouter = require('./api/Admin/AdminRoutes')
 const TeachersDetail=require('./api/Admin/TeachersDetails')
 const OfficerDetail=require('./api/Admin/OfficerDetails')
-const FacultyProfile=require('./api/faculity/faculityhome')
 const AdminForget=require('./api/Admin/AdminForgot')
-const FaculityForget=require('./api/faculity/FaculityForgot')
-const hodForget=require('./api/hod/hodForgot')
-const officerForget=require('./api/officer/officerForgot')
-const principalForget=require('./api/principal/principalForgot')
-const studentForget=require('./api/student/studentForgot')
-const tutorForget=require('./api/tutor/tutorForgot');
-const hodcertificaterequest=require('./api/hod/Hodcertificaterequest');
-const AssigmentNotification =require('./api/faculity/Assignmentnotification');
-const StudentAdmission =require('./api/officer/StudentAdmission');
+
+
+const Feereminder = require('./api/feereminder')
+
+
 const app = express();
 const MAX_AGE = 1000 * 60 * 60 * 3 //3hrs
 const corsOptions = {
@@ -45,7 +65,6 @@ mongoose.connect(process.env.DATABASE_CONNECTION_STRING,{
     useNewUrlParser: true,
     
 })
-
 
 // setting up connect-mongodb-session store
 const mongoDBstore = new MongoDBStore({
