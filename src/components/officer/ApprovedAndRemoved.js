@@ -25,12 +25,12 @@ const ApprovedAndRemoved = () => {
       });
   }, []);
 
-  const handlePrintPreview = (admissionId) => {
+  const handlePrintPreview = (_id) => {
     // Log the admission ID when clicking on "Print Preview"
-    console.log('Admission ID for Print Preview:', admissionId);
+    console.log('Admission ID for Print Preview:', _id);
 
     // Fetch the details of the selected student
-    axios.get(`/api/studentDetails/${admissionId}`)
+    axios.get(`/api/studentDetails/${_id}`)
       .then(response => {
         const studentDetails = response.data.studentDetails;
 
@@ -340,7 +340,7 @@ const ApprovedAndRemoved = () => {
                   <td>{student.admissionId}</td>
                   <td>{student.name}</td>
                   <td>
-                    <button onClick={() => handlePrintPreview(student.admissionId)}>Print Preview</button>
+                    <button onClick={() => handlePrintPreview(student.id)}>Print Preview</button>
                   </td>
                 </tr>
               ))}
@@ -365,7 +365,7 @@ const ApprovedAndRemoved = () => {
                   <td>{student.admissionId}</td>
                   <td>{student.name}</td>
                   <td>
-                    <button onClick={() => handlePrintPreview(student.admissionId)}>Print Preview</button>
+                    <button onClick={() => handlePrintPreview(student.id)}>Print Preview</button>
                   </td>
                 </tr>
               ))}

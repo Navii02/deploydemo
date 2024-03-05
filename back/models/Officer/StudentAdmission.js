@@ -40,12 +40,12 @@ const studentSchema = new mongoose.Schema({
   },
   parentDetails: {
     father: {
-      name: String,
+      fathername: String,
       occupation: String,
       mobileNo: String,
     },
     mother: {
-      name: String,
+      mothername: String,
       occupation: String,
       mobileNo: String,
     },
