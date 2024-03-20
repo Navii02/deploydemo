@@ -1,14 +1,13 @@
 // models/student.js
 const mongoose = require('mongoose');
 
-
 const studentSchema = new mongoose.Schema({
   admissionType: String,
   admissionId: String,
   allotmentCategory: String,
   feeCategory: String,
   name: String,
-  photoPath: String,
+  photo: String, // Store file path for photo
   address: String,
   pincode: String,
   religion: String,
@@ -39,16 +38,12 @@ const studentSchema = new mongoose.Schema({
     mathematics: String,
   },
   parentDetails: {
-    father: {
-      fathername: String,
-      occupation: String,
-      mobileNo: String,
-    },
-    mother: {
-      mothername: String,
-      occupation: String,
-      mobileNo: String,
-    },
+    fatherName: String,
+    fatherOccupation: String,
+    fatherMobileNo: String,
+    motherName: String,
+    motherOccupation: String,
+    motherMobileNo: String,
   },
   annualIncome: String,
   nativity: String,
@@ -59,6 +54,7 @@ const studentSchema = new mongoose.Schema({
     ifscCode: String,
   },
 });
+
 
 const StudentAdmission = mongoose.model('StudentAdmission', studentSchema);
 

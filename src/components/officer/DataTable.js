@@ -218,9 +218,9 @@ const StudentList = () => {
   </tr>
     <tr>
     <td>Entrance Exam</td>
-    <td>
-      ${studentDetails?.entranceExam?.type === "other" ? studentDetails?.entranceExam?.name : studentDetails?.entranceExam?.type}
-    </td>
+<td>
+  ${studentDetails?.entranceExam?.type === "other" ? studentDetails?.entranceExam?.other : studentDetails?.entranceExam?.type}
+</td>
   </tr>
   
     <tr>

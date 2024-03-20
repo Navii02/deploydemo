@@ -84,7 +84,7 @@ router.get('/studentDetails/:id', async (req, res) => {
     const { parentDetails } = student;
    
     const {bankDetails }= student;
-    //const {entranceExam} = student;
+    const {entranceExam} = student;
     const{plusTwo} = student;
 
     res.json({
@@ -110,12 +110,12 @@ router.get('/studentDetails/:id', async (req, res) => {
         course,
         annualIncome,
         nativity,
-        /*
+  
         entranceExam: {
           type:entranceExam.type,
           name:entranceExam.name,
           other:entranceExam.other,
-        },*/
+        },
 
         plusTwo: {
           board:plusTwo.board,
@@ -126,23 +126,18 @@ router.get('/studentDetails/:id', async (req, res) => {
           physics:plusTwo.physics,
           chemistry:plusTwo.chemistry,
           mathematics:plusTwo.mathematics,
-        },/*
-        parentDetails: {
-          father: {
-            name:parentDetails.father.name,
-            occupation: parentDetails.father.occupation,
-            mobileNo: parentDetails.father.mobileNo,
-          },
-          mother: {
-            name:parentDetails.mother.name,
-            occupation:parentDetails.mother.occupation,
-            mobileNo: parentDetails.mother.mobileNo,
-          },
-        },*/
-        parentDetails: {
-          father: parentDetails.father,
-          mother: parentDetails.mother,
         },
+        parentDetails: {
+     
+            fatherName:parentDetails.fatherName,
+            fatherOccupation: parentDetails.fatherOccupation,
+            fatherMobileNo: parentDetails.fatherMobileNo,
+            motherName:parentDetails.motherName,
+            motherOccupation:parentDetails.motherOccupation,
+            motherMobileNo: parentDetails.motherMobileNo,
+          
+        },
+  
         bankDetails: {
           bankName:bankDetails.bankName,
           branch:bankDetails.branch,

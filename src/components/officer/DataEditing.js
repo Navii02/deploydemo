@@ -1,77 +1,73 @@
 // DataEntryForm.js
-import React, { useState,} from "react";
-import axios from "axios";
 import Navbar from "./OfficerNavbar";
 import './DataEntry.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function DataEntryForm({ fetchStudents, onDataEntered }) {
-  const [formData, setFormData] = useState({
-    admissionType: "",
-    admissionId: "",
-    allotmentCategory: "",
-    feeCategory: "",
-    name: "",
+const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
+  const initialFormData = {
+    admissionType: '',
+    admissionId: '',
+    allotmentCategory: '',
+    feeCategory: '',
+    name: '',
     photo: null,
-    address: "",
-    pincode: "",
-    religion: "",
-    community: "",
-    gender: "",
-    dateOfBirth: "",
-    bloodGroup: "",
-    mobileNo: "",
-    whatsappNo: "",
-    email: "",
+    address: '',
+    pincode: '',
+    religion: '',
+    community: '',
+    gender: '',
+    dateOfBirth: '',
+    bloodGroup: '',
+    mobileNo: '',
+    whatsappNo: '',
+    email: '',
     entranceExam: {
-      type: "",
-      name: "keam",
-      other: "",
+      type: '',
+      name: 'keam',
+      other: '',
     },
-    entranceRollNo: "",
-    entranceRank: "",
-    aadharNo: "",
-    course: "",
+    entranceRollNo: '',
+    entranceRank: '',
+    aadharNo: '',
+    course: '',
     plusTwo: {
-      board: "",
-      regNo: "",
-      examMonthYear: "",
-      percentage: "",
-      schoolName: "",
-      physics: "",
-      chemistry: "",
-      mathematics: "",
+      board: '',
+      regNo: '',
+      examMonthYear: '',
+      percentage: '',
+      schoolName: '',
+      physics: '',
+      chemistry: '',
+      mathematics: '',
     },
     parentDetails: {
-      father: {
-        name: "",
-        occupation: "",
-        mobileNo: "",
-      },
-      mother: {
-        name: "",
-        occupation: "",
-        mobileNo: "",
-      },
+        fatherName: '',
+        fatherOccupation: '',
+        fatherMobileNo: '',
+        motherName: '',
+        motherOccupation: '',
+        motherMobileNo: '',
     },
-    annualIncome: "",
-    nativity: "",
+    annualIncome: '',
+    nativity: '',
     bankDetails: {
-      bankName: "",
-      branch: "",
-      accountNo: "",
-      ifscCode: "",
-      
+      bankName: '',
+      branch: '',
+      accountNo: '',
+      ifscCode: '',
     },
-  });
+  };
 
- 
+  const [formData, setFormData] = useState({ ...initialFormData });
+
   const handleChange = (event) => {
     const { name, value, files } = event.target;
 
-    if (name === "photo") {
+    if (name === 'photo') {
       setFormData({ ...formData, [name]: files[0] });
-    } else if (name.includes("plusTwo")) {
-      const [, subField] = name.split(".");
+    } else if (name.includes('plusTwo')) {
+      const [, subField] = name.split('.');
       setFormData({
         ...formData,
         plusTwo: {
@@ -79,37 +75,26 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
           [subField]: value,
         },
       });
-    } else if (name.includes("father") || name.includes("mother")) {
-      const [, parentField, subField] = name.split(".");
+    } else if (name.includes('parentDetails')) {
+      const [, subField] = name.split('.');
       setFormData({
         ...formData,
         parentDetails: {
           ...formData.parentDetails,
-          [parentField]: {
-            ...formData.parentDetails[parentField],
-            [subField]: value,
-          },
+          [subField]: value,
         },
       });
-    } else if (name === "entranceExam.type") {
+    } else if (name.startsWith('entranceExam')) {
+      const [, subField] = name.split('.');
       setFormData({
         ...formData,
         entranceExam: {
           ...formData.entranceExam,
-          type: value,
-          name: "", // Reset name when changing type
+          [subField]: value,
         },
       });
-    } else if (name === "entranceExam.name") {
-      setFormData({
-        ...formData,
-        entranceExam: {
-          ...formData.entranceExam,
-          name: value,
-        },
-      });
-    } else if (name.startsWith("bankDetails")) {
-      const [, subField] = name.split(".");
+    } else if (name.startsWith('bankDetails')) {
+      const [, subField] = name.split('.');
       setFormData({
         ...formData,
         bankDetails: {
@@ -124,92 +109,46 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      const sendData = new FormData();
-
-      for (const key in formData) {
-        if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
-          for (const subKey in formData[key]) {
-            sendData.append(`${key}.${subKey}`, formData[key][subKey]);
-          }
-        } else {
-          sendData.append(key, formData[key]);
+  
+    // Calculate entranceExamValue based on entranceExam.type
+    const entranceExamValue =
+      formData.entranceExam.type === 'other'
+        ? formData.entranceExam.name
+        : formData.entranceExam.type;
+  
+    // Create a new FormData object to send the form data
+    const sendData = new FormData();
+  
+    // Append form data to the FormData object
+    for (const key in formData) {
+      if (key === 'entranceExam') {
+        sendData.append(key, entranceExamValue);
+      } else if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
+        for (const subKey in formData[key]) {
+          sendData.append(`${key}.${subKey}`, formData[key][subKey]);
         }
+      } else {
+        sendData.append(key, formData[key]);
       }
-
-      await axios.post("/api/studentadmission", sendData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      setFormData({
-        admissionType: "",
-        allotmentCategory: "",
-        feeCategory: "",
-        name: "",
-        photo: null,
-        address: "",
-        pincode: "",
-        religion: "",
-        community: "",
-        gender: "",
-        dateOfBirth: "",
-        bloodGroup: "",
-        mobileNo: "",
-        whatsappNo: "",
-        email: "",
-        entranceExam: {
-          type: "",
-          name: "keam",
-          other: "",
-        },
-        entranceRollNo: "",
-        entranceRank: "",
-        aadharNo: "",
-        course: "",
-        plusTwo: {
-          board: "",
-          regNo: "",
-          examMonthYear: "",
-          percentage: "",
-          schoolName: "",
-          physics: "",
-          chemistry: "",
-          mathematics: "",
-        },
-        parentDetails: {
-          father: {
-            name: "",
-            occupation: "",
-            mobileNo: "",
-          },
-          mother: {
-            name: "",
-            occupation: "",
-            mobileNo: "",
-          },
-        },
-        annualIncome: "",
-        nativity: "",
-        bankDetails: {
-          bankName: "",
-          branch: "",
-          accountNo: "",
-          ifscCode: "",
-        },
-      });
-
-      // Fetch updated student list after data submission
+    }
+  
+    try {
+      // Make the axios POST request with the FormData object
+      const response = await axios.post('/api/studentadmission', sendData);
+      console.log(response.data); // Log the response from the backend
+  
+      // Reset the form data to initial state after successful submission
+      setFormData({ ...initialFormData });
+  
+      // Fetch updated student list and trigger onDataEntered callback
       fetchStudents();
-
-      // Callback to pass entered data
       onDataEntered(formData);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error('Error submitting form:', error);
     }
   };
+  
+
 
   return (
     <div>
@@ -414,28 +353,29 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
               />
             </div>
             <div className="form-group">
-              <label>Entrance Exam:</label>
-              <select
-                name="entranceExam.type"
-                value={formData.entranceExam.type}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Exam Name</option>
-                <option value="keam">KEAM</option>
-                <option value="other">Other</option>
-              </select>
-              {formData.entranceExam.type === "other" && (
-                <input
-                  type="text"
-                  name="entranceExam.name"
-                  value={formData.entranceExam.name}
-                  onChange={handleChange}
-                  placeholder="Specify Exam Name"
-                  required
-                />
-              )}
-            </div>
+  <label>Entrance Exam:</label>
+  <select
+    name="entranceExam.type"
+    value={formData.entranceExam.type}
+    onChange={handleChange}
+    required
+  >
+    <option value="">Exam Name</option>
+    <option value="keam">KEAM</option>
+    <option value="other">Other</option>
+  </select>
+  {formData.entranceExam.type === "other" && (
+    <input
+      type="text"
+      name="entranceExam.other" 
+      value={formData.entranceExam.other} 
+      onChange={handleChange}
+      placeholder="Specify Exam Name"
+      required
+    />
+  )}
+</div>
+     
             <div className="form-group">
               <label>Entrance Roll No:</label>
               <input
@@ -550,73 +490,73 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
               </div>
             </div>
             <div className="box">
-              <h4>Parent Details</h4>
-              <div className="form-group">
-                <label>Father's Name:</label>
-                <input
-                  type="text"
-                  name="parentDetails.father.name"
-                  value={formData.parentDetails.father.name}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Occupation:</label>
-                <input
-                  type="text"
-                  name="parentDetails.father.occupation"
-                  value={formData.parentDetails.father.occupation}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Mobile No:</label>
-                <input
-                  type="tel"
-                  name="parentDetails.father.mobileNo"
-                  value={formData.parentDetails.father.mobileNo}
-                  onChange={handleChange}
-                  required
-                  pattern="[0-9]{10}"
-                  title="Please enter a valid 10-digit phone number"
-                />
-              </div>
-              <div className="form-group">
-                <label>Mother's Name:</label>
-                <input
-                  type="text"
-                  name="parentDetails.mother.name"
-                  value={formData.parentDetails.mother.name}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Occupation:</label>
-                <input
-                  type="text"
-                  name="parentDetails.mother.occupation"
-                  value={formData.parentDetails.mother.occupation}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Mobile No:</label>
-                <input
-                  type="tel"
-                  name="parentDetails.mother.mobileNo"
-                  value={formData.parentDetails.mother.mobileNo}
-                  onChange={handleChange}
-                  required
-                  pattern="[0-9]{10}"
-                  title="Please enter a valid 10-digit phone number"
-                />
-              </div>
-              
-            </div>
+  <h4>Parent Details</h4>
+  <div className="form-group">
+    <label>Father's Name:</label>
+    <input
+      type="text"
+      name="parentDetails.fatherName"  // Changed from "parentDetails.father.name"
+      value={formData.parentDetails.fatherName}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div className="form-group">
+    <label>Father's Occupation:</label>
+    <input
+      type="text"
+      name="parentDetails.fatherOccupation"
+      value={formData.parentDetails.fatherOccupation}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div className="form-group">
+    <label>Father's Mobile No:</label>
+    <input
+      type="tel"
+      name="parentDetails.fatherMobileNo"
+      value={formData.parentDetails.fatherMobileNo}
+      onChange={handleChange}
+      required
+      pattern="[0-9]{10}"
+      title="Please enter a valid 10-digit phone number"
+    />
+  </div>
+  <div className="form-group">
+    <label>Mother's Name:</label>
+    <input
+      type="text"
+      name="parentDetails.motherName"  // Changed from "parentDetails.mother.name"
+      value={formData.parentDetails.motherName}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div className="form-group">
+    <label>Mother's Occupation:</label>
+    <input
+      type="text"
+      name="parentDetails.motherOccupation"
+      value={formData.parentDetails.motherOccupation}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div className="form-group">
+    <label>Mother's Mobile No:</label>
+    <input
+      type="tel"
+      name="parentDetails.motherMobileNo"
+      value={formData.parentDetails.motherMobileNo}
+      onChange={handleChange}
+      required
+      pattern="[0-9]{10}"
+      title="Please enter a valid 10-digit phone number"
+    />
+  </div>
+</div>
+
             <div className="form-group">
               <label>Annual Income:</label>
               <input
@@ -681,67 +621,13 @@ function DataEntryForm({ fetchStudents, onDataEntered }) {
               </div>
             </div>
             <div className="button-container">
-              <button type="submit" className="submit-button">
+            <button type="submit" className="submit-button">
                 Submit
               </button>
               <button
                 type="button"
                 className="clear-button"
-                onClick={() => setFormData({ 
-                admissionType:"",
-                admissionId:"",
-                allotmentCategory: "",
-                feeCategory: "",
-                name: "",
-                photo: null,
-                address: "",
-                pincode: "",
-                religion: "",
-                community: "",
-                gender: "",
-                dateOfBirth: "",
-                bloodGroup: "",
-                mobileNo: "",
-                whatsappNo: "",
-                email: "",
-                entranceExam: {
-                  name: "keam",
-                  other: "",
-                },
-                entranceRollNo: "",
-                entranceRank: "",
-                aadharNo: "",
-                course: "",
-                plusTwo: {
-                  board: "",
-                  regNo: "",
-                  examMonthYear: "",
-                  percentage: "",
-                  schoolName: "",
-                  physics: "",
-                  chemistry: "",
-                  mathematics: "",
-                },
-                parentDetails: {
-                  father: {
-                    name: "",
-                    occupation: "",
-                    mobileNo: "",
-                  },
-                  mother: {
-                    name: "",
-                    occupation: "",
-                    mobileNo: "",
-                  },
-                },
-                annualIncome: "",
-                nativity: "",
-                bankDetails: {
-                  bankName: "",
-                  branch: "",
-                  accountNo: "",
-                  ifscCode: "",
-                },})}
+                onClick={() => setFormData({ ...initialFormData })}
               >
                 Clear
               </button>
