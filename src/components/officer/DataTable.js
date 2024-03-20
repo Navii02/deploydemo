@@ -9,7 +9,6 @@ const StudentList = () => {
     axios.get('/api/studentAdmission')
       .then(response => {
         setStudents(response.data);
-        
       })
       .catch(error => {
         console.error('Error fetching students:', error);
@@ -47,14 +46,13 @@ const StudentList = () => {
     // Fetch the details of the selected student
     axios.get(`/api/studentDetails/${_id}`)
       .then(response => {
-        const studentDetails = response.data.student;
-        console.log(studentDetails);
-        
-          // Check if the response contains studentDetails and parentDetails
-      if (!studentDetails || !studentDetails.parentDetails || !studentDetails.parentDetails.fathername) {
-        console.error('Error: Invalid student details received');
-        return;
-      }
+        const studentDetails = response.data.studentDetails;
+
+        // Check if the response contains studentDetails and parentDetails
+        if (!studentDetails || !studentDetails.parentDetails) {
+          console.error('Error: Invalid student details received');
+          return;
+        }
 
         // Open a new tab with the student details for print preview
         const printWindow = window.open('', '_blank');
@@ -130,7 +128,7 @@ const StudentList = () => {
   <table class="print-table">
     <tr>
       <td colspan="2" class="header">
-      <img src="images/college__2_-removebg-preview.png" alt="College Logo" class="logo" width="100">
+      <img src="images/college_2-removebg-preview.png" alt="College Logo" class="logo" width="100">
         COLLEGE OF ENGINEERING POONJAR
         <br />
         Managed by IHRD, Govt. of Kerala
@@ -271,10 +269,10 @@ const StudentList = () => {
     <tr>
     <td colspan="2" style="text-align: center; font-weight: bold;">Parents Details</td>
   </tr>
-  <tr>
-  <td>Father's Name</td>
-  <td>${studentDetails.parentDetails.father.name}</td>
-</tr>
+    <tr>
+      <td>Father's Name</td>
+      <td>${studentDetails.parentDetails.father.name}</td>
+    </tr>
     <tr>
       <td>Father's Occupation</td>
       <td>${studentDetails.parentDetails.father.occupation}</td>

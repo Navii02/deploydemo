@@ -74,11 +74,83 @@ router.get('/studentDetails/:id', async (req, res) => {
 
     // Fetch student details including parentDetails from the database
     const student = await Student.findById(studentId);
-    res.json({ student });
 
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
+
+    // Extract necessary details for print preview
+    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity,} = student;
+    const { parentDetails } = student;
+   
+    const {bankDetails }= student;
+    //const {entranceExam} = student;
+    const{plusTwo} = student;
+
+    res.json({
+      studentDetails: {
+        name,
+        admissionType,
+        admissionId,
+        allotmentCategory,
+        feeCategory,
+        address,
+        pincode,
+        religion,
+        community,
+        gender,
+        dateOfBirth,
+        bloodGroup,
+        mobileNo,
+        whatsappNo,
+        email,
+        entranceRollNo,
+        entranceRank,
+        aadharNo,
+        course,
+        annualIncome,
+        nativity,
+        /*
+        entranceExam: {
+          type:entranceExam.type,
+          name:entranceExam.name,
+          other:entranceExam.other,
+        },*/
+
+        plusTwo: {
+          board:plusTwo.board,
+          regNo:plusTwo.regNo,
+          examMonthYear: plusTwo.examMonthYear,
+          percentage:plusTwo.percentage,
+          schoolName:plusTwo.schoolName,
+          physics:plusTwo.physics,
+          chemistry:plusTwo.chemistry,
+          mathematics:plusTwo.mathematics,
+        },/*
+        parentDetails: {
+          father: {
+            name:parentDetails.father.name,
+            occupation: parentDetails.father.occupation,
+            mobileNo: parentDetails.father.mobileNo,
+          },
+          mother: {
+            name:parentDetails.mother.name,
+            occupation:parentDetails.mother.occupation,
+            mobileNo: parentDetails.mother.mobileNo,
+          },
+        },*/
+        parentDetails: {
+          father: parentDetails.father,
+          mother: parentDetails.mother,
+        },
+        bankDetails: {
+          bankName:bankDetails.bankName,
+          branch:bankDetails.branch,
+          accountNo:bankDetails.accountNo,
+          ifscCode:bankDetails.ifscCode,
+        }
+      }
+    });
   } catch (error) {
     console.error('Error fetching student details:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -123,40 +195,6 @@ router.post('/decline/:id', async (req, res) => {
     await Student.findByIdAndRemove(studentId);
 
     res.json({ message: 'Student Declined and Moved to Not Admitted Students Collection' });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-router.get('/approvedStudents', async (req, res) => {
-  try {
-    const approvedStudents = await ApprovedStudent.find();
-    res.json(approvedStudents);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-router.get('/removedStudents', async (req, res) => {
-  try {
-    const removedStudents = await NotAdmittedStudent.find();
-    res.json(removedStudents);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-router.get('/studentDetails/:id', async (req, res) => {
-  const admissionId = req.params.id;
-  
-  try {
-    const approvedStudent = await ApprovedStudent.findOne({ admissionId });
-    const removedStudent = await NotAdmittedStudent.findOne({ admissionId });
-
-    if (approvedStudent) {
-      res.json({ studentDetails: approvedStudent });
-    } else if (removedStudent) {
-      res.json({ studentDetails: removedStudent });
-    } else {
-      res.status(404).json({ error: 'Student not found' });
-    }
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
