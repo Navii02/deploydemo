@@ -218,10 +218,8 @@ const StudentList = () => {
     <td colspan="2" style="text-align: center; font-weight: bold;">Entrance Exam Details</td>
   </tr>
   <tr>
-  <td>Entrance Exam</td>
-<td>
-${studentDetails.entranceExam.name}
-</td>
+  <td>Entrance Exam Name</td>
+<td>${studentDetails.entranceExam}</td>
 </tr>
 <tr>
 <td>Entrance Roll No</td>
@@ -271,27 +269,27 @@ ${studentDetails.entranceExam.name}
 </tr>
 <tr>
 <td>Father's Name</td>
-<td>${studentDetails.parentDetails.fatherName}</td>
+<td>${studentDetails.parentDetails?.fatherName}</td>
 </tr>
 <tr>
 <td>Father's Occupation</td>
-<td>${studentDetails.parentDetails.fatherOccupation}</td>
+<td>${studentDetails.parentDetails?.fatherOccupation}</td>
 </tr>
 <tr>
 <td>Father's Mobile No</td>
-<td>${studentDetails.parentDetails.fatherMobileNo}</td>
+<td>${studentDetails.parentDetails?.fatherMobileNo}</td>
 </tr>
 <tr>
 <td>Mother's Name</td>
-<td>${studentDetails.parentDetails.motherName}</td>
+<td>${studentDetails.parentDetails?.motherName}</td>
 </tr>
 <tr>
 <td>Mother's Occupation</td>
-<td>${studentDetails.parentDetails.motherOccupation}</td>
+<td>${studentDetails.parentDetails?.motherOccupation}</td>
 </tr>
 <tr>
 <td>Mother's Mobile No</td>
-<td>${studentDetails.parentDetails.motherMobileNo}</td>
+<td>${studentDetails.parentDetails?.motherMobileNo}</td>
 </tr>
 <tr>
       <td>Annual Income</td>

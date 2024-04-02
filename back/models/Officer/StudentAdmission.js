@@ -18,11 +18,7 @@ const studentSchema = new mongoose.Schema({
   mobileNo: String,
   whatsappNo: String,
   email: String,
-  entranceExam: {
-    type: String,
-    name: String,
-    other: String,
-  },
+  entranceExam: String,
   entranceRollNo: String,
   entranceRank: String,
   aadharNo: String,

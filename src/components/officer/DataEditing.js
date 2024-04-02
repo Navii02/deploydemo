@@ -22,11 +22,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     mobileNo: '',
     whatsappNo: '',
     email: '',
-    entranceExam: {
-      type: '',
-      name: 'keam',
-      other: '',
-    },
+    entranceExam: '',
     entranceRollNo: '',
     entranceRank: '',
     aadharNo: '',
@@ -59,6 +55,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     },
   };
 
+
   const [formData, setFormData] = useState({ ...initialFormData });
 
   const handleChange = (event) => {
@@ -84,15 +81,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
           [subField]: value,
         },
       });
-    } else if (name.startsWith('entranceExam')) {
-      const [, subField] = name.split('.');
-      setFormData({
-        ...formData,
-        entranceExam: {
-          ...formData.entranceExam,
-          [subField]: value,
-        },
-      });
     } else if (name.startsWith('bankDetails')) {
       const [, subField] = name.split('.');
       setFormData({
@@ -107,23 +95,17 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     }
   };
 
+ 
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    // Calculate entranceExamValue based on entranceExam.type
-    const entranceExamValue =
-      formData.entranceExam.type === 'other'
-        ? formData.entranceExam.name
-        : formData.entranceExam.type;
   
     // Create a new FormData object to send the form data
     const sendData = new FormData();
   
     // Append form data to the FormData object
     for (const key in formData) {
-      if (key === 'entranceExam') {
-        sendData.append(key, entranceExamValue);
-      } else if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
+     if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
         for (const subKey in formData[key]) {
           sendData.append(`${key}.${subKey}`, formData[key][subKey]);
         }
@@ -170,16 +152,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 <option value="LET">LET</option>
               </select>
             </div>
-            <div className="form-group">
-              <label>Admission ID:</label>
-              <input
-                type="text"
-                name="admissionId"
-                value={formData.admissionId}
-                onChange={handleChange}
-                readOnly
-              />
-            </div>
+           
             <div className="form-group">
               <label>Allotment Category:</label>
               <select
@@ -353,29 +326,15 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               />
             </div>
             <div className="form-group">
-  <label>Entrance Exam:</label>
-  <select
-    name="entranceExam.type"
-    value={formData.entranceExam.type}
+  <label>Entrance Exam Name:</label>
+  <input
+    type="text"
+    name="entranceExam"
+    value={formData.entranceExam}
     onChange={handleChange}
     required
-  >
-    <option value="">Exam Name</option>
-    <option value="keam">KEAM</option>
-    <option value="other">Other</option>
-  </select>
-  {formData.entranceExam.type === "other" && (
-    <input
-      type="text"
-      name="entranceExam.name" 
-      value={formData.entranceExam.name} 
-      onChange={handleChange}
-      placeholder="Specify Exam Name"
-      required
-    />
-  )}
+  />
 </div>
-     
             <div className="form-group">
               <label>Entrance Roll No:</label>
               <input

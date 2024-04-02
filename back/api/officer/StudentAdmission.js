@@ -80,11 +80,9 @@ router.get('/studentDetails/:id', async (req, res) => {
     }
 
     // Extract necessary details for print preview
-    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity,} = student;
+    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceExam,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity,} = student;
     const { parentDetails } = student;
-   
     const {bankDetails }= student;
-    const {entranceExam} = student;
     const{plusTwo} = student;
 
     res.json({
@@ -104,19 +102,13 @@ router.get('/studentDetails/:id', async (req, res) => {
         mobileNo,
         whatsappNo,
         email,
+        entranceExam,
         entranceRollNo,
         entranceRank,
         aadharNo,
         course,
         annualIncome,
         nativity,
-  
-        entranceExam: {
-          type:entranceExam.type,
-          name:entranceExam.name,
-          other:entranceExam.other,
-        },
-
         plusTwo: {
           board:plusTwo.board,
           regNo:plusTwo.regNo,
