@@ -367,8 +367,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   {formData.entranceExam.type === "other" && (
     <input
       type="text"
-      name="entranceExam.other" 
-      value={formData.entranceExam.other} 
+      name="entranceExam.name" 
+      value={formData.entranceExam.name} 
       onChange={handleChange}
       placeholder="Specify Exam Name"
       required
