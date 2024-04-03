@@ -1,14 +1,29 @@
-// models/student.js
+// models/ApprovedStudent.js
 const mongoose = require('mongoose');
 
-const approvedStudentSchema = new mongoose.Schema({
-  // Include the same fields as the student admission schema
+const approvedStudentConnection = mongoose.createConnection('mongodb+srv://naveenshaji02:naveen@collegeofficedata.scsxkdd.mongodb.net/test', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Handle connection errors
+approvedStudentConnection.on('error', (error) => {
+  console.error('Approved Student Database Connection Error:', error);
+});
+
+// Listen for the connected event
+approvedStudentConnection.once('open', () => {
+  console.log('Connected to Approved Student Database');
+});
+
+const ApprovedStudentSchema = new mongoose.Schema({
+  admissionNumber: String, // Include the admission number field
   admissionType: String,
-  admissionId: String,
+  admissionId: String, 
   allotmentCategory: String,
   feeCategory: String,
   name: String,
-  photoPath: String,
+  photo: String, // Store file path for photo
   address: String,
   pincode: String,
   religion: String,
@@ -19,11 +34,7 @@ const approvedStudentSchema = new mongoose.Schema({
   mobileNo: String,
   whatsappNo: String,
   email: String,
-  entranceExam: {
-    type: String,
-    name: String,
-    other: String,
-  },
+  entranceExam: String,
   entranceRollNo: String,
   entranceRank: String,
   aadharNo: String,
@@ -39,16 +50,12 @@ const approvedStudentSchema = new mongoose.Schema({
     mathematics: String,
   },
   parentDetails: {
-    father: {
-      fathername: String,
-      occupation: String,
-      mobileNo: String,
-    },
-    mother: {
-      mothername: String,
-      occupation: String,
-      mobileNo: String,
-    },
+    fatherName: String,
+    fatherOccupation: String,
+    fatherMobileNo: String,
+    motherName: String,
+    motherOccupation: String,
+    motherMobileNo: String,
   },
   annualIncome: String,
   nativity: String,
@@ -58,8 +65,9 @@ const approvedStudentSchema = new mongoose.Schema({
     accountNo: String,
     ifscCode: String,
   },
+  semester: Number, // Include the semester field
 });
 
-const ApprovedStudent = mongoose.model('ApprovedStudent', approvedStudentSchema);
+const ApprovedStudent = approvedStudentConnection.model('ApprovedStudent', ApprovedStudentSchema);
 
 module.exports = ApprovedStudent;

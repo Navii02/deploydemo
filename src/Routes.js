@@ -61,6 +61,7 @@ import PrinciHome from './components/principal/PrinciHome'
 import PrincipalSignup from './components/principal/principalsignup'
 import PrincipalLogin from './components/principal/principallogin'
 import PForgotPassword from './components/principal/PrinciForgot'
+import Pstudents from './components/principal/StudentsList'
 
 
 function RoutesComp() {
@@ -123,6 +124,7 @@ function RoutesComp() {
             <Route path='/tforgot' element={<TForgotPassword/>}/>
             <Route path='/certificate-approval' element={<CertificateApproval/>}/>
             <Route path='/ar' element={<ApprovedAndRemoved/>}/>
+            <Route path='/pstudents' element={<Pstudents/>}/>
           </>
         )}
       </Routes>
