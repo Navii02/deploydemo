@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './AdminNavbar.css';
+import '../Navbar.css';
 import { Button } from '../Button';
 
 function Navbar() {
@@ -35,7 +35,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className='admin-navbar'>
+      <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/dash' className='navbar-logo' onClick={closeMobileMenu}>
             HOME

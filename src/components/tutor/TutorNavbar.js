@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './TutorNavbar.css';
+import '../Navbar.css';
 import { Button } from '../Button';
 
 function TutorNavbar() {
@@ -35,7 +35,7 @@ function TutorNavbar() {
 
   return (
     <>
-      <nav className='tutor-navbar'>
+      <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/thome' className='navbar-logo' onClick={closeMobileMenu}>
             HOME

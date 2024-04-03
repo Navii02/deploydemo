@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './PrinciNavbar.css';
+import '../Navbar.css';
 import { Button } from '../Button';
 
 function PrinciNavbar() {
@@ -35,7 +35,7 @@ function PrinciNavbar() {
 
   return (
     <>
-      <nav className='princi-navbar'>
+      <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/phome' className='navbar-logo' onClick={closeMobileMenu}>
             HOME

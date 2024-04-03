@@ -28,7 +28,6 @@ import PaymentAndReminders from './components/officer/PaymentAndReminders'
 import OForgotPassword from './components/officer/OfficerForgot'
 import CertificateDistribution from './components/officer/CertificateDistribution'
 import ApprovedAndRemoved from './components/officer/ApprovedAndRemoved'
-import StudentInformation from './components/hi'
 
 import AdminDashboard from './components/admin/AdminDashboard'
 import AForgotPassword from './components/admin/AdminForgot'
@@ -123,7 +122,6 @@ function RoutesComp() {
             <Route path='/sforgot' element={<SForgotPassword/>}/>
             <Route path='/tforgot' element={<TForgotPassword/>}/>
             <Route path='/certificate-approval' element={<CertificateApproval/>}/>
-            <Route path='/hi' element={<StudentInformation/>}/>
             <Route path='/ar' element={<ApprovedAndRemoved/>}/>
           </>
         )}

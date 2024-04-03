@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './HodNavbar.css';
+import '../Navbar.css';
 import { Button } from '../Button';
 
 function HodNavbar() {
@@ -35,7 +35,7 @@ function HodNavbar() {
 
   return (
     <>
-      <nav className='hod-navbar'>
+      <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/hodhome' className='navbar-logo' onClick={closeMobileMenu}>
             HOME

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './FacultyNavbar.css';
+import '../Navbar.css';
 import { Button } from '../Button';
 
 function Navbar() {
@@ -35,7 +35,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className='faculty-navbar'>
+      <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/fchome' className='navbar-logo' onClick={closeMobileMenu}>
             HOME
