@@ -39,14 +39,16 @@ const StudentList = () => {
       });
   };
 
-  const handlePrintPreview = (_id) => {
+  const handlePrintPreview = (_id,photoUrl) => {
     // Log the student ID when clicking on "Print Preview"
     console.log('Student ID for Print Preview:', _id);
+    console.log('Photo URL:', photoUrl);
 
     // Fetch the details of the selected student
     axios.get(`/api/studentDetails/${_id}`)
       .then(response => {
         const studentDetails = response.data.studentDetails;
+        console.log(studentDetails.photoUrl);
 
         if (!studentDetails || !studentDetails.parentDetails) {
           console.error('Error: Invalid student details received');
@@ -99,8 +101,8 @@ const StudentList = () => {
 
               .photo {
                 position: absolute;
-                right: 10px; /* Adjust as needed */
-                top: 5px; /* Adjust as needed */
+                right: 0px; /* Adjust as needed */
+                top: 0px; /* Adjust as needed */
               }
 
               @media print {
@@ -123,7 +125,7 @@ const StudentList = () => {
           </head>
           <body>
             <table class="print-table">
-            <tr>
+            <tr style="height: 100px;">
             <td colspan="2" class="header">
             <img src="/images/college__2_-removebg-preview.png" alt="College Logo" class="logo" width="100">
               COLLEGE OF ENGINEERING POONJAR
@@ -133,11 +135,7 @@ const StudentList = () => {
               Poonjar Thekkekara P.O. Kottayam Dist. PIN 686 582
               <br/>
               Academic Year: 2023-24
-              <img
-              class="photo"
-              src="{${studentDetails.photo }}"
-              alt="Student Photo"
-            />
+              <img src="${studentDetails.photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
             </td>
           </tr>
           <tr>
@@ -347,7 +345,7 @@ const StudentList = () => {
               <td>
                 <button onClick={() => handleApprove(student._id)}>Approve</button>
                 <button onClick={() => handleDecline(student._id)}>Decline</button>
-                <button className="hide-on-print" onClick={() => handlePrintPreview(student._id)}>Print Preview</button>
+                <button className="hide-on-print" onClick={() => handlePrintPreview(student._id,student.photo)}>Print Preview</button>
               </td>
             </tr>
           ))}

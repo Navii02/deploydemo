@@ -2,6 +2,8 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const mongoose = require('mongoose');
+
 const Student = require('../../models/Officer/StudentAdmission');
 const ApprovedStudent = require('../../models/Officer/ApprovedStudents');
 const NotAdmittedStudent = require('../../models/Officer/NotApprovedstudents');
@@ -14,9 +16,10 @@ const storage = multer.diskStorage({
     cb(null, 'studentsphoto/'); // Save photos in the 'studentsphoto' folder
   },
   filename: function (req, file, cb) {
-    const studentName = req.body.name || 'unknown';
-    const filename = `${studentName.replace(/\s/g, '_')}_${Date.now()}${path.extname(file.originalname)}`;
-    cb(null, filename);
+    
+      const fileId = new mongoose.Types.ObjectId(); // Generate a new unique ID
+      const filename = `${fileId}${path.extname(file.originalname)}`; // Use the unique ID as the filename
+      cb(null, filename);
   },
 });
 
@@ -26,7 +29,8 @@ const upload = multer({ storage: storage });
 router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
   try {
     const formData = req.body;
-    formData.photoPath = req.file ? req.file.path : null;
+    formData.photo = req.file ? req.file.path : null;
+
 
     const lastStudent = await Student.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
 
@@ -80,10 +84,12 @@ router.get('/studentDetails/:id', async (req, res) => {
     }
 
     // Extract necessary details for print preview
-    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceExam,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity,} = student;
+    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,photo,pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceExam,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity,} = student;
     const { parentDetails } = student;
     const {bankDetails }= student;
     const{plusTwo} = student;
+    const photoUrl = photo ? `${req.protocol}://${req.get('host')}/${photo}` : null;
+
 
     res.json({
       studentDetails: {
@@ -109,6 +115,7 @@ router.get('/studentDetails/:id', async (req, res) => {
         course,
         annualIncome,
         nativity,
+        photoUrl,
         plusTwo: {
           board:plusTwo.board,
           regNo:plusTwo.regNo,
