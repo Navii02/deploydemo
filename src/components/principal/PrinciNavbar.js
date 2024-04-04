@@ -51,12 +51,12 @@ function PrinciNavbar() {
               </Link>
             </li>
             <li className='nav-item'>
-              <Link to='/phome' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/pteachers' className='nav-links' onClick={closeMobileMenu}>
                 Faculties
               </Link>
             </li>
             <li className='nav-item'>
-              <Link to='/phome' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/pOffice' className='nav-links' onClick={closeMobileMenu}>
                 Office
               </Link>
             </li>

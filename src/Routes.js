@@ -62,6 +62,10 @@ import PrincipalSignup from './components/principal/principalsignup'
 import PrincipalLogin from './components/principal/principallogin'
 import PForgotPassword from './components/principal/PrinciForgot'
 import Pstudents from './components/principal/StudentsList'
+import Pteachers from './components/principal/TeachersList'
+import Pofficers from './components/principal/OfficersList'
+
+
 
 
 function RoutesComp() {
@@ -125,6 +129,9 @@ function RoutesComp() {
             <Route path='/certificate-approval' element={<CertificateApproval/>}/>
             <Route path='/ar' element={<ApprovedAndRemoved/>}/>
             <Route path='/pstudents' element={<Pstudents/>}/>
+            <Route path='/pteachers' element={<Pteachers/>}/>
+            <Route path='/pOffice' element={<Pofficers/>}/>
+            
           </>
         )}
       </Routes>

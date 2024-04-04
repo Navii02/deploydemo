@@ -1,5 +1,5 @@
 const express = require('express');
-const Officer = require('../../models/Admin/OfficersDetailSchema');
+const Officer = require('../../models/Principal/OfficersDetailSchema');
 const router = express.Router();
 
 router.get('/admin/officers', async (req, res) => {
