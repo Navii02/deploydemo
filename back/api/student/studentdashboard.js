@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 const User = require('../../models/Student/UserSchema'); // Import User model
-const Student = require('../../models/Student/StudentData'); // Import Student model
+const Student = require('../../models/Officer/ApprovedStudents'); // Import Student model
 
 app.get('/student/:email', (req, res) => {
   const userEmail = req.params.email; // Use req.params.userEmail instead of req.params.email

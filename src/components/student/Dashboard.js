@@ -32,23 +32,19 @@ function Dashboard() {
         <div className="student-details">
           <h4>Name: {student.name}</h4>
           <p>Email: {student.email}</p>
-          <p>Register Number: {student.registerNumber}</p>
+          <p>Register Number: {student.admissionNumber}</p>
           <p>Date of Birth: {student.dateOfBirth}</p>
-          <p>Branch: {student.branch}</p> 
+          <p>Branch: {student.course}</p> 
           <p>Semester: {student.semester}</p>
           <p>Address: {student.address}</p>
           <p>Gender: {student.gender}</p>
           <p>Religion: {student.religion}</p>
-          <p>Caste: {student.caste}</p>
-          <p>Category: {student.category}</p>
-          <p>Plus Two Mark Percentage: {student.plusTwoPercentage}</p>
-          <p>Tenth Mark Percentage: {student.tenthPercentage}</p>
+          <p>Caste: {student.community}</p>
+          <p>Plus Two Board: {student.plusTwo.board}</p>
+          <p>Plus Two Mark Percentage: {student.plusTwo.percentage}</p>
+          
           <br/>
-          <h2>Fee Payment Status</h2>
-          <p>First Year: {student.firstYearFees}</p>
-          <p>Second Year: {student.secondYearFees}</p>
-          <p>Third Year: {student.thirdYearFees}</p>
-          <p>Fourth Year: {student.fourthYearFees}</p>
+          
         </div>
       ) : (
         <p className="loading-text">Loading...</p>
