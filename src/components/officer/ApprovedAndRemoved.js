@@ -28,7 +28,7 @@ const ApprovedAndRemoved = () => {
   const handlePrintPreview = (_id) => {
     // Log the admission ID when clicking on "Print Preview"
     console.log('Admission ID for Print Preview:', _id);
-    axios.get(`/api/studentDetails/${_id}`)
+    axios.get(`/api/approvedstudentDetails/${_id}`)
     .then(response => {
       const studentDetails = response.data.studentDetails;
       console.log(studentDetails.photoUrl);

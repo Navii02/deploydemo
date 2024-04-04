@@ -69,6 +69,7 @@ mongoose.connect(process.env.DATABASE_CONNECTION_STRING,{
     
 })
 
+
 // setting up connect-mongodb-session store
 const mongoDBstore = new MongoDBStore({
     uri: process.env.DATABASE_CONNECTION_STRING,

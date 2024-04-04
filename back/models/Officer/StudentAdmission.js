@@ -6,13 +6,14 @@ const approvedStudentConnection = mongoose.createConnection('mongodb+srv://navee
   useUnifiedTopology: true,
 });
 
+
 // Handle connection errors
 approvedStudentConnection.on('error', (error) => {
   console.error('Approved Student Database Connection Error:', error);
 });
 
 // Listen for the connected event
-approvedStudentConnection.once('open', () => {
+approvedStudentConnection.on('open', () => {
   console.log('Connected to Approved Student Database');
 });
 

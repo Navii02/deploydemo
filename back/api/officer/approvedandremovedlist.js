@@ -29,7 +29,7 @@ router.get('/removedStudents', async (req, res) => {
     }
 });
 
-router.get('/studentDetails/:id', async (req, res) => {
+router.get('/approvedstudentDetails/:id', async (req, res) => {
     try {
       const studentId = req.params.id;
   

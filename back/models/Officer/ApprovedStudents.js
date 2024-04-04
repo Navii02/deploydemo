@@ -12,7 +12,7 @@ approvedStudentConnection.on('error', (error) => {
 });
 
 // Listen for the connected event
-approvedStudentConnection.once('open', () => {
+approvedStudentConnection.on('open', () => {
   console.log('Connected to Approved Student Database');
 });
 
