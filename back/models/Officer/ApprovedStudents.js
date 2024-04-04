@@ -1,29 +1,14 @@
-// models/ApprovedStudent.js
 const mongoose = require('mongoose');
 
-const approvedStudentConnection = mongoose.createConnection('mongodb+srv://naveenshaji02:naveen@collegeofficedata.scsxkdd.mongodb.net/test', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-// Handle connection errors
-approvedStudentConnection.on('error', (error) => {
-  console.error('Approved Student Database Connection Error:', error);
-});
-
-// Listen for the connected event
-approvedStudentConnection.on('open', () => {
-  console.log('Connected to Approved Student Database');
-});
-
 const ApprovedStudentSchema = new mongoose.Schema({
-  admissionNumber: String, // Include the admission number field
+  customId: String, // New field for custom ID
+  admissionNumber: String,
   admissionType: String,
   admissionId: String, 
   allotmentCategory: String,
   feeCategory: String,
   name: String,
-  photo: String, // Store file path for photo
+  photo: String,
   address: String,
   pincode: String,
   religion: String,
@@ -65,9 +50,17 @@ const ApprovedStudentSchema = new mongoose.Schema({
     accountNo: String,
     ifscCode: String,
   },
-  semester: Number, // Include the semester field
+  semester: Number,
 });
 
-const ApprovedStudent = approvedStudentConnection.model('ApprovedStudent', ApprovedStudentSchema);
+// Pre-save middleware to generate custom ID before saving
+ApprovedStudentSchema.pre('save', function(next) {
+  const currentYear = new Date().getFullYear();
+  // Assuming you want the custom ID in the format "number/year" (e.g., "100/2024")
+  this.customId = `${this.admissionNumber}/${currentYear}`;
+  next();
+});
+
+const ApprovedStudent = mongoose.model('ApprovedStudent', ApprovedStudentSchema);
 
 module.exports = ApprovedStudent;

@@ -172,8 +172,7 @@ router.post('/decline/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
-});
-router.post('/approve/:id', async (req, res) => {
+});router.post('/approve/:id', async (req, res) => {
   const studentId = req.params.id;
 
   try {
@@ -205,8 +204,13 @@ router.post('/approve/:id', async (req, res) => {
     const lastStudent = await ApprovedStudent.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
     let nextAdmissionNumber;
     if (lastStudent) {
-      const lastAdmissionNumber = parseInt(lastStudent.admissionNumber.split('/')[0], 10);
-      nextAdmissionNumber = `${lastAdmissionNumber + 1}/${currentYear}`;
+      // Check if admissionNumber exists before splitting
+      if (lastStudent.admissionNumber) {
+        const lastAdmissionNumber = parseInt(lastStudent.admissionNumber.split('/')[0], 10);
+        nextAdmissionNumber = `${lastAdmissionNumber + 1}/${currentYear}`;
+      } else {
+        nextAdmissionNumber = `100/${currentYear}`;
+      }
     } else {
       nextAdmissionNumber = `100/${currentYear}`;
     }
@@ -226,5 +230,6 @@ router.post('/approve/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 module.exports = router;
