@@ -51,7 +51,7 @@ function HodNavbar() {
               </Link>
             </li>
             <li className='nav-item'>
-              <Link to='/hodhome' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/teacher-details' className='nav-links' onClick={closeMobileMenu}>
                Faculty 
               </Link>
             </li>

@@ -1,6 +1,6 @@
 .admin-dashboard {
     font-family: Arial, sans-serif;
-    max-width: stretch;
+    max-width: fit;
     margin: 0 auto;
     padding: 2px;
   }

@@ -34,7 +34,7 @@ import AForgotPassword from './components/admin/AdminForgot'
 import AdminSignup from './components/admin/AdminSignup'
 import AdminLogin from './components/admin/AdminLogin'
 import AdminOfficersPage from './components/admin/AdminOfficersPage'
-import AdminTeachersPage from './components/admin/AdminTeachersPage'
+import AdminTeachersPage from './components/hod/AdminTeachersPage'
 
 
 import FacultyHome from './components/faculty/FacultyHome'
