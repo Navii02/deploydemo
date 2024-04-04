@@ -1,6 +1,22 @@
 // models/student.js
 const mongoose = require('mongoose');
 
+const approvedStudentConnection = mongoose.createConnection('mongodb+srv://naveenshaji02:naveen@collegeofficedata.scsxkdd.mongodb.net/test', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Handle connection errors
+approvedStudentConnection.on('error', (error) => {
+  console.error('Approved Student Database Connection Error:', error);
+});
+
+// Listen for the connected event
+approvedStudentConnection.once('open', () => {
+  console.log('Connected to Approved Student Database');
+});
+
+
 const studentSchema = new mongoose.Schema({
   admissionType: String,
   admissionId: String,
@@ -52,7 +68,7 @@ const studentSchema = new mongoose.Schema({
 });
 
 
-const StudentAdmission = mongoose.model('StudentAdmission', studentSchema);
+const StudentAdmission = approvedStudentConnection.model('StudentAdmission', studentSchema);
 
 module.exports = StudentAdmission;
 

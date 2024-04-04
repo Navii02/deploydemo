@@ -46,7 +46,7 @@ function PrinciNavbar() {
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
             <li className='nav-item'>
-              <Link to='/phome' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/pstudents' className='nav-links' onClick={closeMobileMenu}>
                 Students
               </Link>
             </li>

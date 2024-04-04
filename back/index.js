@@ -43,7 +43,7 @@ const classtutorRoutes = require('./api/tutor/classtutorroutes')
 
 const PrincipalRoutes = require('./api/principal/PrincipalRoutes')
 const principalForget=require('./api/principal/principalForgot')
-
+const pstudents=require('./api/principal/StudentList')
 
 const adminRouter = require('./api/Admin/AdminRoutes')
 const TeachersDetail=require('./api/Admin/TeachersDetails')
@@ -124,6 +124,7 @@ app.use('/api',tutorForget)
 app.use('/api',hodcertificaterequest)
 app.use('/api',AssigmentNotification)
 app.use('/api',StudentAdmission)
+app.use('/api',pstudents)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));

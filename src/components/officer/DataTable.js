@@ -24,9 +24,12 @@ const StudentList = () => {
       })
       .catch(error => {
         console.error('Error approving student:', error);
+        if (error.response && error.response.data) {
+          console.error('Server Error:', error.response.data);
+        }
       });
   };
-
+  
   const handleDecline = (_id) => {
     axios.post(`/api/decline/${_id}`)
       .then(response => {
