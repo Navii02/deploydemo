@@ -24,6 +24,7 @@ const OfficerRoutes = require('./api/officer/OfficerRoutes')
 const certificate = require('./api/officer/certificate')
 const StudentAdmission =require('./api/officer/StudentAdmission');
 const officerForget=require('./api/officer/officerForgot')
+const aprrovedLists = require('./api/officer/approvedandremovedlist')
 
 
 const FaculityRoutes = require('./api/faculity/faculityRoutes')
@@ -129,6 +130,7 @@ app.use('/api',StudentAdmission)
 app.use('/api',pstudents)
 app.use('/api',pTeachers)
 app.use('/api',pofficers)
+app.use('/api',aprrovedLists)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));
