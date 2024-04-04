@@ -56,6 +56,7 @@ import HodSignup from './components/hod/hodsignup'
 import HodLogin from './components/hod/hodlogin'
 import HForgotPassword from './components/hod/hodForgot'
 import CertificateApproval from './components/hod/CertificateApproval'
+import HStudenlist from './components/hod/studenlisthod'
 
 import PrinciHome from './components/principal/PrinciHome'
 import PrincipalSignup from './components/principal/principalsignup'
@@ -131,6 +132,7 @@ function RoutesComp() {
             <Route path='/pstudents' element={<Pstudents/>}/>
             <Route path='/pteachers' element={<Pteachers/>}/>
             <Route path='/pOffice' element={<Pofficers/>}/>
+            <Route path='/hodstudents' element={<HStudenlist/>}/>
             
           </>
         )}
