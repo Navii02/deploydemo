@@ -1,7 +1,7 @@
 // DataEntryForm.js
 import Navbar from "./OfficerNavbar";
 import './DataEntry.css';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 
 const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
@@ -57,6 +57,48 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
 
 
   const [formData, setFormData] = useState({ ...initialFormData });
+  const fileInputRef = useRef(null);
+
+   // Function to handle camera capture
+   const handleCameraCapture = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+
+      const video = document.createElement('video');
+      video.autoplay = true;
+      video.srcObject = mediaStream;
+
+      video.addEventListener('loadedmetadata', () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob((blob) => {
+          const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+          setFormData({ ...formData, photo: file });
+        }, 'image/jpeg', 1);
+
+        mediaStream.getTracks().forEach((track) => {
+          track.stop();
+        });
+      });
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+    }
+  };
+
+  const handleFileInputChange = (event) => {
+    const { name, files } = event.target;
+    if (name === 'photo') {
+      setFormData({ ...formData, [name]: files[0] });
+    }
+  };
+  
 
   const handleChange = (event) => {
     const { name, value, files } = event.target;
@@ -205,12 +247,26 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             <div className="form-group">
               <label>Photo:</label>
               <input
+                ref={fileInputRef}
                 type="file"
                 name="photo"
-                onChange={handleChange}
+                onChange={handleFileInputChange}
                 accept="image/*"
+                style={{ display: 'none' }}
                 required
               />
+              <button
+                type="button"
+                onClick={handleCameraCapture}
+              >
+                Capture Photo
+              </button>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current.click()}
+              >
+                Upload Photo
+              </button>
               {formData.photo && (
                 <img
                   className="photo-preview"
