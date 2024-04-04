@@ -1,0 +1,54 @@
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .name-column, .actions-column {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .name-cell, .actions-cell {
+    padding: 10px;
+  }
+  
+  .approve-btn, .decline-btn, .print-preview-btn {
+    cursor: pointer;
+    padding: 6px 10px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  .approve-btn {
+    background-color: rgb(44, 135, 239);
+    color: #fff;
+  }
+  
+  .decline-btn {
+    background-color: #000000;
+    color: #fff;
+  }
+  
+  .print-preview-btn {
+    background-color: #676d68;
+    color: #fff;
+  }
+  
+  .approve-btn:hover, .decline-btn:hover, .print-preview-btn:hover {
+    opacity: 0.8;
+  }
+  
+
+  
+  @media print {
+    .hide-on-print {
+      display: inline-block;
+    }
+  
+    .approve-btn, .decline-btn, .print-preview-btn {
+      display: none;
+    }
+  }
+  

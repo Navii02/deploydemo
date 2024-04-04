@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Navbar from "./OfficerNavbar";
+import './DataTable.css'
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -333,27 +335,27 @@ const StudentList = () => {
 
   return (
     <div>
-      <h1>Student List</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.map(student => (
-            <tr key={student._id}>
-              <td>{student.name}</td>
-              <td>
-                <button onClick={() => handleApprove(student._id)}>Approve</button>
-                <button onClick={() => handleDecline(student._id)}>Decline</button>
-                <button className="hide-on-print" onClick={() => handlePrintPreview(student._id,student.photo)}>Print Preview</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Navbar />
+      <table class="students-table">
+  <thead>
+    <tr>
+      <th class="name-column">Name</th>
+      <th class="actions-column">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {students.map(student => (
+      <tr key={student._id}>
+        <td class="name-cell">{student.name}</td>
+        <td class="actions-cell">
+          <button class="approve-btn" onClick={() => handleApprove(student._id)}>Approve</button>
+          <button class="decline-btn" onClick={() => handleDecline(student._id)}>Decline</button>
+          <button class="print-preview-btn" onClick={() => handlePrintPreview(student._id,student.photo)}>Print Preview</button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
     </div>
   );
 };
