@@ -44,16 +44,16 @@ function TeacherPage() {
                     <tr>
                         <th>Name</th>
                         <th>Department</th>
-                        <th>Phone Number</th>
+                        <th>Email</th>
                         <th>Subjects</th>
                     </tr>
                 </thead>
                 <tbody>
                     {filteredTeachers.map(teacher => (
                         <tr key={teacher.id}>
-                            <td>{teacher.name}</td>
+                            <td>{teacher.teachername}</td>
                             <td>{teacher.branches}</td>
-                            <td>{teacher.phoneNumber}</td>
+                            <td>{teacher.email}</td>
                             <td>{teacher.subjects.join(', ')}</td>
                         </tr>
                     ))}

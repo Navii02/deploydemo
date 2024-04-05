@@ -47,6 +47,7 @@ const principalForget=require('./api/principal/principalForgot')
 const pstudents=require('./api/principal/StudentList')
 const pTeachers=require('./api/principal/TeacherList')
 const pofficers=require('./api/principal/OfficerList')
+const HodAssign = require('./api/principal/hodassign')
 
 const adminRouter = require('./api/Admin/AdminRoutes')
 const TeachersDetail=require('./api/hod/TeachersDetails')
@@ -133,6 +134,7 @@ app.use('/api',pstudents)
 app.use('/api',pTeachers)
 app.use('/api',pofficers)
 app.use('/api',aprrovedLists)
+app.use('/api',HodAssign)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));

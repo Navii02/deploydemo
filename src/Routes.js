@@ -65,6 +65,7 @@ import PForgotPassword from './components/principal/PrinciForgot'
 import Pstudents from './components/principal/StudentsList'
 import Pteachers from './components/principal/TeachersList'
 import Pofficers from './components/principal/OfficersList'
+import Hodassign from './components/principal/hodassign'
 
 
 
@@ -133,6 +134,7 @@ function RoutesComp() {
             <Route path='/pteachers' element={<Pteachers/>}/>
             <Route path='/pOffice' element={<Pofficers/>}/>
             <Route path='/hodstudents' element={<HStudenlist/>}/>
+            <Route path='/hodassign' element={<Hodassign/>}/>
             
           </>
         )}
