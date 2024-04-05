@@ -1,8 +1,7 @@
-// DataEntryForm.js
-import Navbar from "./OfficerNavbar";
-import './DataEntry.css';
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
+import Navbar from "./OfficerNavbar";
+import './DataEntry.css';
 
 const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   const initialFormData = {
@@ -38,12 +37,12 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       mathematics: '',
     },
     parentDetails: {
-        fatherName: '',
-        fatherOccupation: '',
-        fatherMobileNo: '',
-        motherName: '',
-        motherOccupation: '',
-        motherMobileNo: '',
+      fatherName: '',
+      fatherOccupation: '',
+      fatherMobileNo: '',
+      motherName: '',
+      motherOccupation: '',
+      motherMobileNo: '',
     },
     annualIncome: '',
     nativity: '',
@@ -55,37 +54,37 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     },
   };
 
-
   const [formData, setFormData] = useState({ ...initialFormData });
   const fileInputRef = useRef(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
-   // Function to handle camera capture
-   const handleCameraCapture = async () => {
+  const handleCameraCapture = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: true,
       });
 
-      const video = document.createElement('video');
-      video.autoplay = true;
-      video.srcObject = mediaStream;
+      videoRef.current.srcObject = mediaStream;
+      videoRef.current.play(); // Start playing the video
 
-      video.addEventListener('loadedmetadata', () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+      // Introduce a delay before capturing the photo
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
-        const context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const canvas = canvasRef.current;
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
 
-        canvas.toBlob((blob) => {
-          const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
-          setFormData({ ...formData, photo: file });
-        }, 'image/jpeg', 1);
+      const context = canvas.getContext('2d');
+      context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
-        mediaStream.getTracks().forEach((track) => {
-          track.stop();
-        });
+      canvas.toBlob((blob) => {
+        const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+        setFormData({ ...formData, photo: file });
+      }, 'image/jpeg', 1);
+
+      mediaStream.getTracks().forEach((track) => {
+        track.stop(); // Stop the media stream tracks
       });
     } catch (error) {
       console.error('Error accessing camera:', error);
@@ -98,11 +97,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       setFormData({ ...formData, [name]: files[0] });
     }
   };
-  
 
   const handleChange = (event) => {
     const { name, value, files } = event.target;
-
     if (name === 'photo') {
       setFormData({ ...formData, [name]: files[0] });
     } else if (name.includes('plusTwo')) {
@@ -137,17 +134,11 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     }
   };
 
- 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    // Create a new FormData object to send the form data
     const sendData = new FormData();
-  
-    // Append form data to the FormData object
     for (const key in formData) {
-     if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
+      if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
         for (const subKey in formData[key]) {
           sendData.append(`${key}.${subKey}`, formData[key][subKey]);
         }
@@ -155,16 +146,11 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
         sendData.append(key, formData[key]);
       }
     }
-  
+
     try {
-      // Make the axios POST request with the FormData object
       const response = await axios.post('/api/studentadmission', sendData);
-      console.log(response.data); // Log the response from the backend
-  
-      // Reset the form data to initial state after successful submission
+      console.log(response.data);
       setFormData({ ...initialFormData });
-  
-      // Fetch updated student list and trigger onDataEntered callback
       fetchStudents();
       onDataEntered(formData);
     } catch (error) {
@@ -172,8 +158,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     }
   };
   
-
-
   return (
     <div>
       <Navbar />
@@ -204,8 +188,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               >
                 <option value="">Select Allotment Category</option>
-                <option value="merit">SM</option>
-                <option value="management">MG</option>
+                <option value="State Merit">SM</option>
               </select>
             </div>
             <div className="form-group">
@@ -217,8 +200,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               >
                 <option value="">Select Fee Category</option>
-                <option value="meritRegulatedFee">Merit Regulated Fee</option>
-                <option value="meritFullFee">Merit Full Fee</option>
+                <option value="Merit Lower Fee">Merit Lower Fee</option>
+                <option value="Merit Higher Fee">Merit Higher Fee</option>
               </select>
             </div>
             <div className="form-group">
@@ -252,19 +235,12 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 name="photo"
                 onChange={handleFileInputChange}
                 accept="image/*"
-                style={{ display: 'none' }}
-                required
+                style={{ opacity: 0, position: 'absolute', zIndex: -1 }} // Hide but keep accessible
               />
-              <button
-                type="button"
-                onClick={handleCameraCapture}
-              >
+              <button type="button" onClick={handleCameraCapture}>
                 Capture Photo
               </button>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current.click()}
-              >
+              <button type="button" onClick={() => fileInputRef.current.click()}>
                 Upload Photo
               </button>
               {formData.photo && (
@@ -274,6 +250,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   alt="Uploaded"
                 />
               )}
+              {/* Video and canvas elements for camera capture */}
+              <video ref={videoRef} style={{ display: 'none' }}></video>
+              <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
             </div>
             <div className="form-group">
               <label>Address:</label>
@@ -655,4 +634,3 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
 }
 
 export default DataEntryForm;
-
