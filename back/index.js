@@ -64,10 +64,11 @@ const corsOptions = {
   optionSuccessStatus:200,
 }
 mongoose.Promise = global.Promise
-mongoose.connect(process.env.DATABASE_CONNECTION_STRING,{
-    useNewUrlParser: true,
-    
-})
+mongoose.connect(process.env.DATABASE_CONNECTION_STRING, {
+  useNewUrlParser: true,
+
+});
+
 
 
 // setting up connect-mongodb-session store

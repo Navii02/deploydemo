@@ -6,6 +6,7 @@ const ApprovedAndRemoved = () => {
   const [removedStudents, setRemovedStudents] = useState([]);
   const [showRemoved, setShowRemoved] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState('');
+  const [selectedSemester, setSelectedSemester] = useState('');
 
   useEffect(() => {
     // Fetch approved students from the server
@@ -334,6 +335,10 @@ const ApprovedAndRemoved = () => {
     setSelectedCourse(e.target.value);
   };
 
+  const handleSemesterChange = (e) => {
+    setSelectedSemester(e.target.value);
+  };
+
   return (
     <div>
       <h1>Student List</h1>
@@ -373,7 +378,7 @@ const ApprovedAndRemoved = () => {
         </div>
       )}
 
-      {/* Course Filter Dropdown */}
+      {/* Course Filter */}
       <div>
         <label htmlFor="course">Select Course: </label>
         <select id="course" value={selectedCourse} onChange={handleCourseChange}>
@@ -387,6 +392,15 @@ const ApprovedAndRemoved = () => {
       {!showRemoved && (
         <div>
           <h2>Approved Students</h2>
+          <div>
+            <label htmlFor="semester">Select Semester: </label>
+            <select id="semester" value={selectedSemester} onChange={handleSemesterChange}>
+              <option value="">All</option>
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+              {/* Add more options for semesters if needed */}
+            </select>
+          </div>
           <table>
             <thead>
               <tr>
@@ -398,7 +412,13 @@ const ApprovedAndRemoved = () => {
             </thead>
             <tbody>
               {approvedStudents
-                .filter(student => !selectedCourse || String(student.course) === selectedCourse)
+                .filter(student => {
+                  // Apply filter for course
+                  let passCourseFilter = !selectedCourse || String(student.course) === selectedCourse;
+                  // Apply filter for semester if selectedCourse is not empty
+                  let passSemesterFilter = !selectedCourse || !selectedSemester || String(student.semester) === selectedSemester;
+                  return passCourseFilter && passSemesterFilter;
+                })
                 .map(student => (
                   <tr key={student.admissionNumber}>
                     <td>{student.admissionNumber}</td>
