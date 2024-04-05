@@ -60,6 +60,11 @@ function PrinciNavbar() {
                 Office
               </Link>
             </li>
+            <li className='nav-item'>
+              <Link to='/hodassign' className='nav-links' onClick={closeMobileMenu}>
+                HodAssign
+              </Link>
+            </li>
           </ul>
           <div className='nav-out'>
             <li>

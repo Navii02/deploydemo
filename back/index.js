@@ -47,6 +47,7 @@ const principalForget=require('./api/principal/principalForgot')
 const pstudents=require('./api/principal/StudentList')
 const pTeachers=require('./api/principal/TeacherList')
 const pofficers=require('./api/principal/OfficerList')
+const HodAssign = require('./api/principal/hodassign')
 
 const adminRouter = require('./api/Admin/AdminRoutes')
 const TeachersDetail=require('./api/hod/TeachersDetails')
@@ -64,10 +65,11 @@ const corsOptions = {
   optionSuccessStatus:200,
 }
 mongoose.Promise = global.Promise
-mongoose.connect(process.env.DATABASE_CONNECTION_STRING,{
-    useNewUrlParser: true,
-    
-})
+mongoose.connect(process.env.DATABASE_CONNECTION_STRING, {
+  useNewUrlParser: true,
+
+});
+
 
 
 // setting up connect-mongodb-session store
@@ -132,6 +134,7 @@ app.use('/api',pstudents)
 app.use('/api',pTeachers)
 app.use('/api',pofficers)
 app.use('/api',aprrovedLists)
+app.use('/api',HodAssign)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));
