@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import validator from 'validator';
@@ -74,19 +73,14 @@ function HodLogin() {
       const data = await res.json();
 
       if (data) {
-        // Save the email to local storage
-        localStorage.setItem('email', data.email);
-
-        // Retrieve the email from local storage
-        const userEmail = localStorage.getItem('email');
-        console.log('User Email:', userEmail);
-
-
         // Redirect the officer to the office page
         Navigate('/hodhome');
+        localStorage.setItem('branch', data.branch);
+        localStorage.setItem('branch', data.email);
+        console.log('email', data.email);
+        console.log('branch', data.branch);
       } else {
-        alert('Login failed');
-        window.location.href = '/hodlogin';
+        alert('Login failed. Please contact the office.');
       }
 
       setValues({
@@ -146,9 +140,9 @@ function HodLogin() {
                     {values.showPassword}
                   </span>
                 </div>
-                <a href="/hforgot" onClick={handleForgotPassword} class="forgot-password-link">
-  Forgot Password?
-</a>
+                <a href="/hforgot" onClick={handleForgotPassword} className="forgot-password-link">
+                  Forgot Password?
+                </a>
               </div>
 
               <div className="login-button-container">

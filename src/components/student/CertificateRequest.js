@@ -20,14 +20,6 @@ function StudentCertificateRequestPage() {
     setSelectedDocuments(updatedSelection);
   };
 
-  const resetForm = () => {
-    setRegisterNumber('');
-    setReason('');
-    setSelectedDocuments([]);
-    setSuccessMessage('');
-    setErrorMessage('');
-  };
-
   const handleSubmit = async () => {
     try {
       if (!registerNumber || !reason || selectedDocuments.length === 0) {
@@ -43,7 +35,6 @@ function StudentCertificateRequestPage() {
       });
 
       setSuccessMessage(response.data.message);
-      resetForm(); // Clear form fields on successful request
     } catch (error) {
       setErrorMessage(error.response.data.message);
     }
