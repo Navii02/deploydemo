@@ -66,8 +66,8 @@ function OfficerNavbar() {
                 Student Data<i className='fas fa-caret-down' />
               </Link>
               <div className='dropdown-content'>
-                <Link to='/' className='dropdown-link' onClick={closeMobileMenu}>
-                  Data Entry
+                <Link to='/feepayment' className='dropdown-link' onClick={closeMobileMenu}>
+                  FeePayment
                 </Link>
                 <Link to='/' className='dropdown-link' onClick={closeMobileMenu}>
                   Data Table

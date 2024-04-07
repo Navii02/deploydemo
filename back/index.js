@@ -25,6 +25,7 @@ const certificate = require('./api/officer/certificate')
 const StudentAdmission =require('./api/officer/StudentAdmission');
 const officerForget=require('./api/officer/officerForgot')
 const aprrovedLists = require('./api/officer/approvedandremovedlist')
+const FeePayment = require('./api/officer/FeePayment')
 
 
 const FaculityRoutes = require('./api/faculity/faculityRoutes')
@@ -36,7 +37,7 @@ const AssigmentNotification =require('./api/faculity/Assignmentnotification');
 const HodRoutes = require('./api/hod/HodRoutes')
 const hodForget=require('./api/hod/hodForgot')
 const hodcertificaterequest=require('./api/hod/Hodcertificaterequest');
-
+const HodStudenlist=require('./api/hod/hodstudentlist');
 
 const tutorForget=require('./api/tutor/tutorForgot')
 const classtutorRoutes = require('./api/tutor/classtutorroutes')
@@ -135,6 +136,8 @@ app.use('/api',pTeachers)
 app.use('/api',pofficers)
 app.use('/api',aprrovedLists)
 app.use('/api',HodAssign)
+app.use('/api',HodStudenlist)
+app.use('/api',FeePayment)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));

@@ -16,6 +16,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+
+
 // Function to handle notice upload
 const handleNoticeUpload = async (req, res) => {
   try {
@@ -36,6 +38,7 @@ const handleNoticeUpload = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+app.post('/photos', upload.single('image'), handleNoticeUpload);
 
 // Routes
 app.get('/notices', async (req, res) => {
@@ -48,6 +51,5 @@ app.get('/notices', async (req, res) => {
   }
 });
 
-app.post('/photos', upload.single('image'), handleNoticeUpload);
 
 module.exports = app;

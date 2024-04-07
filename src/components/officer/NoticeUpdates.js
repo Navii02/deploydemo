@@ -42,7 +42,7 @@ function NoticeUpdates() {
       setNotice('');
       setImage(null);
 
-      fetchNotices(); // Fetch the updated list of notices after adding a new one
+      fetchNotices();
     } catch (error) {
       console.log(error.response.data);
     }
@@ -79,7 +79,7 @@ function NoticeUpdates() {
       <div className="notice-list">
         {notices.map((notice) => (
           <div key={notice._id}>
-            <img style={{ width: 400, height: 400 }} src={`/uploads/${notice.image}`} alt="Notice" />
+            <img style={{ width: 400, height: 400 }} src={`/uploads/${notice.image}`} alt="Notice" />  
             <h3>{notice.notice}</h3>
           </div>
         ))}

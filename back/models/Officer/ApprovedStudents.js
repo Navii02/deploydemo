@@ -1,7 +1,18 @@
 const mongoose = require('mongoose');
 
+const InstallmentSchema = new mongoose.Schema({
+  number: Number,
+  status: {
+    type: String,
+    enum: ['Not Paid', 'Paid'],
+    default: 'Not Paid',
+  },
+  paymentDate: Date,
+  amount: Number,
+});
+
 const ApprovedStudentSchema = new mongoose.Schema({
-  customId: String, // New field for custom ID
+  customId: String,
   admissionNumber: String,
   admissionType: String,
   admissionId: String, 
@@ -51,12 +62,12 @@ const ApprovedStudentSchema = new mongoose.Schema({
     ifscCode: String,
   },
   semester: Number,
+  feeInstallments: [InstallmentSchema], // Array of installment objects
 });
 
 // Pre-save middleware to generate custom ID before saving
 ApprovedStudentSchema.pre('save', function(next) {
   const currentYear = new Date().getFullYear();
-  // Assuming you want the custom ID in the format "number/year" (e.g., "100/2024")
   this.customId = `${this.admissionNumber}/${currentYear}`;
   next();
 });
