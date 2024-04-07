@@ -10,7 +10,11 @@ function Dashboard() {
 
   useEffect(() => {
     fetchStudentDetails();
-  },);
+
+    const intervalId = setInterval(fetchStudentDetails, 300000); // Fetch data every 5 minutes (300000 milliseconds)
+
+    return () => clearInterval(intervalId); // Clear interval on component unmount
+  }, []);
 
   const fetchStudentDetails = () => {
     fetch(`/api/student/${userEmail}`)
@@ -40,8 +44,8 @@ function Dashboard() {
           <p>Gender: {student.gender}</p>
           <p>Religion: {student.religion}</p>
           <p>Caste: {student.community}</p>
-          <p>Plus Two Board: {student.plusTwo.board}</p>
-          <p>Plus Two Mark Percentage: {student.plusTwo.percentage}</p>
+          <p>Plus Two Board: {student.plusTwo?.board}</p>
+          <p>Plus Two Mark Percentage: {student.plusTwo?.percentage}</p>
           
           <br/>
           
@@ -55,4 +59,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-
