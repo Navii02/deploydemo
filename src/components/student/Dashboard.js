@@ -6,15 +6,6 @@ import './Dashboard.css';
 function Dashboard() {
   const [student, setStudentDetails] = useState(null);
   const userEmail = localStorage.getItem('email'); // Get the user's email from localStorage
-  console.log('User Email:', userEmail);
-
-  useEffect(() => {
-    fetchStudentDetails();
-
-    const intervalId = setInterval(fetchStudentDetails, 300000); // Fetch data every 5 minutes (300000 milliseconds)
-
-    return () => clearInterval(intervalId); // Clear interval on component unmount
-  }, []);
 
   const fetchStudentDetails = () => {
     fetch(`/api/student/${userEmail}`)
@@ -27,17 +18,29 @@ function Dashboard() {
       });
   };
 
+  useEffect(() => {
+    fetchStudentDetails();
+
+    const intervalId = setInterval(fetchStudentDetails, 300000); // Fetch data every 5 minutes (300000 milliseconds)
+
+    return () => clearInterval(intervalId); // Clear interval on component unmount
+  }, );
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <>
     <Navbar />
     <div className="dashboard-container">
-      <h1 className="dashboard-title">Student Details</h1>
       {student ? (
         <div className="student-details">
           <h4>Name: {student.name}</h4>
           <p>Email: {student.email}</p>
           <p>Register Number: {student.admissionNumber}</p>
-          <p>Date of Birth: {student.dateOfBirth}</p>
+          <p>Date of Birth: {formatDate(student.dateOfBirth)}</p>
           <p>Branch: {student.course}</p> 
           <p>Semester: {student.semester}</p>
           <p>Address: {student.address}</p>

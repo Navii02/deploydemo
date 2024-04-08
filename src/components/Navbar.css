@@ -154,9 +154,15 @@
     background: #fff;
     color: #242424;
     transition: 250ms;
+
   }
 
-  
+  .dropdown-content {
+    position: absolute;
+    top: 315px;
+    right: 100px;
+
+  }
 }
 
 .dropdown-content {

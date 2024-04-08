@@ -40,6 +40,10 @@
   border-radius: 4px;
 }
 
+.certificate-request-form .document-selection {
+  margin-bottom: 20px;;
+}
+
 .certificate-request-form .document-selection .checkbox-list {
   list-style: none;
   padding: 0;

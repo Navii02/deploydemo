@@ -79,31 +79,29 @@ function OfficerNavbar() {
                 Services<i className='fas fa-caret-down' />
               </Link>
             <div className='dropdown-content'>
-              <Link to='/certificate-distribution' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/certificate-distribution' className='dropdown-link' onClick={closeMobileMenu}>
                 Certificates
               </Link>
-              <Link to='/payment' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/payment' className='dropdown-link' onClick={closeMobileMenu}>
                 Payments
               </Link>
-              <Link to='/notice-updates' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/notice-updates' className='dropdown-link' onClick={closeMobileMenu}>
                 Noticeboard
               </Link>
             </div>
             </li>
-          </ul>
-          <div className='nav-out'>
             <li>
               <Link to='/officerlogin' className='nav-links-mobile' onClick={handleLogout}>
                 Log Out
               </Link>
             </li>
+          </ul>
             {button && (
               <Button buttonStyle='btn--outline' onClick={handleLogout}>
                 LOG OUT
               </Button>
             )}
           </div>
-        </div>
       </nav>
     </>
   );
