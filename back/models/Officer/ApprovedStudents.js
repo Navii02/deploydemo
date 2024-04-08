@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const InstallmentSchema = new mongoose.Schema({
-  number: Number,
+  Number: Number,
   status: {
     type: String,
     enum: ['Not Paid', 'Paid'],
@@ -62,7 +62,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
     ifscCode: String,
   },
   semester: Number,
-  feeInstallments: [InstallmentSchema], // Array of installment objects
+  installments: [InstallmentSchema], // Array of installment objects
 });
 
 // Pre-save middleware to generate custom ID before saving

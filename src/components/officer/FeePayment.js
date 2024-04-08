@@ -4,13 +4,11 @@ function StudentDetailsPage() {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    // Fetch student details when component mounts
     fetchStudentDetails();
   }, []);
 
   const fetchStudentDetails = async () => {
     try {
-      // Fetch student details from backend API
       const response = await fetch('/api/officer/details');
       if (!response.ok) {
         throw new Error('Failed to fetch student details');
@@ -18,27 +16,25 @@ function StudentDetailsPage() {
       const data = await response.json();
       setStudents(data.students);
     } catch (error) {
-      console.error('Error fetching student details:', error.message);
+      console.error(error.message);
     }
   };
 
   const handleFeePayment = async (studentId, installmentIndex) => {
     try {
-      // Submit fee payment information to backend API
-      const response = await fetch('/api/officer/fee-payment', {
+      const response = await fetch(`/api/officer/fee-payment/${studentId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ studentId, installmentIndex }),
+        body: JSON.stringify({ installmentIndex: installmentIndex }), // Corrected parameter name
       });
       if (!response.ok) {
         throw new Error('Failed to submit fee payment');
       }
-      // Fetch updated student details after fee payment submission
       fetchStudentDetails();
     } catch (error) {
-      console.error('Error submitting fee payment:', error.message);
+      console.error(error.message);
     }
   };
 
@@ -50,8 +46,7 @@ function StudentDetailsPage() {
           <div key={student._id} className="student-card">
             <h2>Name: {student.name}</h2>
             <p>Roll Number: {student.admissionNumber}</p>
-            <p>Branch: {student.course}</p>
-            {/* Add more student details here */}
+            <p>Branch: {student.branch}</p>
             <div className="fee-payment-section">
               <h3>Fee Payment</h3>
               <div className="fee-table">

@@ -1,44 +1,45 @@
-// routes/studentRoutes.js
-
 const express = require('express');
 const router = express.Router();
-const Student = require('../../models/Officer/ApprovedStudents');
+const ApprovedStudent = require('../../models/Officer/ApprovedStudents');
 
-// Route to fetch all student details
+// Routes
+
 router.get('/officer/details', async (req, res) => {
   try {
-    const students = await Student.find({});
-    res.status(200).json({ students });
+    const students = await ApprovedStudent.find();
+    res.json({ students });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Route to update fee payment status
-router.post('/api/officer/fee-payment', async (req, res) => { // Corrected route path
+router.post('/officer/fee-payment/:studentId', async (req, res) => {
+  const { studentId } = req.params;
+  const { installmentIndex } = req.body;
+  
   try {
-    const { studentId, installmentIndex } = req.body;
-
-    // Find the student by ID
-    const student = await Student.findById(studentId);
+    const student = await ApprovedStudent.findById(studentId);
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
 
-    // Update the payment status of the specified installment
-    if (student.feeInstallments && student.feeInstallments.length > installmentIndex) {
-      student.feeInstallments[installmentIndex].status = 'Paid';
-      student.feeInstallments[installmentIndex].paymentDate = new Date();
-      await student.save();
-      res.status(200).json({ message: 'Fee payment status updated successfully', student });
-    } else {
-      res.status(400).json({ message: 'Invalid installment index or fee installments not found' });
+    // Ensure student.installments exists and installmentIndex is within bounds
+    if (!student.installments || installmentIndex < 0 || installmentIndex >= student.installments.length) {
+      return res.status(400).json({ message: 'Invalid installment index' });
     }
+
+    // Update installment status
+    student.installments[installmentIndex].status = 'Paid'; // No need to subtract 1 here
+    student.installments[installmentIndex].paymentDate = new Date();
+    await student.save();
+
+    res.json({ message: 'Fee payment successful' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 module.exports = router;
