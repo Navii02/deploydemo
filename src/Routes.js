@@ -17,6 +17,7 @@ import Reminders from './components/student/reminders'
 import CertificateRecieve from './components/student/CertificateRecieve'
 import SForgotPassword from './components/student/StudentForgot'
 
+
 import OfficerSignup from './components/officer/OfficerSignup'
 import Officerlogin from './components/officer/Officerlogin'
 import DataEntryForm from './components/officer/DataEditing'
@@ -59,6 +60,7 @@ import HForgotPassword from './components/hod/hodForgot'
 import CertificateApproval from './components/hod/CertificateApproval'
 import HStudenlist from './components/hod/studenlisthod'
 import HodStudenlist from './components/hod/HstudentsDetails'
+import SubjectAdd from './components/hod/SubjectAddition'
 
 import PrinciHome from './components/principal/PrinciHome'
 import PrincipalSignup from './components/principal/principalsignup'
@@ -68,6 +70,8 @@ import Pstudents from './components/principal/StudentsList'
 import Pteachers from './components/principal/TeachersList'
 import Pofficers from './components/principal/OfficersList'
 import Hodassign from './components/principal/hodassign'
+
+
 
 
 
@@ -140,6 +144,8 @@ function RoutesComp() {
             <Route path='/hodassign' element={<Hodassign/>}/>
             <Route path='/hstudents' element={<HodStudenlist/>}/>
             <Route path='/feepayment' element={<FeePayment/>}/>
+            <Route path='/subject' element={<SubjectAdd/>}/>
+           
           </>
         )}
       </Routes>

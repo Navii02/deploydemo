@@ -38,6 +38,7 @@ const HodRoutes = require('./api/hod/HodRoutes')
 const hodForget=require('./api/hod/hodForgot')
 const hodcertificaterequest=require('./api/hod/Hodcertificaterequest');
 const HodStudenlist=require('./api/hod/hodstudentlist');
+const Subject=require('./api/hod/SubjectAddition')
 
 const tutorForget=require('./api/tutor/tutorForgot')
 const classtutorRoutes = require('./api/tutor/classtutorroutes')
@@ -138,6 +139,7 @@ app.use('/api',aprrovedLists)
 app.use('/api',HodAssign)
 app.use('/api',HodStudenlist)
 app.use('/api',FeePayment)
+app.use('/api',Subject)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));

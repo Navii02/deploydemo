@@ -50,10 +50,22 @@ function HodNavbar() {
                 Requests
               </Link>
             </li>
-            <li className='nav-item'>
-              <Link to='/teacher-details' className='nav-links' onClick={closeMobileMenu}>
-               Faculty 
+            <li className='nav-item dropdown'>
+              <Link to='/hodhome' className='nav-links' onClick={closeMobileMenu}>
+                Faculity<i className='fas fa-caret-down' />
               </Link>
+              <div className='dropdown-content'>
+                <Link to='/teacher-details' className='dropdown-link' onClick={closeMobileMenu}>
+                  TeacherDetails
+                </Link>
+                <Link to='/subject' className='dropdown-link' onClick={closeMobileMenu}>
+                  Subject Addition
+                </Link>
+                <Link to='/' className='dropdown-link' onClick={closeMobileMenu}>
+                  Subject Assign
+                </Link>
+                
+              </div>
             </li>
             <li className='nav-item'>
               <Link to='/hstudents' className='nav-links' onClick={closeMobileMenu}>
