@@ -6,7 +6,7 @@ import HodNavbar from './HodNavbar';
 
 const AdminTeachersPage = () => {
   const [teachers, setTeachers] = useState([]);
-  const [newTeacher, setNewTeacher] = useState({ teachername: '', email: '', subjects: '', branches: '', semesters: '' });
+  const [newTeacher, setNewTeacher] = useState({ teachername: '', email: '', subjects: '', subjectCode:'', branches: '', semesters: '' });
   const [editingTeacher, setEditingTeacher] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [showAddTeacher, setShowAddTeacher] = useState(false); // State to toggle add teacher section visibility
@@ -28,7 +28,7 @@ const AdminTeachersPage = () => {
     try {
       await axios.post('/api/admin/addTeacher', newTeacher);
       fetchTeachers();
-      setNewTeacher({ teachername: '', email: '', subjects: '', branches: '', semesters: '' });
+      setNewTeacher({ teachername: '', email: '', subjects: '',subjectCode:'', branches: '', semesters: '' });
       setShowAddTeacher(false); // Hide the add teacher section after adding
     } catch (error) {
       setErrorMessage(error.response.data.message);
@@ -68,6 +68,7 @@ const AdminTeachersPage = () => {
           <th>Name</th>
           <th>Email</th>
           <th>Subjects</th>
+          <th>subjectCode</th>
           <th>Branches</th>
           <th>Semesters</th>
           <th>Actions</th>
@@ -102,6 +103,13 @@ const AdminTeachersPage = () => {
                 <td>
                   <input
                     type="text"
+                    value={editingTeacher.subjectCode}
+                    onChange={(e) => setEditingTeacher({ ...editingTeacher, subjectCode: e.target.value })}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
                     value={editingTeacher.branches}
                     onChange={(e) => setEditingTeacher({ ...editingTeacher, branches: e.target.value })}
                   />
@@ -122,6 +130,7 @@ const AdminTeachersPage = () => {
                 <td>{teacher.teachername}</td>
                 <td>{teacher.email}</td>
                 <td>{teacher.subjects}</td>
+                <td>{teacher.subjectCode}</td>
                 <td>{teacher.branches}</td>
                 <td>{teacher.semesters}</td>
                 <td>

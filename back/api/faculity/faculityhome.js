@@ -1,6 +1,6 @@
 // teachers-profile.js
 const express = require('express');
-const FacultyProfile = require('../../models/Principal/TeachersDetailSchema');
+const FacultyProfile = require('../../models/hod/TeachersDetailSchema');
 
 const app = express();
 

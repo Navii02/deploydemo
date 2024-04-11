@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Teacher = require('../../models/Principal/TeachersDetailSchema') // Assuming you have a Teacher model defined
+const Teacher = require('../../models/hod/TeachersDetailSchema') // Assuming you have a Teacher model defined
 
 // Route to fetch all teachers
 router.get('/teachers', async (req, res) => {

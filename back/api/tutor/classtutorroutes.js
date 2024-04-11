@@ -1,4 +1,5 @@
 const TutorSchema = require('../../models/Tutor/TutorSchema');
+const TeacherDetailSchema = require('../../models/hod/TeachersDetailSchema');
 const bcrypt = require('bcrypt');
 const express = require('express');
 const router = express.Router();
@@ -58,27 +59,40 @@ router.post('/classtutorregister', async (req, res) => {
     }
   });
 });
-
 router.post(`/classtutorlogin`, async (req, res) => {
   const { email, password } = req.body
 
   if (!email || !password) {
-    res.status(400).json({ msg: 'Something missing' })
+    res.status(400).json({ msg: 'Email and password are required' })
   }
 
-  const user = await TutorSchema.findOne({ email: email }) // finding user in db
-  if (!user) {
-    return res.status(400).json({ msg: 'User not found' })
-  }
+  try {
+    const user = await TutorSchema.findOne({ email }); // finding user in db
+    if (!user) {
+      return res.status(400).json({ msg: 'User not found' })
+    }
 
-  // comparing the password with the saved hash-password
-  const matchPassword = await bcrypt.compare(password, user.password)
-  if (matchPassword) {
-    return res
-      .status(200)
-      .json({ msg: 'You have logged in successfully' }) 
-  } else {
-    return res.status(400).json({ msg: 'Invalid credential' })
+    // comparing the password with the saved hash-password
+    const matchPassword = await bcrypt.compare(password, user.password)
+    if (matchPassword) {
+      // Check if the teacher exists in TeacherDetailSchema
+      const teacher = await TeacherDetailSchema.findOne({ email });
+      if (!teacher) {
+        return res.status(400).json({ msg: 'Teacher details not found' });
+      }
+
+      // Check if the teacher has an academic year
+      if (!teacher.academicYear) {
+        return res.status(400).json({ msg: 'Academic year not set for the teacher' });
+      }
+
+      return res.status(200).json({ msg: 'You have logged in successfully', academicYear: teacher.academicYear ,department: teacher.branches});
+    } else {
+      return res.status(400).json({ msg: 'Invalid credentials' })
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ msg: 'Internal Server Error' });
   }
 })
 

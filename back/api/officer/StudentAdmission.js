@@ -1,4 +1,3 @@
-// routes/student.js
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -16,10 +15,9 @@ const storage = multer.diskStorage({
     cb(null, 'studentsphoto/'); // Save photos in the 'studentsphoto' folder
   },
   filename: function (req, file, cb) {
-    
-      const fileId = new mongoose.Types.ObjectId(); // Generate a new unique ID
-      const filename = `${fileId}${path.extname(file.originalname)}`; // Use the unique ID as the filename
-      cb(null, filename);
+    const fileId = new mongoose.Types.ObjectId(); // Generate a new unique ID
+    const filename = `${fileId}${path.extname(file.originalname)}`; // Use the unique ID as the filename
+    cb(null, filename);
   },
 });
 
@@ -31,6 +29,13 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
     const formData = req.body;
     formData.photo = req.file ? req.file.path : null;
 
+    const admissionYear = new Date().getFullYear(); // Get the current year
+
+    // Calculate the end year of the academic year
+    const academicYearEnd = admissionYear + 4;
+
+    // Construct the academic year string
+    const academicYear = `${admissionYear}-${academicYearEnd}`;
 
     const lastStudent = await Student.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
 
@@ -38,12 +43,13 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
     if (lastStudent) {
       // Extract the last admission ID and increment it by one
       const lastAdmissionId = parseInt(lastStudent.admissionId.split('/')[0], 10);
-      nextAdmissionId = `${lastAdmissionId + 1}/${new Date().getFullYear()}`;
+      nextAdmissionId = `${lastAdmissionId + 1}/${academicYear}`;
     } else {
       // If no previous admission, start from a default number
-      nextAdmissionId = '1000/' + new Date().getFullYear();
+      nextAdmissionId = '1000/' + academicYear;
     }
     formData.admissionId = nextAdmissionId;
+    formData.academicYear = academicYear;
 
     if (formData.plusTwo && formData.plusTwo.registerNo) {
       const existingStudent = await Student.findOne({ 'plusTwo.regNo': formData.plusTwo.regNo });
@@ -151,8 +157,6 @@ router.get('/studentDetails/:id', async (req, res) => {
   }
 });
 
-
-
 router.post('/decline/:id', async (req, res) => {
   const studentId = req.params.id;
 
@@ -172,7 +176,9 @@ router.post('/decline/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
-});router.post('/approve/:id', async (req, res) => {
+});
+
+router.post('/approve/:id', async (req, res) => {
   const studentId = req.params.id;
 
   try {
@@ -230,6 +236,5 @@ router.post('/decline/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 module.exports = router;

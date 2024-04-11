@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Teacher = require('../../models/Principal/TeachersDetailSchema');
+const Teacher = require('../../models/hod/TeachersDetailSchema');
 const HODDetail = require('../../models/Principal/HODDetail');
 
 // Route to fetch teachers who are not yet assigned as HODs

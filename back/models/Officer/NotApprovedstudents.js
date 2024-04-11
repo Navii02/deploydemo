@@ -50,6 +50,7 @@ const notAdmittedStudentSchema = new mongoose.Schema({
     accountNo: String,
     ifscCode: String,
   },
+  academicYear: String
 });
 
 const NotAdmittedStudent = mongoose.model('NotAdmittedStudent', notAdmittedStudentSchema);

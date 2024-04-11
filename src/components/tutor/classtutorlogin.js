@@ -45,10 +45,9 @@ function TutorLogin() {
     // Navigate to the Forgot Password page
     Navigate('/tforgot');
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     try {
       const res = await fetch('/api/classtutorlogin', {
         method: 'POST',
@@ -60,7 +59,7 @@ function TutorLogin() {
           password: values.password,
         }),
       });
-
+  
       if (!res.ok) {
         const error = await res.json();
         return setErrors({
@@ -69,25 +68,23 @@ function TutorLogin() {
           fetchErrorMsg: error.msg,
         });
       }
+      
       const data = await res.json();
-
-      if (data) {
-        // Save the email to local storage
-        localStorage.setItem('email', data.email);
-        console.log('Email saved to local storage:', data.email);
-      
-        // Retrieve the email from local storage
-        const userEmail = localStorage.getItem('email');
-        console.log('User Email from:', userEmail); 
-      
-
+  
+      if (data && data.academicYear && data.department) {
+        // Save the email and academic year to local storage
+        localStorage.setItem('email', values.email);
+        localStorage.setItem('academicYear', data.academicYear);
+        localStorage.setItem('department', data.department);
+        console.log('Email and academic year saved to local storage:', values.email, data.academicYear,data.department);
+        
         // Redirect the user to the dashboard page
         Navigate('/thome');
       } else {
         alert('Login failed');
         window.location.href = '/classtutorlogin';
       }
-
+  
       setValues({
         email: '',
         password: '',
@@ -103,7 +100,8 @@ function TutorLogin() {
       });
     }
   };
-
+  
+ 
   return (
     <>
       <div className="login-background-image">

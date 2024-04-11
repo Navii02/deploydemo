@@ -37,6 +37,7 @@ import AdminSignup from './components/admin/AdminSignup'
 import AdminLogin from './components/admin/AdminLogin'
 import AdminOfficersPage from './components/admin/AdminOfficersPage'
 import AdminTeachersPage from './components/hod/AdminTeachersPage'
+import AssignTutor from './components/hod/Assigntutor'
 
 
 import FacultyHome from './components/faculty/FacultyHome'
@@ -52,6 +53,7 @@ import TutorHome from './components/tutor/TutorHome'
 import ClasstutorSignup from './components/tutor/classtututorsignup'
 import ClasstutorLogin from './components/tutor/classtutorlogin'
 import TForgotPassword from './components/tutor/TutorForgot'
+import Tutorstudentlist from './components/tutor/tutorstudentlist'
 
 import HodHome from './components/hod/HodHome'
 import HodSignup from './components/hod/hodsignup'
@@ -141,6 +143,8 @@ function RoutesComp() {
             <Route path='/hstudents' element={<HodStudenlist/>}/>
             <Route path='/feepayment' element={<FeePayment/>}/>
             <Route path='/subject' element={<SubjectAdd/>}/>
+            <Route path='/asigntutor' element={<AssignTutor/>}/>
+           <Route path='/tstudents' element={<Tutorstudentlist/>}/>
            
          
       </Routes>

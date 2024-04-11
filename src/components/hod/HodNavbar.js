@@ -61,8 +61,8 @@ function HodNavbar() {
                 <Link to='/subject' className='dropdown-link' onClick={closeMobileMenu}>
                   Subject Addition
                 </Link>
-                <Link to='/' className='dropdown-link' onClick={closeMobileMenu}>
-                  Subject Assign
+                <Link to='/asigntutor' className='dropdown-link' onClick={closeMobileMenu}>
+                  Tutor Assign
                 </Link>
                 
               </div>
