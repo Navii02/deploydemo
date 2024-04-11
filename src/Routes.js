@@ -1,7 +1,7 @@
 
-import { useContext } from 'react'
+
 import { Route,Routes } from 'react-router-dom'
-import { UserContext } from './App'
+
 import HomePage from './components/home'
 
 import Login from './components/student/studentlogin'
@@ -78,15 +78,11 @@ import Hodassign from './components/principal/hodassign'
 
 
 function RoutesComp() {
-  const userContext = useContext(UserContext)
+
   return (
     <>
       <Routes>
-        {userContext.email && (
-          <Route path='/' element={<>Welcome {userContext.email}</>} />
-        )}
-        {!userContext.email && (
-          <>
+       
             <Route path='/' element={<HomePage />} />  
             <Route path='/studentlogin' element={<Login />} />
             <Route path='/studentsignup' element={<Signup />} />
@@ -146,8 +142,7 @@ function RoutesComp() {
             <Route path='/feepayment' element={<FeePayment/>}/>
             <Route path='/subject' element={<SubjectAdd/>}/>
            
-          </>
-        )}
+         
       </Routes>
     </>
   )

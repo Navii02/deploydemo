@@ -135,14 +135,17 @@ function PrincipalLogin() {
                 onChange={handleChange('password')}
                 className={errors.password ? 'login-error' : ''}
               />
-              <span className="eye-icon" onClick={handleShowPassword}>
-                {values.showPassword}
-              </span>
+             
             </div>
-            <a href="/pforgot" onClick={handleForgotPassword} class="forgot-password-link">
-  Forgot Password?
-</a>
-
+            </div>
+              <div className="forgot-show-password-links">
+              <span className="show-password-link" onClick={handleShowPassword}>
+                  {values.showPassword ? 'Hide' : 'Show'} Password
+                </span>
+                <a href="/pforgot" onClick={handleForgotPassword} className="forgot-password-link">
+                  Forgot Password?
+                </a>
+               
             </div>
               <div className="login-button-container">
                 <button

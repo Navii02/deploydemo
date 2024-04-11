@@ -165,11 +165,10 @@ function TutorSignup() {
                   onChange={handleChange('repeatPassword')}
                   className={errors.repeatPassword ? 'signup-input signup-error' : 'signup-input'}
                 />
-                <span className="eye-icon" onClick={() => handleShowPassword('showRepeatPassword')}>
-                  {values.showRepeatPassword}
-                </span>
+               
                 <p>(Password must contain a capital letter, a special character and a number)</p>
               </div>
+              
             </div>
             <div className='signup-button-container'>
               <button type='submit' className="signup-button">
