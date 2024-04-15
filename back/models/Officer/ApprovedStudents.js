@@ -28,8 +28,10 @@ const ApprovedStudentSchema = new mongoose.Schema({
   dateOfBirth: Date,
   bloodGroup: String,
   mobileNo: String,
-  whatsappNo: String,
   email: String,
+  whatsappNo: String,
+ 
+  emails: String,
   entranceExam: String,
   entranceRollNo: String,
   entranceRank: String,
