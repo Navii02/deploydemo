@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 function StudentDetailsPage() {
@@ -7,6 +7,19 @@ function StudentDetailsPage() {
   const [academicYear, setAcademicYear] = useState('');
   const [editedStudent, setEditedStudent] = useState(null); // To track the student being edited
   const [newEmail, setNewEmail] = useState('');
+
+  // Define fetchStudents as a useCallback Hook to prevent unnecessary re-renders
+  const fetchStudents = useCallback(async () => {
+    try {
+      // Adjust department names before sending the request
+      const adjustedDepartment = adjustDepartmentName(department);
+      
+      const response = await axios.get(`/api/tutor?department=${adjustedDepartment}&academicYear=${academicYear}`);
+      setStudents(response.data);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    }
+  }, [department, academicYear]); // Include department and academicYear in the dependency array
 
   useEffect(() => {
     // Retrieve department and academic year from local storage
@@ -17,25 +30,13 @@ function StudentDetailsPage() {
       setDepartment(storedDepartment);
       setAcademicYear(storedAcademicYear);
     }
-  }, []);
+  }, [department, academicYear]); // Include department and academicYear in the dependency array
 
   useEffect(() => {
     if (department && academicYear) {
-      fetchStudents();
+      fetchStudents(); // Call fetchStudents here
     }
-  }, [department, academicYear]); // Include department and academicYear in the dependency array
-
-  const fetchStudents = async () => {
-    try {
-      // Adjust department names before sending the request
-      const adjustedDepartment = adjustDepartmentName(department);
-      
-      const response = await axios.get(`/api/tutor?department=${adjustedDepartment}&academicYear=${academicYear}`);
-      setStudents(response.data);
-    } catch (error) {
-      console.error('Error fetching students:', error);
-    }
-  };
+  }, [department, academicYear, fetchStudents]); // Include fetchStudents in the dependency array
 
   // Function to adjust department names
   const adjustDepartmentName = (dept) => {
@@ -76,7 +77,7 @@ function StudentDetailsPage() {
       setNewEmail('');
 
       // Fetch updated student list
-      fetchStudents();
+      fetchStudents(); // Call fetchStudents here
     } catch (error) {
       console.error('Error updating student and handling college email:', error);
     }

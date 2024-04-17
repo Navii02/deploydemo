@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Navbar from './OfficerNavbar';
 
 const ApprovedAndRemoved = () => {
   const [approvedStudents, setApprovedStudents] = useState([]);
@@ -341,43 +342,7 @@ const ApprovedAndRemoved = () => {
 
   return (
     <div>
-      <h1>Student List</h1>
-
-      {/* Show Removed Students Button */}
-      {!showRemoved && (
-        <button className="show-non-approved-button" onClick={handleShowRemoved}>Show Removed Students</button>
-      )}
-
-      {/* Removed Students */}
-      {showRemoved && (
-        <div>
-          <h2>Removed Students</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Admission ID</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {removedStudents.map(student => (
-                <tr key={student.admissionId}>
-                  <td>{student.admissionId}</td>
-                  <td>{student.name}</td>
-                  <td>{student.course}</td>
-                  <td>
-                    <button onClick={() => handlePrintPreview(student._id)}>Print Preview</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <button onClick={handleBackToApproved}>Back to Approved Students</button>
-        </div>
-      )}
-
+      <Navbar />
       {/* Course Filter */}
       <div>
         <label htmlFor="course">Select Course: </label>
@@ -431,6 +396,41 @@ const ApprovedAndRemoved = () => {
                 ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+         {/* Show Removed Students Button */}
+         {!showRemoved && (
+        <button className="show-non-approved-button" onClick={handleShowRemoved}>Show Removed Students</button>
+      )}
+
+      {/* Removed Students */}
+      {showRemoved && (
+        <div>
+          <h2>Removed Students</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Admission ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {removedStudents.map(student => (
+                <tr key={student.admissionId}>
+                  <td>{student.admissionId}</td>
+                  <td>{student.name}</td>
+                  <td>{student.course}</td>
+                  <td>
+                    <button onClick={() => handlePrintPreview(student._id)}>Print Preview</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={handleBackToApproved}>Back to Approved Students</button>
         </div>
       )}
     </div>

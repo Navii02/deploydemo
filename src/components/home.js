@@ -1,30 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Home.css'; // Import the CSS file
 
 const HomePage = () => {
+  const [isVisible, setIsVisible] = useState(false); // State to manage text visibility
+
+  useEffect(() => {
+    // Set timeout to delay visibility toggle
+    const timeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 0.5); // Adjust the delay as needed
+
+    return () => clearTimeout(timeout); // Cleanup function
+  }, []); // Run effect only once on component mount
+
   const handleSelection = (event) => {
     const selectedUser = event.target.value;
     switch (selectedUser) {
       case 'student':
-        window.location.href = '/studentlogin'; // Redirect to student login page
+        window.location.href = '/studentlogin';
         break;
       case 'officer':
-        window.location.href = '/officerlogin'; // Redirect to officer login page
+        window.location.href = '/officerlogin';
         break;
       case 'faculty':
-        window.location.href = '/faculitylogin'; // Redirect to faculty login page
+        window.location.href = '/facultylogin'; // Corrected typo
         break;
       case 'classTutor':
-        window.location.href = '/classtutorlogin'; // Redirect to class tutor login page
+        window.location.href = '/classtutorlogin';
         break;
       case 'hod':
-        window.location.href = '/hodlogin'; // Redirect to HOD login page
+        window.location.href = '/hodlogin';
         break;
       case 'principal':
-        window.location.href = '/principallogin'; // Redirect to principal login page
+        window.location.href = '/principallogin';
         break;
       case 'admin':
-        window.location.href = '/adminlogin'; // Redirect to admin login page
+        window.location.href = '/adminlogin';
         break;
       default:
         break;
@@ -33,8 +44,9 @@ const HomePage = () => {
 
   return (
     <div className="office-home-page">
-      <h1>Welcome to the Office</h1>
-      <h6>Who are You?</h6>
+      <h1 className="animate-left">Welcome to CAP</h1>
+      <h5 className="animate-right">Your Personal Assistant for College</h5>
+      <h6 className={isVisible ? 'animate-fade-in' : 'animate-fade-out'}>Who are You?</h6>
       <div className="dropdown-container">
         <select onChange={handleSelection}>
           <option value="">Select User Type</option>
