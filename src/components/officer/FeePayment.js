@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from './OfficerNavbar';
 
 function StudentDetailsPage() {
   const [students, setStudents] = useState([]);
@@ -40,7 +41,7 @@ function StudentDetailsPage() {
 
   return (
     <div className="student-details-container">
-      <h1>Student Details</h1>
+      <Navbar/>
       <div className="students-list">
         {students.map((student) => (
           <div key={student._id} className="student-card">

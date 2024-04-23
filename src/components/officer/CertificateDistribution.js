@@ -1,8 +1,7 @@
-// OfficerCertificateRequestsPage.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import OfficerNavbar from './OfficerNavbar';
+import './CertificateDistribution.css';
 
 function OfficerCertificateRequestsPage() {
   const [requests, setRequests] = useState([]);
@@ -10,6 +9,7 @@ function OfficerCertificateRequestsPage() {
   const [declineReason, setDeclineReason] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showAllRequests, setShowAllRequests] = useState(false);
 
   useEffect(() => {
     fetchRequests();
@@ -57,13 +57,16 @@ function OfficerCertificateRequestsPage() {
     }
   };
 
+  const toggleShowAllRequests = () => {
+    setShowAllRequests(!showAllRequests);
+  };
+
   return (
     <>
       <OfficerNavbar />
       <div className="certificate-requests">
-        <h2>Certificate Requests</h2>
         <div className="request-list">
-          {requests.map((request) => (
+          {requests.slice(0, showAllRequests ? requests.length : 3).map((request) => (
             <div key={request._id}>
               <h3>{request.studentName}</h3>
               <p>Request ID: {request._id}</p>
@@ -73,16 +76,27 @@ function OfficerCertificateRequestsPage() {
               <p>Status: {request.status}</p>
               {request.status === 'Approved' && <p>File URL: {request.fileUrl}</p>}
               {request.status === 'Declined' && <p>Decline Reason: {request.declineReason}</p>}
-              <input type="file" onChange={handleFileChange} />
-              <button onClick={() => handleApprove(request._id)}>Approve</button>
-              <textarea
-                placeholder="Decline Reason"
-                value={declineReason}
-                onChange={(e) => setDeclineReason(e.target.value)}
-              />
-              <button onClick={() => handleDecline(request._id)}>Decline</button>
+              {request.status !== 'Approved' && request.status !== 'Declined' && (
+                <>
+                  <input type="file" onChange={handleFileChange} />
+                  <button onClick={() => handleApprove(request._id)}>Approve</button>
+                  <textarea
+                    placeholder="Decline Reason"
+                    value={declineReason}
+                    onChange={(e) => setDeclineReason(e.target.value)}
+                  />
+                  <button onClick={() => handleDecline(request._id)}>Decline</button>
+                </>
+              )}
             </div>
           ))}
+        </div>
+        <div className="toggle-buttons">
+          {requests.length > 3 && (
+            <button onClick={toggleShowAllRequests}>
+              {showAllRequests ? 'Show Less' : 'Show More'}
+            </button>
+          )}
         </div>
         {successMessage && <p>{successMessage}</p>}
         {errorMessage && <p>{errorMessage}</p>}

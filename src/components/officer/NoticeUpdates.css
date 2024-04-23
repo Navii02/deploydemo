@@ -1,16 +1,29 @@
-.board{
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    display: block;
-    flex-direction: column;
-    align-items: flex-start;
+.board {
+    margin: 50px;
+  }
+  
+  .board .area {
+    width: 100%;
+    height: 100px;
+  }
+  
+  .notice-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .notice-item {
+    width: calc(33.33% - 20px);
     text-align: center;
-
-}
-
-.area{
-    align-items: center;
-    height: 200px;
-    width:450px
-}
+  }
+  
+  .notice-item img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .show-buttons {
+    margin-top: 10px;
+  }
+  

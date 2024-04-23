@@ -46,6 +46,11 @@ function OfficerNavbar() {
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
+          <li className='nav-item'>
+              <Link to='/sdata' className='nav-links' onClick={closeMobileMenu}>
+                Student Data
+              </Link>
+            </li>
           <li className='nav-item dropdown'>
               <Link to='/data-editing' className='nav-links' onClick={closeMobileMenu}>
                 Admission<i className='fas fa-caret-down' />
@@ -62,19 +67,6 @@ function OfficerNavbar() {
                 </Link>
               </div>
             </li>
-            <li className='nav-item dropdown'>
-              <Link to='/' className='nav-links' onClick={closeMobileMenu}>
-                Student Data<i className='fas fa-caret-down' />
-              </Link>
-              <div className='dropdown-content'>
-                <Link to='/feepayment' className='dropdown-link' onClick={closeMobileMenu}>
-                  FeePayment
-                </Link>
-                <Link to='/' className='dropdown-link' onClick={closeMobileMenu}>
-                  Data Table
-                </Link>
-              </div>
-            </li>
           <li className='nav-item dropdown'>
             <Link to='/certificate-distribution' className='nav-links' onClick={closeMobileMenu}>
                 Services<i className='fas fa-caret-down' />
@@ -83,7 +75,7 @@ function OfficerNavbar() {
               <Link to='/certificate-distribution' className='dropdown-link' onClick={closeMobileMenu}>
                 Certificates
               </Link>
-              <Link to='/payment' className='dropdown-link' onClick={closeMobileMenu}>
+              <Link to='/feepayment' className='dropdown-link' onClick={closeMobileMenu}>
                 Payments
               </Link>
               <Link to='/notice-updates' className='dropdown-link' onClick={closeMobileMenu}>

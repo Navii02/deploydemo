@@ -41,7 +41,7 @@ function StudentCertificateRequestPage() {
         setErrorMessage('Register number, admission number, reason, and at least one document selection are required.');
         return;
       }
-
+  
       const response = await axios.post('/api/student/submitRequest', {
         registerNumber,
         admissionNumber,
@@ -50,13 +50,24 @@ function StudentCertificateRequestPage() {
         selectedDocuments,
         phoneNumber,
       });
-
+  
       setSuccessMessage(response.data.message);
+  
+      // Reset form fields and clear messages after successful submission
+      setRegisterNumber('');
+      setAdmissionNumber('');
+      setReason('');
+      setSelectedDocuments([]);
+      setPhoneNumber('');
+      setErrorMessage('');
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
     } catch (error) {
       setErrorMessage(error.response.data.message);
     }
   };
-
+  
   const documentOptions = [
     'SSLC Book (original)',
     'Plus Two Certificate (original)',

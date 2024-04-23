@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import Navbar from "./OfficerNavbar";
-import './DataEntry.css';
+import './DataEditing.css'
 
 const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   const initialFormData = {
@@ -175,7 +175,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     <div>
       <Navbar />
       <div className="data-entry-container">
-        <div className="container">
           <form className="form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Admission Type:</label>
@@ -671,7 +670,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             </div>
           </form>
         </div>
-      </div>
     </div>
   );
 }

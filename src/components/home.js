@@ -40,6 +40,9 @@ const HomePage = () => {
       default:
         break;
     }
+
+    // Reset the dropdown value to the default option after selection
+    event.target.value = '';
   };
 
   return (

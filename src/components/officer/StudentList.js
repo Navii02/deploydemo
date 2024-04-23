@@ -1,6 +1,7 @@
 // StudentListPage.js
 import React, { useState } from "react";
 import Navbar from "./OfficerNavbar";
+import './StudentList.css'
 
 function StudentListPage({ students }) {
   const [showApproved, setShowApproved] = useState(true);
@@ -24,9 +25,6 @@ function StudentListPage({ students }) {
   const handleShowApprovedChange = () => {
     setShowApproved(!showApproved);
   };
-
- 
-
 
   return (
     <div>

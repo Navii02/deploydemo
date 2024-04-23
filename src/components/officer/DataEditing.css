@@ -1,0 +1,104 @@
+
+.data-entry-container body, html {
+  overflow-x: hidden; /* Prevent horizontal scrollbar on the entire page */
+}
+
+.data-entry-container input,
+select,
+textarea {
+  margin-top: 5px;
+  height: 40px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.data-entry-container .submit-button,
+.data-entry-container .clear-button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+}
+
+.data-entry-container .button-container {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
+.data-entry-container .submit-button {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.data-entry-container .clear-button {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.data-entry-container label {
+  display: block;
+  font-weight: bold;
+  color: #000000ee;
+  margin-bottom: 5px;
+}
+
+.data-entry-container select {
+  color: #000000ee;
+  height: 40px;
+}
+
+.data-entry-container .box {
+  width: 100%;
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.data-entry-container h4 {
+  color: #000000ee;
+}
+
+.data-entry-container .box-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.data-entry-container .photo-preview {
+  width: 22.75vh;
+  height: 32.375vh;
+  margin-bottom: 30px;
+  
+}
+
+.data-entry-container .form-group {
+  margin-bottom: 15px;
+}
+
+.data-entry-container .form {
+  max-width: 100%;
+  overflow-x: hidden;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+
+.data-entry-container {
+  width: 85%;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+
+
+
+
+
