@@ -1,102 +1,101 @@
 /* DataEntry.css */
 
 .data-entry-container {
-    margin-top: 20px;
-  }
-  
-  .data-entry-container .container {
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .data-entry-container .form {
-    background-color: #f0f0f0;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .data-entry-container .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .data-entry-container .photo-preview {
-    max-width: 100%;
-    height: auto;
-    margin-top: 10px;
-  }
-  
-  .data-entry-container .box-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  
-  .data-entry-container h4 {
-    color: #000000ee;
-  }
-  
-  .data-entry-container .box {
-    width: 100%;
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
-  }
-  
-  .data-entry-container .button-container {
-    display: flex;
-    justify-content: space-evenly;
-    margin-top: 20px;
-  }
-  
-  .data-entry-container .submit-button,
-  .data-entry-container .clear-button {
-    padding: 10px 20px;
-    margin-left: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-  }
-  
-  .data-entry-container .submit-button {
-    background-color: #4caf50;
-    color: #fff;
-  }
-  
-  .data-entry-container .clear-button {
-    background-color: #f44336;
-    color: #fff;
-  }
-  
-  .data-entry-container label {
-    display: block;
-    font-weight: bold;
-    color: #000000ee;
-    margin-bottom: 5px;
-  }
-  
-  .data-entry-container input,
-  select,
-  textarea {
-    margin-top: 5px;
-    height: 40px;
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  .data-entry-container select {
-    color: #000000ee;
-    height: 40px;
-  }
-  /* Add any other styling as needed */
-  
+  margin-top: 20px;
+}
+
+.data-entry-container .container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.data-entry-container .form {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.data-entry-container .form-group {
+  margin-bottom: 15px;
+}
+
+.data-entry-container .photo-preview {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+.data-entry-container .box-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.data-entry-container h4 {
+  color: #000000ee;
+}
+
+.data-entry-container .box {
+  width: 100%;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.data-entry-container .button-container {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
+.data-entry-container .submit-button,
+.data-entry-container .clear-button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+}
+
+.data-entry-container .submit-button {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.data-entry-container .clear-button {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.data-entry-container label {
+  display: block;
+  font-weight: bold;
+  color: #000000ee;
+  margin-bottom: 5px;
+}
+
+.data-entry-container input,
+select,
+textarea {
+  margin-top: 5px;
+  height: 40px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.data-entry-container select {
+  color: #000000ee;
+  height: 40px;
+}
+/* Add any other styling as needed */

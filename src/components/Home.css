@@ -1,4 +1,4 @@
-body, html {
+.office-home-page html {
   margin: 0;
   padding: 0;
   overflow: hidden; /* Prevent scrollbars */
@@ -67,16 +67,16 @@ body, html {
   animation: fade-in 1s ease-in-out forwards 0.5s; /* Delay animation */
 }
 
-.dropdown-container {
+.office-home-page .dropdown-container {
   color: #0000;
 }
 
-select {
-  width: 200px;
-  height: 40px;
+.office-home-page select {
+  width: 150px;
+  height: 35px;
   font-size: 1em;
-  border: 2px solid #444;
-  border-radius: 20px;
+  border: 1.5px solid #444444da;
+  border-radius: 10px;
   padding: 5px;
   cursor: pointer;
   outline: none;
@@ -84,7 +84,7 @@ select {
   color: rgb(35, 35, 35);
 }
 
-select:focus {
+.office-home-page select:focus {
   border-color: rgb(52, 52, 52);
 }
 

@@ -52,6 +52,11 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       accountNo: '',
       ifscCode: '',
     },
+    achievements:{
+      arts:'',
+      sports: '',
+      other: '',
+    },
   };
 
   const [formData, setFormData] = useState({ ...initialFormData });
@@ -127,6 +132,14 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
         bankDetails: {
           ...formData.bankDetails,
           [subField]: value,
+        },
+      });
+    } else if (name.startsWith('achievements')) { // Handle achievements fields
+      setFormData({
+        ...formData,
+        achievements: {
+          ...formData.achievements,
+          [name.split('.')[1]]: value,
         },
       });
     } else {
@@ -484,7 +497,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               </div>
             </div>
             <div className="box">
-  <h4>Parent Details</h4>
+  <h4>Parents Details</h4>
   <div className="form-group">
     <label>Father's Name:</label>
     <input
@@ -611,6 +624,36 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   value={formData.bankDetails.ifscCode}
                   onChange={handleChange}
                   required
+                />
+              </div>
+            </div>
+            <div className="box">
+              <h4>Achievements</h4>
+              <div className="form-group">
+                <label>Arts:</label>
+                <input
+                  type="text"
+                  name="achievements.arts"
+                  value={formData.achievements.arts}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Sports:</label>
+                <input
+                  type="text"
+                  name="achievements.sports"
+                  value={formData.achievements.sports}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Other:</label>
+                <input
+                  type="text"
+                  name="achievements.other"
+                  value={formData.achievements.other}
+                  onChange={handleChange}
                 />
               </div>
             </div>

@@ -7,6 +7,7 @@ function OfficerNavbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem('email'); // Check if user is logged in
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -90,11 +91,13 @@ function OfficerNavbar() {
               </Link>
             </div>
             </li>
+            {isLoggedIn && (
             <li>
               <Link to='/officerlogin' className='nav-links-mobile' onClick={handleLogout}>
                 Log Out
               </Link>
             </li>
+            )}
           </ul>
             {button && (
               <Button buttonStyle='btn--outline' onClick={handleLogout}>
