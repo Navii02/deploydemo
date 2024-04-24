@@ -1,0 +1,33 @@
+/* Performance.css */
+
+.student-performance-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .student-performance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .student-performance-table th,
+  .student-performance-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .student-performance-table th,
+    .student-performance-table td {
+      font-size: 14px;
+      padding: 8px;
+    }
+  }
+  
