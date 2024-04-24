@@ -59,25 +59,27 @@ function StudentDetailsPage() {
     setEditedStudent(editedStudentData); // Set the entire student object to be edited
   };
 
-  // Function to handle updating semester and name of the student
+  // Function to handle updating semester, name, and adding new email to the student
   const handleSave = async () => {
     try {
       if (editedStudent) {
+        // If the newEmail is not empty and not already present in editedStudent.emails, add it
+        if (newEmail && !editedStudent.emails.includes(newEmail)) {
+          // Send a POST request to add the new email
+          await axios.post(`/api/students/${editedStudent._id}/emails`, { email: newEmail });
+        }
+        
+        // Update the student details
         const updatedStudentResponse = await axios.put(`/api/students/${editedStudent._id}`, editedStudent);
         console.log('Student updated:', updatedStudentResponse.data);
-      }
-      // Check if newEmail is not empty and not already present in editedStudent.emails
-      if (newEmail && editedStudent && !editedStudent.emails.some(email => email === newEmail)) {
-        // Add newEmail to editedStudent.emails
-        editedStudent.emails.push(newEmail);
-      }
 
-      // Reset edited student and new email
-      setEditedStudent(null);
-      setNewEmail('');
+        // Reset edited student and new email
+        setEditedStudent(null);
+        setNewEmail('');
 
-      // Fetch updated student list
-      fetchStudents(); // Call fetchStudents here
+        // Fetch updated student list
+        fetchStudents();
+      }
     } catch (error) {
       console.error('Error updating student and handling college email:', error);
     }
@@ -137,7 +139,7 @@ function StudentDetailsPage() {
                   </div>
                 ) : (
                   <div>
-                    {student.emails && student.emails.map((email, index) => (
+                    {student.collegemail && student.collegemail.map((email, index) => (
                       <div key={index}>{email}</div>
                     ))}
                   </div>

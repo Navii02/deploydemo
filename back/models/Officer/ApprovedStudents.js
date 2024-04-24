@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const InstallmentSchema = new mongoose.Schema({
-  Number: Number,
+  number: Number,
   status: {
     type: String,
     enum: ['Not Paid', 'Paid'],
@@ -31,7 +31,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
   email: String,
   whatsappNo: String,
  
-  emails: String,
+  collegemail: String, // New field to store secondary email
   entranceExam: String,
   entranceRollNo: String,
   entranceRank: String,

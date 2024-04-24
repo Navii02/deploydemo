@@ -12,11 +12,11 @@ const router = express.Router();
 // Multer storage configuration for handling file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'studentsphoto/'); // Save photos in the 'studentsphoto' folder
+    cb(null, 'studentsphoto/'); 
   },
   filename: function (req, file, cb) {
-    const fileId = new mongoose.Types.ObjectId(); // Generate a new unique ID
-    const filename = `${fileId}${path.extname(file.originalname)}`; // Use the unique ID as the filename
+    const fileId = new mongoose.Types.ObjectId(); 
+    const filename = `${fileId}${path.extname(file.originalname)}`; 
     cb(null, filename);
   },
 });

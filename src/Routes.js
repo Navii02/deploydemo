@@ -91,7 +91,7 @@ function RoutesComp() {
             <Route path='/studentsignup' element={<Signup />} />
             <Route path='/officersignup' element={<OfficerSignup />} />
             <Route path='/officerlogin' element={<Officerlogin />} />
-            <Route path='/faculitylogin' element={<FaculityLogin />} />
+            <Route path='/facultylogin' element={<FaculityLogin />} />
             <Route path='/faculitysignup' element={<FaculitySignup />} />
             <Route path='/classtutorlogin' element={<ClasstutorLogin />} />
             <Route path='/classtutorsignup' element={<ClasstutorSignup />} />

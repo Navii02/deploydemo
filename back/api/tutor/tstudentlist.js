@@ -23,6 +23,7 @@ router.put('/students/:studentId', async (req, res) => {
   const updatedData = req.body;
 
   try {
+    // Ensure that 'updatedData' includes the new email field (e.g., 'collegemai')
     const updatedStudent = await Student.findByIdAndUpdate(studentId, updatedData, { new: true });
     res.json(updatedStudent);
   } catch (error) {
@@ -31,7 +32,7 @@ router.put('/students/:studentId', async (req, res) => {
   }
 });
 
-// Add secondary email to student
+// Add secondary email to student (saved in 'collegemai' field)
 router.post('/students/:studentId/emails', async (req, res) => {
   const studentId = req.params.studentId;
   const { email } = req.body;
@@ -39,7 +40,7 @@ router.post('/students/:studentId/emails', async (req, res) => {
   try {
     const updatedStudent = await Student.findByIdAndUpdate(
       studentId,
-      { $addToSet: { emails: email } }, // Using $addToSet to prevent duplicate emails
+      { $addToSet: { collegemail: email } }, // Use $addToSet to prevent duplicate emails
       { new: true }
     );
     res.json(updatedStudent);

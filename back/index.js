@@ -57,6 +57,7 @@ const adminRouter = require('./api/Admin/AdminRoutes')
 const TeachersDetail=require('./api/hod/TeachersDetails')
 const OfficerDetail=require('./api/Admin/OfficerDetails')
 const AdminForget=require('./api/Admin/AdminForgot')
+const AdminDashboard = require('./api/Admin/AdminDashboard')
 
 
 const Feereminder = require('./api/feereminder')
@@ -144,6 +145,7 @@ app.use('/api',FeePayment)
 app.use('/api',Subject)
 app.use('/api',tutorassign)
 app.use('/api',tstudentlist)
+app.use('/api',AdminDashboard)
 
 
 app.use('/uploads', express.static('uploads'));

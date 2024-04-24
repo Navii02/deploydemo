@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Chart from 'chart.js/auto';
 import './AdminDashboard.css'; 
 import Navbar from './AdminNavbar';
+import axios from 'axios';
 
 const AdminDashboard = () => {
   const [userStats, setUserStats] = useState({
@@ -15,20 +16,14 @@ const AdminDashboard = () => {
   });
 
   useEffect(() => {
-    const fetchUserStatistics = () => {
-      // Simulating API call with a timeout to get dummy data
-      setTimeout(() => {
-        const simulatedUserStatistics = {
-          totalUsers: 200,
-          principal: 1,
-          hod: 3,
-          classTutor: 4,
-          faculty: 32,
-          officer: 10,
-          student: 150,
-        };
-        setUserStats(simulatedUserStatistics);
-      }, 1000); // Simulate 1 second delay
+    const fetchUserStatistics = async () => {
+      try {
+        const response = await axios.get('/api/user/stats'); // Adjust the API endpoint accordingly
+        const data = response.data;
+        setUserStats(data);
+      } catch (error) {
+        console.error('Error fetching user statistics:', error);
+      }
     };
 
     fetchUserStatistics();
