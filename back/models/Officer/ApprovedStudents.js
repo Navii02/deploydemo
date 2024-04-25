@@ -15,7 +15,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
   customId: String,
   admissionNumber: String,
   admissionType: String,
-  admissionId: String, 
+  admissionId: String,
   allotmentCategory: String,
   feeCategory: String,
   name: String,
@@ -30,8 +30,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
   mobileNo: String,
   email: String,
   whatsappNo: String,
- 
-  collegemail: String, // New field to store secondary email
+  collegemail: String, // New field for secondary email
   entranceExam: String,
   entranceRollNo: String,
   entranceRank: String,
@@ -63,8 +62,8 @@ const ApprovedStudentSchema = new mongoose.Schema({
     accountNo: String,
     ifscCode: String,
   },
-  achievements:{
-    arts:String,
+  achievements: {
+    arts: String,
     sports: String,
     other: String,
   },

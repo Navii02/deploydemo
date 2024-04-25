@@ -8,6 +8,7 @@ const ApprovedAndRemoved = () => {
   const [removedStudents, setRemovedStudents] = useState([]);
   const [showRemoved, setShowRemoved] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState('');
+  const [selectedSemester, setSelectedSemester] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     address: '',
@@ -401,6 +402,9 @@ const ApprovedAndRemoved = () => {
   const handleCourseChange = (e) => {
     setSelectedCourse(e.target.value);
   };
+  const handleSemesterChange = (e) => {
+    setSelectedSemester(e.target.value);
+  };
 
   const handleEdit = (student) => {
      // Check if the selected student matches the current filter criteria
@@ -483,6 +487,19 @@ const ApprovedAndRemoved = () => {
             <option value="computerScience">Computer Science (CSE)</option>
             <option value="electronicsAndCommunication">Electronics and Communication (EC)</option>
           </select>
+          <label htmlFor="semester">Select Semester: </label>
+          <select id="semester" value={selectedSemester} onChange={handleSemesterChange}>
+            <option value="">All</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            <option value="5">Semester 5</option>
+            <option value="6">Semester 6</option>
+            <option value="7">Semester 7</option>
+            <option value="8">Semester 8</option>
+            {/* Add more semester options if needed */}
+          </select>
         </div>
       )}
 
@@ -503,7 +520,8 @@ const ApprovedAndRemoved = () => {
               {approvedStudents
                 .filter(student => {
                   let passCourseFilter = !selectedCourse || String(student.course) === selectedCourse;
-                  return passCourseFilter;
+                  let passSemesterFilter = !selectedSemester || String(student.semester) === selectedSemester;
+                  return passCourseFilter && passSemesterFilter;
                 })
                 .map(student => (
                   <tr key={student.admissionNumber}>
@@ -556,7 +574,6 @@ const ApprovedAndRemoved = () => {
           <button onClick={handleBackToApproved}>Back to Approved Students</button>
         </div>
       )}
-
     
       {/* Edit Mode */}
       {editMode && (
