@@ -5,8 +5,7 @@ import './DataEditing.css'
 
 const ApprovedAndRemoved = () => {
   const [approvedStudents, setApprovedStudents] = useState([]);
-  const [removedStudents, setRemovedStudents] = useState([]);
-  const [showRemoved, setShowRemoved] = useState(false);
+
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedSemester, setSelectedSemester] = useState('');
   const [formData, setFormData] = useState({
@@ -73,16 +72,7 @@ const ApprovedAndRemoved = () => {
         console.error('Error fetching approved students:', error);
       });
 
-    if (showRemoved) {
-      axios.get('/api/removedStudents')
-        .then(response => {
-          setRemovedStudents(response.data);
-        })
-        .catch(error => {
-          console.error('Error fetching removed students:', error);
-        });
-    }
-  }, [showRemoved]);
+    });
 
   const handleInputChange = (e) => {
     setFormData({
@@ -391,13 +381,7 @@ const ApprovedAndRemoved = () => {
       });
   };
 
-  const handleShowRemoved = () => {
-    setShowRemoved(!showRemoved);
-  };
-
-  const handleBackToApproved = () => {
-    setShowRemoved(false);
-  };
+ 
 
   const handleCourseChange = (e) => {
     setSelectedCourse(e.target.value);
@@ -504,7 +488,7 @@ const ApprovedAndRemoved = () => {
       )}
 
       {/* Approved Students */}
-      {!showRemoved && !editMode && (
+      {!editMode && (
         <div>
           <h2>Approved Students</h2>
           <table>
@@ -539,42 +523,7 @@ const ApprovedAndRemoved = () => {
         </div>
       )}
 
-      {/* Show Removed Students Button */}
-      {!showRemoved && !editMode && (
-        <button className="show-non-approved-button" onClick={handleShowRemoved}>Show Removed Students</button>
-      )}
-
-      {/* Removed Students */}
-      {showRemoved && !editMode && (
-        <div>
-          <h2>Removed Students</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Admission ID</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {removedStudents.map(student => (
-                <tr key={student.admissionId}>
-                  <td>{student.admissionId}</td>
-                  <td>{student.name}</td>
-                  <td>{student.course}</td>
-                  <td>
-                    <button onClick={() => handlePrintPreview(student._id)}>Print Preview</button>
-                    <button onClick={() => handleEdit(student)}>Edit</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <button onClick={handleBackToApproved}>Back to Approved Students</button>
-        </div>
-      )}
-    
+     
       {/* Edit Mode */}
       {editMode && (
         <div>
@@ -990,5 +939,3 @@ const ApprovedAndRemoved = () => {
 };
 
 export default ApprovedAndRemoved;
-
-           
