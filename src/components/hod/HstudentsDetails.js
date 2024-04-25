@@ -29,6 +29,7 @@ function StudentDetailsPage() {
         return branch;
     }
   };
+  console.log(branch);
 
   const fetchStudents = async (branch) => {
     try {

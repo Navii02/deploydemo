@@ -6,6 +6,7 @@ const certificateRequestSchema = new mongoose.Schema({
   registerNumber:  { type: String },
   userEmail: String,
   reason: String,
+  branch: String,
   selectedDocuments: [String],
   HoDstatus: { type: String, default: 'Pending' },
   status: { type: String, default: 'Pending' },

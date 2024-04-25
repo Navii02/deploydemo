@@ -19,13 +19,13 @@ function StudentCertificateRequestPage() {
       .then((response) => {
         const { registerNumber, admissionNumber, phoneNumber } = response.data;
         setRegisterNumber(registerNumber);
-        setAdmissionNumber(admissionNumber);
-        setPhoneNumber(phoneNumber);
+        setAdmissionNumber(admissionNumber); // Set admission number fetched from the backend
+        setPhoneNumber(phoneNumber); // Set phone number fetched from the backend
       })
       .catch((error) => {
         console.error('Error fetching student details:', error);
       });
-  },); // Empty dependency array ensures the effect runs only once when the component mounts
+  }, [userEmail]); // Include userEmail in the dependency array to re-run the effect when it changes
 
   const handleDocumentSelection = (document) => {
     const updatedSelection = selectedDocuments.includes(document)
