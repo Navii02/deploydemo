@@ -63,6 +63,11 @@ const ApprovedStudentSchema = new mongoose.Schema({
     accountNo: String,
     ifscCode: String,
   },
+  achievements:{
+    arts:String,
+    sports: String,
+    other: String,
+  },
   academicYear: String,
   semester: Number,
   installments: [InstallmentSchema], // Array of installment objects

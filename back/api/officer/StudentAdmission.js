@@ -93,6 +93,7 @@ router.get('/studentDetails/:id', async (req, res) => {
     const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,photo,pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceExam,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity,} = student;
     const { parentDetails } = student;
     const {bankDetails }= student;
+    const{achievements}=student;
     const{plusTwo} = student;
     const photoUrl = photo ? `${req.protocol}://${req.get('host')}/${photo}` : null;
 
@@ -148,7 +149,12 @@ router.get('/studentDetails/:id', async (req, res) => {
           branch:bankDetails.branch,
           accountNo:bankDetails.accountNo,
           ifscCode:bankDetails.ifscCode,
-        }
+        },
+        achievements:{
+          arts:achievements.arts,
+          sports:achievements.sports,
+          other: achievements.other,
+        },
       }
     });
   } catch (error) {

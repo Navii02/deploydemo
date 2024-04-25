@@ -50,6 +50,11 @@ const notAdmittedStudentSchema = new mongoose.Schema({
     accountNo: String,
     ifscCode: String,
   },
+  achievements:{
+    arts:String,
+    sports: String,
+    other: String,
+  },
   academicYear: String
 });
 
