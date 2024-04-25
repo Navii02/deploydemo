@@ -55,6 +55,8 @@ import ClasstutorSignup from './components/tutor/classtututorsignup'
 import ClasstutorLogin from './components/tutor/classtutorlogin'
 import TForgotPassword from './components/tutor/TutorForgot'
 import Tutorstudentlist from './components/tutor/tutorstudentlist'
+import StudentPerformancePage from './components/tutor/Performance'
+import TutorUpdates from './components/tutor/Updates'
 
 import HodHome from './components/hod/HodHome'
 import HodSignup from './components/hod/hodsignup'
@@ -145,9 +147,10 @@ function RoutesComp() {
             <Route path='/feepayment' element={<FeePayment/>}/>
             <Route path='/subject' element={<SubjectAdd/>}/>
             <Route path='/asigntutor' element={<AssignTutor/>}/>
-           <Route path='/tstudents' element={<Tutorstudentlist/>}/>
-           <Route path='/sdata' element={<StudentListPage/>}/>
-         
+            <Route path='/tstudents' element={<Tutorstudentlist/>}/>
+            <Route path='/sdata' element={<StudentListPage/>}/>
+            <Route path='/perf' element={<StudentPerformancePage/>}/>  
+            <Route path='/upd' element={<TutorUpdates/>}/>      
       </Routes>
     </>
   )

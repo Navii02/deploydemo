@@ -61,7 +61,7 @@ function Navbar() {
               </Link>
             </li>
             <li>
-              <Link to='/faculitylogin' className='nav-links-mobile' onClick={handleLogout}>
+              <Link to='/facultylogin' className='nav-links-mobile' onClick={handleLogout}>
                 Log Out
               </Link>
             </li>

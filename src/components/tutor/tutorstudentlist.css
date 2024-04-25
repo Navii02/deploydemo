@@ -1,0 +1,58 @@
+.student-details-table-container {
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    width: 100%; /* Ensure full width */
+    max-width: 100%; /* Ensure full width */
+  }
+  
+  .student-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Fix table layout */
+  }
+  
+  .student-details-table th,
+  .student-details-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    word-wrap: break-word; /* Allow word break within cells */
+    white-space: normal; /* Allow text to wrap within cells */
+  }
+  
+  .student-details-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .student-details-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .student-details-table tbody tr:hover {
+    background-color: #ddd;
+  }
+  
+  .edit-button,
+  .save-button {
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+  }
+  
+  .edit-button:hover,
+  .save-button:hover {
+    background-color: #45a049;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 5px;
+  }
+  

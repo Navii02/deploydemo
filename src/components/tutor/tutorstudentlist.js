@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import Navbar from './TutorNavbar';
+import './tutorstudentlist.css'; // Import your CSS file
 
 function StudentDetailsPage() {
   const [students, setStudents] = useState([]);
@@ -87,75 +89,77 @@ function StudentDetailsPage() {
 
   return (
     <div>
-      <h1>Student Details</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Admission Number</th>
-            <th>Name</th>
-            <th>Semester</th>
-            <th>Department</th>
-            <th>Academic Year</th>
-            <th>College Emails</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.map((student) => (
-            <tr key={student._id}>
-              <td>{student.admissionNumber}</td>
-              <td>
-                {editedStudent && editedStudent._id === student._id ? (
-                  <input 
-                    type="text" 
-                    value={editedStudent.name} 
-                    onChange={(e) => setEditedStudent({ ...editedStudent, name: e.target.value })} 
-                  />
-                ) : (
-                  student.name
-                )}
-              </td>
-              <td>
-                {editedStudent && editedStudent._id === student._id ? (
-                  <input 
-                    type="number" 
-                    value={editedStudent.semester} 
-                    onChange={(e) => setEditedStudent({ ...editedStudent, semester: e.target.value })} 
-                  />
-                ) : (
-                  student.semester
-                )}
-              </td>
-              <td>{student.course}</td>
-              <td>{student.academicYear}</td>
-              <td>
-                {editedStudent && editedStudent._id === student._id ? (
-                  <div>
+      <Navbar/>
+      <div className="student-details-table-container">
+        <table className="student-details-table">
+          <thead>
+            <tr>
+              <th>Admission Number</th>
+              <th>Name</th>
+              <th>Semester</th>
+              <th>Department</th>
+              <th>Academic Year</th>
+              <th>College Emails</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {students.map((student) => (
+              <tr key={student._id}>
+                <td>{student.admissionNumber}</td>
+                <td>
+                  {editedStudent && editedStudent._id === student._id ? (
                     <input 
                       type="text" 
-                      value={newEmail} 
-                      onChange={(e) => setNewEmail(e.target.value)} 
+                      value={editedStudent.name} 
+                      onChange={(e) => setEditedStudent({ ...editedStudent, name: e.target.value })} 
                     />
-                  </div>
-                ) : (
-                  <div>
-                    {student.collegemail && student.collegemail.map((email, index) => (
-                      <div key={index}>{email}</div>
-                    ))}
-                  </div>
-                )}
-              </td>
-              <td>
-                {editedStudent && editedStudent._id === student._id ? (
-                  <button onClick={handleSave}>Save</button>
-                ) : (
-                  <button onClick={() => handleEdit(student)}>Edit</button>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  ) : (
+                    student.name
+                  )}
+                </td>
+                <td>
+                  {editedStudent && editedStudent._id === student._id ? (
+                    <input 
+                      type="number" 
+                      value={editedStudent.semester} 
+                      onChange={(e) => setEditedStudent({ ...editedStudent, semester: e.target.value })} 
+                    />
+                  ) : (
+                    student.semester
+                  )}
+                </td>
+                <td>{student.course}</td>
+                <td>{student.academicYear}</td>
+                <td>
+                  {editedStudent && editedStudent._id === student._id ? (
+                    <div>
+                      <input 
+                        type="text" 
+                        value={newEmail} 
+                        onChange={(e) => setNewEmail(e.target.value)} 
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      {student.collegemail && student.collegemail.map((email, index) => (
+                        <div key={index}>{email}</div>
+                      ))}
+                    </div>
+                  )}
+                </td>
+                <td>
+                  {editedStudent && editedStudent._id === student._id ? (
+                    <button className="save-button" onClick={handleSave}>Save</button>
+                  ) : (
+                    <button className="edit-button" onClick={() => handleEdit(student)}>Edit</button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

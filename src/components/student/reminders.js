@@ -25,25 +25,30 @@ const Reminders = () => {
 
   return (
     <>
-    <Navbar/>
-    <div className="reminder-page-container">
-      <div className="reminder-category">
-        <h2>Attendance</h2>
-        {renderReminders('attendance')}
+      <Navbar />
+      <div className="reminder-page-container">
+        <div className="reminder-category">
+          <h2>Attendance</h2>
+          {renderReminders('attendance')}
+        </div>
+        <div className="reminder-category">
+          <h2>Internal Marks</h2>
+          {renderReminders('internalMarks')}
+        </div>
+        <div className="reminder-category">
+          <h2>Fees</h2>
+          {renderReminders('fees')}
+        </div>
+        <div className="reminder-category">
+          <h2>Assignments</h2>
+          {renderReminders('assignments')}
+        </div>
+        {/* New Section for Updates */}
+        <div className="reminder-category">
+          <h2>Updates</h2>
+          {renderReminders('updates')}
+        </div>
       </div>
-      <div className="reminder-category">
-        <h2>Internal Marks</h2>
-        {renderReminders('internalMarks')}
-      </div>
-      <div className="reminder-category">
-        <h2>Fees</h2>
-        {renderReminders('fees')}
-      </div>
-      <div className="reminder-category">
-        <h2>Assignments</h2>
-        {renderReminders('assignments')}
-      </div>
-    </div>
     </>
   );
 
@@ -73,4 +78,3 @@ const Reminders = () => {
 };
 
 export default Reminders;
-

@@ -3,7 +3,7 @@
 
 .reminder-page-container {
     width: 95vw;
-    height: 70vh;
+    height: auto;
     margin: 50px auto;
     padding: 20px;
     background-color: #f9f9f9;

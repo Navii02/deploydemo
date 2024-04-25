@@ -51,23 +51,21 @@ function TutorNavbar() {
               </Link>
             </li>
             <li className='nav-item'>
-              <Link to='/thome' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/perf' className='nav-links' onClick={closeMobileMenu}>
                 Performance
               </Link>
             </li>
             <li className='nav-item'>
-              <Link to='/thome' className='nav-links' onClick={closeMobileMenu}>
+              <Link to='/upd' className='nav-links' onClick={closeMobileMenu}>
                 Updates
               </Link>
             </li>
+            <li>
+              <Link to='/classtutorlogin' className='nav-links-mobile' onClick={handleLogout}>
+                Log Out
+              </Link>
+            </li>
           </ul>
-        </div>
-        <div className='nav-out'>
-          <li>
-            <Link to='/classtutorlogin' className='nav-links-mobile' onClick={handleLogout}>
-              Log Out
-            </Link>
-          </li>
           {button && (
             <Button buttonStyle='btn--outline' onClick={handleLogout}>
               LOG OUT
