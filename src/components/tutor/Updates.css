@@ -1,0 +1,40 @@
+/* Updates.css */
+
+.update-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .student-selection {
+    margin-top:20px;
+    margin-bottom: 20px;
+  }
+
+  .all{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .student-checkbox,
+  .select-all {
+    display: flex;
+    margin-bottom: 5px;
+    width: 500px;
+  }
+  
+  .student-checkbox span {
+    margin-right: 10px;
+  }
+  
+  .select-all input[type="checkbox"] {
+    margin-right: 5px;
+  }
+
+  .update-container .error-message,.success-message {
+    font-size: small;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+  }

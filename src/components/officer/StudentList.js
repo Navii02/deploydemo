@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './OfficerNavbar';
-import './DataEditing.css'
 
 const ApprovedAndRemoved = () => {
   const [approvedStudents, setApprovedStudents] = useState([]);
