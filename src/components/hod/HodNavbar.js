@@ -7,6 +7,7 @@ function HodNavbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem('email'); // Check if user is logged in
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -51,41 +52,48 @@ function HodNavbar() {
               </Link>
             </li>
             <li className='nav-item dropdown'>
-              <Link to='/hodhome' className='nav-links' onClick={closeMobileMenu}>
-                Faculity<i className='fas fa-caret-down' />
+              <Link to='/teacher-details' className='nav-links' onClick={closeMobileMenu}>
+                Faculty<i className='fas fa-caret-down' />
               </Link>
               <div className='dropdown-content'>
                 <Link to='/teacher-details' className='dropdown-link' onClick={closeMobileMenu}>
-                  TeacherDetails
+                  Details
                 </Link>
                 <Link to='/subject' className='dropdown-link' onClick={closeMobileMenu}>
-                  Subject Addition
+                  Add Subject
                 </Link>
                 <Link to='/asigntutor' className='dropdown-link' onClick={closeMobileMenu}>
-                  Tutor Assign
+                  Assign Tutor
                 </Link>
-                
               </div>
             </li>
-            <li className='nav-item'>
+            <li className='nav-item dropdown'>
               <Link to='/hstudents' className='nav-links' onClick={closeMobileMenu}>
-                Student
+                Student<i className='fas fa-caret-down' />
+              </Link>
+              <div className='dropdown-content'>
+                <Link to='/hstudents' className='dropdown-link' onClick={closeMobileMenu}>
+                  Details
+                </Link>
+                <Link to='/' className='dropdown-link' onClick={closeMobileMenu}>
+                  Performance
+                </Link>
+              </div>
+            </li>
+            {isLoggedIn && (
+            <li>
+              <Link to='/hodlogin' className='nav-links-mobile' onClick={handleLogout}>
+                Log Out
               </Link>
             </li>
+            )}
           </ul>
-        </div>
-        <div className='nav-out'>
-          <li>
-            <Link to='/hodlogin' className='nav-links-mobile' onClick={handleLogout}>
-              Log Out
-            </Link>
-          </li>
-          {button && (
-            <Button buttonStyle='btn--outline' onClick={handleLogout}>
-              LOG OUT
-            </Button>
-          )}
-        </div>
+            {button && (
+              <Button buttonStyle='btn--outline' onClick={handleLogout}>
+                LOG OUT
+              </Button>
+            )}
+          </div>
       </nav>
     </>
   );
