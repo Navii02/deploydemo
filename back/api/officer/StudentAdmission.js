@@ -31,11 +31,21 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
 
     const admissionYear = new Date().getFullYear(); // Get the current year
 
-    // Calculate the end year of the academic year
-    const academicYearEnd = admissionYear + 4;
+    // Calculate the end year of the academic year based on admission type
+    let academicYearEnd;
+    if (formData.admissionType === 'LET') {
+      // For LET (Lateral Entry), academic year spans from (current year) to (current year + 3)
+      academicYearEnd = admissionYear + 3;
+    } else {
+      // For other admission types, academic year end is current year + 4 (default logic)
+      academicYearEnd = admissionYear + 4;
+    }
+
+    // Calculate the start year of the academic year (current year - 1 for LET)
+    const academicYearStart = formData.admissionType === 'LET' ? admissionYear : admissionYear;
 
     // Construct the academic year string
-    const academicYear = `${admissionYear}-${academicYearEnd}`;
+    const academicYear = `${academicYearStart}-${academicYearEnd}`;
 
     const lastStudent = await Student.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
 
@@ -90,13 +100,12 @@ router.get('/studentDetails/:id', async (req, res) => {
     }
 
     // Extract necessary details for print preview
-    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,photo,pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceExam,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity,} = student;
+    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity } = student;
     const { parentDetails } = student;
-    const {bankDetails }= student;
-    const{achievements}=student;
-    const{plusTwo} = student;
+    const { bankDetails } = student;
+    const { achievements } = student;
+    const { plusTwo } = student;
     const photoUrl = photo ? `${req.protocol}://${req.get('host')}/${photo}` : null;
-
 
     res.json({
       studentDetails: {
@@ -124,38 +133,35 @@ router.get('/studentDetails/:id', async (req, res) => {
         nativity,
         photoUrl,
         plusTwo: {
-          board:plusTwo.board,
-          regNo:plusTwo.regNo,
+          board: plusTwo.board,
+          regNo: plusTwo.regNo,
           examMonthYear: plusTwo.examMonthYear,
-          percentage:plusTwo.percentage,
-          schoolName:plusTwo.schoolName,
-          physics:plusTwo.physics,
-          chemistry:plusTwo.chemistry,
-          mathematics:plusTwo.mathematics,
+          percentage: plusTwo.percentage,
+          schoolName: plusTwo.schoolName,
+          physics: plusTwo.physics,
+          chemistry: plusTwo.chemistry,
+          mathematics: plusTwo.mathematics,
         },
         parentDetails: {
-     
-            fatherName:parentDetails.fatherName,
-            fatherOccupation: parentDetails.fatherOccupation,
-            fatherMobileNo: parentDetails.fatherMobileNo,
-            motherName:parentDetails.motherName,
-            motherOccupation:parentDetails.motherOccupation,
-            motherMobileNo: parentDetails.motherMobileNo,
-          
+          fatherName: parentDetails.fatherName,
+          fatherOccupation: parentDetails.fatherOccupation,
+          fatherMobileNo: parentDetails.fatherMobileNo,
+          motherName: parentDetails.motherName,
+          motherOccupation: parentDetails.motherOccupation,
+          motherMobileNo: parentDetails.motherMobileNo,
         },
-  
         bankDetails: {
-          bankName:bankDetails.bankName,
-          branch:bankDetails.branch,
-          accountNo:bankDetails.accountNo,
-          ifscCode:bankDetails.ifscCode,
+          bankName: bankDetails.bankName,
+          branch: bankDetails.branch,
+          accountNo: bankDetails.accountNo,
+          ifscCode: bankDetails.ifscCode,
         },
-        achievements:{
-          arts:achievements.arts,
-          sports:achievements.sports,
+        achievements: {
+          arts: achievements.arts,
+          sports: achievements.sports,
           other: achievements.other,
         },
-      }
+      },
     });
   } catch (error) {
     console.error('Error fetching student details:', error);
@@ -208,7 +214,7 @@ router.post('/approve/:id', async (req, res) => {
     // Perform the approval process
     const approvedStudentData = {
       ...student.toJSON(),
-      semester: semester
+      semester: semester,
     };
 
     // Generate the new admission ID with the current year

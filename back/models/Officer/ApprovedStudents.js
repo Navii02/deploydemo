@@ -11,6 +11,7 @@ const InstallmentSchema = new mongoose.Schema({
   amount: Number,
 });
 
+
 const ApprovedStudentSchema = new mongoose.Schema({
   customId: String,
   admissionNumber: String,
@@ -30,7 +31,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
   mobileNo: String,
   email: String,
   whatsappNo: String,
-  collegemail: String, // New field for secondary email
+  collegemail: String,
   entranceExam: String,
   entranceRollNo: String,
   entranceRank: String,
@@ -69,8 +70,20 @@ const ApprovedStudentSchema = new mongoose.Schema({
   },
   academicYear: String,
   semester: Number,
-  installments: [InstallmentSchema], // Array of installment objects
+  assignments: {
+    type: String,
+    default: 'Not Assigned',
+  },
+  exams: {
+    type: String,
+    default: 'Not Scheduled',
+  },
+  attendance: {
+    type: String,
+    default: 'N/A',
+  },
 });
+ 
 
 // Pre-save middleware to generate custom ID before saving
 ApprovedStudentSchema.pre('save', function(next) {

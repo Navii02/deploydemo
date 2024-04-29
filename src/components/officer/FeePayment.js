@@ -51,7 +51,7 @@ function StudentDetailsPage() {
             <div className="fee-payment-section">
               <h3>Fee Payment</h3>
               <div className="fee-table">
-                {student.feeCategory === 'meritRegulatedFee' ? (
+                {student.feeCategory === 'merit Regulated Fee' ? (
                   <>
                     {[1, 2, 3, 4].map((index) => (
                       <div key={index} className="installment">
@@ -60,7 +60,7 @@ function StudentDetailsPage() {
                       </div>
                     ))}
                   </>
-                ) : student.feeCategory === 'meritFullFee' ? (
+                ) : student.feeCategory === 'Merit Higher Fee' ? (
                   <>
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
                       <div key={index} className="installment">
