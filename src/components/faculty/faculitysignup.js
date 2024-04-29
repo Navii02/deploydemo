@@ -95,7 +95,7 @@ function useFacultySignup() {
       });
 
       // Redirect to the login page after successful registration
-      navigate('/faculitylogin');
+      navigate('/facultylogin');
     } catch (error) {
       setErrors({
         ...errors,

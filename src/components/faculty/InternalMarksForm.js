@@ -98,10 +98,9 @@ const InternalMarksForm = () => {
             <th>Student Name</th>
             <th>Assignment 1</th>
             <th>Assignment 2</th>
-            <th>Tutorial 1</th>
-            <th>Tutorial 2</th>
             <th>Exam 1</th>
             <th>Exam 2</th>
+            <th>Attendance</th>
             <th>Aggregate</th>
             <th>Action</th>
           </tr>
@@ -112,10 +111,9 @@ const InternalMarksForm = () => {
               <td>{student.name}</td>
               <td contentEditable="true">{student.assignment1}</td>
               <td contentEditable="true">{student.assignment2}</td>
-              <td contentEditable="true">{student.tutorial1}</td>
-              <td contentEditable="true">{student.tutorial2}</td>
               <td contentEditable="true">{student.exam1}</td>
               <td contentEditable="true">{student.exam2}</td>
+              <td contentEditable="true">{student.attendance}</td>
               <td>{student.aggregate}</td>
               <td>
                 <button onClick={() => handleEdit(index)}>Edit</button>
