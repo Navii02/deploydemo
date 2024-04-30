@@ -8,6 +8,7 @@ function NoticeUpdates() {
   const [notice, setNotice] = useState('');
   const [image, setImage] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [notices, setNotices] = useState([]);
   const [visibleNotices, setVisibleNotices] = useState(3); // Number of notices to initially display
 
@@ -43,8 +44,16 @@ function NoticeUpdates() {
       setImage(null);
 
       fetchNotices();
+
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000); // Hide success message after 3 seconds
     } catch (error) {
-      console.log(error.response.data);
+      setErrorMessage(error.response.data.message);
+
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 3000); // Hide error message after 3 seconds
     }
   };
 
@@ -83,7 +92,8 @@ function NoticeUpdates() {
           </label>
           <button type="submit">Add Notice</button>
         </form>
-        {successMessage && <p>{successMessage}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <div className="notice-list">
           {notices.slice(0, visibleNotices).map((notice) => (

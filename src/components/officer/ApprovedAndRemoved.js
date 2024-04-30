@@ -354,11 +354,11 @@ const ApprovedAndRemoved = () => {
       <Navbar />
       {/* Course Filter */}
       <div>
-        <label htmlFor="course">Select Course: </label>
+        <label htmlFor="course">Select Department: </label>
         <select id="course" value={selectedCourse} onChange={handleCourseChange}>
           <option value="">All</option>
-          <option value="computerScience">Computer Science (CSE)</option>
-          <option value="electronicsAndCommunication">Electronics and Communication (EC)</option>
+          <option value="Computer Science">Computer Science (CSE)</option>
+          <option value="Electronics And Communication">Electronics and Communication (EC)</option>
         </select>
       </div>
 

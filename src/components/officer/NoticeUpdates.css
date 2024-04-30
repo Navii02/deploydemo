@@ -14,6 +14,7 @@
   }
   
   .notice-item {
+    margin-top: 20px;
     width: calc(33.33% - 20px);
     text-align: center;
   }
