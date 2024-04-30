@@ -464,12 +464,13 @@ const ApprovedAndRemoved = () => {
       {/* Course Filter */}
       {!editMode && (
         <div>
-          <label htmlFor="course">Select Course: </label>
+          <label htmlFor="course">Select Department: </label>
           <select id="course" value={selectedCourse} onChange={handleCourseChange}>
             <option value="">All</option>
             <option value="computerScience">Computer Science (CSE)</option>
             <option value="electronicsAndCommunication">Electronics and Communication (EC)</option>
           </select>
+          &nbsp;
           <label htmlFor="semester">Select Semester: </label>
           <select id="semester" value={selectedSemester} onChange={handleSemesterChange}>
             <option value="">All</option>
@@ -489,7 +490,7 @@ const ApprovedAndRemoved = () => {
       {/* Approved Students */}
       {!editMode && (
         <div>
-          <h2>Approved Students</h2>
+          &nbsp;
           <table>
             <thead>
               <tr>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import HodNavbar from './HodNavbar';
 
 function StudentDetailsPage() {
   const [branch, setBranch] = useState('');
@@ -29,7 +30,6 @@ function StudentDetailsPage() {
         return branch;
     }
   };
-  console.log(branch);
 
   const fetchStudents = async (branch) => {
     try {
@@ -60,9 +60,10 @@ function StudentDetailsPage() {
 
   return (
     <div>
-      <h1>Student Details</h1>
-      <h2>Branch: {branch}</h2>
+      <HodNavbar />
+      <h3>Branch: {branch}</h3>
       <div>
+        &nbsp;
         <label htmlFor="semester">Select Semester:</label>
         <select id="semester" value={selectedSemester} onChange={handleSemesterChange}>
           <option value="">All</option>
@@ -78,26 +79,29 @@ function StudentDetailsPage() {
         </select>
       </div>
       <div>
-        <h3>Students:</h3>
-        <ul>
-          {filteredStudents.map((student) => (
-            <li key={student._id}>
-              <div>
-                <strong>Name:</strong> {student.name}
-              </div>
-              <div>
-                <strong>Semester:</strong> {student.semester}
-              </div>
-              <div>
-                <strong>Register Number:</strong> {student.admissionNumber}
-              </div>
-              <div>
-                <strong>Email:</strong> {student.email}
-              </div>
-              {/* Add other details as needed */}
-            </li>
-          ))}
-        </ul>
+        &nbsp;
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Semester</th>
+              <th>Register Number</th>
+              <th>Email</th>
+              {/* Add other table headers as needed */}
+            </tr>
+          </thead>
+          <tbody>
+            {filteredStudents.map((student) => (
+              <tr key={student._id}>
+                <td>{student.name}</td>
+                <td>{student.semester}</td>
+                <td>{student.admissionNumber}</td>
+                <td>{student.email}</td>
+                {/* Add other table cells as needed */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

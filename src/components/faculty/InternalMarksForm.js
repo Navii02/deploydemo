@@ -56,6 +56,7 @@ const InternalMarksForm = () => {
   return (
     <div>
       <Navbar/>
+      <div className="internal-container">
       <div className="selections">
         <label>
           Branch:
@@ -123,6 +124,7 @@ const InternalMarksForm = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

@@ -50,35 +50,36 @@ function PrinciNavbar() {
                 Students
               </Link>
             </li>
-            <li className='nav-item'>
+            <li className='nav-item dropdown'>
               <Link to='/pteachers' className='nav-links' onClick={closeMobileMenu}>
-                Faculties
+                Faculties<i className='fas fa-caret-down' />
               </Link>
+              <div className='dropdown-content'>
+                <Link to='/pteachers' className='dropdown-link' onClick={closeMobileMenu}>
+                  Details
+                </Link>
+                <Link to='/hodassign' className='dropdown-link' onClick={closeMobileMenu}>
+                  Hod Assign
+                </Link>
+              </div>
             </li>
             <li className='nav-item'>
               <Link to='/pOffice' className='nav-links' onClick={closeMobileMenu}>
                 Office
               </Link>
             </li>
-            <li className='nav-item'>
-              <Link to='/hodassign' className='nav-links' onClick={closeMobileMenu}>
-                HodAssign
-              </Link>
-            </li>
-          </ul>
-          <div className='nav-out'>
             <li>
               <Link to='/principallogin' className='nav-links-mobile' onClick={handleLogout}>
                 Log Out
               </Link>
             </li>
+            </ul>
             {button && (
               <Button buttonStyle='btn--outline' onClick={handleLogout}>
                 LOG OUT
               </Button>
             )}
           </div>
-        </div>
       </nav>
     </>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import HodNavbar from './HodNavbar';
 
 function AssignTutorPage() {
   const [tutors, setTutors] = useState([]);
@@ -37,8 +38,9 @@ function AssignTutorPage() {
 
   return (
     <div>
-      <h1>Assign Tutor for Academic Year</h1>
+     <HodNavbar/>
       <div>
+        &nbsp;
         <label htmlFor="academicYear">Academic Year:</label>
         <input
           type="text"
@@ -62,6 +64,7 @@ function AssignTutorPage() {
             </option>
           ))}
         </select>
+        &nbsp;
       </div>
       <button onClick={handleAssignTutor}>Assign Tutor</button>
     </div>

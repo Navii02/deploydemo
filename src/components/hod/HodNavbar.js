@@ -75,7 +75,7 @@ function HodNavbar() {
                 <Link to='/hstudents' className='dropdown-link' onClick={closeMobileMenu}>
                   Details
                 </Link>
-                <Link to='/' className='dropdown-link' onClick={closeMobileMenu}>
+                <Link to='/hperf' className='dropdown-link' onClick={closeMobileMenu}>
                   Performance
                 </Link>
               </div>

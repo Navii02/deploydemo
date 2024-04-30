@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import HodNavbar from './HodNavbar';
 const ShowAddedSubjects = () => {
     const [addedSubjects, setAddedSubjects] = useState([]);
     const [editingIndex, setEditingIndex] = useState(null);
@@ -59,9 +60,9 @@ const ShowAddedSubjects = () => {
   
     return (
       <div>
-        <h2>Added Subjects</h2>
         <div>
-          <label htmlFor="semesterFilter">Filter by Semester:</label>
+          &nbsp;
+          <label htmlFor="semesterFilter">Select Semester:</label>
           <select id="semesterFilter" value={selectedSemester} onChange={handleSemesterChange}>
             <option value="">All</option>
             {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
@@ -71,6 +72,7 @@ const ShowAddedSubjects = () => {
             ))}
           </select>
         </div>
+        &nbsp;
         <table>
           <thead>
             <tr>
@@ -184,7 +186,7 @@ const AddSubjectForm = () => {
 
   return (
     <div>
-      <h2>Add Subjects</h2>
+      <HodNavbar/>
       {showSubjectAddingInterface && (
         <div>
           <form onSubmit={handleSubmit}>
@@ -199,7 +201,7 @@ const AddSubjectForm = () => {
             </div>
             {semester && (
               <div>
-                <h3>Semester {semester}</h3>
+                &nbsp;
                 {subjects.map((subject, index) => (
                   <div key={index}>
                     <div>
@@ -213,6 +215,7 @@ const AddSubjectForm = () => {
                       />
                     </div>
                     <div>
+                      &nbsp;
                       <label htmlFor={`subjectCode${index}`}>Subject Code:</label>
                       <input
                         type="text"

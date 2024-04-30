@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-//import Navbar from './Navbar';
-//import './StudentDetails.css';
+import HodNavbar from './HodNavbar';
 
 function StudentDetailsPage() {
   const [students, setStudents] = useState([]);
@@ -28,7 +27,7 @@ function StudentDetailsPage() {
 
   return (
     <>
-     
+     <HodNavbar/>
       <div className="student-details-container">
         <h1>Student Details - {localStorage.getItem('userDepartment')}</h1>
         {loading && <p>Loading...</p>}

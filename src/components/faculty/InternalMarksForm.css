@@ -1,38 +1,64 @@
 /* InternalMarksForm.css */
 
+.internal-container {
+  margin: 20px;
+}
+
 .selections {
-    margin-top: 10px;
-    margin-bottom: 40px;
+  margin-bottom: 20px;
+}
+
+.selections label {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.selections select {
+  padding: 5px;
+}
+
+.marks-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto; /* Add horizontal scrollbar */
+}
+
+.marks-table th,
+.marks-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.marks-table th {
+  background-color: #4caf50;
+  color: white;
+}
+
+.marks-table td {
+  white-space: nowrap;
+}
+
+.marks-table button {
+  margin: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+/* Responsive CSS */
+@media screen and (max-width: 768px) {
+  .selections label {
+    display: block;
+    margin-bottom: 10px;
   }
 
-  .selections label {
-    display: inline-block;
-    margin-right: 20px;
-  }
-  
-  .marks-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .marks-table th, .marks-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-  }
-  
-  .marks-table th {
-    background-color: #4caf50;
-    color: white;
-  }
-  
+  .marks-table th,
   .marks-table td {
-    white-space: nowrap;
+    font-size: 14px;
   }
-  
+
   .marks-table button {
-    margin-left: 5px;
-    cursor: pointer;
+    padding: 4px 8px;
   }
-  
+}

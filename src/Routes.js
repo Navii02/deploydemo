@@ -66,6 +66,7 @@ import CertificateApproval from './components/hod/CertificateApproval'
 import HStudenlist from './components/hod/studenlisthod'
 import HodStudenlist from './components/hod/HstudentsDetails'
 import SubjectAdd from './components/hod/SubjectAddition'
+import HodPerformancePage from './components/hod/HodPerformance'
 
 import PrinciHome from './components/principal/PrinciHome'
 import PrincipalSignup from './components/principal/principalsignup'
@@ -150,7 +151,8 @@ function RoutesComp() {
             <Route path='/tstudents' element={<Tutorstudentlist/>}/>
             <Route path='/sdata' element={<StudentListPage/>}/>
             <Route path='/perf' element={<StudentPerformancePage/>}/>  
-            <Route path='/upd' element={<TutorUpdates/>}/>      
+            <Route path='/upd' element={<TutorUpdates/>}/>  
+            <Route path='/hperf' element={<HodPerformancePage/>}/>
       </Routes>
     </>
   )
