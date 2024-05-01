@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import '../Navbar.css';
 import { Button } from '../Button';
+import { Link, useNavigate } from 'react-router-dom';
+import '../Navbar.css'
 
 function Navbar() {
   const [click, setClick] = useState(false);
@@ -24,7 +24,7 @@ function Navbar() {
     localStorage.removeItem('email');
 
     // Redirect to the login page
-    navigate('/adminlogin');
+    navigate('/studentlogin');
   };
 
   useEffect(() => {
@@ -45,46 +45,32 @@ function Navbar() {
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
+          <li className='nav-item'>
+              <Link to='/dash' className='nav-links' onClick={closeMobileMenu}>
+                Students
+              </Link>
+            </li>
             <li className='nav-item'>
-              <Link to='/user' className='nav-links' onClick={closeMobileMenu}>
-                Student
+              <Link to='/dash' className='nav-links' onClick={closeMobileMenu}>
+                 Faculties
               </Link>
             </li>
             <li className='nav-item'>
               <Link to='/officer-details' className='nav-links' onClick={closeMobileMenu}>
-                Officer
+                 Officers
               </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/teacher-details' className='nav-links' onClick={closeMobileMenu}>
-                Faculty
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/thome' className='nav-links' onClick={closeMobileMenu}>
-                Tutor
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/hodhome' className='nav-links' onClick={closeMobileMenu}>
-                HOD
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/' className='nav-links' onClick={closeMobileMenu}>
-                Principal
+            </li> 
+            <li>
+              <Link to='/adminlogin' className='nav-links-mobile' onClick={handleLogout}>
+                Log Out
               </Link>
             </li>
           </ul>
-        </div>
-        <div className='nav-out'>
-          <li>
-            {/* Use handleLogout for the onClick event */}
-            <Link to='/' className='nav-links-mobile' onClick={handleLogout}>
-              Log Out
-            </Link>
-          </li>
-          {button && <Button buttonStyle='btn--outline' onClick={handleLogout}>LOG OUT</Button>}
+          {button && (
+            <Button buttonStyle='btn--outline' onClick={handleLogout}>
+              LOG OUT
+            </Button>
+          )}
         </div>
       </nav>
     </>

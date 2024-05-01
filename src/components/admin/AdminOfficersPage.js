@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Navbar from './AdminNavbar';
 
 const AdminOfficersPage = () => {
   const [officers, setOfficers] = useState([]);
@@ -51,9 +52,9 @@ const AdminOfficersPage = () => {
 
   return (
     <div className="admin-officers-page">
-      <h2>Officers Management</h2>
-
+      <Navbar/>
       <div>
+        &nbsp;
         <h3>Add New Officer</h3>
         <label>
           Name:
@@ -81,8 +82,9 @@ const AdminOfficersPage = () => {
         </label>
         <button onClick={handleAddOfficer}>Add Officer</button>
       </div>
-
+        &nbsp;
       <div>
+        &nbsp;
         <h3>Officers List</h3>
         <ul>
           {officers.map((officer) => (

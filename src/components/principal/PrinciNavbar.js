@@ -59,13 +59,13 @@ function PrinciNavbar() {
                   Details
                 </Link>
                 <Link to='/hodassign' className='dropdown-link' onClick={closeMobileMenu}>
-                  Hod Assign
+                  Assign HOD
                 </Link>
               </div>
             </li>
             <li className='nav-item'>
               <Link to='/pOffice' className='nav-links' onClick={closeMobileMenu}>
-                Office
+                Officers
               </Link>
             </li>
             <li>
