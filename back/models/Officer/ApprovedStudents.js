@@ -19,7 +19,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
   mobileNo: String,
   email: String,
   whatsappNo: String,
-  collegemail: String,
+  
   entranceExam: String,
   entranceRollNo: String,
   entranceRank: String,
@@ -71,6 +71,12 @@ const ApprovedStudentSchema = new mongoose.Schema({
     default: 'N/A',
   },
   installmentsPaid: [Number],
+  registerNumber: String,
+  collegemail: {
+    type: [String], // Array of strings (email addresses)
+    default: [],    // Default value is an empty array
+   
+  }
 });
  
 

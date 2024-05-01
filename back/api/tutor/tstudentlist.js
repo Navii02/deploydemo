@@ -1,4 +1,5 @@
 // routes/students.js
+
 const express = require('express');
 const router = express.Router();
 const Student = require('../../models/Officer/ApprovedStudents'); // Import your Student model
@@ -23,7 +24,6 @@ router.put('/students/:studentId', async (req, res) => {
   const updatedData = req.body;
 
   try {
-    // Ensure that 'updatedData' includes the new email field (e.g., 'collegemai')
     const updatedStudent = await Student.findByIdAndUpdate(studentId, updatedData, { new: true });
     res.json(updatedStudent);
   } catch (error) {
@@ -32,18 +32,23 @@ router.put('/students/:studentId', async (req, res) => {
   }
 });
 
-// Add secondary email to student (saved in 'collegemai' field)
+// Add college email to student (saved in 'collegemail' field)
 router.post('/students/:studentId/emails', async (req, res) => {
   const studentId = req.params.studentId;
   const { email } = req.body;
 
   try {
-    const updatedStudent = await Student.findByIdAndUpdate(
-      studentId,
-      { $addToSet: { collegemail: email } }, // Use $addToSet to prevent duplicate emails
-      { new: true }
-    );
-    res.json(updatedStudent);
+    const student = await Student.findById(studentId);
+
+    if (student) {
+      if (!student.collegemail.includes(email)) {
+        student.collegemail.push(email);
+        await student.save();
+      }
+      res.json(student);
+    } else {
+      res.status(404).json({ error: 'Student not found' });
+    }
   } catch (error) {
     console.error('Error adding email to student:', error);
     res.status(500).json({ error: 'Internal Server Error' });
