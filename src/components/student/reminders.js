@@ -10,24 +10,24 @@ const Reminders = () => {
   useEffect(() => {
     const categories = ['attendance', 'internalMarks', 'fees', 'assignments', 'updates'];
 
+    const fetchReminders = (category) => {
+      const apiEndpoint = `/api/reminders/${category}/${userEmail}`;
+
+      axios.get(apiEndpoint)
+        .then(response => {
+          const fetchedReminders = { category, data: response.data };
+          setReminders(prevReminders => [...prevReminders, fetchedReminders]);
+        })
+        .catch(error => {
+          console.error(`Error fetching ${category} reminders:`, error);
+          setReminders(prevReminders => [...prevReminders, { category, data: [] }]);
+        });
+    };
+
     categories.forEach(category => {
       fetchReminders(category);
     });
   }, [userEmail]);
-
-  const fetchReminders = (category) => {
-    const apiEndpoint = `/api/reminders/${category}/${userEmail}`;
-
-    axios.get(apiEndpoint)
-      .then(response => {
-        const fetchedReminders = { category, data: response.data };
-        setReminders(prevReminders => [...prevReminders, fetchedReminders]);
-      })
-      .catch(error => {
-        console.error(`Error fetching ${category} reminders:`, error);
-        setReminders(prevReminders => [...prevReminders, { category, data: [] }]);
-      });
-  };
 
   const renderCategoryReminders = (categoryReminders) => {
     const { category, data } = categoryReminders;

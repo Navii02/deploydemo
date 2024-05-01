@@ -1,7 +1,8 @@
 /* FeeDetails.css */
 
+
 .fee-details {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -10,75 +11,52 @@
   margin-bottom: 10px;
 }
 
-.fee-details .fee-table {
+/* Table styles */
+.fee-details-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-.fee-details .fee-table th,
-.fee-details .fee-table td {
-  padding: 8px 12px;
+.fee-details-table th,
+.fee-details-table td {
+  padding: 10px;
   border: 1px solid #ddd;
-  text-align: center;
 }
 
-.fee-details .fee-table th {
-  background-color: #f0f0f0;
+.fee-details-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-align: left;
 }
 
-.fee-details .fee-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.fee-details .fee-table tbody tr:hover {
-  background-color: #f0f0f0;
-}
-
-.fee-details .payment-button {
-  padding: 6px 12px;
-  border: none;
+/* Button styles */
+.fee-details button {
+  padding: 8px 12px;
   background-color: #007bff;
   color: #fff;
+  border: none;
   cursor: pointer;
 }
 
-.fee-details .payment-status {
-  font-size: 14px;
-  margin-top: 6px;
+.fee-details button:hover {
+  background-color: #0056b3;
 }
 
-/* Responsive Styles */
-@media only screen and (max-width: 768px) {
-  .fee-details .fee-table th,
-  .fee-details .fee-table td {
-    font-size: 14px;
-    padding: 10px; /* Increased padding for better spacing */
-  }
-
-  .fee-details .payment-button {
-    font-size: 14px;
-    padding: 8px 12px; /* Adjusted padding for the button */
-  }
-
-  .fee-details .payment-status {
-    font-size: 12px;
-  }
+.fee-details p{
+  color: dimgray;
 }
 
-@media only screen and (max-width: 480px) {
-  .fee-details .fee-table th,
-  .fee-details .fee-table td {
-    font-size: 12px;
-    padding: 8px; /* Reduced padding for smaller screens */
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .fee-details-table th,
+  .fee-details-table td {
+    padding: 8px;
+    font-size: 14px;
   }
 
-  .fee-details .payment-button {
-    font-size: 12px;
-    padding: 6px 10px; /* Adjusted padding for the button */
-  }
-
-  .fee-details .payment-status {
-    font-size: 10px;
+  .fee-details button {
+    padding: 6px 10px;
+    font-size: 14px;
   }
 }

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import './FeeDetails.css';  // Import your CSS file
+import './FeeDetails.css'; // Import your CSS file
 import Navbar from './UserNavbar';
 
 const FeeDetails = () => {
- // eslint-disable-next-line
   const [paymentStatus] = useState({});
   const userEmail = localStorage.getItem('email');
 
@@ -53,8 +52,8 @@ const FeeDetails = () => {
     <>
       <Navbar />
       <div className="fee-details">
-        <h3>Fee Structure(Merit)</h3>
-        <table className="fee-table">
+        <h3>Fee Structure (Merit)</h3>
+        <table className="fee-details-table">
           <thead>
             <tr>
               <th>Year of Study</th>
@@ -76,8 +75,8 @@ const FeeDetails = () => {
           </tbody>
         </table>
 
-        <h3>Fee Structure(Management)</h3>
-        <table className="fee-table">
+        <h3>Fee Structure (Management)</h3>
+        <table className="fee-details-table">
           <thead>
             <tr>
               <th>Year of Study</th>
@@ -98,7 +97,7 @@ const FeeDetails = () => {
             ))}
           </tbody>
         </table>
-        Note*: Tuition Fee Waiver(TFW) for Top two candidates from each course.
+        <p>Note*: Tuition Fee Waiver (TFW) for Top two candidates from each course.</p>
       </div>
     </>
   );
