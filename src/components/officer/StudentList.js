@@ -899,36 +899,7 @@ const ApprovedAndRemoved = () => {
                 required
               />
             </div>
-            <div className="box">
-              <h4>Achievements</h4>
-              <div className="form-group">
-                <label>Arts:</label>
-                <input
-                  type="text"
-                  name="achievements.arts"
-                  value={formData.achievements.arts}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="form-group">
-                <label>Sports:</label>
-                <input
-                  type="text"
-                  name="achievements.sports"
-                  value={formData.achievements.sports}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="form-group">
-                <label>Other:</label>
-                <input
-                  type="text"
-                  name="achievements.other"
-                  value={formData.achievements.other}
-                  onChange={handleInputChange}
-                />
-              </div>
-              </div>
+          
             <button type="submit">Save Changes</button>
           </form>
           {isSuccess && <div className="success-message">Data successfully edited. Reloading...</div>}

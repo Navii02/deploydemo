@@ -4,7 +4,7 @@ const Principal = require('../../models/Principal/PrincipalSchema');
 const HOD = require('../../models/Principal/HODDetail');
 const ClassTutor = require('../../models/Tutor/TutorSchema');
 const Faculty = require('../../models/Faculity/FaculitySchema');
-const Officer = require('../../models/Principal/OfficersDetailSchema');
+const Officer = require('../../models/Admin/OfficersDetailSchema');
 const Student = require('../../models/Officer/ApprovedStudents');
 
 // Route to fetch user statistics

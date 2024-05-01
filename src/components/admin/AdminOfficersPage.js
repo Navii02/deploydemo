@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const AdminOfficersPage = () => {
   const [officers, setOfficers] = useState([]);
-  const [newOfficer, setNewOfficer] = useState({ name: '', post: '' });
+  const [newOfficer, setNewOfficer] = useState({ name: '', post: '', email: '' });
   const [editingOfficer, setEditingOfficer] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -24,7 +24,7 @@ const AdminOfficersPage = () => {
     try {
       await axios.post('/api/admin/addOfficer', newOfficer);
       fetchOfficers();
-      setNewOfficer({ name: '', post: '' });
+      setNewOfficer({ name: '', post: '', email: '' });
     } catch (error) {
       setErrorMessage(error.response.data.message);
     }
@@ -71,6 +71,14 @@ const AdminOfficersPage = () => {
             onChange={(e) => setNewOfficer({ ...newOfficer, post: e.target.value })}
           />
         </label>
+        <label>
+          Email:
+          <input
+            type="text"
+            value={newOfficer.email}
+            onChange={(e) => setNewOfficer({ ...newOfficer, email: e.target.value })}
+          />
+        </label>
         <button onClick={handleAddOfficer}>Add Officer</button>
       </div>
 
@@ -95,11 +103,18 @@ const AdminOfficersPage = () => {
                       setEditingOfficer({ ...editingOfficer, post: e.target.value })
                     }
                   />
+                  <input
+                    type="text"
+                    value={editingOfficer.email}
+                    onChange={(e) =>
+                      setEditingOfficer({ ...editingOfficer, email: e.target.value })
+                    }
+                  />
                   <button onClick={handleUpdateOfficer}>Update</button>
                 </>
               ) : (
                 <>
-                  {officer.name} - {officer.post}
+                  {officer.name} - {officer.post} - {officer.email}
                   <button onClick={() => setEditingOfficer(officer)}>Edit</button>
                   <button onClick={() => handleDeleteOfficer(officer._id)}>Delete</button>
                 </>

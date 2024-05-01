@@ -1,70 +1,72 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from './OfficerNavbar';
-import './OfficeHome.css'
-
+import './OfficeHome.css';
 
 function OfficeHome() {
-  const [officername, setOfficerName] = useState('');
+  const [officerName, setOfficerName] = useState('');
   const [position, setPosition] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchOfficerProfile = async () => {
       const userEmail = localStorage.getItem('email');
       console.log('User Email:', userEmail);
 
       if (!userEmail) {
         console.error('User email not found in localStorage');
+        setLoading(false);
         return;
       }
 
       try {
-        const response = await axios.get(`/api/officer-profile?email=${userEmail}`);
-        console.log('Full Response:', response);
+        const response = await axios.get(`/api/officerprofile/${userEmail}`);
+        console.log('Officer Profile Response:', response.data);
 
-        const { officername, position } = response.data;
+        const { name, post } = response.data;
 
-        console.log('Received Data:', {
-          officername,
-          position,
-        });
-
-        setOfficerName(officername);
-        setPosition(position);
-        
-
-        console.log('User:', officername);
+        setOfficerName(name);
+        if (Array.isArray(post) && post.length > 0) {
+          setPosition(post);
+        } else {
+          setPosition([]);
+        }
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching teacher profile:', error);
+        console.error('Error fetching officer profile:', error);
+        setLoading(false);
       }
     };
 
-    fetchData();
+    fetchOfficerProfile();
   }, []);
 
-  useEffect(() => {
-    // Log the updated state
-    console.log('User:', officername);
-  }, [officername]);
-
-
-    return(
+  return (
     <div>
-        <Navbar/>
-        <div className="officer-home-container">
+      <Navbar />
+      <div className="officer-home-container">
         <div className="welcome-section">
-          <h1 className="welcome-header">Welcome, {officername}!</h1>
-          <p className="welcome-text">
-            This is your officer home page. Explore the features and modules available for you.
-          </p>
-          <div className="associated-data">
-            <h2>Your Associated Data:</h2>
-            <p><strong>Position:</strong> {position.join(", ")}</p>
-          </div>
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <>
+              <h1 className="welcome-header">Welcome, {officerName}!</h1>
+              <p className="welcome-text">
+                This is your officer home page. Explore the features and modules available for you.
+              </p>
+              <div className="associated-data">
+                <h2>Your Associated Data:</h2>
+                <p>
+                  <strong>Position:</strong>{' '}
+                  {position.length > 0 ? position.join(', ') : 'No position available'}
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
-    )
+  );
 }
 
 export default OfficeHome;

@@ -5,6 +5,9 @@ const officerDetailSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email:{
+    type: String,
+     required: true},
   post: {
     type: String,
     required: true,

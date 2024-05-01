@@ -1,3 +1,5 @@
+// StudentCertificateRequestPage.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './UserNavbar';
@@ -6,26 +8,40 @@ import './CertificateRequest.css';
 function StudentCertificateRequestPage() {
   const [registerNumber, setRegisterNumber] = useState('');
   const [admissionNumber, setAdmissionNumber] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [mobileNo, setMobileNumber] = useState('');
   const [reason, setReason] = useState('');
   const [selectedDocuments, setSelectedDocuments] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [userName, setUserName] = useState('');
   const userEmail = localStorage.getItem('email');
+  const [manualRegisterNumber, setManualRegisterNumber] = useState('');
 
   useEffect(() => {
-    // Fetch student details including register number, admission number, and phone number when component mounts
-    axios.get(`/api/student/details/${userEmail}`)
-      .then((response) => {
-        const { registerNumber, admissionNumber, phoneNumber } = response.data;
-        setRegisterNumber(registerNumber);
-        setAdmissionNumber(admissionNumber); // Set admission number fetched from the backend
-        setPhoneNumber(phoneNumber); // Set phone number fetched from the backend
-      })
-      .catch((error) => {
+    const fetchStudentDetails = async () => {
+      try {
+        const response = await axios.get(`/api/student/details/${userEmail}`);
+        const { registerNumber, admissionNumber, mobileNo, name } = response.data;
+
+        if (registerNumber) {
+          setRegisterNumber(registerNumber);
+        } else {
+          setManualRegisterNumber('');
+        }
+
+        setAdmissionNumber(admissionNumber);
+        setMobileNumber(mobileNo);
+        setUserName(name); // Set userName from backend
+      } catch (error) {
         console.error('Error fetching student details:', error);
-      });
-  }, [userEmail]); // Include userEmail in the dependency array to re-run the effect when it changes
+        setErrorMessage('Failed to fetch student details');
+      }
+    };
+
+    if (userEmail) {
+      fetchStudentDetails();
+    }
+  }, [userEmail]);
 
   const handleDocumentSelection = (document) => {
     const updatedSelection = selectedDocuments.includes(document)
@@ -37,37 +53,36 @@ function StudentCertificateRequestPage() {
 
   const handleSubmit = async () => {
     try {
-      if (!registerNumber || !admissionNumber || !reason || selectedDocuments.length === 0) {
-        setErrorMessage('Register number, admission number, reason, and at least one document selection are required.');
-        return;
-      }
-  
       const response = await axios.post('/api/student/submitRequest', {
-        registerNumber,
-        admissionNumber,
-        reason,
         userEmail,
+        reason,
         selectedDocuments,
-        phoneNumber,
+        registerNumber: registerNumber || manualRegisterNumber,
+        admissionNumber,
+        phoneNumber: mobileNo,
+        name: userName, // Use fetched name from state
       });
-  
+
       setSuccessMessage(response.data.message);
-  
+
       // Reset form fields and clear messages after successful submission
-      setRegisterNumber('');
-      setAdmissionNumber('');
       setReason('');
       setSelectedDocuments([]);
-      setPhoneNumber('');
+      setRegisterNumber('');
+      setManualRegisterNumber('');
+      setAdmissionNumber('');
+      setMobileNumber('');
+      setUserName('');
       setErrorMessage('');
       setTimeout(() => {
         setSuccessMessage('');
       }, 3000);
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      console.error('Error submitting request:', error);
+      setErrorMessage(error.response?.data?.message || 'Failed to submit request');
     }
   };
-  
+
   const documentOptions = [
     'SSLC Book (original)',
     'Plus Two Certificate (original)',
@@ -94,13 +109,23 @@ function StudentCertificateRequestPage() {
           <h1>COLLEGE OF ENGINEERING POONJAR</h1>
           <h2>General Application Form</h2>
         </div>
-        <label>
-          Register Number:
-          <input type="text" value={registerNumber} onChange={(e) => setRegisterNumber(e.target.value)} />
-        </label>
+        {!registerNumber && (
+          <label>
+            Register Number:
+            <input
+              type="text"
+              value={manualRegisterNumber}
+              onChange={(e) => setManualRegisterNumber(e.target.value)}
+            />
+          </label>
+        )}
         <label>
           Admission Number:
           <input type="text" value={admissionNumber} onChange={(e) => setAdmissionNumber(e.target.value)} />
+        </label>
+        <label>
+          Name:
+          <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} />
         </label>
         <label>
           Reason:
@@ -128,7 +153,7 @@ function StudentCertificateRequestPage() {
         )}
         <label>
           Contact Number:
-          <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+          <input type="text" value={mobileNo} onChange={(e) => setMobileNumber(e.target.value)} />
         </label>
         <button className="submit-button" onClick={handleSubmit}>Submit Request</button>
         {successMessage && <p className="success-message">{successMessage}</p>}

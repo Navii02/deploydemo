@@ -1,0 +1,68 @@
+/* StudentDetailsPage.css */
+
+.student-card {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .student-card .student-info {
+    margin-bottom: 15px;
+  }
+  
+  .student-card .student-info p {
+    margin: 8px 0;
+  }
+  
+  .student-card .student-info .name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .student-card .student-info .admission-number {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .student-card .student-info .branch {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .fee-payment-section {
+    margin-top: 20px;
+  }
+  
+  .fee-table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  
+  .installment {
+    background-color: #e0e0e0;
+    border-radius: 6px;
+    padding: 10px;
+  }
+  
+  .installment div {
+    font-weight: bold;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  

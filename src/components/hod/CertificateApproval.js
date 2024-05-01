@@ -17,6 +17,7 @@ function HodCertificateRequestsPage() {
     try {
       const response = await axios.get('/api/hod/certificateRequests');
       setRequests(response.data.requests.reverse()); // Reverse the order
+    
     } catch (error) {
       setErrorMessage(error.response.data.message);
     }
@@ -55,12 +56,17 @@ function HodCertificateRequestsPage() {
               <h3>{request.studentName}</h3>
               <p>Request ID: {request._id}</p>
               <p>Student ID: {request.registerNumber}</p>
+              <p>Student Name: {request.name}</p>
               <p>Reason: {request.reason}</p>
-              <p>selected option: {request.selectedDocuments}</p>
+              <p>Selected Documents: {request.selectedDocuments.join(', ')}</p>
               <p>Status: {request.HoDstatus}</p>
-              {request.status === 'Accepted' && <p>Accepted By: {request.acceptedBy}</p>}
-              <input type="button" value="Accept" onClick={() => handleAccept(request._id)} />
-              <input type="button" value="Decline" onClick={() => handleDecline(request._id)} />
+              {request.HoDstatus === 'Pending' && (
+                <>
+                  <input type="button" value="Accept" onClick={() => handleAccept(request._id)} />
+                  <input type="button" value="Decline" onClick={() => handleDecline(request._id)} />
+                </>
+              )}
+              {request.HODstatus === 'Accepted' && <p>Accepted By: {request.acceptedBy}</p>}
             </div>
           ))}
         </div>

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './OfficerNavbar';
+import './Feepayment.css';
 
 function StudentDetailsPage() {
   const [students, setStudents] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState('');
+  const [selectedSemester, setSelectedSemester] = useState('');
 
   useEffect(() => {
     fetchStudentDetails();
@@ -28,50 +31,95 @@ function StudentDetailsPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ installmentIndex: installmentIndex }), // Corrected parameter name
+        body: JSON.stringify({ installmentIndex }),
       });
       if (!response.ok) {
         throw new Error('Failed to submit fee payment');
       }
       fetchStudentDetails();
     } catch (error) {
-      console.error(error.message);
+      console.error('Fee payment error:', error.message);
     }
   };
 
+  const handleCourseChange = (event) => {
+    const course = event.target.value;
+    setSelectedCourse(course);
+    // Clear selected semester when course changes
+    setSelectedSemester('');
+  };
+
+  const handleSemesterChange = (event) => {
+    const selectedValue = event.target.value;
+    console.log('Selected semester:', selectedValue); // Log the selected semester
+    setSelectedSemester(selectedValue);
+  };
+
+  // Filtered students based on selected course and semester
+  const filteredStudents = students.filter((student) => {
+    const courseMatch = !selectedCourse || student.course === selectedCourse;
+    const semesterMatch =
+      !selectedSemester || (student.semester && student.semester.toString() === selectedSemester);
+
+    return courseMatch && semesterMatch;
+  });
+
   return (
     <div className="student-details-container">
-      <Navbar/>
+      <Navbar />
+      <div>
+        <label htmlFor="course">Select Department: </label>
+        <select id="course" value={selectedCourse} onChange={handleCourseChange}>
+          <option value="">All</option>
+          <option value="computerScience">Computer Science (CSE)</option>
+          <option value="electronicsAndCommunication">Electronics and Communication (EC)</option>
+        </select>
+        &nbsp;
+        <label htmlFor="semester">Select Semester: </label>
+        <select id="semester" value={selectedSemester} onChange={handleSemesterChange}>
+          <option value="">All</option>
+          <option value="1">Semester 1</option>
+          <option value="2">Semester 2</option>
+          <option value="3">Semester 3</option>
+          <option value="4">Semester 4</option>
+          <option value="5">Semester 5</option>
+          <option value="6">Semester 6</option>
+          <option value="7">Semester 7</option>
+          <option value="8">Semester 8</option>
+          {/* Add more semester options if needed */}
+        </select>
+      </div>
+
       <div className="students-list">
-        {students.map((student) => (
+        {filteredStudents.map((student) => (
           <div key={student._id} className="student-card">
-            <h2>Name: {student.name}</h2>
-            <p>Roll Number: {student.admissionNumber}</p>
-            <p>Branch: {student.branch}</p>
+            <p>Name: {student.name}</p>
+            <p>Admission Number: {student.admissionNumber}</p>
+            <p>Branch: {student.course}</p>
+            <p>Semester: {student.semester}</p>
             <div className="fee-payment-section">
               <h3>Fee Payment</h3>
               <div className="fee-table">
-                {student.feeCategory === 'merit Regulated Fee' ? (
-                  <>
-                    {[1, 2, 3, 4].map((index) => (
-                      <div key={index} className="installment">
-                        <div>Installment {index}</div>
-                        <button onClick={() => handleFeePayment(student._id, index)}>Pay</button>
-                      </div>
-                    ))}
-                  </>
-                ) : student.feeCategory === 'Merit Higher Fee' ? (
-                  <>
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
-                      <div key={index} className="installment">
-                        <div>Installment {index}</div>
-                        <button onClick={() => handleFeePayment(student._id, index)}>Pay</button>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <p>Unknown Fee Category</p>
-                )}
+                {[...Array(student.feeCategory === 'Merit Lower Fee' ? 4 : 8)].map((_, index) => {
+                  const installmentNumber = index + 1;
+                  const isPaid = student.installmentsPaid && student.installmentsPaid.includes(installmentNumber);
+
+                  return (
+                    <div key={installmentNumber} className="installment">
+                      <div>Installment {installmentNumber}</div>
+                      {isPaid ? (
+                        <p>Paid</p>
+                      ) : (
+                        <button
+                          onClick={() => handleFeePayment(student._id, installmentNumber)}
+                          disabled={isPaid}
+                        >
+                          Pay
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

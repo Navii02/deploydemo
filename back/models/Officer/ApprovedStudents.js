@@ -1,17 +1,5 @@
 const mongoose = require('mongoose');
 
-const InstallmentSchema = new mongoose.Schema({
-  number: Number,
-  status: {
-    type: String,
-    enum: ['Not Paid', 'Paid'],
-    default: 'Not Paid',
-  },
-  paymentDate: Date,
-  amount: Number,
-});
-
-
 const ApprovedStudentSchema = new mongoose.Schema({
   customId: String,
   admissionNumber: String,
@@ -82,6 +70,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
     type: String,
     default: 'N/A',
   },
+  installmentsPaid: [Number],
 });
  
 

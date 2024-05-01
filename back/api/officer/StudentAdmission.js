@@ -42,7 +42,7 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
     }
 
     // Calculate the start year of the academic year (current year - 1 for LET)
-    const academicYearStart = formData.admissionType === 'LET' ? admissionYear : admissionYear;
+    const academicYearStart = formData.admissionType === 'LET' ? admissionYear - 1 : admissionYear;
 
     // Construct the academic year string
     const academicYear = `${academicYearStart}-${academicYearEnd}`;
@@ -52,8 +52,9 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
     let nextAdmissionId;
     if (lastStudent) {
       // Extract the last admission ID and increment it by one
-      const lastAdmissionId = parseInt(lastStudent.admissionId.split('/')[0], 10);
-      nextAdmissionId = `${lastAdmissionId + 1}/${academicYear}`;
+      const lastAdmissionId = lastStudent.admissionId.split('/')[0];
+      const nextAdmissionNumber = parseInt(lastAdmissionId) + 1;
+      nextAdmissionId = `${nextAdmissionNumber}/${academicYear}`;
     } else {
       // If no previous admission, start from a default number
       nextAdmissionId = '1000/' + academicYear;
@@ -78,6 +79,7 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 router.get('/studentAdmission', async (req, res) => {
   try {

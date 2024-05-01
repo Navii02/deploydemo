@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Officer = require('../../models/Principal/OfficersDetailSchema'); // Import Officer model/schema
+const Officer = require('../../models/Admin/OfficersDetailSchema'); // Import Officer model/schema
 
 // Route to fetch officers
 router.get('/officers', async (req, res) => {

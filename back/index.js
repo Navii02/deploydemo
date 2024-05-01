@@ -26,6 +26,7 @@ const StudentAdmission =require('./api/officer/StudentAdmission');
 const officerForget=require('./api/officer/officerForgot')
 const aprrovedLists = require('./api/officer/approvedandremovedlist')
 const FeePayment = require('./api/officer/FeePayment')
+const Officerhome = require('./api/officer/officerhome')
 
 
 const FaculityRoutes = require('./api/faculity/faculityRoutes')
@@ -146,7 +147,7 @@ app.use('/api',Subject)
 app.use('/api',tutorassign)
 app.use('/api',tstudentlist)
 app.use('/api',AdminDashboard)
-
+app.use('/api',Officerhome)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));
