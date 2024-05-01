@@ -53,7 +53,7 @@ const FeeDetails = () => {
     <>
       <Navbar />
       <div className="fee-details">
-        <h2>Fee Structure(Merit)</h2>
+        <h3>Fee Structure(Merit)</h3>
         <table className="fee-table">
           <thead>
             <tr>
@@ -76,7 +76,7 @@ const FeeDetails = () => {
           </tbody>
         </table>
 
-        <h2>Fee Structure(Management)</h2>
+        <h3>Fee Structure(Management)</h3>
         <table className="fee-table">
           <thead>
             <tr>
