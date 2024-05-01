@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PrinciNavbar from './PrinciNavbar';
 
 function StudentPage() {
     const [students, setStudents] = useState([]);
@@ -40,8 +41,9 @@ function StudentPage() {
 
     return (
         <div>
-            <h1>Students Classified by Semester</h1>
+            <PrinciNavbar/>
             <div>
+                &nbsp;
                 <label htmlFor="semesterSelect">Select Semester: </label>
                 <select id="semesterSelect" value={selectedSemester} onChange={handleSemesterChange}>
                     <option value="">All</option>
@@ -56,6 +58,7 @@ function StudentPage() {
                     {/* Add more options for other semesters */}
                 </select>
             </div>
+            &nbsp;
             {selectedStudent && (
                 <div>
                     <h2>Student Details</h2>

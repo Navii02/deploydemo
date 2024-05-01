@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PrinciNavbar from './PrinciNavbar';
 
 function OfficerPage() {
     const [officers, setOfficers] = useState([]);
@@ -19,7 +20,8 @@ function OfficerPage() {
 
     return (
         <div>
-            <h1>Officers Information</h1>
+            <PrinciNavbar/>
+            &nbsp;
             <table>
                 <thead>
                     <tr>
