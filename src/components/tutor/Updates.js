@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Updates.css'; // Import the CSS file used in StudentCertificateRequestPage.js
-import Navbar from './TutorNavbar'; // Assuming you have a TutorNavbar component
+import './Updates.css';
+import Navbar from './TutorNavbar';
 
 const TutorUpdates = () => {
   const [students, setStudents] = useState([]);
@@ -11,15 +11,34 @@ const TutorUpdates = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    fetchStudents();
+    const storedDepartment = localStorage.getItem('department');
+    const adjustedDepartment = adjustDepartmentName(storedDepartment);
+    const storedAcademicYear = localStorage.getItem('academicYear');
+    if (adjustedDepartment && storedAcademicYear) {
+      fetchStudents(adjustedDepartment, storedAcademicYear);
+    }
   }, []);
 
-  const fetchStudents = async () => {
+  const adjustDepartmentName = (department) => {
+    switch (department) {
+      case 'CSE':
+        return 'computerScience';
+      case 'ECE':
+        return 'electronicsAndCommunication';
+      // Add more cases as needed
+      default:
+        return department;
+    }
+  };
+
+  const fetchStudents = async (department, academicYear) => {
     try {
-      const response = await axios.get('/api/students');
+      const response = await axios.get(`/api/students/${department}/${academicYear}`);
       setStudents(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching students:', error);
+      setErrorMessage('Error fetching students');
     }
   };
 
@@ -44,18 +63,13 @@ const TutorUpdates = () => {
         message,
       });
       setSuccessMessage(response.data.message);
-      setErrorMessage('');
       setTimeout(() => {
         setSuccessMessage('');
-      }, 3000); // Set timeout for success message
+      }, 3000);
     } catch (error) {
-      setErrorMessage('Error sending message.');
-      setSuccessMessage('');
-      setTimeout(() => {
-        setErrorMessage('');
-      }, 3000); // Set timeout for error message
+      console.error('Error sending message:', error);
+      setErrorMessage('Error sending message');
     }
-    // Reset form after submission
     setMessage('');
     setSelectedStudents([]);
   };
@@ -73,11 +87,14 @@ const TutorUpdates = () => {
           />
         </label>
         <div className="student-selection">
-          {/* Numbered list for students */}
           <div className="select-all">
             <label className="all">
               Select All
-              <input type="checkbox" onChange={handleSelectAll} checked={selectedStudents.length === students.length} />
+              <input
+                type="checkbox"
+                onChange={handleSelectAll}
+                checked={selectedStudents.length === students.length}
+              />
             </label>
           </div>
           {students.map((student, index) => (

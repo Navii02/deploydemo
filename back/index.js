@@ -17,6 +17,7 @@ const CertificateUser=require('./api/student/usercertificaterequest')
 const loginRouter = require('./api/student/studentRoutes')
 const Dashboard=require('./api/student/studentdashboard')
 const studentForget=require('./api/student/studentForgot')
+const Reminders=require('./api/student/reminders')
 
 
 const Notice = require('./api/officer/Notice')
@@ -42,10 +43,11 @@ const HodStudenlist=require('./api/hod/hodstudentlist');
 const Subject=require('./api/hod/SubjectAddition')
 const tutorassign = require('./api/hod/tutorassign')
 
+
 const tutorForget=require('./api/tutor/tutorForgot')
 const classtutorRoutes = require('./api/tutor/classtutorroutes')
 const tstudentlist = require('./api/tutor/tstudentlist')
-
+const Update = require('./api/tutor/update')
 
 const PrincipalRoutes = require('./api/principal/PrincipalRoutes')
 const principalForget=require('./api/principal/principalForgot')
@@ -121,6 +123,7 @@ app.use('/api',Notice)
 app.use('/api',CertificateUser)
 app.use('/api',Feereminder)
 app.use('/api',Dashboard)
+app.use('/api',Reminders)
 
 app.use('/api',certificate)
 app.use('/api',TeachersDetail)
@@ -148,6 +151,7 @@ app.use('/api',tutorassign)
 app.use('/api',tstudentlist)
 app.use('/api',AdminDashboard)
 app.use('/api',Officerhome)
+app.use('/api',Update)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));

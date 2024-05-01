@@ -51,6 +51,9 @@ const ApprovedStudentSchema = new mongoose.Schema({
     accountNo: String,
     ifscCode: String,
   },
+  tutormessage: {
+    type: [String],
+  },
   achievements: {
     arts: String,
     sports: String,
@@ -77,6 +80,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
     default: [],    // Default value is an empty array
    
   }
+  
 });
  
 

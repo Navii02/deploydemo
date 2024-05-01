@@ -6,6 +6,7 @@ function AssignTutorPage() {
   const [tutors, setTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState('');
   const [academicYear, setAcademicYear] = useState('');
+  const [assignSuccess, setAssignSuccess] = useState(false); // State to track assignment success
 
   useEffect(() => {
     fetchTutors();
@@ -13,7 +14,6 @@ function AssignTutorPage() {
 
   const fetchTutors = async () => {
     const department = localStorage.getItem('branch');
-    console.log(department);
     try {
       const response = await axios.get(`/api/tutors?department=${department}`);
       setTutors(response.data);
@@ -31,14 +31,20 @@ function AssignTutorPage() {
   
       await axios.post('/api/tutors/assign', { tutorId: selectedTutor, academicYear });
       console.log('Tutor assigned successfully');
+      setAssignSuccess(true); // Set assignSuccess state to true on successful assignment
+      // Refetch tutors after assignment to update the list
+      fetchTutors();
     } catch (error) {
       console.error('Error assigning tutor:', error);
     }
   };
 
+  // Filter tutors to exclude those who are already assigned
+  const availableTutors = tutors.filter((tutor) => !tutor.isAssigned);
+
   return (
     <div>
-     <HodNavbar/>
+      <HodNavbar />
       <div>
         &nbsp;
         <label htmlFor="academicYear">Academic Year:</label>
@@ -55,10 +61,10 @@ function AssignTutorPage() {
           id="tutor"
           value={selectedTutor}
           onChange={(e) => setSelectedTutor(e.target.value)}
-          style={{ color: 'black', backgroundColor: 'white' }} // Apply inline styles
+          style={{ color: 'black', backgroundColor: 'white' }}
         >
           <option value="">Select Tutor</option>
-          {tutors.map((tutor) => (
+          {availableTutors.map((tutor) => (
             <option key={tutor._id} value={tutor._id}>
               {tutor.name}
             </option>
@@ -67,6 +73,7 @@ function AssignTutorPage() {
         &nbsp;
       </div>
       <button onClick={handleAssignTutor}>Assign Tutor</button>
+      {assignSuccess && <p style={{ color: 'green' }}>Tutor assigned successfully!</p>}
     </div>
   );
 }
