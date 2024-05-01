@@ -1,7 +1,7 @@
 /* FeeDetails.css */
 
 .fee-details {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -17,7 +17,7 @@
 }
 
 .fee-details .fee-table th,
-.fee-table td {
+.fee-details .fee-table td {
   padding: 8px 12px;
   border: 1px solid #ddd;
   text-align: center;
@@ -48,14 +48,10 @@
   margin-top: 6px;
 }
 
-.fee-details p{
-  color: dimgrey;
-}
-
 /* Responsive Styles */
 @media only screen and (max-width: 768px) {
   .fee-details .fee-table th,
-  .fee-table td {
+  .fee-details .fee-table td {
     font-size: 14px;
     padding: 10px; /* Increased padding for better spacing */
   }
@@ -72,7 +68,7 @@
 
 @media only screen and (max-width: 480px) {
   .fee-details .fee-table th,
-  .fee-table td {
+  .fee-details .fee-table td {
     font-size: 12px;
     padding: 8px; /* Reduced padding for smaller screens */
   }

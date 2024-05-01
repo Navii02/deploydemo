@@ -65,8 +65,9 @@ function StudentDetailsPage() {
   });
 
   return (
+    <>
+    <Navbar/>
     <div className="student-details-container">
-      <Navbar />
       <div>
         <label htmlFor="course">Select Department: </label>
         <select id="course" value={selectedCourse} onChange={handleCourseChange}>
@@ -127,6 +128,7 @@ function StudentDetailsPage() {
         ))}
       </div>
     </div>
+    </>
   );
 }
 
