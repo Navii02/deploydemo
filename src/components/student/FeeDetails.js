@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import './FeeDetails.css';  // Import your CSS file
+import './FeeDetails.css'; // Import your CSS file
 import Navbar from './UserNavbar';
 
 const FeeDetails = () => {
- // eslint-disable-next-line
   const [paymentStatus] = useState({});
   const userEmail = localStorage.getItem('email');
 
@@ -53,7 +52,7 @@ const FeeDetails = () => {
     <>
       <Navbar />
       <div className="fee-details">
-        <h2>Fee Structure(Merit)</h2>
+        <h3>Fee Structure (Merit)</h3>
         <table className="fee-table">
           <thead>
             <tr>
@@ -68,7 +67,7 @@ const FeeDetails = () => {
                 <td>{fee.year}</td>
                 <td>{fee.totalFees}</td>
                 <td>
-                  <button onClick={() => handlePayment(fee.year, 'merit')}>Pay Now</button>
+                  <button className='payment-button' onClick={() => handlePayment(fee.year, 'merit')}>Pay Now</button>
                   <p>{paymentStatus[`merit-${fee.year}`]}</p>
                 </td>
               </tr>
@@ -76,7 +75,7 @@ const FeeDetails = () => {
           </tbody>
         </table>
 
-        <h2>Fee Structure(Management)</h2>
+        <h3>Fee Structure (Management)</h3>
         <table className="fee-table">
           <thead>
             <tr>
@@ -91,14 +90,14 @@ const FeeDetails = () => {
                 <td>{fee.year}</td>
                 <td>{fee.totalFees}</td>
                 <td>
-                  <button onClick={() => handlePayment(fee.year, 'management')}>Pay Now</button>
+                  <button className='payment-button' onClick={() => handlePayment(fee.year, 'management')}>Pay Now</button>
                   <p>{paymentStatus[`management-${fee.year}`]}</p>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        Note*: Tuition Fee Waiver(TFW) for Top two candidates from each course.
+        <p>Note*: Tuition Fee Waiver (TFW) for Top two candidates from each course.</p>
       </div>
     </>
   );

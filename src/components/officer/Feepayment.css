@@ -36,7 +36,7 @@
     margin-top: 20px;
   }
   
-  .fee-table {
+  .student-details-container .fee-table {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 10px;
@@ -52,7 +52,7 @@
     font-weight: bold;
   }
   
-  button {
+  .student-details-container button {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -61,7 +61,7 @@
     cursor: pointer;
   }
   
-  button:disabled {
+  .student-details-container button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
   }
