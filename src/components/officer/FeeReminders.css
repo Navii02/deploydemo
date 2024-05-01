@@ -1,18 +1,67 @@
-table {
-  width: 100%;
-  border-collapse: collapse;
+/* Feepayment.css */
+
+.student-details-container {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
 }
 
-.th,td {
-  padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+.student-list-container {
+  margin-top: 20px;
 }
 
-.th {
-  background-color: #f2f2f2;
+.student-details-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
 }
 
-.tr:hover {
-  background-color: #ffffff;
+.fee-payment-section {
+  margin-top: 10px;
+}
+
+.fee-table {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.installment-item {
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.paid-text {
+  color: green;
+}
+
+.pay-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.pay-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .fee-table {
+    flex-direction: column;
+  }
+
+  .installment-item {
+    margin-right: 0;
+    width: 100%;
+  }
 }

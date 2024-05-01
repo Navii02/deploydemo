@@ -90,9 +90,9 @@ function StudentDetailsPage() {
         </select>
       </div>
 
-      <div className="students-list">
+      <div className="student-list-container">
         {filteredStudents.map((student) => (
-          <div key={student._id} className="student-card">
+          <div key={student._id} className="student-details-card">
             <p>Name: {student.name}</p>
             <p>Admission Number: {student.admissionNumber}</p>
             <p>Branch: {student.course}</p>
@@ -105,14 +105,15 @@ function StudentDetailsPage() {
                   const isPaid = student.installmentsPaid && student.installmentsPaid.includes(installmentNumber);
 
                   return (
-                    <div key={installmentNumber} className="installment">
+                    <div key={installmentNumber} className="installment-item">
                       <div>Installment {installmentNumber}</div>
                       {isPaid ? (
-                        <p>Paid</p>
+                        <p className="paid-text">Paid</p>
                       ) : (
                         <button
                           onClick={() => handleFeePayment(student._id, installmentNumber)}
                           disabled={isPaid}
+                          className="pay-button"
                         >
                           Pay
                         </button>

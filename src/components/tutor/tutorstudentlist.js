@@ -9,22 +9,19 @@ function StudentDetailsPage() {
   const [academicYear, setAcademicYear] = useState('');
   const [editedStudent, setEditedStudent] = useState(null); // To track the student being edited
   const [newEmail, setNewEmail] = useState('');
+  const [registerNumber, setRegisterNumber] = useState('');
 
-  // Define fetchStudents as a useCallback Hook to prevent unnecessary re-renders
   const fetchStudents = useCallback(async () => {
     try {
-      // Adjust department names before sending the request
       const adjustedDepartment = adjustDepartmentName(department);
-      
       const response = await axios.get(`/api/tutor?department=${adjustedDepartment}&academicYear=${academicYear}`);
       setStudents(response.data);
     } catch (error) {
       console.error('Error fetching students:', error);
     }
-  }, [department, academicYear]); // Include department and academicYear in the dependency array
+  }, [department, academicYear]);
 
   useEffect(() => {
-    // Retrieve department and academic year from local storage
     const storedDepartment = localStorage.getItem('department');
     const storedAcademicYear = localStorage.getItem('academicYear');
     
@@ -32,15 +29,14 @@ function StudentDetailsPage() {
       setDepartment(storedDepartment);
       setAcademicYear(storedAcademicYear);
     }
-  }, [department, academicYear]); // Include department and academicYear in the dependency array
+  }, []);
 
   useEffect(() => {
     if (department && academicYear) {
-      fetchStudents(); // Call fetchStudents here
+      fetchStudents();
     }
-  }, [department, academicYear, fetchStudents]); // Include fetchStudents in the dependency array
+  }, [department, academicYear, fetchStudents]);
 
-  // Function to adjust department names
   const adjustDepartmentName = (dept) => {
     if (dept === 'CSE') {
       return 'computerScience';
@@ -51,45 +47,40 @@ function StudentDetailsPage() {
     }
   };
 
-  // Function to handle editing of student details
   const handleEdit = (student) => {
-    // Initialize emails array if it's not present
-    const editedStudentData = { ...student };
-    if (!editedStudentData.emails) {
-      editedStudentData.emails = [];
-    }
-    setEditedStudent(editedStudentData); // Set the entire student object to be edited
+    setEditedStudent({ ...student });
+    setRegisterNumber(student.admissionNumber); // Set register number for editing
+    setNewEmail(''); // Reset newEmail when editing a new student
   };
 
-  // Function to handle updating semester, name, and adding new email to the student
   const handleSave = async () => {
     try {
       if (editedStudent) {
-        // If the newEmail is not empty and not already present in editedStudent.emails, add it
-        if (newEmail && !editedStudent.emails.includes(newEmail)) {
-          // Send a POST request to add the new email
-          await axios.post(`/api/students/${editedStudent._id}/emails`, { email: newEmail });
-        }
-        
-        // Update the student details
+        // Save the edited student details
         const updatedStudentResponse = await axios.put(`/api/students/${editedStudent._id}`, editedStudent);
         console.log('Student updated:', updatedStudentResponse.data);
 
-        // Reset edited student and new email
-        setEditedStudent(null);
-        setNewEmail('');
+        // Check if there's a new email to add
+        if (newEmail.trim() !== '') {
+          // Send a POST request to add the new email to the student
+          const response = await axios.post(`/api/students/${editedStudent._id}/emails`, { email: newEmail });
+          console.log('New email added:', response.data);
+          setNewEmail(''); // Reset newEmail field after adding
+        }
 
-        // Fetch updated student list
+        // Reset editedStudent and registerNumber, and fetch updated student list
+        setEditedStudent(null);
+        setRegisterNumber('');
         fetchStudents();
       }
     } catch (error) {
-      console.error('Error updating student and handling college email:', error);
+      console.error('Error updating student:', error);
     }
   };
 
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className="student-details-table-container">
         <table className="student-details-table">
           <thead>
@@ -97,6 +88,7 @@ function StudentDetailsPage() {
               <th>Admission Number</th>
               <th>Name</th>
               <th>Semester</th>
+              <th>Register Number</th>
               <th>Department</th>
               <th>Academic Year</th>
               <th>College Emails</th>
@@ -106,7 +98,17 @@ function StudentDetailsPage() {
           <tbody>
             {students.map((student) => (
               <tr key={student._id}>
-                <td>{student.admissionNumber}</td>
+                <td>
+                  {editedStudent && editedStudent._id === student._id ? (
+                    <input 
+                      type="text" 
+                      value={registerNumber} 
+                      onChange={(e) => setRegisterNumber(e.target.value)} 
+                    />
+                  ) : (
+                    student.admissionNumber
+                  )}
+                </td>
                 <td>
                   {editedStudent && editedStudent._id === student._id ? (
                     <input 
@@ -128,16 +130,41 @@ function StudentDetailsPage() {
                   ) : (
                     student.semester
                   )}
+                  </td>
+                    <td>
+                  {editedStudent && editedStudent._id === student._id ? (
+                    <input 
+                      type="text" 
+                      value={editedStudent.registerNumber}  
+                      onChange={(e) => setEditedStudent({ ...editedStudent, registerNumber: e.target.value })} 
+                    />
+                  ) : (
+                    student.registerNumber
+                  )}
                 </td>
                 <td>{student.course}</td>
                 <td>{student.academicYear}</td>
                 <td>
                   {editedStudent && editedStudent._id === student._id ? (
                     <div>
+                      {editedStudent.collegemail && editedStudent.collegemail.map((email, index) => (
+                        <div key={index}>
+                          <input 
+                            type="text" 
+                            value={email} 
+                            onChange={(e) => {
+                              const updatedEmails = [...editedStudent.collegemail];
+                              updatedEmails[index] = e.target.value;
+                              setEditedStudent({ ...editedStudent, collegemail: updatedEmails });
+                            }} 
+                          />
+                        </div>
+                      ))}
                       <input 
                         type="text" 
                         value={newEmail} 
                         onChange={(e) => setNewEmail(e.target.value)} 
+                        placeholder="Add New Email" 
                       />
                     </div>
                   ) : (
