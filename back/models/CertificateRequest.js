@@ -15,6 +15,7 @@ const certificateRequestSchema = new mongoose.Schema({
   fileUrl: { type: String },
   declineReason: String,
   acceptedBy: String,
+  hodDeclineReason: { type: String },
 }, { timestamps: true });
 
 const CertificateRequest = mongoose.model('CertificateRequest', certificateRequestSchema);

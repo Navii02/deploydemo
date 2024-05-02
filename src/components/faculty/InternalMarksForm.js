@@ -32,7 +32,7 @@ const InternalMarksForm = () => {
   useEffect(() => {
     const fetchStudentsData = async () => {
       try {
-        const response = await axios.get(`/api/students?branch=${branch}&semester=${semester}&subject=${subject}`);
+        const response = await axios.get(`/api/students?branch=${branch}&semester=${semester}`);
         setStudentsData(response.data.studentsData);
       } catch (error) {
         console.error('Error fetching students data:', error);
