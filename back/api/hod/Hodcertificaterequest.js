@@ -41,7 +41,7 @@ router.post('/hod/acceptRequest/:requestId', async (req, res) => {
 // Decline request
 router.post('/hod/declineRequest/:requestId', async (req, res) => {
   const requestId = req.params.requestId;
-  const { declineReason } = req.body;
+  const { hodDeclineReason } = req.body;
 
   try {
     const request = await CertificateRequest.findById(requestId);
@@ -50,9 +50,9 @@ router.post('/hod/declineRequest/:requestId', async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    // Update the request status and declineReason
-    request.status = 'Declined';
-    request.declineReason = declineReason;
+    // Update the request status and hodDeclineReason
+    request.HoDstatus = 'Declined';
+    request.hodDeclineReason = hodDeclineReason;
     await request.save();
 
     res.json({ message: 'Request declined successfully', request });
@@ -60,5 +60,6 @@ router.post('/hod/declineRequest/:requestId', async (req, res) => {
     res.status(500).json({ message: 'Error declining request' });
   }
 });
+
 
 module.exports = router;

@@ -34,6 +34,7 @@ const FaculityRoutes = require('./api/faculity/faculityRoutes')
 const FacultyProfile=require('./api/faculity/faculityhome')
 const FaculityForget=require('./api/faculity/FaculityForgot')
 const AssigmentNotification =require('./api/faculity/Assignmentnotification');
+const Internal = require('./api/faculity/internalmark');
 
 
 const HodRoutes = require('./api/hod/HodRoutes')
@@ -152,6 +153,7 @@ app.use('/api',tstudentlist)
 app.use('/api',AdminDashboard)
 app.use('/api',Officerhome)
 app.use('/api',Update)
+app.use('/api',Internal)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));

@@ -17,7 +17,6 @@ function HodCertificateRequestsPage() {
     try {
       const response = await axios.get('/api/hod/certificateRequests');
       setRequests(response.data.requests.reverse()); // Reverse the order
-    
     } catch (error) {
       setErrorMessage(error.response.data.message);
     }
@@ -35,8 +34,10 @@ function HodCertificateRequestsPage() {
   };
 
   const handleDecline = async (requestId) => {
+    const declineReason = prompt('Please enter decline reason:');
+    
     try {
-      await axios.post(`/api/hod/declineRequest/${requestId}`);
+      await axios.post(`/api/hod/declineRequest/${requestId}`, { declineReason });
 
       setSuccessMessage('Request declined successfully!');
       fetchRequests();
@@ -66,7 +67,8 @@ function HodCertificateRequestsPage() {
                   <input type="button" value="Decline" onClick={() => handleDecline(request._id)} />
                 </>
               )}
-              {request.HODstatus === 'Accepted' && <p>Accepted By: {request.acceptedBy}</p>}
+              {request.HoDstatus === 'Accepted' && <p>Accepted By: {request.acceptedBy}</p>}
+              {request.HoDstatus === 'Declined' && <p>Decline Reason: {request.declineReason}</p>}
             </div>
           ))}
         </div>
