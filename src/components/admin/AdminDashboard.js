@@ -82,7 +82,7 @@ const AdminDashboard = () => {
             },
             y: {
               beginAtZero: true,
-              max: 10, // Set a maximum value for the y-axis (adjust as needed)
+              max: 100, // Set a maximum value for the y-axis (adjust as needed)
             },
           },
           plugins: {

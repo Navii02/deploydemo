@@ -111,6 +111,10 @@
     font-size: 14px;
     text-align: center;
   }
+
+  .login-link p{
+   text-align: center;
+  }
   
   @media (max-width: 500px) {
     .signup-container {

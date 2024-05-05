@@ -47,12 +47,12 @@ function PrinciNavbar() {
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
             <li className='nav-item'>
               <Link to='/pstudents' className='nav-links' onClick={closeMobileMenu}>
-                Students
+                Student Data
               </Link>
             </li>
             <li className='nav-item dropdown'>
               <Link to='/pteachers' className='nav-links' onClick={closeMobileMenu}>
-                Faculties<i className='fas fa-caret-down' />
+                Faculty<i className='fas fa-caret-down' />
               </Link>
               <div className='dropdown-content'>
                 <Link to='/pteachers' className='dropdown-link' onClick={closeMobileMenu}>
@@ -65,7 +65,7 @@ function PrinciNavbar() {
             </li>
             <li className='nav-item'>
               <Link to='/pOffice' className='nav-links' onClick={closeMobileMenu}>
-                Officers
+                Officer Data
               </Link>
             </li>
             <li>
