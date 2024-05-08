@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./FacultyNavbar";
-import "./FacultyHome.css"; // Import your CSS file
+import "./FacultyHome.css";
 
 function FacultyHome() {
   const [teachername, setTeacherName] = useState('');
@@ -33,10 +33,16 @@ function FacultyHome() {
           subjects,
         });
 
+        // Set state with the fetched data
         setTeacherName(teachername);
         setBranches(branches);
         setSemesters(semesters);
         setSubjects(subjects);
+
+        // Save branches, semesters, and subjects to localStorage
+        localStorage.setItem('branches', JSON.stringify(branches));
+        localStorage.setItem('semesters', JSON.stringify(semesters));
+        localStorage.setItem('subjects', JSON.stringify(subjects));
 
         console.log('User:', teachername);
       } catch (error) {

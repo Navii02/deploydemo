@@ -54,5 +54,16 @@ router.post('/students/:studentId/emails', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+router.get('/students/tutor/:department/:academicYear', async (req, res) => {
+  const { department, academicYear } = req.params;
+
+  try {
+    const students = await Student.find({ course: department, academicYear });
+    res.json(students);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ message: 'Error fetching students' });
+  }
+});
 
 module.exports = router;

@@ -15,6 +15,7 @@ function AssignTutorPage() {
   const fetchTutors = async () => {
     const department = localStorage.getItem('branch');
     try {
+
       const response = await axios.get(`/api/tutors?department=${department}`);
       setTutors(response.data);
     } catch (error) {
@@ -61,7 +62,7 @@ function AssignTutorPage() {
           id="tutor"
           value={selectedTutor}
           onChange={(e) => setSelectedTutor(e.target.value)}
-          style={{ color: 'black', backgroundColor: 'white' }}
+          //style={{ color: 'black', backgroundColor: 'white' }}
         >
           <option value="">Select Tutor</option>
           {availableTutors.map((tutor) => (

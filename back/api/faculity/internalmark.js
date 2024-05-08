@@ -3,12 +3,16 @@ const router = express.Router();
 //const Subject = require('../../models/'); // Import Subject model
 const Student = require('../../models/Officer/ApprovedStudents'); // Import Student model
 
-// Fetch students based on branch and semester
-router.get('/students', async (req, res) => {
-  const { branch, semester } = req.query;
+
+// Define route to fetch students by semester and course (branch)
+router.get('/student/:branch/:semseter', async (req, res) => {
+  console.log(req.params.semester);
+  const course = req.params.branch;
+  const semester=req.params.semseter// Extract semester and course from URL parameters
   
   try {
-    const studentsData = await Student.find({ branch, semester });
+    // Query students based on semester and course (branch)
+    const studentsData = await Student.find({ semester, course });
     res.json({ studentsData });
   } catch (error) {
     console.error('Error fetching students data:', error);
@@ -16,8 +20,10 @@ router.get('/students', async (req, res) => {
   }
 });
 
+module.exports = router;
+
 // Update student marks
-router.put('/students/:studentId', async (req, res) => {
+router.put('/student/:studentId', async (req, res) => {
   const studentId = req.params.studentId;
   const { assignment1, assignment2, exam1, exam2, attendance } = req.body;
 

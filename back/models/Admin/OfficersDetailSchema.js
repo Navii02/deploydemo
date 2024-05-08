@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
 const officerDetailSchema = new mongoose.Schema({
+ 
+
   name: {
     type: String,
     required: true,

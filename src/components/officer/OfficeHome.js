@@ -5,7 +5,7 @@ import './OfficeHome.css';
 
 function OfficeHome() {
   const [officerName, setOfficerName] = useState('');
-  const [position, setPosition] = useState([]);
+  const [position, setPosition] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,11 +26,7 @@ function OfficeHome() {
         const { name, post } = response.data;
 
         setOfficerName(name);
-        if (Array.isArray(post) && post.length > 0) {
-          setPosition(post);
-        } else {
-          setPosition([]);
-        }
+        setPosition(post); // Set post directly as position (string)
         setLoading(false);
       } catch (error) {
         console.error('Error fetching officer profile:', error);
@@ -58,7 +54,7 @@ function OfficeHome() {
                 <h2>Your Associated Data:</h2>
                 <p>
                   <strong>Position:</strong>{' '}
-                  {position.length > 0 ? position.join(', ') : 'No position available'}
+                  {position ? position : 'No position available'}
                 </p>
               </div>
             </>
