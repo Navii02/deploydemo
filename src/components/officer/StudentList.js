@@ -109,8 +109,9 @@ const ApprovedAndRemoved = () => {
           console.error('Error: Invalid student details received');
           return;
         }
-
+        const formattedDateOfBirth = new Date(studentDetails.dateOfBirth).toISOString().split('T')[0];
         const printWindow = window.open('', '_blank');
+        //const formattedDateOfBirth = new Date(student.dateOfBirth).toISOString().split('T')[0];
         printWindow.document.write(`
           <!DOCTYPE html>
           <html lang="en">
@@ -240,7 +241,7 @@ const ApprovedAndRemoved = () => {
         </tr>
         <tr>
       <td>Date of Birth</td>
-      <td>${studentDetails.dateOfBirth}</td>
+      <td>${formattedDateOfBirth}</td>
     </tr>
     <tr>
       <td>Blood Group</td>

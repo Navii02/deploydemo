@@ -36,7 +36,29 @@ router.put('/updateStudent/:studentId', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+// PUT endpoint to update approved student details
+router.put('/student/:id', async (req, res) => {
+  const studentId = req.params.id;
+  const updatedStudentData = req.body;
+  
+  try {
+    // Find the approved student by ID and update their details
+    const updatedStudent = await ApprovedStudent.findByIdAndUpdate(
+      studentId,
+      updatedStudentData,
+      { new: true } // Return the updated student data after the update
+    );
+    
+    if (!updatedStudent) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
 
+    res.status(200).json(updatedStudent); // Send the updated student data in the response
+  } catch (error) {
+    console.error('Error updating student details:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 // Route to fetch removed students
 router.get('/removedStudents', async (req, res) => {
