@@ -57,7 +57,7 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
       nextAdmissionId = `${nextAdmissionNumber}/${academicYear}`;
     } else {
       // If no previous admission, start from a default number
-      nextAdmissionId = '1000/' + academicYear;
+      nextAdmissionId = '1000/' +admissionYear;
     }
     formData.admissionId = nextAdmissionId;
     formData.academicYear = academicYear;

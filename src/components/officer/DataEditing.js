@@ -227,6 +227,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 <option value="">Select Course</option>
                 <option value="computerScience">CSE</option>
                 <option value="electronicsAndCommunication">ECE</option>
+                <option value="MCA">MCA</option>
+                <option value="BCA">BCA</option>
+                <option value="BBA">BBA</option>
               </select>
             </div>
             <div className="form-group">
