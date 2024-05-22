@@ -126,6 +126,26 @@ const ApprovedAndRemoved = () => {
         }
         const formattedDate = new Date(studentDetails.dateOfBirth).toISOString().split('T')[0];
         const formattedDateOfBirth = new Date(formattedDate).toLocaleDateString('en-US');
+        const admissionID=studentDetails.admissionId;
+        // Example function to calculate academic year from admission ID year
+        const getAcademicYear = (admissionID) => {
+          // Extract the year from the admission ID
+          const yearString = admissionID.split('/')[1];
+          const year = parseInt(yearString) ;
+        
+          // Calculate the next year
+          const nextYear = year + 1;
+        
+          // Format academic year as "yyyy-yyyy"
+          const academicYear = `${year}-${nextYear.toString().slice(-2)}`;
+        
+          return academicYear;
+        };
+        
+        const academicYear = getAcademicYear(admissionID);
+        console.log(academicYear); // Output: "2024-25"
+        
+ 
 
         const printWindow = window.open('', '_blank');
         //const formattedDateOfBirth = new Date(student.dateOfBirth).toISOString().split('T')[0];
@@ -206,7 +226,7 @@ const ApprovedAndRemoved = () => {
               <br />
               Poonjar Thekkekara P.O. Kottayam Dist. PIN 686 582
               <br/>
-              Academic Year: 2023-24
+              Academic Year: ${academicYear}
               <img src="${studentDetails.photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
             </td>
           </tr>

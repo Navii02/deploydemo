@@ -63,6 +63,25 @@ const StudentList = () => {
         // Open a new tab with the student details for print preview
         const printWindow = window.open('', '_blank');
         const formattedDateOfBirth = new Date(studentDetails.dateOfBirth).toLocaleDateString('en-US');
+        const admissionID=studentDetails.admissionId;
+// Example function to calculate academic year from admission ID year
+const getAcademicYear = (admissionID) => {
+  // Extract the year from the admission ID
+  const yearString = admissionID.split('/')[1];
+  const year = parseInt(yearString) ;
+
+  // Calculate the next year
+  const nextYear = year + 1;
+
+  // Format academic year as "yyyy-yyyy"
+  const academicYear = `${year}-${nextYear.toString().slice(-2)}`;
+
+  return academicYear;
+};
+
+const academicYear = getAcademicYear(admissionID);
+console.log(academicYear); // Output: "2024-25"
+
 
         printWindow.document.write(`
           <!DOCTYPE html>
@@ -141,7 +160,8 @@ const StudentList = () => {
               <br />
               Poonjar Thekkekara P.O. Kottayam Dist. PIN 686 582
               <br/>
-              Academic Year: 2023-24
+            
+              Academic Year: "${academicYear}
               <img src="${studentDetails.photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
             </td>
           </tr>
