@@ -23,15 +23,14 @@ const studentSchema = new mongoose.Schema({
   entranceRank: String,
   aadharNo: String,
   course: String,
-  plusTwo: {
+  qualify: {
     board: String,
     regNo: String,
     examMonthYear: String,
     percentage: String,
-    schoolName: String,
-    physics: String,
-    chemistry: String,
-    mathematics: String,
+    institution: String,
+    cgpa:String,
+    
   },
   parentDetails: {
     fatherName: String,

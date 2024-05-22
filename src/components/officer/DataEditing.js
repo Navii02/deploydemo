@@ -26,15 +26,13 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     entranceRank: '',
     aadharNo: '',
     course: '',
-    plusTwo: {
+    qualify: {
       board: '',
       regNo: '',
       examMonthYear: '',
       percentage: '',
-      schoolName: '',
-      physics: '',
-      chemistry: '',
-      mathematics: '',
+      cgpa:'',
+      institution: '',
     },
     parentDetails: {
       fatherName: '',
@@ -107,12 +105,12 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     const { name, value, files } = event.target;
     if (name === 'photo') {
       setFormData({ ...formData, [name]: files[0] });
-    } else if (name.includes('plusTwo')) {
+    } else if (name.includes('qualify')) {
       const [, subField] = name.split('.');
       setFormData({
         ...formData,
-        plusTwo: {
-          ...formData.plusTwo,
+        qualify: {
+          ...formData.qualify,
           [subField]: value,
         },
       });
@@ -225,8 +223,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               >
                 <option value="">Select Course</option>
-                <option value="computerScience">CSE</option>
-                <option value="electronicsAndCommunication">ECE</option>
+                <option value="B.Tech CSE">B.Tech CSE</option>
+                <option value="B.Tech ECE">B.Tech ECE</option>
                 <option value="MCA">MCA</option>
                 <option value="BCA">BCA</option>
                 <option value="BBA">BBA</option>
@@ -416,23 +414,35 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               />
             </div>
             <div className="box">
-              <h4>Plus Two Details</h4>
+              <h4>Qualification Examination Details</h4>
               <div className="form-group">
                 <label>Board:</label>
                 <input
                   type="text"
-                  name="plusTwo.board"
-                  value={formData.plusTwo.board}
+                  name="qualify.board"
+                  value={formData.qualify.board}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="form-group">
+                <label>Institution:</label>
+                <input
+                  type="text"
+                  name="qualify.institution"
+                  value={formData.qualify.institution}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+             
+              <div className="form-group">
                 <label>Register No:</label>
                 <input
                   type="text"
-                  name="plusTwo.regNo"
-                  value={formData.plusTwo.regNo}
+                  name="qualify.regNo"
+                  value={formData.qualify.regNo}
                   onChange={handleChange}
                   required
                 />
@@ -441,8 +451,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 <label>Exam Month and Year:</label>
                 <input
                   type="text"
-                  name="plusTwo.examMonthYear"
-                  value={formData.plusTwo.examMonthYear}
+                  name="qualify.examMonthYear"
+                  value={formData.qualify.examMonthYear}
                   onChange={handleChange}
                   required
                 />
@@ -451,48 +461,18 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 <label>Percentage:</label>
                 <input
                   type="text"
-                  name="plusTwo.percentage"
-                  value={formData.plusTwo.percentage}
+                  name="qualify.percentage"
+                  value={formData.qualify.percentage}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="form-group">
-                <label>School Name:</label>
+                <label>CGPA:</label>
                 <input
                   type="text"
-                  name="plusTwo.schoolName"
-                  value={formData.plusTwo.schoolName}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Physics:</label>
-                <input
-                  type="text"
-                  name="plusTwo.physics"
-                  value={formData.plusTwo.physics}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Chemistry:</label>
-                <input
-                  type="text"
-                  name="plusTwo.chemistry"
-                  value={formData.plusTwo.chemistry}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Mathematics:</label>
-                <input
-                  type="text"
-                  name="plusTwo.mathematics"
-                  value={formData.plusTwo.mathematics}
+                  name="qualify.cgpa"
+                  value={formData.qualify.cgpa}
                   onChange={handleChange}
                   required
                 />

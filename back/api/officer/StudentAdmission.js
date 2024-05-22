@@ -106,7 +106,7 @@ router.get('/studentDetails/:id', async (req, res) => {
     const { parentDetails } = student;
     const { bankDetails } = student;
     const { achievements } = student;
-    const { plusTwo } = student;
+    const { qualify } = student;
     const photoUrl = photo ? `${req.protocol}://${req.get('host')}/${photo}` : null;
 
     res.json({
@@ -134,15 +134,14 @@ router.get('/studentDetails/:id', async (req, res) => {
         annualIncome,
         nativity,
         photoUrl,
-        plusTwo: {
-          board: plusTwo.board,
-          regNo: plusTwo.regNo,
-          examMonthYear: plusTwo.examMonthYear,
-          percentage: plusTwo.percentage,
-          schoolName: plusTwo.schoolName,
-          physics: plusTwo.physics,
-          chemistry: plusTwo.chemistry,
-          mathematics: plusTwo.mathematics,
+        qualify: {
+          board: qualify.board,
+          regNo: qualify.regNo,
+          examMonthYear: qualify.examMonthYear,
+          percentage: qualify.percentage,
+          institution: qualify.institution,
+          cgpa:qualify.cgpa,
+
         },
         parentDetails: {
           fatherName: parentDetails.fatherName,

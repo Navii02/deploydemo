@@ -221,51 +221,43 @@ const StudentList = () => {
     <td colspan="2" style="text-align: center; font-weight: bold;">Entrance Exam Details</td>
   </tr>
   <tr>
-  <td>Entrance Exam Name</td>
+  <td>Exam Name</td>
 <td>${studentDetails.entranceExam}</td>
 </tr>
 <tr>
-<td>Entrance Roll No</td>
+<td>Roll No</td>
 <td>${studentDetails.entranceRollNo}</td>
 </tr>
 <tr>
-<td>Entrance Rank</td>
+<td>Rank</td>
 <td>${studentDetails.entranceRank}</td>
 </tr>
 <tr>
-<td colspan="2" style="text-align: center; font-weight: bold;">Plus Two Details</td>
+<td colspan="2" style="text-align: center; font-weight: bold;">Qualifying Examination Details</td>
 </tr>
 <tr>
-  <td>Plus Two Board</td>
-  <td>${studentDetails.plusTwo?.board}</td>
+  <td>Exam Board</td>
+  <td>${studentDetails.qualify?.board}</td>
 </tr>
 <tr>
-  <td>Plus Two Register No</td>
-  <td>${studentDetails.plusTwo?.regNo}</td>
+  <td>Institution Name</td>
+  <td>${studentDetails.qualify?.institution}</td>
 </tr>
 <tr>
-  <td>Plus Two Exam Month and Year</td>
-  <td>${studentDetails.plusTwo?.examMonthYear}</td>
+  <td>Register No</td>
+  <td>${studentDetails.qualify?.regNo}</td>
 </tr>
 <tr>
-  <td>Plus Two Percentage</td>
-  <td>${studentDetails.plusTwo?.percentage}</td>
+  <td>Exam Month and Year</td>
+  <td>${studentDetails.qualify?.examMonthYear}</td>
 </tr>
 <tr>
-  <td>Plus Two School Name</td>
-  <td>${studentDetails.plusTwo?.schoolName}</td>
+  <td>Percentage</td>
+  <td>${studentDetails.qualify?.percentage}</td>
 </tr>
 <tr>
-  <td>Plus Two Physics</td>
-  <td>${studentDetails.plusTwo?.physics}</td>
-</tr>
-<tr>
-  <td>Plus Two Chemistry</td>
-  <td>${studentDetails.plusTwo?.chemistry}</td>
-</tr>
-<tr>
-  <td>Plus Two Mathematics</td>
-  <td>${studentDetails.plusTwo?.mathematics}</td>
+  <td>CGPA</td>
+  <td>${studentDetails.qualify?.cgpa}</td>
 </tr>
 <tr>
 <td colspan="2" style="text-align: center; font-weight: bold;">Parents Details</td>
@@ -316,6 +308,21 @@ const StudentList = () => {
     <tr>
       <td>IFSC Code</td>
       <td>${studentDetails.bankDetails.ifscCode}</td>
+    </tr>
+    <tr>
+    <td colspan="2" style="text-align: center; font-weight: bold;">Achievements</td>
+  </tr>
+  <tr>
+      <td>Arts</td>
+      <td>${studentDetails.achievements.arts}</td>
+    </tr>
+    <tr>
+      <td>Sports</td>
+      <td>${studentDetails.achievements.sports}</td>
+    </tr>
+    <tr>
+      <td>Other</td>
+      <td>${studentDetails.achievements.other}</td>
     </tr>
             </table>
             <button class="hide-on-print" onclick="window.print()">Print</button>
