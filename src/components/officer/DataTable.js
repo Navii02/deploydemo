@@ -62,6 +62,8 @@ const StudentList = () => {
 
         // Open a new tab with the student details for print preview
         const printWindow = window.open('', '_blank');
+        const formattedDateOfBirth = new Date(studentDetails.dateOfBirth).toLocaleDateString('en-US');
+
         printWindow.document.write(`
           <!DOCTYPE html>
           <html lang="en">
@@ -191,7 +193,7 @@ const StudentList = () => {
         </tr>
         <tr>
       <td>Date of Birth</td>
-      <td>${studentDetails.dateOfBirth}</td>
+      <td>${formattedDateOfBirth}</td>
     </tr>
     <tr>
       <td>Blood Group</td>
