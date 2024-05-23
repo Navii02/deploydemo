@@ -10,18 +10,24 @@ const NotAdmittedStudent = require('../../models/Officer/NotApprovedstudents');
 const router = express.Router();
 
 // Multer storage configuration for handling file uploads
+const sanitizeFilename = (name) => {
+  return name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+};
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'studentsphoto/'); 
+    cb(null, 'studentsphoto/');
   },
   filename: function (req, file, cb) {
-    const fileId = new mongoose.Types.ObjectId(); 
-    const filename = `${fileId}${path.extname(file.originalname)}`; 
+    const fileId = new mongoose.Types.ObjectId();
+    const studentName = sanitizeFilename(req.body.name || 'unknown'); // Fallback to 'unknown' if name is not provided
+    const filename = `${studentName}_${fileId}${path.extname(file.originalname)}`;
     cb(null, filename);
   },
 });
 
 const upload = multer({ storage: storage });
+
 
 // Express middleware to handle file upload
 router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
