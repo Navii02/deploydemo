@@ -62,38 +62,55 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+ 
 
   const handleCameraCapture = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: true,
       });
-
+  
       videoRef.current.srcObject = mediaStream;
       videoRef.current.play(); // Start playing the video
-
+  
+      // Display both video and canvas elements
+      videoRef.current.style.display = 'block';
+      canvasRef.current.style.display = 'block';
+  
       // Introduce a delay before capturing the photo
       await new Promise((resolve) => setTimeout(resolve, 5000));
-
+  
       const canvas = canvasRef.current;
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
-
+      // Adjust the width and height of the canvas to change the resolution
+      canvas.width = 720; // New width
+      canvas.height = 480; // New height
+  
       const context = canvas.getContext('2d');
       context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-
-      canvas.toBlob((blob) => {
-        const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
-        setFormData({ ...formData, photo: file });
-      }, 'image/jpeg', 1);
-
+  
+      // Show a confirmation dialog to capture the photo
+      const captureConfirmed = window.confirm('Do you want to capture this photo?');
+      if (captureConfirmed) {
+        canvas.toBlob((blob) => {
+          const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+          setFormData({ ...formData, photo: file });
+  
+          // Hide the video and canvas elements after capturing the photo
+          videoRef.current.style.display = 'none';
+          canvasRef.current.style.display = 'none';
+        }, 'image/jpeg', 1);
+      }
+  
+      // Stop the media stream tracks
       mediaStream.getTracks().forEach((track) => {
-        track.stop(); // Stop the media stream tracks
+        track.stop();
       });
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
   };
+  
+
 
   const handleFileInputChange = (event) => {
     const { name, files } = event.target;
@@ -245,32 +262,32 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               />
             </div>
             <div className="form-group">
-              <label>Photo:</label>
-              <input
-                ref={fileInputRef}
-                type="file"
-                name="photo"
-                onChange={handleFileInputChange}
-                accept="image/*"
-                style={{ opacity: 0, position: 'absolute', zIndex: -1 }} // Hide but keep accessible
+            <label>Photo:</label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              name="photo"
+              onChange={handleFileInputChange}
+              accept="image/*"
+              style={{ opacity: 0, position: 'absolute', zIndex: -1 }} // Hide but keep accessible
+            />
+            <button type="button" onClick={handleCameraCapture}>
+              Capture Photo
+            </button>
+            <button type="button" onClick={() => fileInputRef.current.click()}>
+              Upload Photo
+            </button>
+            {formData.photo && (
+              <img
+                className="photo-preview"
+                src={URL.createObjectURL(formData.photo)}
+                alt="Uploaded"
               />
-              <button type="button" onClick={handleCameraCapture}>
-                Capture Photo
-              </button>
-              <button type="button" onClick={() => fileInputRef.current.click()}>
-                Upload Photo
-              </button>
-              {formData.photo && (
-                <img
-                  className="photo-preview"
-                  src={URL.createObjectURL(formData.photo)}
-                  alt="Uploaded"
-                />
-              )}
-              {/* Video and canvas elements for camera capture */}
-              <video ref={videoRef} style={{ display: 'none' }}></video>
-              <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
-            </div>
+            )}
+            {/* Video and canvas elements for camera capture */}
+            <video ref={videoRef} style={{ display: 'none' }}></video>
+            <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+          </div>
             <div className="form-group">
               <label>Address:</label>
               <textarea
