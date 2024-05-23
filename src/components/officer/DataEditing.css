@@ -1,11 +1,29 @@
-
-.data-entry-container body, html {
+/* Base styles for body and html */
+body, html {
   overflow-x: hidden; /* Prevent horizontal scrollbar on the entire page */
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
 }
 
+/* Container for data entry form */
+.data-entry-container {
+  width: 85%;
+  margin: 30px auto;
+  overflow-x: hidden;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form elements */
 .data-entry-container input,
-select,
-textarea {
+.data-entry-container select,
+.data-entry-container textarea {
   margin-top: 5px;
   height: 40px;
   width: 100%;
@@ -13,8 +31,32 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  font-size: 14px;
+  transition: border-color 0.3s;
 }
 
+.data-entry-container input:focus,
+.data-entry-container select:focus,
+.data-entry-container textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Label styling */
+.data-entry-container label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Select box styling */
+.data-entry-container select {
+  color: #333;
+  height: 40px;
+}
+
+/* Button styling */
 .data-entry-container .submit-button,
 .data-entry-container .clear-button {
   padding: 10px 20px;
@@ -23,6 +65,7 @@ textarea {
   font-size: 16px;
   border: none;
   border-radius: 4px;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .data-entry-container .button-container {
@@ -36,34 +79,29 @@ textarea {
   color: #fff;
 }
 
+.data-entry-container .submit-button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
 .data-entry-container .clear-button {
   background-color: #f44336;
   color: #fff;
 }
 
-.data-entry-container label {
-  display: block;
-  font-weight: bold;
-  color: #000000ee;
-  margin-bottom: 5px;
+.data-entry-container .clear-button:hover {
+  background-color: #e53935;
+  transform: scale(1.05);
 }
 
-.data-entry-container select {
-  color: #000000ee;
-  height: 40px;
-}
-
+/* Box container styling */
 .data-entry-container .box {
   width: 100%;
   background-color: #f0f0f0;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 15px;
-}
-
-.data-entry-container h4 {
-  color: #000000ee;
 }
 
 .data-entry-container .box-container {
@@ -72,17 +110,28 @@ textarea {
   flex-wrap: wrap;
 }
 
-.data-entry-container .photo-preview {
-  width: 22.75vh;
-  height: 32.375vh;
-  margin-bottom: 30px;
-  
+/* Heading styling */
+.data-entry-container h4 {
+  color: #333;
+  margin-bottom: 15px;
 }
 
+/* Photo preview styling */
+.data-entry-container .photo-preview {
+  width: 150px;
+  height: 200px;
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+/* Form group styling */
 .data-entry-container .form-group {
   margin-bottom: 15px;
 }
 
+/* Form container styling */
 .data-entry-container .form {
   max-width: 100%;
   overflow-x: hidden;
@@ -90,15 +139,54 @@ textarea {
   margin-bottom: 30px;
 }
 
-
-.data-entry-container {
-  width: 85%;
-  margin: 0 auto;
-  overflow-x: hidden;
+/* Add some hover effects for inputs */
+.data-entry-container input:hover,
+.data-entry-container select:hover,
+.data-entry-container textarea:hover {
+  border-color: #007bff;
+}
+.data-entry-container .pincode-input {
+  width: 100px; /* Adjust width as needed */
+}
+/* Enhance textarea for achievements */
+.data-entry-container textarea {
+  height: auto;
+  resize: vertical;
+  min-height: 100px;
 }
 
+/* Parent details section styling */
+.parent-details-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
 
+.parent-details-row .form-group {
+  flex: 1 1 calc(50% - 15px); /* Take full width on small screens, half on larger screens */
+  min-width: 250px;
+}
+/* Styling for elements in a row */
+.data-entry-container .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+/* Styling for form headings */
+.data-entry-container h1 {
+  text-align: center;
+  font-size: 3em;
+  margin-bottom: 20px;
+  color: #333;
+}
 
+.data-entry-container .row .form-group {
+  flex: 1;
+  min-width: 200px;
+  margin-right: 10px;
+}
 
-
-
+.data-entry-container .row .form-group:last-child {
+  margin-right: 0;
+}

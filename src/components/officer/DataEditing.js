@@ -174,7 +174,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     <div>
       <Navbar />
       <div className="data-entry-container">
+      <h1>Admission Form</h1>
           <form className="form" onSubmit={handleSubmit}>
+          <div className="row">
             <div className="form-group">
               <label>Admission Type:</label>
               <select
@@ -231,6 +233,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 <option value="BBA">BBA</option>
               </select>
             </div>
+            </div>
             <div className="form-group">
               <label>Name:</label>
               <input
@@ -277,14 +280,16 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               ></textarea>
             </div>
+            
             <div className="form-group">
-              <label>Pin Code:</label>
-              <textarea
+              <label>pincode:</label>
+              <input
+                type="text"
                 name="pincode"
                 value={formData.pincode}
                 onChange={handleChange}
                 required
-              ></textarea>
+              />
             </div>
             <div className="form-group">
               <label>Religion:</label>
@@ -491,12 +496,23 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             </div>
             <div className="box">
   <h4>Parents Details</h4>
+  <div className="parent-details-row">
   <div className="form-group">
     <label>Father's Name:</label>
     <input
       type="text"
-      name="parentDetails.fatherName"  // Changed from "parentDetails.father.name"
+      name="parentDetails.fatherName"  
       value={formData.parentDetails.fatherName}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div className="form-group">
+    <label>Mother's Name:</label>
+    <input
+      type="text"
+      name="parentDetails.motherName"  // Changed from "parentDetails.mother.name"
+      value={formData.parentDetails.motherName}
       onChange={handleChange}
       required
     />
@@ -507,6 +523,16 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       type="text"
       name="parentDetails.fatherOccupation"
       value={formData.parentDetails.fatherOccupation}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div className="form-group">
+    <label>Mother's Occupation:</label>
+    <input
+      type="text"
+      name="parentDetails.motherOccupation"
+      value={formData.parentDetails.motherOccupation}
       onChange={handleChange}
       required
     />
@@ -523,26 +549,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       title="Please enter a valid 10-digit phone number"
     />
   </div>
-  <div className="form-group">
-    <label>Mother's Name:</label>
-    <input
-      type="text"
-      name="parentDetails.motherName"  // Changed from "parentDetails.mother.name"
-      value={formData.parentDetails.motherName}
-      onChange={handleChange}
-      required
-    />
-  </div>
-  <div className="form-group">
-    <label>Mother's Occupation:</label>
-    <input
-      type="text"
-      name="parentDetails.motherOccupation"
-      value={formData.parentDetails.motherOccupation}
-      onChange={handleChange}
-      required
-    />
-  </div>
+  
+
   <div className="form-group">
     <label>Mother's Mobile No:</label>
     <input
@@ -554,6 +562,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       pattern="[0-9]{10}"
       title="Please enter a valid 10-digit phone number"
     />
+    </div>
   </div>
 </div>
 
