@@ -62,8 +62,13 @@ const StudentList = () => {
 
         // Open a new tab with the student details for print preview
         const printWindow = window.open('', '_blank');
-        const formattedDate = new Date(studentDetails.dateOfBirth).toISOString().split('T')[0];
-        const formattedDateOfBirth = new Date(formattedDate).toLocaleDateString('en-GB').format(Date).replace(/V/g,'-');
+        const formatDate = (dateString) => {
+          const dateOfBirth = new Date(dateString);
+          const day = String(dateOfBirth.getDate()).padStart(2, '0');
+          const month = String(dateOfBirth.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+          const year = dateOfBirth.getFullYear();
+          return `${day}-${month}-${year}`;
+        };
         const admissionID=studentDetails.admissionId;
 // Example function to calculate academic year from admission ID year
 const getAcademicYear = (admissionID) => {
@@ -214,7 +219,7 @@ console.log(academicYear); // Output: "2024-25"
         </tr>
         <tr>
       <td>Date of Birth</td>
-      <td>${formattedDateOfBirth}</td>
+      <td>${formatDate(studentDetails.dateOfBirth)}</td>
     </tr>
     <tr>
       <td>Blood Group</td>

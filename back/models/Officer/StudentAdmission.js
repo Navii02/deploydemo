@@ -24,6 +24,7 @@ const studentSchema = new mongoose.Schema({
   aadharNo: String,
   course: String,
   qualify: {
+    exam: String,
     board: String,
     regNo: String,
     examMonthYear: String,

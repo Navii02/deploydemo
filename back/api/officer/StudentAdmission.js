@@ -135,6 +135,7 @@ router.get('/studentDetails/:id', async (req, res) => {
         nativity,
         photoUrl,
         qualify: {
+          exam: qualify.exam,
           board: qualify.board,
           regNo: qualify.regNo,
           examMonthYear: qualify.examMonthYear,

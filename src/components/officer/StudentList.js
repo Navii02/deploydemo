@@ -109,7 +109,13 @@ const ApprovedAndRemoved = () => {
           console.error('Error: Invalid student details received');
           return;
         }
-        const formattedDateOfBirth = new Date(studentDetails.dateOfBirth).toISOString().split('T')[0];
+        const formatDate = (dateString) => {
+          const dateOfBirth = new Date(dateString);
+          const day = String(dateOfBirth.getDate()).padStart(2, '0');
+          const month = String(dateOfBirth.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+          const year = dateOfBirth.getFullYear();
+          return `${day}-${month}-${year}`;
+        };
         const printWindow = window.open('', '_blank');
         //const formattedDateOfBirth = new Date(student.dateOfBirth).toISOString().split('T')[0];
         printWindow.document.write(`
@@ -241,7 +247,7 @@ const ApprovedAndRemoved = () => {
         </tr>
         <tr>
       <td>Date of Birth</td>
-      <td>${formattedDateOfBirth}</td>
+      <td>${formatDate(studentDetails.dateOfBirth)}</td>
     </tr>
     <tr>
       <td>Blood Group</td>
