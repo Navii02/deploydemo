@@ -1,12 +1,35 @@
 /* Base styles for body and html */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
 body, html {
   overflow-x: hidden; /* Prevent horizontal scrollbar on the entire page */
   font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
+  background-color: #ffffff; /* Light cyan background */
   color: #333;
   line-height: 1.6;
   margin: 0;
   padding: 0;
+}
+
+/* Header container styling */
+.header-container {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.header-container h1 {
+  font-size: 3em;
+  color: #333;
+  margin-bottom: 10px;
+  font-family: 'Roboto', sans-serif; 
+}
+
+.header-container .divider {
+  width: 80%;
+  margin: 0 auto;
+  border: 0;
+  height: 1px;
+  background: #ccc;
 }
 
 /* Container for data entry form */
@@ -14,7 +37,7 @@ body, html {
   width: 85%;
   margin: 30px auto;
   overflow-x: hidden;
-  background: #fff;
+  background: #ffffff; /* White background for the form */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -28,7 +51,7 @@ body, html {
   height: 40px;
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #bbb; /* Lighter border */
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 14px;
@@ -38,7 +61,7 @@ body, html {
 .data-entry-container input:focus,
 .data-entry-container select:focus,
 .data-entry-container textarea:focus {
-  border-color: #007bff;
+  border-color: #03a9f4; /* Soft blue focus color */
   outline: none;
 }
 
@@ -46,7 +69,7 @@ body, html {
 .data-entry-container label {
   display: block;
   font-weight: bold;
-  color: #333;
+  color: #030202; /* Dark grey color */
   margin-bottom: 5px;
 }
 
@@ -58,9 +81,11 @@ body, html {
 
 /* Button styling */
 .data-entry-container .submit-button,
-.data-entry-container .clear-button {
+.data-entry-container .clear-button,
+.data-entry-container .capture-button,
+.data-entry-container .upload-button  {
   padding: 10px 20px;
-  margin-left: 10px;
+  margin: 0 5px; /* Adjust margin */
   cursor: pointer;
   font-size: 16px;
   border: none;
@@ -75,22 +100,39 @@ body, html {
 }
 
 .data-entry-container .submit-button {
-  background-color: #4caf50;
+  background-color: #03a9f4; /* Soft blue button */
   color: #fff;
 }
 
 .data-entry-container .submit-button:hover {
-  background-color: #45a049;
+  background-color: #0288d1; /* Darker blue on hover */
   transform: scale(1.05);
 }
 
 .data-entry-container .clear-button {
-  background-color: #f44336;
+  background-color: #f44336; /* Red button */
   color: #fff;
 }
 
 .data-entry-container .clear-button:hover {
-  background-color: #e53935;
+  background-color: #d32f2f; /* Darker red on hover */
+  transform: scale(1.05);
+}
+
+.data-entry-container .capture-button  {
+  background-color: #409240; /* Orange button */
+  color: #fff;
+}
+.data-entry-container .capture-button:hover {
+  background-color: #175517; /* Darker red on hover */
+  transform: scale(1.05);
+}
+.data-entry-container .upload-button {
+  background-color: #3a8a3d; /* Green button */
+  color: #fff;
+}
+.data-entry-container .upload-button:hover {
+  background-color: #0e592b; /* Darker red on hover */
   transform: scale(1.05);
 }
 
@@ -112,7 +154,7 @@ body, html {
 
 /* Heading styling */
 .data-entry-container h4 {
-  color: #333;
+  color: #1a1919;
   margin-bottom: 15px;
 }
 
@@ -121,7 +163,7 @@ body, html {
   width: 150px;
   height: 200px;
   margin-bottom: 30px;
-  border: 1px solid #ccc;
+  border: 1px solid #bbb; /* Lighter border */
   border-radius: 4px;
   object-fit: cover;
 }
@@ -143,11 +185,13 @@ body, html {
 .data-entry-container input:hover,
 .data-entry-container select:hover,
 .data-entry-container textarea:hover {
-  border-color: #007bff;
+  border-color: #03a9f4; /* Soft blue border on hover */
 }
+
 .data-entry-container .pincode-input {
   width: 100px; /* Adjust width as needed */
 }
+
 /* Enhance textarea for achievements */
 .data-entry-container textarea {
   height: auto;
@@ -166,6 +210,7 @@ body, html {
   flex: 1 1 calc(50% - 15px); /* Take full width on small screens, half on larger screens */
   min-width: 250px;
 }
+
 /* Styling for elements in a row */
 .data-entry-container .row {
   display: flex;
@@ -173,6 +218,7 @@ body, html {
   justify-content: space-between;
   margin-bottom: 15px;
 }
+
 /* Styling for form headings */
 .data-entry-container h1 {
   text-align: center;

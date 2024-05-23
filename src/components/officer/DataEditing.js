@@ -192,6 +192,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       <Navbar />
       <div className="data-entry-container">
       <h1>Admission Form</h1>
+      <hr class="divider"></hr>
           <form className="form" onSubmit={handleSubmit}>
           <div className="row">
             <div className="form-group">
@@ -262,7 +263,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               />
             </div>
             <div className="form-group">
+            
             <label>Photo:</label>
+            <div className="button-container">
             <input
               ref={fileInputRef}
               type="file"
@@ -271,10 +274,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               accept="image/*"
               style={{ opacity: 0, position: 'absolute', zIndex: -1 }} // Hide but keep accessible
             />
-            <button type="button" onClick={handleCameraCapture}>
+            <button type="button"className="capture-button" onClick={handleCameraCapture}>
               Capture Photo
             </button>
-            <button type="button" onClick={() => fileInputRef.current.click()}>
+            <button type="button"className="upload-button" onClick={() => fileInputRef.current.click()}>
               Upload Photo
             </button>
             {formData.photo && (
@@ -287,6 +290,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             {/* Video and canvas elements for camera capture */}
             <video ref={videoRef} style={{ display: 'none' }}></video>
             <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+          </div>
           </div>
             <div className="form-group">
               <label>Address:</label>
