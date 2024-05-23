@@ -27,6 +27,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     aadharNo: '',
     course: '',
     qualify: {
+      exam: '',
       board: '',
       regNo: '',
       examMonthYear: '',
@@ -314,9 +315,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               >
                 <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="transgender">Transgender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Transgender">Transgender</option>
               </select>
             </div>
             <div className="form-group">
@@ -410,11 +411,23 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 name="aadharNo"
                 value={formData.aadharNo}
                 onChange={handleChange}
+                pattern="[2-9]{1}[0-9]{3}[0-9]{4}[0-9]{4}"
+                title="Please enter a valid Aadhar number"
                 required
               />
             </div>
             <div className="box">
-              <h4>Qualification Examination Details</h4>
+              <h4>Qualifying Examination Details</h4>
+              <div className="form-group">
+                <label>Qualification:</label>
+                <input
+                  type="text"
+                  name="qualify.exam"
+                  value={formData.qualify.exam}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
               <div className="form-group">
                 <label>Board:</label>
                 <input
@@ -435,8 +448,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   required
                 />
               </div>
-              
-             
               <div className="form-group">
                 <label>Register No:</label>
                 <input

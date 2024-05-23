@@ -62,7 +62,8 @@ const StudentList = () => {
 
         // Open a new tab with the student details for print preview
         const printWindow = window.open('', '_blank');
-        const formattedDateOfBirth = new Date(studentDetails.dateOfBirth).toLocaleDateString('en-US');
+        const formattedDate = new Date(studentDetails.dateOfBirth).toISOString().split('T')[0];
+        const formattedDateOfBirth = new Date(formattedDate).toLocaleDateString('en-GB').format(Date).replace(/V/g,'-');
         const admissionID=studentDetails.admissionId;
 // Example function to calculate academic year from admission ID year
 const getAcademicYear = (admissionID) => {
@@ -161,7 +162,7 @@ console.log(academicYear); // Output: "2024-25"
               Poonjar Thekkekara P.O. Kottayam Dist. PIN 686 582
               <br/>
             
-              Academic Year: "${academicYear}
+              Academic Year: ${academicYear}
               <img src="${studentDetails.photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
             </td>
           </tr>
@@ -256,6 +257,10 @@ console.log(academicYear); // Output: "2024-25"
 </tr>
 <tr>
 <td colspan="2" style="text-align: center; font-weight: bold;">Qualifying Examination Details</td>
+</tr>
+<tr>
+  <td>Qualification</td>
+  <td>${studentDetails.qualify?.exam}</td>
 </tr>
 <tr>
   <td>Exam Board</td>

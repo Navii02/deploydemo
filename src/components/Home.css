@@ -60,7 +60,7 @@
 .office-home-page h6 {
   font-size: 45px;
   font-weight: 500;
-  margin-top: 25px;
+  margin-top: 10px;
   color:rgb(220, 210, 210);
   font-style: bold;
   opacity: 0; /* Start with opacity 0 */
@@ -69,6 +69,7 @@
 
 .office-home-page .dropdown-container {
   color: #0000;
+  margin-top: -5px;
 }
 
 .office-home-page select {
