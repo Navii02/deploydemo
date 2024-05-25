@@ -1,12 +1,12 @@
 // Import necessary modules
 const FaculitySchema = require('../../models/Faculity/FaculitySchema');
+const TeachersDetailSchema = require('../../models/hod/TeachersDetailSchema');
 const bcrypt = require('bcrypt');
 const express = require('express');
 const router = express.Router();
 const emailTransporter = require('../../nodemailer');
 
 // Configure Nodemailer transporter
-
 
 // Register endpoint
 router.post('/faculityregister', async (req, res) => {
@@ -77,6 +77,12 @@ router.post(`/faculitylogin`, async (req, res) => {
     const user = await FaculitySchema.findOne({ email: email });
     if (!user) {
       return res.status(400).json({ msg: 'User not found' });
+    }
+
+    // Check if the email is also present in TeachersDetailSchema
+    const teacher = await TeachersDetailSchema.findOne({ email });
+    if (!teacher) {
+      return res.status(400).json({ msg: 'Teacher details not found' });
     }
 
     // Compare the password with the saved hash-password

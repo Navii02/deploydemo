@@ -1,19 +1,22 @@
-// routes/tutors.js
 const express = require('express');
 const router = express.Router();
-const Tutor = require('../../models/hod/TeachersDetailSchema');
+const Teacher = require('../../models/hod/TeachersDetailSchema');
 
 // Fetch tutors by department
 router.get('/tutors', async (req, res) => {
-  const department = req.query.department; // Extract department from query parameter
   try {
+    const department = req.query.department; // Extract department from query parameter
     let tutors;
+
     if (department) {
-      tutors = await Tutor.find({ branches: department }); // Filter tutors by department (branches)
+      // Filter tutors by department (branches) if department is specified
+      tutors = await Teacher.find({ branches: department });
     } else {
-      tutors = await Tutor.find(); // Fetch all tutors if no department specified
+      // Fetch all tutors if no department specified
+      tutors = await Teacher.find();
     }
-    res.json(tutors);
+
+    res.json(tutors.map(tutor => ({ _id: tutor._id, name: tutor.teachername })));
   } catch (error) {
     console.error('Error fetching tutors:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -22,19 +25,21 @@ router.get('/tutors', async (req, res) => {
 
 // Assign tutor for academic year
 router.post('/tutors/assign', async (req, res) => {
-  const { tutorId, academicYear } = req.body;
-  
   try {
-    const tutor = await Tutor.findById(tutorId);
+    const { tutorId, academicYear, course } = req.body;
+  
+    const tutor = await Teacher.findById(tutorId);
     if (!tutor) {
       return res.status(404).json({ error: 'Tutor not found' });
     }
 
-    // Update tutor's academic year
+    // Update tutor's academic year and course
     tutor.academicYear = academicYear;
+    tutor.course = course;
+    tutor.tutorassigned = true;
     await tutor.save();
 
-    res.json({ message: 'Tutor assigned successfully', tutor });
+    res.json({ message: 'Tutor assigned successfully', tutor: { _id: tutor._id, name: tutor.teachername } });
   } catch (error) {
     console.error('Error assigning tutor:', error);
     res.status(500).json({ error: 'Internal Server Error' });

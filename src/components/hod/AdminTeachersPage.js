@@ -177,6 +177,14 @@ const AdminTeachersPage = () => {
             />
           </label>
           <label>
+            SubjectCode:
+            <input
+              type="text"
+              value={newTeacher.subjectCode}
+              onChange={(e) => setNewTeacher({ ...newTeacher, subjectCode: e.target.value })}
+            />
+          </label>
+          <label>
             Branches:
             <input
               type="text"
@@ -184,6 +192,7 @@ const AdminTeachersPage = () => {
               onChange={(e) => setNewTeacher({ ...newTeacher, branches: e.target.value })}
             />
           </label>
+         
           <label>
             Semesters:
             <input

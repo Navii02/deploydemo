@@ -1,9 +1,46 @@
 const HodSchema = require('../../models/hod/HodSchema');
-const Hoddetails = require('../../models/Principal/HODDetail'); // Assuming you have a schema named Hoddetails
+const Hoddetails = require('../../models/Principal/HODDetail');
+const TeacherDetails = require('../../models/hod/TeachersDetailSchema'); // Assuming you have a schema named TeacherDetails
 const bcrypt = require('bcrypt');
 const express = require('express');
 const router = express.Router();
 const emailTransporter = require('../../nodemailer');
+
+router.post('/hodlogin', async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(400).json({ msg: 'Email and password are required' });
+  }
+
+  try {
+    // Check if the email exists in HodSchema and Hoddetails schema
+    const userInHodSchema = await HodSchema.findOne({ email });
+    const userInHoddetails = await Hoddetails.findOne({ email });
+
+    if (!userInHodSchema || !userInHoddetails) {
+      return res.status(400).json({ msg: 'User not found' });
+    }
+
+    // Check if the email is present in TeacherDetails and hodassign is true
+    const teacher = await TeacherDetails.findOne({ email });
+    if (!teacher || !teacher.isHOD) {
+      return res.status(400).json({ msg: 'User is not authorized to log in' });
+    }
+
+    // Comparing the password with the saved hash-password
+    const matchPassword = await bcrypt.compare(password, userInHodSchema.password);
+    if (matchPassword) {
+      // If password matches, send login success message
+      return res.status(200).json({ msg: 'You have logged in successfully', branch: userInHoddetails.branches, email: userInHodSchema.email });
+    } else {
+      return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    return res.status(500).json({ msg: 'Internal server error' });
+  }
+});
 
 router.post('/hodregister', async (req, res) => {
   const { name, email, password } = req.body;
@@ -55,31 +92,6 @@ router.post('/hodregister', async (req, res) => {
       return res.status(500).json({ msg: 'Error saving user to the database' });
     }
   });
-});
-
-router.post(`/hodlogin`, async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    res.status(400).json({ msg: 'Something missing' });
-  }
-
-  // Check if the email exists in both HodSchema and Hoddetails schema
-  const userInHodSchema = await HodSchema.findOne({ email });
-  const userInHoddetails = await Hoddetails.findOne({ email });
-
-  if (!userInHodSchema || !userInHoddetails) {
-    return res.status(400).json({ msg: 'User not found' });
-  }
-
-  // comparing the password with the saved hash-password
-  const matchPassword = await bcrypt.compare(password, userInHodSchema.password);
-  if (matchPassword) {
-    // If password matches, send login success message
-    return res.status(200).json({ msg: 'You have logged in successfully',branch: userInHoddetails.branches,email: userInHodSchema.email});
-  } else {
-    return res.status(400).json({ msg: 'Invalid credentials' });
-  }
 });
 
 module.exports = router;

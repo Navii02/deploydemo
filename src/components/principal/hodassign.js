@@ -7,6 +7,16 @@ const TeacherList = () => {
   const [hods, setHods] = useState([]);
   const [assignedTeacher, setAssignedTeacher] = useState(null);
   const [selectedTeacherId, setSelectedTeacherId] = useState(null); // State to store the selected teacher ID for HOD assignment
+  const [showAddHodForm, setShowAddHodForm] = useState(false); // State to control showing the HOD form
+  const [newHod, setNewHod] = useState({
+    teachername: '',
+    email: '',
+    branches: '',
+    semesters: '',
+    subjects: '',
+    subjectCode: '',
+    academicYear: '',
+  });
 
   useEffect(() => {
     fetchTeachers();
@@ -46,9 +56,37 @@ const TeacherList = () => {
       });
   };
 
+  const handleAddHodChange = (e) => {
+    const { name, value } = e.target;
+    setNewHod((prevNewHod) => ({ ...prevNewHod, [name]: value }));
+  };
+
+  const handleAddHodSubmit = (e) => {
+    e.preventDefault();
+    axios.post('/api/admin/addTeacher', newHod)
+      .then(response => {
+        console.log('HOD added successfully:', response.data);
+        setShowAddHodForm(false);
+        setNewHod({
+          teachername: '',
+          email: '',
+          branches: '',
+          semesters: '',
+          subjects: '',
+          subjectCode: '',
+          academicYear: '',
+        });
+        fetchTeachers();
+        fetchHODs();
+      })
+      .catch(error => {
+        console.error('Error adding HOD:', error);
+      });
+  };
+
   return (
     <div>
-      <Navbar /> {/* Assuming your Navbar component is correctly implemented */}
+      <Navbar />
       <div className="teacher-list-container">
         <div>
           <h3>List of Teachers</h3>
@@ -75,13 +113,12 @@ const TeacherList = () => {
           </div>
         )}
 
-        {/* List of HODs */}
         <div>
           <h3>List of HODs</h3>
           <ul>
             {hods.map(hod => (
               <li key={hod._id}>
-                  <strong>LoginID</strong> {hod.customId}<br />
+                <strong>LoginID:</strong> {hod.customId}<br />
                 <strong>Name:</strong> {hod.teachername}<br />
                 <strong>Department:</strong> {hod.branches}<br />
                 <strong>Email:</strong> {hod.email}
@@ -89,6 +126,69 @@ const TeacherList = () => {
             ))}
           </ul>
         </div>
+
+        {/* Button to show HOD form */}
+        <button onClick={() => setShowAddHodForm(true)}>Add New HOD</button>
+
+        {/* Form to add a new HOD */}
+        {showAddHodForm && (
+          <div>
+            <h3>Add New HOD</h3>
+            <form onSubmit={handleAddHodSubmit}>
+              <input
+                type="text"
+                name="teachername"
+                placeholder="Teacher Name"
+                value={newHod.teachername}
+                onChange={handleAddHodChange}
+                required
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={newHod.email}
+                onChange={handleAddHodChange}
+                required
+              />
+              <input
+                type="text"
+                name="branches"
+                placeholder="Branches"
+                value={newHod.branches}
+                onChange={handleAddHodChange}
+                required
+              />
+              <input
+                type="text"
+                name="semesters"
+                placeholder="Semesters"
+                value={newHod.semesters}
+                onChange={handleAddHodChange}
+                required
+              />
+              <input
+                type="text"
+                name="subjects"
+                placeholder="Subjects"
+                value={newHod.subjects}
+                onChange={handleAddHodChange}
+                required
+              />
+              <input
+                type="text"
+                name="subjectCode"
+                placeholder="Subject Code"
+                value={newHod.subjectCode}
+                onChange={handleAddHodChange}
+                required
+              />
+            
+              <button type="submit">Add HOD</button>
+              <button type="button" onClick={() => setShowAddHodForm(false)}>Cancel</button>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );
