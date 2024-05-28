@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from './PrinciNavbar'; 
+import Navbar from './PrinciNavbar';
+import './Hodassign.css'; // Import CSS file for styling
 
 const TeacherList = () => {
   const [teachers, setTeachers] = useState([]);
   const [hods, setHods] = useState([]);
   const [assignedTeacher, setAssignedTeacher] = useState(null);
-  const [selectedTeacherId, setSelectedTeacherId] = useState(null); // State to store the selected teacher ID for HOD assignment
-  const [showAddHodForm, setShowAddHodForm] = useState(false); // State to control showing the HOD form
+  const [selectedTeacherId, setSelectedTeacherId] = useState(null);
+  const [showAddHodForm, setShowAddHodForm] = useState(false);
   const [newHod, setNewHod] = useState({
     teachername: '',
     email: '',
@@ -15,7 +16,7 @@ const TeacherList = () => {
     semesters: '',
     subjects: '',
     subjectCode: '',
-    academicYear: '',
+   
   });
 
   useEffect(() => {
@@ -48,8 +49,9 @@ const TeacherList = () => {
       .then(response => {
         console.log('HOD assigned successfully:', response.data);
         setAssignedTeacher(response.data.teachername);
-        setSelectedTeacherId(null); // Reset selected teacher ID
+        setSelectedTeacherId(null);
         fetchTeachers();
+        window.location.reload();
       })
       .catch(error => {
         console.error('Error assigning HOD:', error);
@@ -93,23 +95,24 @@ const TeacherList = () => {
           <ul>
             {teachers.map(teacher => (
               <li key={teacher._id}>
-                {teacher.teachername}
-                <button onClick={() => setSelectedTeacherId(teacher._id)}>Assign as HOD</button>
+                <strong>Name:</strong>{teacher.teachername}<br/>
+                <strong>Department:</strong> {teacher.branches}<br />
+                <strong>Email:</strong> {teacher.email}<br/>
+                <button className="assign-button" onClick={() => setSelectedTeacherId(teacher._id)}>Assign as HOD</button>
                 {assignedTeacher && assignedTeacher === teacher.teachername && (
-                  <p>{teacher.teachername} has been assigned as HOD successfully!</p>
+                  <p className="success-message">{teacher.teachername} has been assigned as HOD successfully!</p>
                 )}
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Render HOD assignment section only when a teacher is selected */}
         {selectedTeacherId && (
           <div>
             <h3>Assign HOD</h3>
             <p>Selected Teacher: {teachers.find(teacher => teacher._id === selectedTeacherId)?.teachername}</p>
-            <button onClick={() => assignHOD(selectedTeacherId)}>Confirm Assign as HOD</button>
-            <button onClick={() => setSelectedTeacherId(null)}>Cancel</button>
+            <button className="assign-button" onClick={() => assignHOD(selectedTeacherId)}>Confirm Assign as HOD</button>
+            <button className="cancel-button" onClick={() => setSelectedTeacherId(null)}>Cancel</button>
           </div>
         )}
 
@@ -117,8 +120,7 @@ const TeacherList = () => {
           <h3>List of HODs</h3>
           <ul>
             {hods.map(hod => (
-              <li key={hod._id}>
-                <strong>LoginID:</strong> {hod.customId}<br />
+              <li key={hod._id} className="hod-item">
                 <strong>Name:</strong> {hod.teachername}<br />
                 <strong>Department:</strong> {hod.branches}<br />
                 <strong>Email:</strong> {hod.email}
@@ -127,12 +129,10 @@ const TeacherList = () => {
           </ul>
         </div>
 
-        {/* Button to show HOD form */}
-        <button onClick={() => setShowAddHodForm(true)}>Add New HOD</button>
+        <button className="add-hod-button" onClick={() => setShowAddHodForm(true)}>Add New HOD</button>
 
-        {/* Form to add a new HOD */}
         {showAddHodForm && (
-          <div>
+          <div className="add-hod-form">
             <h3>Add New HOD</h3>
             <form onSubmit={handleAddHodSubmit}>
               <input
@@ -185,7 +185,7 @@ const TeacherList = () => {
               />
             
               <button type="submit">Add HOD</button>
-              <button type="button" onClick={() => setShowAddHodForm(false)}>Cancel</button>
+              <button type="button" className="cancel-button" onClick={() => setShowAddHodForm(false)}>Cancel</button>
             </form>
           </div>
         )}

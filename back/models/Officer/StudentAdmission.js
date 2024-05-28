@@ -7,8 +7,10 @@ const studentSchema = new mongoose.Schema({
   allotmentCategory: String,
   feeCategory: String,
   name: String,
+  otherCertificate:String,
   photo: String, // Store file path for photo
   address: String,
+  permanentAddress: String,
   pincode: String,
   religion: String,
   community: String,
@@ -34,12 +36,30 @@ const studentSchema = new mongoose.Schema({
     
   },
   parentDetails: {
-    fatherName: String,
-    fatherOccupation: String,
-    fatherMobileNo: String,
-    motherName: String,
-    motherOccupation: String,
-    motherMobileNo: String,
+    fatherName:{
+      type: String,
+      default: 'Nil',
+    },
+    fatherOccupation:{
+      type: String,
+      default: 'Nil',
+    },
+    fatherMobileNo:{
+      type: String,
+      default: 'Nil',
+    },
+    motherName:{
+      type: String,
+      default: 'Nil',
+    },
+    motherOccupation:{
+      type: String,
+      default: 'Nil',
+    },
+    motherMobileNo: {
+      type: String,
+      default: 'Nil',
+    },
   },
   annualIncome: String,
   nativity: String,
@@ -50,11 +70,19 @@ const studentSchema = new mongoose.Schema({
     ifscCode: String,
   },
   achievements:{
-    arts:String,
-    sports: String,
-    other: String,
+    arts:{
+      type: String,
+      default: 'Nil',
+    },
+    sports:{
+      type: String,
+      default: 'Nil',
+    },
+    other:{
+      type: String,
+      default: 'Nil',
+    },
   },
-  academicYear: String,
 });
 
 

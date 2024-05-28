@@ -202,6 +202,10 @@ console.log(academicYear); // Output: "2024-25"
             <td>${studentDetails.address}</td>
           </tr>
           <tr>
+            <td>Permanent Address</td>
+            <td>${studentDetails.permanentAddress ?? 'Nil'}</td>
+          </tr>
+          <tr>
             <td>Pin Code</td>
             <td>${studentDetails.pincode}</td>
           </tr>
@@ -265,7 +269,7 @@ console.log(academicYear); // Output: "2024-25"
 </tr>
 <tr>
   <td>Qualification</td>
-  <td>${studentDetails.qualify?.exam}</td>
+  <td>${studentDetails.qualify?.exam ?? 'Nil'}</td>
 </tr>
 <tr>
   <td>Exam Board</td>
@@ -296,27 +300,27 @@ console.log(academicYear); // Output: "2024-25"
 </tr>
 <tr>
 <td>Father's Name</td>
-<td>${studentDetails.parentDetails?.fatherName}</td>
+<td>${studentDetails.parentDetails?.fatherName ?? 'Nil'}</td>
 </tr>
 <tr>
 <td>Father's Occupation</td>
-<td>${studentDetails.parentDetails?.fatherOccupation}</td>
+<td>${studentDetails.parentDetails?.fatherOccupation ?? 'Nil'}</td>
 </tr>
 <tr>
 <td>Father's Mobile No</td>
-<td>${studentDetails.parentDetails?.fatherMobileNo}</td>
+<td>${studentDetails.parentDetails?.fatherMobileNo ?? 'Nil'}</td>
 </tr>
 <tr>
 <td>Mother's Name</td>
-<td>${studentDetails.parentDetails?.motherName}</td>
+<td>${studentDetails.parentDetails?.motherName ?? 'Nil'}</td>
 </tr>
 <tr>
 <td>Mother's Occupation</td>
-<td>${studentDetails.parentDetails?.motherOccupation}</td>
+<td>${studentDetails.parentDetails?.motherOccupation ?? 'Nil'}</td>
 </tr>
 <tr>
 <td>Mother's Mobile No</td>
-<td>${studentDetails.parentDetails?.motherMobileNo}</td>
+<td>${studentDetails.parentDetails?.motherMobileNo ?? 'Nil'}</td>
 </tr>
 <tr>
       <td>Annual Income</td>
@@ -346,15 +350,15 @@ console.log(academicYear); // Output: "2024-25"
   </tr>
   <tr>
       <td>Arts</td>
-      <td>${studentDetails.achievements.arts}</td>
+      <td>${studentDetails.achievements.arts?? 'Nil'}</td>
     </tr>
     <tr>
       <td>Sports</td>
-      <td>${studentDetails.achievements.sports}</td>
+      <td>${studentDetails.achievements.sports?? 'Nil'}</td>
     </tr>
     <tr>
       <td>Other</td>
-      <td>${studentDetails.achievements.other}</td>
+      <td>${studentDetails.achievements.other ?? 'Nil'}</td>
     </tr>
             </table>
             <button class="hide-on-print" onclick="window.print()">Print</button>

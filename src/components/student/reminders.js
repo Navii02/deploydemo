@@ -74,13 +74,16 @@ const Reminders = () => {
             <strong>{subject}</strong> Assignment by {teacherName}: {message}
           </>
         );
+       
       case 'updates':
         return (
           <>
             <strong>Update:</strong> {message}
+            
           </>
         );
-      default:
+       
+              default:
         return <span>{message}</span>;
     }
   };

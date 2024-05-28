@@ -3,6 +3,7 @@ import axios from 'axios';
 import Navbar from "./OfficerNavbar";
 import './DataEditing.css'
 
+
 const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   const initialFormData = {
     admissionType: '',
@@ -11,6 +12,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     feeCategory: '',
     name: '',
     photo: null,
+    
     address: '',
     permanentAddress: '',
     pincode: '',
@@ -57,10 +59,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       sports: '',
       other: '',
     },
+   
   };
 
   const [formData, setFormData] = useState({ ...initialFormData });
-  const [copyClicked, setCopyClicked] = useState(false);
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -111,6 +113,12 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       console.error('Error accessing camera:', error);
     }
   };
+  
+ 
+  const [copyClicked, setCopyClicked] = useState(false); // State to track if the copy button is clicked
+
+  
+
   const handleCopyAddress = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -119,23 +127,23 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     setCopyClicked(true); // Set copyClicked to true when the button is clicked
   };
 
-
   const handleFileInputChange = (event) => {
     const { name, files } = event.target;
     if (name === 'photo') {
       setFormData({ ...formData, [name]: files[0] });
     }
+   
+    
   };
 
   const handleChange = (event) => {
     const { name, value, files } = event.target;
     if (name === 'photo') {
       setFormData({ ...formData, [name]: files[0] });
-    } else if (name === 'permanentAddress' && copyClicked) {
+    }else if (name === 'permanentAddress' && copyClicked) {
       // Allow manual typing if the copy button is clicked
       setFormData({ ...formData, [name]: value });
-    }
-    else if (name.includes('qualify')) {
+    } else if (name.includes('qualify')) {
       const [, subField] = name.split('.');
       setFormData({
         ...formData,
@@ -184,7 +192,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
           sendData.append(`${key}.${subKey}`, formData[key][subKey]);
         }
       } else {
-        sendData.append(key, formData[key]? formData[key] : 'nil');
+        sendData.append(key, formData[key]);
       }
     }
 
@@ -274,6 +282,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               />
             </div>
+          
             <div className="form-group">
             
             <label>Photo:</label>
@@ -304,8 +313,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
           </div>
           </div>
+         
             <div className="form-group">
-              <label>Address:</label>
+              <label>Communication Address:</label>
               <textarea
                 name="address"
                 value={formData.address}
@@ -314,13 +324,14 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               ></textarea>
             </div>
             <div className="button">
+            {/* Button to trigger address copy */}
             <button
               type="button"
               onClick={handleCopyAddress}
               className={copyClicked ? 'clicked' : ''}
             >
               Copy Communication Address to Permanent Address
-            </button> 
+            </button>
           </div>
           <div className="form-group">
             <label>Permanent Address:</label>
@@ -331,7 +342,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               required
             ></textarea>
           </div>
-            
+         
             <div className="form-group">
               <label>pincode:</label>
               <input
@@ -555,7 +566,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       name="parentDetails.fatherName"  
       value={formData.parentDetails.fatherName}
       onChange={handleChange}
-  
+      required
     />
   </div>
   <div className="form-group">
@@ -565,7 +576,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       name="parentDetails.motherName"  // Changed from "parentDetails.mother.name"
       value={formData.parentDetails.motherName}
       onChange={handleChange}
-     
+      required
     />
   </div>
   <div className="form-group">
@@ -575,7 +586,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       name="parentDetails.fatherOccupation"
       value={formData.parentDetails.fatherOccupation}
       onChange={handleChange}
-    
+      required
     />
   </div>
   <div className="form-group">
@@ -585,7 +596,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       name="parentDetails.motherOccupation"
       value={formData.parentDetails.motherOccupation}
       onChange={handleChange}
-      
+      required
     />
   </div>
   <div className="form-group">
@@ -595,7 +606,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       name="parentDetails.fatherMobileNo"
       value={formData.parentDetails.fatherMobileNo}
       onChange={handleChange}
-    
+      required
       pattern="[0-9]{10}"
       title="Please enter a valid 10-digit phone number"
     />
@@ -609,7 +620,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       name="parentDetails.motherMobileNo"
       value={formData.parentDetails.motherMobileNo}
       onChange={handleChange}
-     
+      required
       pattern="[0-9]{10}"
       title="Please enter a valid 10-digit phone number"
     />
@@ -709,7 +720,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
-            </div>
+              </div>
             <div className="button-container">
             <button type="submit" className="submit-button">
                 Submit
@@ -722,6 +733,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 Clear
               </button>
             </div>
+           
           </form>
         </div>
     </div>

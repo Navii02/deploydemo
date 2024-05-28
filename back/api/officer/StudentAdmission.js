@@ -108,7 +108,7 @@ router.get('/studentDetails/:id', async (req, res) => {
     }
 
     // Extract necessary details for print preview
-    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity } = student;
+    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity } = student;
     const { parentDetails } = student;
     const { bankDetails } = student;
     const { achievements } = student;
@@ -123,6 +123,7 @@ router.get('/studentDetails/:id', async (req, res) => {
         allotmentCategory,
         feeCategory,
         address,
+        permanentAddress,
         pincode,
         religion,
         community,

@@ -1,0 +1,86 @@
+/* Hodassign.css */
+
+.teacher-list-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .teacher-list-container h3 {
+    margin-bottom: 10px;
+  }
+  
+  .teacher-list-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .teacher-list-container li {
+    margin-bottom: 10px;
+  }
+  
+  .teacher-list-container button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .teacher-list-container button:hover {
+    background-color: #45a049;
+  }
+  
+  .add-hod-form {
+    margin-top: 20px;
+  }
+  
+  .add-hod-form label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .add-hod-form input {
+    width: calc(100% - 22px); /* Adjust width to accommodate padding */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .add-hod-form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  .add-hod-form button[type="submit"] {
+    background-color: #45a049;
+  }
+  
+  .add-hod-form button[type="button"] {
+    background-color: #f44336;
+  }
+  
+  .add-hod-form button:hover {
+    background-color: #45a049;
+  }
+  
+  .success-message {
+    color: green;
+    font-weight: bold;
+  }
+  
