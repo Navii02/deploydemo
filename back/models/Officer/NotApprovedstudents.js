@@ -2,14 +2,17 @@
 const mongoose = require('mongoose');
 
 const notAdmittedStudentSchema = new mongoose.Schema({
-  // Include the same fields as the student admission schema
+  customId: String,
+  admissionNumber: String,
   admissionType: String,
   admissionId: String,
   allotmentCategory: String,
   feeCategory: String,
   name: String,
+  otherCertificate:String,
   photo: String, // Store file path for photo
   address: String,
+  permanentAddress: String,
   pincode: String,
   religion: String,
   community: String,
@@ -24,23 +27,41 @@ const notAdmittedStudentSchema = new mongoose.Schema({
   entranceRank: String,
   aadharNo: String,
   course: String,
-  plusTwo: {
+  qualify: {
+    exam: String,
     board: String,
     regNo: String,
     examMonthYear: String,
     percentage: String,
-    schoolName: String,
-    physics: String,
-    chemistry: String,
-    mathematics: String,
+    institution: String,
+    cgpa:String,
+    
   },
   parentDetails: {
-    fatherName: String,
-    fatherOccupation: String,
-    fatherMobileNo: String,
-    motherName: String,
-    motherOccupation: String,
-    motherMobileNo: String,
+    fatherName:{
+      type: String,
+      default: 'Nil',
+    },
+    fatherOccupation:{
+      type: String,
+      default: 'Nil',
+    },
+    fatherMobileNo:{
+      type: String,
+      default: 'Nil',
+    },
+    motherName:{
+      type: String,
+      default: 'Nil',
+    },
+    motherOccupation:{
+      type: String,
+      default: 'Nil',
+    },
+    motherMobileNo: {
+      type: String,
+      default: 'Nil',
+    },
   },
   annualIncome: String,
   nativity: String,
@@ -51,12 +72,43 @@ const notAdmittedStudentSchema = new mongoose.Schema({
     ifscCode: String,
   },
   achievements:{
-    arts:String,
-    sports: String,
-    other: String,
+    arts:{
+      type: String,
+      default: 'Nil',
+    },
+    sports:{
+      type: String,
+      default: 'Nil',
+    },
+    other:{
+      type: String,
+      default: 'Nil',
+    },
   },
-  academicYear: String
+  academicYear: String,
+  semester: Number,
+  assignments: {
+    type: String,
+    default: 'Not Assigned',
+  },
+  exams: {
+    type: String,
+    default: 'Not Scheduled',
+  },
+  attendance: {
+    type: String,
+    default: 'N/A',
+  },
+  installmentsPaid: [Number],
+  registerNumber: String,
+  collegemail: {
+    type: [String], // Array of strings (email addresses)
+    default: [],    // Default value is an empty array
+   
+  }
+  
 });
+ 
 
 const NotAdmittedStudent = mongoose.model('NotAdmittedStudent', notAdmittedStudentSchema);
 

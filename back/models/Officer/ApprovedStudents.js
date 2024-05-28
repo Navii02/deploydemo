@@ -8,8 +8,10 @@ const ApprovedStudentSchema = new mongoose.Schema({
   allotmentCategory: String,
   feeCategory: String,
   name: String,
-  photo: String,
+  otherCertificate:String,
+  photo: String, // Store file path for photo
   address: String,
+  permanentAddress: String,
   pincode: String,
   religion: String,
   community: String,
@@ -17,31 +19,48 @@ const ApprovedStudentSchema = new mongoose.Schema({
   dateOfBirth: Date,
   bloodGroup: String,
   mobileNo: String,
-  email: String,
   whatsappNo: String,
-  
+  email: String,
   entranceExam: String,
   entranceRollNo: String,
   entranceRank: String,
   aadharNo: String,
   course: String,
-  plusTwo: {
+  qualify: {
+    exam: String,
     board: String,
     regNo: String,
     examMonthYear: String,
     percentage: String,
-    schoolName: String,
-    physics: String,
-    chemistry: String,
-    mathematics: String,
+    institution: String,
+    cgpa:String,
+    
   },
   parentDetails: {
-    fatherName: String,
-    fatherOccupation: String,
-    fatherMobileNo: String,
-    motherName: String,
-    motherOccupation: String,
-    motherMobileNo: String,
+    fatherName:{
+      type: String,
+      default: 'Nil',
+    },
+    fatherOccupation:{
+      type: String,
+      default: 'Nil',
+    },
+    fatherMobileNo:{
+      type: String,
+      default: 'Nil',
+    },
+    motherName:{
+      type: String,
+      default: 'Nil',
+    },
+    motherOccupation:{
+      type: String,
+      default: 'Nil',
+    },
+    motherMobileNo: {
+      type: String,
+      default: 'Nil',
+    },
   },
   annualIncome: String,
   nativity: String,
@@ -51,13 +70,19 @@ const ApprovedStudentSchema = new mongoose.Schema({
     accountNo: String,
     ifscCode: String,
   },
-  tutormessage: {
-    type: [String],
-  },
-  achievements: {
-    arts: String,
-    sports: String,
-    other: String,
+  achievements:{
+    arts:{
+      type: String,
+      default: 'Nil',
+    },
+    sports:{
+      type: String,
+      default: 'Nil',
+    },
+    other:{
+      type: String,
+      default: 'Nil',
+    },
   },
   academicYear: String,
   semester: Number,
