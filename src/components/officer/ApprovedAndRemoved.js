@@ -590,7 +590,7 @@ const ApprovedAndRemoved = () => {
                 <th>Admission ID</th>
                 <th>Name</th>
                 <th>Department</th>
-                <th>Actions</th>
+                
               </tr>
             </thead>
             <tbody>
@@ -601,7 +601,7 @@ const ApprovedAndRemoved = () => {
                   <td>{student.course}</td>
                   <td>
                    
-                    <button onClick={() => handlePrintPreview(student._id)}>Print Preview</button>
+                 
                   </td>
                 </tr>
               ))}
