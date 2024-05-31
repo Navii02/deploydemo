@@ -85,7 +85,8 @@ const ApprovedStudentSchema = new mongoose.Schema({
     },
   },
   academicYear: String,
-  semester: Number,
+  semester: String,
+ 
   assignments: {
     type: String,
     default: 'Not Assigned',

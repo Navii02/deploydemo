@@ -51,7 +51,6 @@ function StudentDetailsPage() {
 
   const handleSemesterChange = (event) => {
     const selectedValue = event.target.value;
-    console.log('Selected semester:', selectedValue); // Log the selected semester
     setSelectedSemester(selectedValue);
   };
 
@@ -71,9 +70,12 @@ function StudentDetailsPage() {
       <div>
         <label htmlFor="course">Select Department: </label>
         <select id="course" value={selectedCourse} onChange={handleCourseChange}>
-          <option value="">All</option>
-          <option value="computerScience">Computer Science (CSE)</option>
-          <option value="electronicsAndCommunication">Electronics and Communication (EC)</option>
+        <option value="">All</option>
+          <option value="B.Tech CSE">Computer Science (CSE)</option>
+          <option value="B.Tech ECE">Electronics and Communication (EC)</option>
+          <option value="MCA">MCA</option>
+          <option value="BCA">BCA</option>
+          <option value="BBA">BBA</option>
         </select>
         &nbsp;
         <label htmlFor="semester">Select Semester: </label>
@@ -101,7 +103,7 @@ function StudentDetailsPage() {
             <div className="fee-payment-section">
               <h3>Fee Payment</h3>
               <div className="fee-table">
-                {[...Array(student.feeCategory === 'Merit Lower Fee' ? 4 : 8)].map((_, index) => {
+                {[...Array(getInstallmentCount(student))].map((_, index) => {
                   const installmentNumber = index + 1;
                   const isPaid = student.installmentsPaid && student.installmentsPaid.includes(installmentNumber);
 
@@ -130,6 +132,15 @@ function StudentDetailsPage() {
     </div>
     </>
   );
+}
+
+function getInstallmentCount(student) {
+  // Determine the number of installments based on course and fee category
+  if (student.course === 'MCA') {
+    return student.feeCategory === 'Merit Lower Fee' ? 1 : 2;
+  } else {
+    return student.feeCategory === 'Merit Lower Fee' ? 4 : 8;
+  }
 }
 
 export default StudentDetailsPage;

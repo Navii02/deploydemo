@@ -9,7 +9,7 @@ const ApprovedStudent = require('../../models/Officer/ApprovedStudents');
 
 router.post('/student/submitRequest', async (req, res) => {
   try {
-    const {name, userEmail, reason, selectedDocuments, registerNumber, admissionNumber, phoneNumber } = req.body;
+    const {name, userEmail, reason, selectedDocuments, registerNumber, admissionNumber, phoneNumber,semester,course } = req.body;
 
     // Validate request data
     if (!userEmail || !reason || !selectedDocuments) {
@@ -25,6 +25,8 @@ router.post('/student/submitRequest', async (req, res) => {
       reason,
       selectedDocuments,
       phoneNumber,
+      semester,
+      course,
     });
 
     await newCertificateRequest.save();
@@ -49,8 +51,8 @@ router.get('/student/details/:email', async (req, res) => {
     }
 
     // Send student details to the frontend
-    const {name, registerNumber, admissionNumber, mobileNo } = studentDetails;
-    res.status(200).json({name, registerNumber, admissionNumber,mobileNo });
+    const {name, registerNumber, admissionNumber, mobileNo,semester,course } = studentDetails;
+    res.status(200).json({name, registerNumber, admissionNumber,mobileNo,semester,course });
   } catch (error) {
     console.error('Error fetching student details:', error);
     res.status(500).json({ message: 'Internal server error' });

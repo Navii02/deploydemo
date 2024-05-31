@@ -37,21 +37,7 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
 
     const admissionYear = new Date().getFullYear(); // Get the current year
 
-    // Calculate the end year of the academic year based on admission type
-    let academicYearEnd;
-    if (formData.admissionType === 'LET') {
-      // For LET (Lateral Entry), academic year spans from (current year) to (current year + 3)
-      academicYearEnd = admissionYear + 3;
-    } else {
-      // For other admission types, academic year end is current year + 4 (default logic)
-      academicYearEnd = admissionYear + 4;
-    }
-
-    // Calculate the start year of the academic year (current year - 1 for LET)
-    const academicYearStart = formData.admissionType === 'LET' ? admissionYear - 1 : admissionYear;
-
-    // Construct the academic year string
-    const academicYear = `${academicYearStart}-${academicYearEnd}`;
+    
 
     const lastStudent = await Student.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
 
@@ -60,13 +46,13 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
       // Extract the last admission ID and increment it by one
       const lastAdmissionId = lastStudent.admissionId.split('/')[0];
       const nextAdmissionNumber = parseInt(lastAdmissionId) + 1;
-      nextAdmissionId = `${nextAdmissionNumber}/${academicYear}`;
+      nextAdmissionId = `${nextAdmissionNumber}/${admissionYear}`;
     } else {
       // If no previous admission, start from a default number
       nextAdmissionId = '1000/' +admissionYear;
     }
     formData.admissionId = nextAdmissionId;
-    formData.academicYear = academicYear;
+   
 
     if (formData.plusTwo && formData.plusTwo.registerNo) {
       const existingStudent = await Student.findOne({ 'plusTwo.regNo': formData.plusTwo.regNo });
@@ -108,7 +94,7 @@ router.get('/studentDetails/:id', async (req, res) => {
     }
 
     // Extract necessary details for print preview
-    const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity } = student;
+    const { name, admissionType, admissionId,admissionNumber, allotmentCategory, feeCategory, address,permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity } = student;
     const { parentDetails } = student;
     const { bankDetails } = student;
     const { achievements } = student;
@@ -120,6 +106,7 @@ router.get('/studentDetails/:id', async (req, res) => {
         name,
         admissionType,
         admissionId,
+        admissionNumber,
         allotmentCategory,
         feeCategory,
         address,
@@ -198,7 +185,6 @@ router.post('/decline/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 router.post('/approve/:id', async (req, res) => {
   const studentId = req.params.id;
 
@@ -212,18 +198,39 @@ router.post('/approve/:id', async (req, res) => {
 
     // Determine the semester based on admission type
     let semester;
-    if (student.admissionType === 'KEAM' || student.admissionType === 'Spot') {
+    if (student.admissionType === 'KEAM' || student.admissionType === 'SPOT') {
       // For KEAM or Spot admission, set semester as 1
+      semester = 1;
+    } else if (student.course === 'MCA' || student.course === 'BBA' || student.course === 'BCA') {
       semester = 1;
     } else if (student.admissionType === 'LET') {
       // For LET admission, set semester as 3
       semester = 3;
     }
 
+    // Determine the academic year for certain admission types and courses
+    let academicYear;
+    
+    if (['KEAM',].includes(student.admissionType) || [ 'BBA', 'BCA','B.Tech CSE','B.Tech ECE'].includes(student.course)) {
+      const currentYear = new Date().getFullYear();
+      const endYear = currentYear + 4;
+      academicYear = `${currentYear}-${endYear}`;
+    }else if(['LET'].includes(student.admissionType)) {
+      const currentYear = new Date().getFullYear();
+      const startyear = currentYear-1;
+      const endYear = startyear + 4;
+      academicYear = `${startyear}-${endYear}`;
+    }else if(['MCA'].includes(student.course)) {
+      const currentYear = new Date().getFullYear();
+      const endYear = currentYear + 1;
+      academicYear = `${currentYear}-${endYear}`;
+    }
+
     // Perform the approval process
     const approvedStudentData = {
       ...student.toJSON(),
       semester: semester,
+      academicYear: academicYear
     };
 
     // Generate the new admission ID with the current year
@@ -257,5 +264,6 @@ router.post('/approve/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 module.exports = router;

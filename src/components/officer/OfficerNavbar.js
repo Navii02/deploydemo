@@ -21,7 +21,7 @@ function OfficerNavbar() {
   };
 
   const handleLogout = () => {
-    // Clear user session (update based on your implementation)
+    // Clear user session
     localStorage.removeItem('email');
 
     // Redirect to the login page
@@ -30,47 +30,49 @@ function OfficerNavbar() {
 
   useEffect(() => {
     showButton();
+    window.addEventListener('resize', showButton);
+    
+    return () => {
+      window.removeEventListener('resize', showButton);
+    };
   }, []);
 
-  window.addEventListener('resize', showButton);
-
   return (
-    <>
-      <nav className='navbar'>
-        <div className='navbar-container'>
-          <Link to='/office' className='navbar-logo' onClick={closeMobileMenu}>
-            HOME
-            <i className='fas fa-home fa-sm' />
-          </Link>
-          <div className='menu-icon' onClick={handleClick}>
-            <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
-          </div>
-          <ul className={click ? 'nav-menu active' : 'nav-menu'}>
+    <nav className='navbar'>
+      <div className='navbar-container'>
+        <Link to='/office' className='navbar-logo' onClick={closeMobileMenu}>
+          HOME
+          <i className='fas fa-home fa-sm' />
+        </Link>
+        <div className='menu-icon' onClick={handleClick}>
+          <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
+        </div>
+        <ul className={click ? 'nav-menu active' : 'nav-menu'}>
           <li className='nav-item'>
-              <Link to='/sdata' className='nav-links' onClick={closeMobileMenu}>
-                Student Data
-              </Link>
-            </li>
+            <Link to='/sdata' className='nav-links' onClick={closeMobileMenu}>
+              Student Data
+            </Link>
+          </li>
           <li className='nav-item dropdown'>
-              <Link to='/data-editing' className='nav-links' onClick={closeMobileMenu}>
-                Admission<i className='fas fa-caret-down' />
+            <Link to='/data-editing' className='nav-links' onClick={closeMobileMenu}>
+              Admission<i className='fas fa-caret-down' />
+            </Link>
+            <div className='dropdown-content'>
+              <Link to='/data-editing' className='dropdown-link' onClick={closeMobileMenu}>
+                Data Entry
               </Link>
-              <div className='dropdown-content'>
-                <Link to='/data-editing' className='dropdown-link' onClick={closeMobileMenu}>
-                  Data Entry
-                </Link>
-                <Link to='/data-table' className='dropdown-link' onClick={closeMobileMenu}>
-                  Data Table
-                </Link>
-                <Link to='/ar' className='dropdown-link' onClick={closeMobileMenu}>
-                  Student List
-                </Link>
-              </div>
-            </li>
+              <Link to='/data-table' className='dropdown-link' onClick={closeMobileMenu}>
+                Data Table
+              </Link>
+              <Link to='/ar' className='dropdown-link' onClick={closeMobileMenu}>
+                Student List
+              </Link>
+            </div>
+          </li>
           <li className='nav-item dropdown'>
             <Link to='/certificate-distribution' className='nav-links' onClick={closeMobileMenu}>
-                Services<i className='fas fa-caret-down' />
-              </Link>
+              Services<i className='fas fa-caret-down' />
+            </Link>
             <div className='dropdown-content'>
               <Link to='/certificate-distribution' className='dropdown-link' onClick={closeMobileMenu}>
                 Certificates
@@ -82,23 +84,22 @@ function OfficerNavbar() {
                 Noticeboard
               </Link>
             </div>
-            </li>
-            {isLoggedIn && (
-            <li>
+          </li>
+          {isLoggedIn && (
+            <li className='nav-item'>
               <Link to='/officerlogin' className='nav-links-mobile' onClick={handleLogout}>
                 Log Out
               </Link>
             </li>
-            )}
-          </ul>
-            {button && (
-              <Button buttonStyle='btn--outline' onClick={handleLogout}>
-                LOG OUT
-              </Button>
-            )}
-          </div>
-      </nav>
-    </>
+          )}
+        </ul>
+        {isLoggedIn && button && (
+          <Button buttonStyle='btn--outline' onClick={handleLogout}>
+            LOG OUT
+          </Button>
+        )}
+      </div>
+    </nav>
   );
 }
 

@@ -82,24 +82,23 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
       if (!student) {
         return res.status(404).json({ error: 'Student not found' });
       }
-  
-      // Extract necessary details for print preview
-      const { name, admissionType, admissionId, allotmentCategory, feeCategory, address,photo,pincode,religion,community,gender,dateOfBirth,bloodGroup,mobileNo,whatsappNo,email,entranceExam,entranceRollNo,entranceRank,aadharNo,course,annualIncome,nativity,} = student;
+      const { name, admissionType, admissionId,admissionNumber, allotmentCategory, feeCategory, address,permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity } = student;
       const { parentDetails } = student;
-      const {bankDetails }= student;
-      const {achievements}=student;
-      const{plusTwo} = student;
+      const { bankDetails } = student;
+      const { achievements } = student;
+      const { qualify } = student;
       const photoUrl = photo ? `${req.protocol}://${req.get('host')}/${photo}` : null;
-  
   
       res.json({
         studentDetails: {
           name,
           admissionType,
           admissionId,
+          admissionNumber,
           allotmentCategory,
           feeCategory,
           address,
+          permanentAddress,
           pincode,
           religion,
           community,
@@ -117,44 +116,40 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
           annualIncome,
           nativity,
           photoUrl,
-          plusTwo: {
-            board:plusTwo.board,
-            regNo:plusTwo.regNo,
-            examMonthYear: plusTwo.examMonthYear,
-            percentage:plusTwo.percentage,
-            schoolName:plusTwo.schoolName,
-            physics:plusTwo.physics,
-            chemistry:plusTwo.chemistry,
-            mathematics:plusTwo.mathematics,
+          qualify: {
+            exam: qualify.exam,
+            board: qualify.board,
+            regNo: qualify.regNo,
+            examMonthYear: qualify.examMonthYear,
+            percentage: qualify.percentage,
+            institution: qualify.institution,
+            cgpa:qualify.cgpa,
+  
           },
           parentDetails: {
-       
-              fatherName:parentDetails.fatherName,
-              fatherOccupation: parentDetails.fatherOccupation,
-              fatherMobileNo: parentDetails.fatherMobileNo,
-              motherName:parentDetails.motherName,
-              motherOccupation:parentDetails.motherOccupation,
-              motherMobileNo: parentDetails.motherMobileNo,
-            
+            fatherName: parentDetails.fatherName,
+            fatherOccupation: parentDetails.fatherOccupation,
+            fatherMobileNo: parentDetails.fatherMobileNo,
+            motherName: parentDetails.motherName,
+            motherOccupation: parentDetails.motherOccupation,
+            motherMobileNo: parentDetails.motherMobileNo,
           },
-    
           bankDetails: {
-            bankName:bankDetails.bankName,
-            branch:bankDetails.branch,
-            accountNo:bankDetails.accountNo,
-            ifscCode:bankDetails.ifscCode,
+            bankName: bankDetails.bankName,
+            branch: bankDetails.branch,
+            accountNo: bankDetails.accountNo,
+            ifscCode: bankDetails.ifscCode,
           },
-          achievements:{
-            arts:achievements.arts,
-            sports:achievements.sports,
+          achievements: {
+            arts: achievements.arts,
+            sports: achievements.sports,
             other: achievements.other,
-          }
-        }
+          },
+        },
       });
     } catch (error) {
       console.error('Error fetching student details:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  
 module.exports = router;

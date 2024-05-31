@@ -58,6 +58,7 @@ function HodCertificateRequestsPage() {
               <p>Request ID: {request._id}</p>
               <p>Student ID: {request.registerNumber}</p>
               <p>Student Name: {request.name}</p>
+              <p> Student Semester: {request.semester}</p>
               <p>Reason: {request.reason}</p>
               <p>Selected Documents: {request.selectedDocuments.join(', ')}</p>
               <p>Status: {request.HoDstatus}</p>

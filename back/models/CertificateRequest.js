@@ -8,6 +8,8 @@ const certificateRequestSchema = new mongoose.Schema({
   userEmail: String,
   reason: String,
   branch: String,
+  semester: String,
+  course: String,
   selectedDocuments: [String],
   HoDstatus: { type: String, default: 'Pending' },
   status: { type: String, default: 'Pending' },

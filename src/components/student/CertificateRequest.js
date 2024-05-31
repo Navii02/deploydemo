@@ -1,5 +1,3 @@
-// StudentCertificateRequestPage.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './UserNavbar';
@@ -14,6 +12,8 @@ function StudentCertificateRequestPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [userName, setUserName] = useState('');
+  const [semester, setSemester] = useState(''); // New state for semester
+  const [course, setCourse] = useState(''); // New state for course
   const userEmail = localStorage.getItem('email');
   const [manualRegisterNumber, setManualRegisterNumber] = useState('');
 
@@ -21,8 +21,8 @@ function StudentCertificateRequestPage() {
     const fetchStudentDetails = async () => {
       try {
         const response = await axios.get(`/api/student/details/${userEmail}`);
-        const { registerNumber, admissionNumber, mobileNo, name } = response.data;
-
+        const { registerNumber, admissionNumber, mobileNo, name, semester, course } = response.data;
+       
         if (registerNumber) {
           setRegisterNumber(registerNumber);
         } else {
@@ -31,7 +31,9 @@ function StudentCertificateRequestPage() {
 
         setAdmissionNumber(admissionNumber);
         setMobileNumber(mobileNo);
-        setUserName(name); // Set userName from backend
+        setUserName(name);
+        setSemester(semester); // Set semester from backend
+        setCourse(course); // Set course from backend
       } catch (error) {
         console.error('Error fetching student details:', error);
         setErrorMessage('Failed to fetch student details');
@@ -60,7 +62,10 @@ function StudentCertificateRequestPage() {
         registerNumber: registerNumber || manualRegisterNumber,
         admissionNumber,
         phoneNumber: mobileNo,
-        name: userName, // Use fetched name from state
+        name: userName,
+        semester,
+        course,
+         // Use fetched name from state
       });
 
       setSuccessMessage(response.data.message);

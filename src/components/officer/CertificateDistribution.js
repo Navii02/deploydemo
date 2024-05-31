@@ -68,9 +68,11 @@ function OfficerCertificateRequestsPage() {
         <div className="request-list">
           {requests.slice(0, showAllRequests ? requests.length : 3).map((request) => (
             <div key={request._id}>
-              <h3>{request.studentName}</h3>
+              <h3>{request.name}</h3>
               <p>Request ID: {request._id}</p>
               <p>Student ID: {request.registerNumber}</p>
+              <p> Course: {request.course}</p>
+              <p>Semester: {request.semester}</p>
               <p>Reason: {request.reason}</p>
               <p>selected option:{request.selectedDocuments}</p>
               <p>Status: {request.status}</p>
