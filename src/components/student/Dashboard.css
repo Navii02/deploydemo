@@ -1,5 +1,6 @@
 .dashboard-container {
-  max-width: 500px;
+  max-width: 1000px;
+  
   margin: 0 auto;
   padding: 20px;
   text-align: left; /* Align text to the left */
