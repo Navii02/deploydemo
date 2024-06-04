@@ -16,6 +16,7 @@ const TeacherList = () => {
     semesters: '',
     subjects: '',
     subjectCode: '',
+    course: '',
    
   });
 
@@ -76,7 +77,7 @@ const TeacherList = () => {
           semesters: '',
           subjects: '',
           subjectCode: '',
-          academicYear: '',
+          course: '',
         });
         fetchTeachers();
         fetchHODs();
@@ -96,7 +97,7 @@ const TeacherList = () => {
             {teachers.map(teacher => (
               <li key={teacher._id}>
                 <strong>Name:</strong>{teacher.teachername}<br/>
-                <strong>Department:</strong> {teacher.branches}<br />
+                <strong>Department:</strong> {teacher.course}<br />
                 <strong>Email:</strong> {teacher.email}<br/>
                 <button className="assign-button" onClick={() => setSelectedTeacherId(teacher._id)}>Assign as HOD</button>
                 {assignedTeacher && assignedTeacher === teacher.teachername && (
@@ -122,7 +123,7 @@ const TeacherList = () => {
             {hods.map(hod => (
               <li key={hod._id} className="hod-item">
                 <strong>Name:</strong> {hod.teachername}<br />
-                <strong>Department:</strong> {hod.branches}<br />
+                <strong>Department:</strong> {hod.course}<br />
                 <strong>Email:</strong> {hod.email}
               </li>
             ))}
@@ -180,6 +181,14 @@ const TeacherList = () => {
                 name="subjectCode"
                 placeholder="Subject Code"
                 value={newHod.subjectCode}
+                onChange={handleAddHodChange}
+                required
+              />
+              <input
+                type="text"
+                name="course"
+                placeholder="course"
+                value={newHod.course}
                 onChange={handleAddHodChange}
                 required
               />

@@ -6,9 +6,8 @@ import './HodHome.css'; // Import your CSS file
 function HodHome() {
   const [hodName, setHodName] = useState('');
   const [departmentName, setDepartmentName] = useState('');
-  const [numFaculties, setNumFaculties] = useState(0);
-  const [numStudents, setNumStudents] = useState(0);
-
+  const [teacherCounts, setTeacherCounts] = useState({}); // Object to store course ID and count
+   const [numStudents, setNumStudents] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       const hodEmail = localStorage.getItem('email'); // Assuming email is stored in localStorage
@@ -23,19 +22,20 @@ function HodHome() {
         const response = await axios.get(`/api/hod-profile?email=${hodEmail}`);
         console.log('Full Response:', response);
 
-        const { hodName, departmentName, numFaculties, numStudents } = response.data;
-
+        const hodName = response.data.teachername; // Assuming name property in HOD profile
+        const departmentName = response.data.couse;
+        const teacherCounts = response.data.teacherCounts; // Use the actual property name
+        const studentCounts = response.data.studentCounts;
         console.log('Received Data:', {
           hodName,
           departmentName,
-          numFaculties,
-          numStudents,
+          teacherCounts,
         });
 
         setHodName(hodName);
         setDepartmentName(departmentName);
-        setNumFaculties(numFaculties);
-        setNumStudents(numStudents);
+        setTeacherCounts(teacherCounts);
+          setNumStudents(studentCounts);
 
         console.log('HOD:', hodName);
       } catch (error) {
@@ -46,10 +46,7 @@ function HodHome() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    // Log the updated state
-    console.log('HOD:', hodName);
-  }, [hodName]);
+  const totalFaculties = Object.values(teacherCounts).reduce((acc, count) => acc + count, 0);
 
   return (
     <div>
@@ -62,9 +59,18 @@ function HodHome() {
           </p>
           <div className="associated-data">
             <h2>Your Department Information:</h2>
-            <p><strong>Department Name:</strong> {departmentName}</p>
-            <p><strong>Number of Faculties:</strong> {numFaculties}</p>
-            <p><strong>Number of Students:</strong> {numStudents}</p>
+            <p>
+              <strong>Department Name:</strong> {departmentName} 
+            </p>
+            {/* Details of faculties per course (optional) */}
+            {Object.keys(teacherCounts).length > 0 && (
+              <div>
+                <p>Number of Faculties : {totalFaculties}</p>
+               
+                
+              </div>
+            )}
+            <p><strong>Number of Students:</strong> {numStudents}(Data not available yet)</p>
           </div>
         </div>
       </div>

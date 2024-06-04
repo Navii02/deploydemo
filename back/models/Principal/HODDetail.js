@@ -2,24 +2,18 @@
 const mongoose = require('mongoose');
 
 const hodDetailSchema = new mongoose.Schema({
-  customId: {
-    type: String,
-    required: true
-  },
-  teachername: {
-    type: String,
-    required: true
-  },
+  teacherid:String,
+  teachername: String,
   email: String,
   subjects: [String],
+  subjectCode: [String],
   branches: [String],
   semesters: [String],
-  position: {
-    type: String,
-    default: 'HOD'
-  }
+  academicYear: String,
+  course: String,
+ 
 });
 
-const HODDetail = mongoose.model('HODDetail', hodDetailSchema);
+const HODDetail = mongoose.model('hoddetails', hodDetailSchema);
 
 module.exports = HODDetail;

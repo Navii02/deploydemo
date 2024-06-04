@@ -23,9 +23,9 @@ function StudentDetailsPage() {
   const mapBranchName = (branch) => {
     switch (branch) {
       case 'CSE':
-        return 'computerScience';
+        return 'CSE' 
       case 'ECE':
-        return 'electronicsAndCommunication';
+        return 'ECE';
       default:
         return branch;
     }

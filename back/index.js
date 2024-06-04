@@ -43,7 +43,7 @@ const hodcertificaterequest=require('./api/hod/Hodcertificaterequest');
 const HodStudenlist=require('./api/hod/hodstudentlist');
 const Subject=require('./api/hod/SubjectAddition')
 const tutorassign = require('./api/hod/tutorassign')
-
+const Hodhome = require('./api/hod/hodhome');
 
 const tutorForget=require('./api/tutor/tutorForgot')
 const classtutorRoutes = require('./api/tutor/classtutorroutes')
@@ -56,6 +56,7 @@ const pstudents=require('./api/principal/StudentList')
 const pTeachers=require('./api/principal/TeacherList')
 const pofficers=require('./api/principal/OfficerList')
 const HodAssign = require('./api/principal/hodassign')
+
 
 const adminRouter = require('./api/Admin/AdminRoutes')
 const TeachersDetail=require('./api/hod/TeachersDetails')
@@ -154,6 +155,7 @@ app.use('/api',AdminDashboard)
 app.use('/api',Officerhome)
 app.use('/api',Update)
 app.use('/api',Internal)
+app.use('/api',Hodhome)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));

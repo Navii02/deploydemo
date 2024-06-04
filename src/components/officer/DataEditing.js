@@ -177,6 +177,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    window.location.reload();
     const sendData = new FormData();
     for (const key in formData) {
       if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
@@ -194,6 +195,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       setFormData({ ...initialFormData });
       fetchStudents();
       onDataEntered(formData);
+      window.location.reload();
     } catch (error) {
       console.error('Error submitting form:', error);
     }
