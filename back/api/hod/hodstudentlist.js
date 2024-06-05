@@ -8,7 +8,8 @@ router.get('/students/:branch', async (req, res) => {
 
     // Define a mapping function to translate branches to corresponding courses (modify as needed)
     const courseMapping = {
-      'CSE': ['B.Tech CSE', 'M.Tech CSE','MCA','BBA','BCA',], // Example mapping for CSE branch
+      'CSE': ['B.Tech CSE', 'M.Tech CSE','MCA','BBA','BCA',],
+      'ECE':['B.Tech ECE'] // Example mapping for CSE branch
       // Add mappings for other branches
       // ... Add mappings for other branches
     };

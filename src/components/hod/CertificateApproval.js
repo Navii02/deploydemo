@@ -1,5 +1,3 @@
-// HodCertificateRequestsPage.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import HodNavbar from './HodNavbar';
@@ -15,7 +13,10 @@ function HodCertificateRequestsPage() {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.get('/api/hod/certificateRequests');
+      // Fetch branch from localStorage
+      const storedBranch = localStorage.getItem('branch');
+      
+      const response = await axios.get(`/api/hod/certificateRequests/${storedBranch}`);
       setRequests(response.data.requests.reverse()); // Reverse the order
     } catch (error) {
       setErrorMessage(error.response.data.message);
@@ -25,7 +26,6 @@ function HodCertificateRequestsPage() {
   const handleAccept = async (requestId) => {
     try {
       await axios.post(`/api/hod/acceptRequest/${requestId}`);
-
       setSuccessMessage('Request accepted successfully!');
       fetchRequests();
     } catch (error) {
@@ -38,7 +38,6 @@ function HodCertificateRequestsPage() {
     
     try {
       await axios.post(`/api/hod/declineRequest/${requestId}`, { declineReason });
-
       setSuccessMessage('Request declined successfully!');
       fetchRequests();
     } catch (error) {
@@ -51,28 +50,33 @@ function HodCertificateRequestsPage() {
       <HodNavbar />
       <div className="certificate-requests">
         <h2>Certificate Requests</h2>
-        <div className="request-list">
-          {requests.map((request) => (
-            <div key={request._id}>
-              <h3>{request.studentName}</h3>
-              <p>Request ID: {request._id}</p>
-              <p>Student ID: {request.registerNumber}</p>
-              <p>Student Name: {request.name}</p>
-              <p> Student Semester: {request.semester}</p>
-              <p>Reason: {request.reason}</p>
-              <p>Selected Documents: {request.selectedDocuments.join(', ')}</p>
-              <p>Status: {request.HoDstatus}</p>
-              {request.HoDstatus === 'Pending' && (
-                <>
-                  <input type="button" value="Accept" onClick={() => handleAccept(request._id)} />
-                  <input type="button" value="Decline" onClick={() => handleDecline(request._id)} />
-                </>
-              )}
-              {request.HoDstatus === 'Accepted' && <p>Accepted By: {request.acceptedBy}</p>}
-              {request.HoDstatus === 'Declined' && <p>Decline Reason: {request.declineReason}</p>}
-            </div>
-          ))}
-        </div>
+        {requests.length === 0 ? (
+          <p>No requests available.</p>
+        ) : (
+          <div className="request-list">
+            {requests.map((request) => (
+              <div key={request._id}>
+                <h3>{request.studentName}</h3>
+                <p>Request ID: {request._id}</p>
+                <p>Student ID: {request.registerNumber}</p>
+                <p>Student Name: {request.name}</p>
+                <p> Student Semester: {request.semester}</p>
+                <p>Course :{request.course}</p>
+                <p>Reason: {request.reason}</p>
+                <p>Selected Documents: {request.selectedDocuments.join(', ')}</p>
+                <p>Status: {request.HoDstatus}</p>
+                {request.HoDstatus === 'Pending' && (
+                  <>
+                    <input type="button" value="Accept" onClick={() => handleAccept(request._id)} />
+                    <input type="button" value="Decline" onClick={() => handleDecline(request._id)} />
+                  </>
+                )}
+                {request.HoDstatus === 'Accepted' && <p>Accepted By: {request.acceptedBy}</p>}
+                {request.HoDstatus === 'Declined' && <p>Decline Reason: {request.declineReason}</p>}
+              </div>
+            ))}
+          </div>
+        )}
         {successMessage && <p>{successMessage}</p>}
         {errorMessage && <p>{errorMessage}</p>}
       </div>

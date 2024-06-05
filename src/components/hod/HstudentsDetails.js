@@ -5,17 +5,15 @@ function StudentDetailsPage() {
   const [branch, setBranch] = useState('');
   const [students, setStudents] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState('');
   const [filteredStudents, setFilteredStudents] = useState([]);
+  const [courseOptions, setCourseOptions] = useState([]);
 
   useEffect(() => {
-    // Fetch branch from localStorage
     const storedBranch = localStorage.getItem('branch');
     if (storedBranch) {
-      // Map branch names
       const mappedBranch = mapBranchName(storedBranch);
       setBranch(mappedBranch);
-
-      // Fetch student details based on mapped branch
       fetchStudents(mappedBranch);
     }
   }, []);
@@ -23,7 +21,7 @@ function StudentDetailsPage() {
   const mapBranchName = (branch) => {
     switch (branch) {
       case 'CSE':
-        return 'CSE' 
+        return 'CSE';
       case 'ECE':
         return 'ECE';
       default:
@@ -39,24 +37,36 @@ function StudentDetailsPage() {
       }
       const data = await response.json();
       setStudents(data.students);
+
+      const uniqueCourses = [...new Set(data.students.flatMap(student => student.course))];
+      setCourses(uniqueCourses);
     } catch (error) {
       console.error(error.message);
     }
+  };
+
+  const setCourses = (courses) => {
+    setCourseOptions(['All', ...courses]);
   };
 
   const handleSemesterChange = (event) => {
     setSelectedSemester(event.target.value);
   };
 
+  const handleCourseChange = (event) => {
+    setSelectedCourse(event.target.value);
+  };
+
   useEffect(() => {
-    // Filter students based on selected semester
-    if (selectedSemester) {
-      const filteredStudents = students.filter(student => String(student.semester) === selectedSemester);
-      setFilteredStudents(filteredStudents);
-    } else {
-      setFilteredStudents(students);
+    let filteredStudents = students;
+    if (selectedSemester !== '' && selectedSemester !== 'All') {
+      filteredStudents = filteredStudents.filter((student) => String(student.semester) === selectedSemester);
     }
-  }, [students, selectedSemester]);
+    if (selectedCourse && selectedCourse !== 'All') {
+      filteredStudents = filteredStudents.filter((student) => student.course.includes(selectedCourse));
+    }
+    setFilteredStudents(filteredStudents);
+  }, [students, selectedSemester, selectedCourse]);
 
   return (
     <div>
@@ -71,11 +81,16 @@ function StudentDetailsPage() {
           <option value="2">Semester 2</option>
           <option value="3">Semester 3</option>
           <option value="4">Semester 4</option>
-          <option value="5">Semester 5</option>
-          <option value="6">Semester 6</option>
-          <option value="7">Semester 7</option>
-          <option value="8">Semester 8</option>
-          {/* Add more options for other semesters */}
+          {/* Add options for other semesters */}
+        </select>
+      </div>
+      <div>
+        &nbsp;
+        <label htmlFor="course">Select Course:</label>
+        <select id="course" value={selectedCourse} onChange={handleCourseChange}>
+          {courseOptions.map((course, index) => (
+            <option key={index} value={course}>{course}</option>
+          ))}
         </select>
       </div>
       <div>
@@ -83,9 +98,10 @@ function StudentDetailsPage() {
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Semester</th>
               <th>Register Number</th>
+              <th>Name</th>
+              <th>Course</th>
+              <th>Semester</th>
               <th>Email</th>
               {/* Add other table headers as needed */}
             </tr>
@@ -93,9 +109,10 @@ function StudentDetailsPage() {
           <tbody>
             {filteredStudents.map((student) => (
               <tr key={student._id}>
-                <td>{student.name}</td>
-                <td>{student.semester}</td>
                 <td>{student.admissionNumber}</td>
+                <td>{student.name}</td>
+                <td>{student.course}</td>
+                <td>{student.semester}</td>
                 <td>{student.email}</td>
                 {/* Add other table cells as needed */}
               </tr>

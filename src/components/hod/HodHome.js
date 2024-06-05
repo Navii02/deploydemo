@@ -23,7 +23,7 @@ function HodHome() {
         console.log('Full Response:', response);
 
         const hodName = response.data.teachername; // Assuming name property in HOD profile
-        const departmentName = response.data.couse;
+        const departmentName = response.data.course;
         const teacherCounts = response.data.teacherCounts; // Use the actual property name
         const studentCounts = response.data.studentCounts;
         console.log('Received Data:', {

@@ -4,12 +4,15 @@ const router = express.Router();
 
 router.get('/admin/teachers', async (req, res) => {
   try {
-    const teachers = await Teacher.find();
+    const branch = req.query.branch;
+    //console.log(branch);
+    const teachers = await Teacher.find({ course: branch });
     res.json({ teachers });
   } catch (error) {
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: 'Failed to fetch teachers' });
   }
 });
+
 
 router.post('/admin/addTeacher', async (req, res) => {
   const newTeacherData = req.body;

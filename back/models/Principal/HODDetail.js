@@ -11,7 +11,10 @@ const hodDetailSchema = new mongoose.Schema({
   semesters: [String],
   academicYear: String,
   course: String,
- 
+  isHOD: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const HODDetail = mongoose.model('hoddetails', hodDetailSchema);

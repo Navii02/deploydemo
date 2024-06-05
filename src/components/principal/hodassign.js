@@ -46,13 +46,16 @@ const TeacherList = () => {
   };
 
   const assignHOD = (teacherId) => {
-    axios.post('/api/hod/assign', { teacherId })
+    const selectedTeacher = teachers.find(teacher => teacher._id === teacherId);
+    if (!selectedTeacher) return;
+
+    axios.post('/api/hod/assign', { teacherId, course: selectedTeacher.course })
       .then(response => {
         console.log('HOD assigned successfully:', response.data);
         setAssignedTeacher(response.data.teachername);
         setSelectedTeacherId(null);
         fetchTeachers();
-        window.location.reload();
+        fetchHODs();
       })
       .catch(error => {
         console.error('Error assigning HOD:', error);

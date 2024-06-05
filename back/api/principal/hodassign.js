@@ -18,7 +18,7 @@ router.get('/hod/teachers', async (req, res) => {
 // Route to fetch all HODs (including details from HodDetails)
 router.get('/hod/hods', async (req, res) => {
   try {
-    const hods = await Teacher.find({ isHOD: true });
+    const hods = await HodDetails.find({ isHOD: true });
     // Include details from HodDetails for enriched data
     const hodsWithDetails = await Promise.all(
       hods.map(async (hod) => {
@@ -33,11 +33,13 @@ router.get('/hod/hods', async (req, res) => {
   }
 });
 
-// Route to assign a teacher as HOD and create details in HodDetails
+/// Route to assign a teacher as HOD and handle the HOD turn for specific branch
 router.post('/hod/assign', async (req, res) => {
   try {
-    const { teacherId } = req.body;
+    const { teacherId, course } = req.body;
+    console.log(teacherId, course);
 
+    // Find the teacher to be assigned as HOD
     const teacher = await Teacher.findById(teacherId);
     if (!teacher) {
       return res.status(404).json({ error: 'Teacher not found' });
@@ -49,21 +51,34 @@ router.post('/hod/assign', async (req, res) => {
 
     // Assign the teacher as HOD
     teacher.isHOD = true;
-
-    // **Corrected Line:** Save the updated teacher document **before** creating HodDetails
     await teacher.save();
 
-    // Create corresponding entry in HodDetails (assuming data is available)
+    // Find and update the existing HOD for the specified course
+    const existingHOD = await HodDetails.findOne({ course: course, isHOD: true });
+    if (existingHOD) {
+      // If an existing HOD is found for the specified course, make them no longer an HOD
+      existingHOD.isHOD = false;
+      await existingHOD.save();
+
+      // Update the old HOD's isHOD flag in the TeachersDetailSchema as well
+      const oldHOD = await Teacher.findById(existingHOD.teacherId);
+      if (oldHOD) {
+        oldHOD.isHOD = false;
+        await oldHOD.save();
+      }
+    }
+
+    // Create new entry in HodDetails for the newly assigned HOD
     const newHodDetails = new HodDetails({
-    
+      teacherId: teacher._id,
       teachername: teacher.teachername,
       email: teacher.email,
       subjects: teacher.subjects,
       subjectCode: teacher.subjectCode,
       branches: teacher.branches,
       semesters: teacher.semesters,
-      course: teacher.course,
-
+      course: course, // Assign the specific course here
+      isHOD: true,
       // Add other relevant HOD details here (e.g., department, designation)
     });
     await newHodDetails.save();
@@ -77,5 +92,6 @@ router.post('/hod/assign', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 module.exports = router;

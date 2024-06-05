@@ -7,11 +7,23 @@ const CertificateRequest = require('../../models/CertificateRequest');
 router.use(express.json());
 
 // Fetch all certificate requests
-router.get('/hod/certificateRequests', async (req, res) => {
+router.get('/hod/certificateRequests/:branch', async (req, res) => {
   try {
-    const requests = await CertificateRequest.find();
+    const branch = req.params.branch.toUpperCase(); // Convert branch to uppercase for case-insensitive matching
+    const courseMapping = {
+      'CSE': ['B.Tech CSE', 'M.Tech CSE','MCA','BBA','BCA',],
+      'ECE':['B.Tech ECE'] // Example mapping for CSE branch
+      // Add mappings for other branches
+      // ... Add mappings for other branches
+    };
+
+    const courses = courseMapping[branch] || []; 
+    // Assuming each certificate request has a field named 'branch' indicating the branch related to the request
+    const requests = await CertificateRequest.find({ course:  { $in: courses }});
+
     res.json({ requests });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error fetching certificate requests' });
   }
 });

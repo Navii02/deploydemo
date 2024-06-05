@@ -10,15 +10,19 @@ const AdminTeachersPage = () => {
   const [editingTeacher, setEditingTeacher] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [showAddTeacher, setShowAddTeacher] = useState(false); // State to toggle add teacher section visibility
-
-  const fetchTeachers = async () => {
-    try {
-      const response = await axios.get('/api/admin/teachers');
-      setTeachers(response.data.teachers);
-    } catch (error) {
-      setErrorMessage(error.response.data.message);
-    }
-  };
+  
+    // Fetch branch from localStorage
+    const storedBranch = localStorage.getItem('branch');
+ console.log(storedBranch);
+ const fetchTeachers = async () => {
+  try {
+    const storedBranch = localStorage.getItem('branch');
+    const response = await axios.get(`/api/admin/teachers?branch=${storedBranch}`);
+    setTeachers(response.data.teachers);
+  } catch (error) {
+    setErrorMessage(error.response.data.message);
+  }
+};
 
   useEffect(() => {
     fetchTeachers();
