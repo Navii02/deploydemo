@@ -1,0 +1,58 @@
+/* StudentDetailsPage.css */
+
+.student-details-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .student-details-title {
+    color: #333;
+  }
+  
+  .student-details-label-select {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .student-details-label-select label {
+    margin-right: 10px;
+  }
+  
+  .student-details-label-select select {
+    padding: 5px;
+    font-size: 1rem;
+  }
+  
+  .student-details-table-container {
+    margin-top: 20px;
+    overflow-x: auto;
+  }
+  
+  .student-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  .student-details-table, .student-details-table th, .student-details-table td {
+    border: 1px solid #ddd;
+  }
+  
+  .student-details-table th, .student-details-table td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .student-details-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .student-details-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .student-details-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  

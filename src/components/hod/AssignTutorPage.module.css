@@ -1,0 +1,67 @@
+
+
+.container {
+
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #eeeeee;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.input,
+.select {
+  width: calc(100% - 12px);
+  padding: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #cecdcd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.success-message {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  border: 1px solid #fdfdfd;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+.assigned-tutors-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #b21f1f; /* Adjust color as needed */
+  }

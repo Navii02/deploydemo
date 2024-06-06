@@ -205,6 +205,14 @@ const AdminTeachersPage = () => {
               onChange={(e) => setNewTeacher({ ...newTeacher, semesters: e.target.value })}
             />
           </label>
+          <label>
+            Course:
+            <input
+              type="text"
+              value={newTeacher.course}
+              onChange={(e) => setNewTeacher({ ...newTeacher, course: e.target.value })}
+            />
+          </label>
           <button onClick={handleAddTeacher}>Add Teacher</button>
         </div>
       )}

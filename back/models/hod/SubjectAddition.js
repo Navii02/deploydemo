@@ -5,6 +5,7 @@ const subjectSchema = new mongoose.Schema({
     subjects: [{ subjectName: String, subjectCode: String }],
     minorSubject: String,
     minorSubjectCode: String,
+    branch: String,
   });
 
 module.exports = mongoose.model('Subject', subjectSchema);

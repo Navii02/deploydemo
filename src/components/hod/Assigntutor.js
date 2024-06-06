@@ -1,96 +1,145 @@
+// AssignTutorPage.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import HodNavbar from './HodNavbar';
+import styles from './AssignTutorPage.module.css';
 
 function AssignTutorPage() {
   const [tutors, setTutors] = useState([]);
+  const [assignedTutors, setAssignedTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState('');
   const [academicYear, setAcademicYear] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [assignSuccess, setAssignSuccess] = useState(false);
+  const department = localStorage.getItem('branch');
 
   useEffect(() => {
-    fetchTutors();
+    const fetchData = async () => {
+      await fetchTutors();
+      await fetchAssignedTutors();
+    };
+  
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
 
   const fetchTutors = async () => {
-    const department = localStorage.getItem('branch');
     try {
-      const response = await axios.get(`/api/tutors?department=${department}`);
-      setTutors(response.data.map(tutor => ({ _id: tutor._id, name: tutor.name }))); // Map response data to include only _id and name fields
+      let response;
+      if (department === 'ECE') {
+        response = await axios.get(`/api/tutors?department=${department}`);
+      } else if (department === 'CSE') {
+        response = await axios.get(`/api/tutors?department=${department}`);
+      }
+      setTutors(response.data.map(tutor => ({ _id: tutor._id, name: tutor.name, academicYear: tutor.academicYear, class: tutor.tutorclass })));
     } catch (error) {
       console.error('Error fetching tutors:', error);
+    }
+  };
+
+  const fetchAssignedTutors = async () => {
+    try {
+      const response = await axios.get(`/api/assigned-tutors?department=${department}`);
+      setAssignedTutors(response.data);
+    } catch (error) {
+      console.error('Error fetching assigned tutors:', error);
     }
   };
 
   const handleAssignTutor = async () => {
     try {
       if (!selectedTutor || !academicYear || !selectedCourse) {
-        console.error('Please select tutor, academic year, and course');
+        console.error('Please select tutor, academic year, and class');
         return;
       }
   
-      await axios.post('/api/tutors/assign', { tutorId: selectedTutor, academicYear, course: selectedCourse });
+      await axios.post('/api/tutors/assign', { tutorId: selectedTutor, academicYear, tutorclass: selectedCourse });
       console.log('Tutor assigned successfully');
-      setAssignSuccess(true); // Set assignSuccess state to true on successful assignment
-      // Refetch tutors after assignment to update the list
-      fetchTutors();
+      setAssignSuccess(true);
+      fetchAssignedTutors();
+      setAssignedTutors([...assignedTutors, { _id: selectedTutor, name: tutors.find(tutor => tutor._id === selectedTutor).name, academicYear, tutorclass: selectedCourse }]);
     } catch (error) {
       console.error('Error assigning tutor:', error);
     }
   };
 
-  // Filter tutors to exclude those who are already assigned
-  const availableTutors = tutors.filter((tutor) => !tutor.isAssigned);
-
   return (
     <div>
+  
       <HodNavbar />
+      <div className={styles.container}>
       <div>
-        &nbsp;
-        <label htmlFor="academicYear">Academic Year:</label>
+        <label className={styles.label} htmlFor="academicYear">Academic Year:</label>
         <input
+          className={styles.input}
           type="text"
           id="academicYear"
           value={academicYear}
           onChange={(e) => setAcademicYear(e.target.value)}
+          required
         />
       </div>
       <div>
-        <label htmlFor="course">Select Course:</label>
+        <label className={styles.label} htmlFor="course">Select class:</label>
         <select
+          className={styles.select}
           id="course"
           value={selectedCourse}
           onChange={(e) => setSelectedCourse(e.target.value)}
         >
-          <option value="">Select Course</option>
-          <option value="CSE">CSE</option>
-          <option value="CSE">ECE</option>
-          <option value="MCA">MCA</option>
-          <option value="BCA">BCA</option>
-          <option value="BBA">BBA</option>
-          {/* Add more options for other courses */}
+          <option value="">Select Class</option>
+          {department === 'ECE' && <option value="ECE">B.Tech ECE</option>}
+          {department === 'CSE' && (
+            <>
+              <option value="CSE">B.Tech CSE</option>
+              <option value="MCA">MCA</option>
+              <option value="BCA">BCA</option>
+              <option value="BBA">BBA</option>
+            </>
+          )}
         </select>
       </div>
       <div>
-        <label htmlFor="tutor">Select Tutor:</label>
+        <label className={styles.label} htmlFor="tutor">Select Tutor:</label>
         <select
+          className={styles.select}
           id="tutor"
           value={selectedTutor}
           onChange={(e) => setSelectedTutor(e.target.value)}
-          //style={{ color: 'black', backgroundColor: 'white' }}
         >
           <option value="">Select Tutor</option>
-          {availableTutors.map((tutor) => (
+          {tutors.map((tutor) => (
             <option key={tutor._id} value={tutor._id}>
               {tutor.name}
             </option>
           ))}
         </select>
-        &nbsp;
       </div>
-      <button onClick={handleAssignTutor}>Assign Tutor</button>
-      {assignSuccess && <p style={{ color: 'green' }}>Tutor assigned successfully!</p>}
+      <button className={styles.button} onClick={handleAssignTutor}>Assign Tutor</button>
+      {assignSuccess && <p className={styles.successMessage}>Tutor assigned successfully!</p>}
+
+      <h2 className={styles.assignedTutorsHeader}>Assigned Tutors:</h2>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Academic Year</th>
+            <th>Class</th>
+          </tr>
+        </thead>
+        <tbody>
+          {assignedTutors.map((tutor) => (
+            <tr key={tutor._id}>
+              <td>{tutor.name}</td>
+              <td>{tutor.academicYear}</td>
+              <td>{tutor.tutorclass}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
     </div>
   );
 }

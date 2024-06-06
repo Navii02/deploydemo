@@ -19,6 +19,7 @@ const teacherSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  tutorclass: String,
 });
 
 const teacherDetails = mongoose.model('TeacherDetails', teacherSchema);

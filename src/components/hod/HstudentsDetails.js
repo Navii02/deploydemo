@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HodNavbar from './HodNavbar';
+import './HstudentDetail.css';
 
 function StudentDetailsPage() {
   const [branch, setBranch] = useState('');
@@ -10,13 +11,40 @@ function StudentDetailsPage() {
   const [courseOptions, setCourseOptions] = useState([]);
 
   useEffect(() => {
+    const fetchStudents = async (branch) => {
+      try {
+        const response = await fetch(`/api/students/${branch}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch student details');
+        }
+        const data = await response.json();
+        setStudents(data.students);
+
+        const uniqueCourses = [...new Set(data.students.flatMap(student => student.course))];
+        setCourses(uniqueCourses);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
     const storedBranch = localStorage.getItem('branch');
     if (storedBranch) {
       const mappedBranch = mapBranchName(storedBranch);
       setBranch(mappedBranch);
       fetchStudents(mappedBranch);
     }
-  }, []);
+  }, []); // No dependencies
+
+  useEffect(() => {
+    let newFilteredStudents = [...students];
+    if (selectedSemester !== '' && selectedSemester !== 'All') {
+      newFilteredStudents = newFilteredStudents.filter((student) => String(student.semester) === selectedSemester);
+    }
+    if (selectedCourse && selectedCourse !== 'All') {
+      newFilteredStudents = newFilteredStudents.filter((student) => student.course.includes(selectedCourse));
+    }
+    setFilteredStudents(newFilteredStudents);
+  }, [students, selectedSemester, selectedCourse]);
 
   const mapBranchName = (branch) => {
     switch (branch) {
@@ -26,22 +54,6 @@ function StudentDetailsPage() {
         return 'ECE';
       default:
         return branch;
-    }
-  };
-
-  const fetchStudents = async (branch) => {
-    try {
-      const response = await fetch(`/api/students/${branch}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch student details');
-      }
-      const data = await response.json();
-      setStudents(data.students);
-
-      const uniqueCourses = [...new Set(data.students.flatMap(student => student.course))];
-      setCourses(uniqueCourses);
-    } catch (error) {
-      console.error(error.message);
     }
   };
 
@@ -57,23 +69,13 @@ function StudentDetailsPage() {
     setSelectedCourse(event.target.value);
   };
 
-  useEffect(() => {
-    let filteredStudents = students;
-    if (selectedSemester !== '' && selectedSemester !== 'All') {
-      filteredStudents = filteredStudents.filter((student) => String(student.semester) === selectedSemester);
-    }
-    if (selectedCourse && selectedCourse !== 'All') {
-      filteredStudents = filteredStudents.filter((student) => student.course.includes(selectedCourse));
-    }
-    setFilteredStudents(filteredStudents);
-  }, [students, selectedSemester, selectedCourse]);
-
   return (
     <div>
-      <HodNavbar />
-      <h3>Branch: {branch}</h3>
-      <div>
-        &nbsp;
+       <HodNavbar />
+    <div className="student-details-container">
+     
+      <h3 className="student-details-title">Branch: {branch}</h3>
+      <div className="student-details-label-select">
         <label htmlFor="semester">Select Semester:</label>
         <select id="semester" value={selectedSemester} onChange={handleSemesterChange}>
           <option value="">All</option>
@@ -84,8 +86,7 @@ function StudentDetailsPage() {
           {/* Add options for other semesters */}
         </select>
       </div>
-      <div>
-        &nbsp;
+      <div className="student-details-label-select">
         <label htmlFor="course">Select Course:</label>
         <select id="course" value={selectedCourse} onChange={handleCourseChange}>
           {courseOptions.map((course, index) => (
@@ -93,9 +94,8 @@ function StudentDetailsPage() {
           ))}
         </select>
       </div>
-      <div>
-        &nbsp;
-        <table>
+      <div className="student-details-table-container">
+        <table className="student-details-table">
           <thead>
             <tr>
               <th>Register Number</th>
@@ -120,6 +120,7 @@ function StudentDetailsPage() {
           </tbody>
         </table>
       </div>
+    </div>
     </div>
   );
 }
