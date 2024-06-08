@@ -1,60 +1,73 @@
+// Backend code (assuming you're using Node.js with Express)
 const express = require('express');
 const router = express.Router();
-//const Subject = require('../../models/'); // Import Subject model
-const Student = require('../../models/Officer/ApprovedStudents'); // Import Student model
+const Teacher = require('../../models/hod/TeachersDetailSchema');
+const Student = require('../../models/Officer/ApprovedStudents');
 
+// Route to fetch courses and semesters based on the teacher's email
+router.post('/data', async (req, res) => {
+  const { email } = req.body;
 
-// Define route to fetch students by semester and course (branch)
-router.get('/student/:branch/:semseter', async (req, res) => {
-  console.log(req.params.semester);
-  const course = req.params.branch;
-  const semester=req.params.semseter// Extract semester and course from URL parameters
-  
   try {
-    // Query students based on semester and course (branch)
-    const studentsData = await Student.find({ semester, course });
-    res.json({ studentsData });
+    const teacher = await Teacher.findOne({ email });
+
+    if (!teacher) {
+      return res.status(404).json({ error: 'Teacher not found' });
+    }
+
+    const { subjects, semesters, branches } = teacher;
+
+    res.json({ subjects, semesters, branches });
   } catch (error) {
-    console.error('Error fetching students data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-module.exports = router;
 
-// Update student marks
-router.put('/student/:studentId', async (req, res) => {
-  const studentId = req.params.studentId;
-  const { assignment1, assignment2, exam1, exam2, attendance } = req.body;
+// Route to fetch students based on semester and course
+router.get('/students/faculty/:course/:semester', async (req, res) => {
+  const { course, semester } = req.params;
+
+  try {
+    const students = await Student.find({ course: course, semester: semester });
+    res.json(students);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ message: 'Error fetching students' });
+  }
+});
+// Route to submit or update internal marks
+router.post('/marks', async (req, res) => {
+  const { studentId, subject, marks } = req.body;
 
   try {
     const student = await Student.findById(studentId);
-    
+
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
 
-    // Update student marks
-    student.assignment1 = assignment1;
-    student.assignment2 = assignment2;
-    student.exam1 = exam1;
-    student.exam2 = exam2;
-    student.attendance = attendance;
-    student.aggregate = calculateAggregate(assignment1, assignment2, exam1, exam2, attendance);
+    const existingMarkIndex = student.internalMarks.findIndex(mark => mark.subject === subject);
+
+    if (existingMarkIndex > -1) {
+      student.internalMarks[existingMarkIndex] = {
+        subject,
+        ...marks,
+        totalMarks: marks.examMarks + marks.assignmentMarks + marks.attendance
+      };
+    } else {
+      const totalMarks = marks.examMarks + marks.assignmentMarks + marks.attendance;
+      student.internalMarks.push({ subject, ...marks, totalMarks });
+    }
 
     await student.save();
-    res.json({ message: 'Student marks updated successfully', student });
+
+    res.json({ message: 'Marks submitted successfully' });
   } catch (error) {
-    console.error('Error updating student marks:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error submitting marks:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
 module.exports = router;
-
-// Helper function to calculate aggregate
-function calculateAggregate(assignment1, assignment2, exam1, exam2, attendance) {
-  // Implement your calculation logic here
-  const aggregate = (parseFloat(assignment1) + parseFloat(assignment2) + parseFloat(exam1) + parseFloat(exam2)) / 4 + parseFloat(attendance);
-  return aggregate.toFixed(2); // Return aggregate rounded to 2 decimal places
-}

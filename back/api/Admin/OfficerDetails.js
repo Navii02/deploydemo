@@ -15,14 +15,14 @@ router.get('/admin/officers', async (req, res) => {
 
 // Add a new officer
 router.post('/admin/addOfficer', async (req, res) => {
-  const { name, post, email } = req.body;
+  const { name, post, email,number } = req.body;
 
   if (!name || !post || !email) {
     return res.status(400).json({ message: 'Name, post, and email are required fields' });
   }
 
   try {
-    const newOfficer = await Officer.create({ name, post, email });
+    const newOfficer = await Officer.create({ name, post, email ,number});
     res.status(201).json({ newOfficer });
   } catch (error) {
     console.error('Error adding officer:', error);
@@ -33,7 +33,7 @@ router.post('/admin/addOfficer', async (req, res) => {
 // Update an existing officer
 router.put('/admin/updateOfficer/:id', async (req, res) => {
   const officerId = req.params.id;
-  const { name, post, email } = req.body;
+  const { name, post, email ,number} = req.body;
 
   if (!name || !post || !email) {
     return res.status(400).json({ message: 'Name, post, and email are required fields' });
@@ -42,7 +42,7 @@ router.put('/admin/updateOfficer/:id', async (req, res) => {
   try {
     const updatedOfficer = await Officer.findByIdAndUpdate(
       officerId,
-      { name, post, email },
+      { name, post, email,number },
       { new: true }
     );
 

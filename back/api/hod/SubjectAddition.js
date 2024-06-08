@@ -4,7 +4,7 @@ const Subject = require('../../models/hod/SubjectAddition');
 
 // Route to add subjects
 router.post('/hod/subjects', async (req, res) => {
-    const { semester, subjects, minorSubject, minorSubjectCode,branch } = req.body;
+    const { semester, subjects, minorSubject, minorSubjectCode,branch,course } = req.body;
 
     // Validate request body
     if (!semester || !subjects || !Array.isArray(subjects)) {
@@ -18,6 +18,7 @@ router.post('/hod/subjects', async (req, res) => {
             minorSubject,
             minorSubjectCode,
             branch,
+            course,
         });
 
         await newSubject.save();

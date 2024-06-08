@@ -6,6 +6,7 @@ const subjectSchema = new mongoose.Schema({
     minorSubject: String,
     minorSubjectCode: String,
     branch: String,
+    course: String,
   });
 
 module.exports = mongoose.model('Subject', subjectSchema);

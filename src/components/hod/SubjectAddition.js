@@ -11,7 +11,7 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
     try {
         let response;
         const branch = localStorage.getItem('branch'); // Retrieve branch from localStorage
-        if (selectedSemester && selectedSemester >= 3) {
+        if (selectedSemester && selectedSemester >= 1) {
             if (!branch) {
                 console.error('Branch not found in localStorage.');
                 return;
@@ -121,14 +121,16 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
       </table>
     </div>
   );
-};
-const AddSubjectForm = () => {
+};const AddSubjectForm = () => {
   const [selectedSemester, setSelectedSemester] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [semester, setSemester] = useState('');
   const [subjects, setSubjects] = useState([{ subjectName: '', subjectCode: '' }]);
   const [minorSubject, setMinorSubject] = useState('');
   const [minorSubjectCode, setMinorSubjectCode] = useState('');
+  const [branch, setBranch] = useState('');
+  const [course, setCourse] = useState('');
+  const [courses, setCourses] = useState([]);
 
   const handleChangeSemester = (e) => {
     setSelectedSemester(e.target.value);
@@ -138,6 +140,20 @@ const AddSubjectForm = () => {
     setMinorSubjectCode('');
   };
 
+  const handleChangeCourse = (e) => {
+    setCourse(e.target.value);
+  };
+  useEffect(() => {
+    const branchFromLocalStorage = localStorage.getItem('branch');
+    setBranch(branchFromLocalStorage);
+    // Update courses based on selected branch
+    if (branchFromLocalStorage === 'CSE') {
+      setCourses([ 'B.Tech CSE', 'BBA', 'BCA', 'MCA']);
+    } else if (branchFromLocalStorage === 'ECE') {
+      setCourses(['B.Tech ECE']);
+    }
+  }, []);
+  
   const handleChange = (index, event) => {
     const values = [...subjects];
     if (event.target.name === 'subjectName') {
@@ -164,9 +180,8 @@ const AddSubjectForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const branch = localStorage.getItem('branch');
     try {
-      await axios.post('/api/hod/subjects', { semester, subjects, minorSubject, minorSubjectCode,branch });
+      await axios.post('/api/hod/subjects', { semester, subjects, minorSubject, minorSubjectCode, branch, course });
       alert('Subjects added successfully!');
       setSemester('');
       setSubjects([{ subjectName: '', subjectCode: '' }]);
@@ -177,11 +192,26 @@ const AddSubjectForm = () => {
       alert('Error adding subjects.');
     }
   };
-
   
   return (
     <div>
       <HodNavbar />
+      <div className={styles.container}> {/* Use CSS module class */}
+        
+        {branch && (
+          <>
+            <label htmlFor="courseFilter">Select Course:</label>
+            <select id="courseFilter" value={course} onChange={handleChangeCourse}>
+              <option value="">Select Course</option>
+              {courses.map((course, index) => (
+                <option key={index} value={course}>
+                  {course}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
+      </div>
       <div className={styles.container}> {/* Use CSS module class */}
         <label htmlFor="semesterFilter">Select Semester:</label>
         <select id="semesterFilter" value={selectedSemester} onChange={handleChangeSemester}>

@@ -1,130 +1,195 @@
-// InternalMarksForm.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './InternalMarksForm.css'; // Import the CSS file
-import Navbar from './FacultyNavbar';
-
+import Navbar from "./FacultyNavbar";
 
 const InternalMarksForm = () => {
-  const [branch, setBranch] = useState('');
   const [semester, setSemester] = useState('');
+  const [course, setCourse] = useState('');
   const [subject, setSubject] = useState('');
-  const [studentsData, setStudentsData] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [semesters, setSemesters] = useState([]);
   const [subjects, setSubjects] = useState([]);
 
-  // Fetch subjects based on branch and semester
   useEffect(() => {
-    const fetchSubjects = async () => {
+    const fetchCoursesAndSemesters = async () => {
+      const email = localStorage.getItem('email');
+
       try {
-        const response = await axios.get(`/api/subjects?branch=${branch}&semester=${semester}`);
-        setSubjects(response.data.subjects);
+        const response = await axios.post('/api/data', { email });
+        const { subjects, semesters, branches } = response.data;
+        setCourses(branches || []);
+        setSemesters(semesters || []);
+        setSubjects(subjects || []);
       } catch (error) {
-        console.error('Error fetching subjects:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    if (branch && semester) {
-      fetchSubjects();
+    fetchCoursesAndSemesters();
+  }, []);
+
+  const fetchStudents = async () => {
+    if (!course || !semester || !subject) {
+      console.error('Please select a course, semester, and subject');
+      return;
     }
-  }, [branch, semester]);
 
-  // Fetch students based on branch, semester, and subject
-  useEffect(() => {
-    const fetchStudentsData = async () => {
-      try {
-        const response = await axios.get(`/api/students?branch=${branch}&semester=${semester}`);
-        setStudentsData(response.data.studentsData);
-      } catch (error) {
-        console.error('Error fetching students data:', error);
-      }
-    };
-
-    if (branch && semester && subject) {
-      fetchStudentsData();
+    try {
+      const response = await axios.get(`/api/students/faculty/${course}/${semester}`);
+      setStudents(response.data);
+    } catch (error) {
+      console.error('Error fetching students:', error);
     }
-  }, [branch, semester, subject]);
-
-  const handleEdit = (index) => {
-    console.log(`Editing marks for student: ${studentsData[index].name}`);
   };
 
-  const handleSave = async (index) => {
-    console.log(`Saving marks for student: ${studentsData[index].name}`);
-    // You can send the updated marks to the backend here
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    fetchStudents();
+  };
+
+  const submitMarks = async (studentId, marks) => {
+    try {
+      await axios.post('/api/marks', { studentId, subject, marks });
+      console.log('Marks submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting marks:', error);
+    }
+  };
+
+  const handleInputChange = (studentId, key, value) => {
+    const updatedStudents = students.map(student => {
+      if (student._id === studentId) {
+        const updatedMarks = student.internalMarks.find(mark => mark.subject === subject) || {};
+        updatedMarks[key] = value;
+        return {
+          ...student,
+          internalMarks: student.internalMarks.map(mark =>
+            mark.subject === subject ? updatedMarks : mark
+          )
+        };
+      }
+      return student;
+    });
+    setStudents(updatedStudents);
+  };
+
+  const calculateTotal = (examMarks, assignmentMarks, attendance) => {
+    return (parseFloat(examMarks) || 0) + (parseFloat(assignmentMarks) || 0) + (parseFloat(attendance) || 0);
   };
 
   return (
     <div>
-      <Navbar/>
-      <div className="internal-container">
-      <div className="selections">
+      <Navbar />
+      <form onSubmit={handleSubmit}>
         <label>
-          Branch:
-          <select value={branch} onChange={(e) => setBranch(e.target.value)}>
-            <option value="CSE">CSE</option>
-            <option value="ECE">ECE</option>
-            {/* Add other branches as needed */}
+          Course:
+          <select value={course} onChange={(e) => setCourse(e.target.value)}>
+            <option value="">Select Course</option>
+            {courses.map(course => (
+              <option key={course} value={course}>
+                {course}
+              </option>
+            ))}
           </select>
         </label>
 
         <label>
           Semester:
           <select value={semester} onChange={(e) => setSemester(e.target.value)}>
-            <option value="s1">S1</option>
-            <option value="s2">S2</option>
-            <option value="s3">S3</option>
-            <option value="s4">S4</option>
-            <option value="s5">S5</option>
-            <option value="s6">S6</option>
-            <option value="s7">S7</option>
-            <option value="s8">S8</option>
+            <option value="">Select Semester</option>
+            {semesters.map(semester => (
+              <option key={semester} value={semester}>
+                {semester}
+              </option>
+            ))}
           </select>
         </label>
 
         <label>
           Subject:
           <select value={subject} onChange={(e) => setSubject(e.target.value)}>
-            {subjects.map((subj) => (
-              <option key={subj} value={subj}>
-                {subj}
+            <option value="">Select Subject</option>
+            {subjects.map(subject => (
+              <option key={subject} value={subject}>
+                {subject}
               </option>
             ))}
           </select>
         </label>
-      </div>
 
-      <table className="marks-table">
-        <thead>
-          <tr>
-            <th>Student Name</th>
-            <th>Assignment 1</th>
-            <th>Assignment 2</th>
-            <th>Exam 1</th>
-            <th>Exam 2</th>
-            <th>Attendance</th>
-            <th>Aggregate</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {studentsData.map((student, index) => (
-            <tr key={index}>
-              <td>{student.name}</td>
-              <td contentEditable="true">{student.assignment1}</td>
-              <td contentEditable="true">{student.assignment2}</td>
-              <td contentEditable="true">{student.exam1}</td>
-              <td contentEditable="true">{student.exam2}</td>
-              <td contentEditable="true">{student.attendance}</td>
-              <td>{student.aggregate}</td>
-              <td>
-                <button onClick={() => handleEdit(index)}>Edit</button>
-                <button onClick={() => handleSave(index)}>Save</button>
-              </td>
+        <button type="submit">Fetch Students</button>
+      </form>
+
+      {students.length > 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Course</th>
+              <th>Semester</th>
+              <th>Exam Marks</th>
+              <th>Assignment Marks</th>
+              <th>Attendance</th>
+              <th>Total Marks</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {students.map(student => {
+              const subjectMarks = student.internalMarks.find(mark => mark.subject === subject) || {};
+              return (
+                <tr key={student._id}>
+                  <td>{student.name}</td>
+                  <td>{student.course}</td>
+                  <td>{student.semester}</td>
+                  <td>
+                    <input
+                      type="text"
+                      value={subjectMarks.examMarks || ''}
+                      onChange={(e) => handleInputChange(student._id, 'examMarks', e.target.value)}
+                      onBlur={(e) => submitMarks(student._id, {
+                        ...subjectMarks,
+                        examMarks: parseFloat(e.target.value) || 0,
+                        assignmentMarks: subjectMarks.assignmentMarks || 0,
+                        attendance: subjectMarks.attendance || 0,
+                      })}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={subjectMarks.assignmentMarks || ''}
+                      onChange={(e) => handleInputChange(student._id, 'assignmentMarks', e.target.value)}
+                      onBlur={(e) => submitMarks(student._id, {
+                        ...subjectMarks,
+                        examMarks: subjectMarks.examMarks || 0,
+                        assignmentMarks: parseFloat(e.target.value) || 0,
+                        attendance: subjectMarks.attendance || 0,
+                      })}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={subjectMarks.attendance || ''}
+                      onChange={(e) => handleInputChange(student._id, 'attendance', e.target.value)}
+                      onBlur={(e) => submitMarks(student._id, {
+                        ...subjectMarks,
+                        examMarks: subjectMarks.examMarks || 0,
+                        assignmentMarks: subjectMarks.assignmentMarks || 0,
+                        attendance: parseFloat(e.target.value) || 0,
+                      })}
+                    />
+                  </td>
+                  <td>
+                    {calculateTotal(subjectMarks.examMarks, subjectMarks.assignmentMarks, subjectMarks.attendance)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

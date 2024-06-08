@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const ApprovedStudentSchema = new mongoose.Schema({
   customId: String,
-  admissionNumber: String,
+  admissionNumber: { type: String },
+  name: { type: String},
   admissionType: String,
   admissionId: String,
   allotmentCategory: String,
   feeCategory: String,
-  name: String,
-  otherCertificate:String,
+  otherCertificate: String,
   photo: String, // Store file path for photo
   address: String,
   permanentAddress: String,
@@ -20,12 +20,11 @@ const ApprovedStudentSchema = new mongoose.Schema({
   bloodGroup: String,
   mobileNo: String,
   whatsappNo: String,
-  email: String,
   entranceExam: String,
   entranceRollNo: String,
   entranceRank: String,
   aadharNo: String,
-  course: String,
+  course: { type: String },
   qualify: {
     exam: String,
     board: String,
@@ -33,34 +32,15 @@ const ApprovedStudentSchema = new mongoose.Schema({
     examMonthYear: String,
     percentage: String,
     institution: String,
-    cgpa:String,
-    
+    cgpa: String,
   },
   parentDetails: {
-    fatherName:{
-      type: String,
-      default: 'Nil',
-    },
-    fatherOccupation:{
-      type: String,
-      default: 'Nil',
-    },
-    fatherMobileNo:{
-      type: String,
-      default: 'Nil',
-    },
-    motherName:{
-      type: String,
-      default: 'Nil',
-    },
-    motherOccupation:{
-      type: String,
-      default: 'Nil',
-    },
-    motherMobileNo: {
-      type: String,
-      default: 'Nil',
-    },
+    fatherName: { type: String, default: 'Nil' },
+    fatherOccupation: { type: String, default: 'Nil' },
+    fatherMobileNo: { type: String, default: 'Nil' },
+    motherName: { type: String, default: 'Nil' },
+    motherOccupation: { type: String, default: 'Nil' },
+    motherMobileNo: { type: String, default: 'Nil' },
   },
   annualIncome: String,
   nativity: String,
@@ -70,45 +50,33 @@ const ApprovedStudentSchema = new mongoose.Schema({
     accountNo: String,
     ifscCode: String,
   },
-  achievements:{
-    arts:{
-      type: String,
-      default: 'Nil',
-    },
-    sports:{
-      type: String,
-      default: 'Nil',
-    },
-    other:{
-      type: String,
-      default: 'Nil',
-    },
+  achievements: {
+    arts: { type: String, default: 'Nil' },
+    sports: { type: String, default: 'Nil' },
+    other: { type: String, default: 'Nil' },
   },
   academicYear: String,
-  semester: String,
- 
-  assignments: {
-    type: String,
-    default: 'Not Assigned',
-  },
-  exams: {
-    type: String,
-    default: 'Not Scheduled',
-  },
-  attendance: {
-    type: String,
-    default: 'N/A',
-  },
-  installmentsPaid: [Number],
-  registerNumber: String,
-  collegemail: {
-    type: [String], // Array of strings (email addresses)
-    default: [],    // Default value is an empty array
-   
-  }
+  semester: { type: String, required: true },
+  assignments: { type: String, default: 'Not Assigned' },
+  exams: { type: String, default: 'Not Scheduled' },
   
+  installmentsPaid: [Number],
+
+  registerNumber: { type: String },
+  email: { type: String, required: true },
+  collegemail: String, // Array of strings (email addresses)
+  tutormessage: [String], // Array of strings
+  internalMarks: [
+    {
+      
+      subject: String,
+      examMarks: Number,
+      assignmentMarks: Number,
+      attendance: Number,
+      totalMarks: Number
+    }
+  ],
 });
- 
 
 // Pre-save middleware to generate custom ID before saving
 ApprovedStudentSchema.pre('save', function(next) {

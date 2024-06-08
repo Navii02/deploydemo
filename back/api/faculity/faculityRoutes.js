@@ -90,7 +90,7 @@ router.post(`/faculitylogin`, async (req, res) => {
     if (matchPassword) {
       return res
         .status(200)
-        .json({ msg: 'You have logged in successfully', email: user.email });
+        .json({ msg: 'You have logged in successfully', email: user.email,branch:teacher.course });
     } else {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }

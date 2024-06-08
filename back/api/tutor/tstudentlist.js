@@ -8,7 +8,8 @@ const Student = require('../../models/Officer/ApprovedStudents'); // Import your
 router.get('/tutor', async (req, res) => {
   const course = req.query.department;
   const academicYear = req.query.academicYear;
-  
+console.log(course,academicYear);
+
   try {
     const students = await Student.find({ course, academicYear });
     res.json(students);
@@ -18,44 +19,25 @@ router.get('/tutor', async (req, res) => {
   }
 });
 
+
 // Update student details
-router.put('/students/:studentId', async (req, res) => {
-  const studentId = req.params.studentId;
-  const updatedData = req.body;
-
+router.put('/students/:id', async (req, res) => {
   try {
-    const updatedStudent = await Student.findByIdAndUpdate(studentId, updatedData, { new: true });
-    res.json(updatedStudent);
-  } catch (error) {
-    console.error('Error updating student:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// Add college email to student (saved in 'collegemail' field)
-router.post('/students/:studentId/emails', async (req, res) => {
-  const studentId = req.params.studentId;
-  const { email } = req.body;
-
-  try {
-    const student = await Student.findById(studentId);
-
-    if (student) {
-      if (!student.collegemail.includes(email)) {
-        student.collegemail.push(email);
-        await student.save();
-      }
-      res.json(student);
-    } else {
-      res.status(404).json({ error: 'Student not found' });
+    const { id } = req.params;
+    const student = await Student.findByIdAndUpdate(id, req.body, { new: true });
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
     }
+    res.json(student);
   } catch (error) {
-    console.error('Error adding email to student:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ message: 'Error updating student', error });
   }
 });
+
+
 router.get('/students/tutor/:department/:academicYear', async (req, res) => {
   const { department, academicYear } = req.params;
+  console.log(department,academicYear);
 
   try {
     const students = await Student.find({ course: department, academicYear });

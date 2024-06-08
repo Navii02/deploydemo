@@ -36,7 +36,7 @@ function OfficerPage() {
                         <tr key={officer.id}>
                             <td>{officer.name}</td>
                             <td>{officer.email}</td>
-                            <td>{officer.phone}</td>
+                            <td>{officer.number}</td>
                             <td>{officer.post}</td>
                         </tr>
                     ))}

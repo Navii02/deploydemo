@@ -25,7 +25,7 @@ const AdminOfficersPage = () => {
     try {
       await axios.post('/api/admin/addOfficer', newOfficer);
       fetchOfficers();
-      setNewOfficer({ name: '', post: '', email: '' });
+      setNewOfficer({ name: '', post: '', email: '',number: '',});
     } catch (error) {
       setErrorMessage(error.response.data.message);
     }
@@ -73,6 +73,14 @@ const AdminOfficersPage = () => {
           />
         </label>
         <label>
+          Number:
+          <input
+            type="text"
+            value={newOfficer.number}
+            onChange={(e) => setNewOfficer({ ...newOfficer, number: e.target.value })}
+          />
+        </label>
+        <label>
           Email:
           <input
             type="text"
@@ -105,6 +113,13 @@ const AdminOfficersPage = () => {
                       setEditingOfficer({ ...editingOfficer, post: e.target.value })
                     }
                   />
+                   <input
+                    type="text"
+                    value={editingOfficer.number}
+                    onChange={(e) =>
+                      setEditingOfficer({ ...editingOfficer, number: e.target.value })
+                    }
+                  />
                   <input
                     type="text"
                     value={editingOfficer.email}
@@ -116,7 +131,7 @@ const AdminOfficersPage = () => {
                 </>
               ) : (
                 <>
-                  {officer.name} - {officer.post} - {officer.email}
+                  {officer.name} - {officer.post} - {officer.email}-{officer.number}
                   <button onClick={() => setEditingOfficer(officer)}>Edit</button>
                   <button onClick={() => handleDeleteOfficer(officer._id)}>Delete</button>
                 </>

@@ -7,6 +7,10 @@ const officerDetailSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+number: {
+    type: String,
+    default: 'Nil',
+  },
   email:{
     type: String,
      required: true},

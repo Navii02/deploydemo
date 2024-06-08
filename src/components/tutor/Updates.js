@@ -10,30 +10,23 @@ const TutorUpdates = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    const storedDepartment = localStorage.getItem('department');
-    const adjustedDepartment = adjustDepartmentName(storedDepartment);
-    const storedAcademicYear = localStorage.getItem('academicYear');
-    if (adjustedDepartment && storedAcademicYear) {
-      fetchStudents(adjustedDepartment, storedAcademicYear);
-    }
-  }, []);
+ 
+    useEffect(() => {
+      const tutorclass = localStorage.getItem('tutorclass');
+      
+      const academicYear = localStorage.getItem('academicYear');
+      if (tutorclass && academicYear) {
+        fetchStudents(tutorclass, academicYear);
+      }
+      console.log(tutorclass, academicYear);
+    }, []);
+  
+  
 
-  const adjustDepartmentName = (department) => {
-    switch (department) {
-      case 'CSE':
-        return 'computerScience';
-      case 'ECE':
-        return 'electronicsAndCommunication';
-      // Add more cases as needed
-      default:
-        return department;
-    }
-  };
 
-  const fetchStudents = async (department, academicYear) => {
+  const fetchStudents = async (tutorclass, academicYear) => {
     try {
-      const response = await axios.get(`/api/students/${department}/${academicYear}`);
+      const response = await axios.get(`/api/students/${tutorclass}/${academicYear}`);
       setStudents(response.data);
       console.log(response.data);
     } catch (error) {
