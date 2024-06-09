@@ -4,7 +4,7 @@ import Navbar from './UserNavbar';
 import './CertificateRequest.css';
 
 function StudentCertificateRequestPage() {
-  const [registerNumber, setRegisterNumber] = useState('');
+  const [RegisterNo, setRegisterNumber] = useState('');
   const [admissionNumber, setAdmissionNumber] = useState('');
   const [mobileNo, setMobileNumber] = useState('');
   const [reason, setReason] = useState('');
@@ -15,16 +15,16 @@ function StudentCertificateRequestPage() {
   const [semester, setSemester] = useState(''); // New state for semester
   const [course, setCourse] = useState(''); // New state for course
   const userEmail = localStorage.getItem('email');
-  const [manualRegisterNumber, setManualRegisterNumber] = useState('');
+  const [manualRegisterNo, setManualRegisterNumber] = useState('');
 
   useEffect(() => {
     const fetchStudentDetails = async () => {
       try {
         const response = await axios.get(`/api/student/details/${userEmail}`);
-        const { registerNumber, admissionNumber, mobileNo, name, semester, course } = response.data;
+        const { RegisterNo, admissionNumber, mobileNo, name, semester, course } = response.data;
        
-        if (registerNumber) {
-          setRegisterNumber(registerNumber);
+        if (RegisterNo) {
+          setRegisterNumber(RegisterNo);
         } else {
           setManualRegisterNumber('');
         }
@@ -59,7 +59,7 @@ function StudentCertificateRequestPage() {
         userEmail,
         reason,
         selectedDocuments,
-        registerNumber: registerNumber || manualRegisterNumber,
+        RegisterNo: RegisterNo || manualRegisterNo,
         admissionNumber,
         phoneNumber: mobileNo,
         name: userName,
@@ -114,12 +114,12 @@ function StudentCertificateRequestPage() {
           <h1>COLLEGE OF ENGINEERING POONJAR</h1>
           <h2>General Application Form</h2>
         </div>
-        {!registerNumber && (
+        {!RegisterNo && (
           <label>
             Register Number:
             <input
               type="text"
-              value={manualRegisterNumber}
+              value={manualRegisterNo}
               onChange={(e) => setManualRegisterNumber(e.target.value)}
             />
           </label>

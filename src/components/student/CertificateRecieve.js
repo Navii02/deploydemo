@@ -1,5 +1,3 @@
-// components/StudentCertificateRequestPage.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './CertificateRecieve.css'
@@ -16,10 +14,10 @@ const CertificateRequestsPage = () => {
 
     const fetchRequests = async () => {
       try {
-        const response = await axios.get(`/api/student/certificateRequests/${userEmail}`);
+        const response = await axios.get(`/api/student/certificateRequests/${userEmailFromLocalStorage}`);
         setRequests(response.data.requests);
       } catch (error) {
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error.response?.data?.message || 'Error fetching requests');
       }
     };
 
@@ -46,30 +44,31 @@ const CertificateRequestsPage = () => {
 
   return (
     <>
-    <Navbar/>
-    <div className="certificate-requests-page">
-      {requests.length === 0 ? (
-        <p>No certificate requests found for the logged-in user.</p>
-      ) : (
-        <ul>
-          {requests.map((request) => (
-            <li key={request._id}>
-              
-              <p>Request ID: {request._id}</p>
-              <p>Student ID: {request.registerNumber}</p>
-              <p>Reason: {request.reason}</p>
-              <p>Status: {request.status}</p>
-              <p>selected option:{request.selectedDocuments}</p>
-              {request.status === 'Approved' && (
-                <button onClick={() => handleDownload(request.fileUrl)}>Download</button>
-              )}
-              {request.status === 'Declined' && <p>Decline Reason: {request.declineReason}</p>}
-            </li>
-          ))}
-        </ul>
-      )}
-      {errorMessage && <p>{errorMessage}</p>}
-    </div>
+      <Navbar />
+      <div className="certificate-requests-page">
+        {requests.length === 0 ? (
+          <p>No certificate requests found for the logged-in user.</p>
+        ) : (
+          <ul>
+            {requests.map((request) => (
+              <li key={request._id}>
+                <p>Request ID: {request._id}</p>
+                <p>Student ID: {request.registerNumber}</p>
+                <p>Reason: {request.reason}</p>
+                <p>HoD Status: {request.HoDstatus}</p>
+                <p>Officer Status: {request.status}</p>
+                <p>Selected Documents: {request.selectedDocuments.join(', ')}</p>
+                {request.HoDstatus === 'Declined' && <p>HoD Decline Reason: {request.hodDeclineReason}</p>}
+                {request.status === 'Approved' && (
+                  <button onClick={() => handleDownload(request.fileUrl)}>Download</button>
+                )}
+                {request.status === 'Declined' && <p>Decline Reason: {request.declineReason}</p>}
+              </li>
+            ))}
+          </ul>
+        )}
+        {errorMessage && <p>{errorMessage}</p>}
+      </div>
     </>
   );
 };

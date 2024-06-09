@@ -13,13 +13,11 @@ function HodCertificateRequestsPage() {
 
   const fetchRequests = async () => {
     try {
-      // Fetch branch from localStorage
       const storedBranch = localStorage.getItem('branch');
-      
       const response = await axios.get(`/api/hod/certificateRequests/${storedBranch}`);
-      setRequests(response.data.requests.reverse()); // Reverse the order
+      setRequests(response.data.requests.reverse());
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      setErrorMessage(error.response?.data?.message || 'Error fetching requests');
     }
   };
 
@@ -29,19 +27,23 @@ function HodCertificateRequestsPage() {
       setSuccessMessage('Request accepted successfully!');
       fetchRequests();
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      setErrorMessage(error.response?.data?.message || 'Error accepting request');
     }
   };
 
   const handleDecline = async (requestId) => {
     const declineReason = prompt('Please enter decline reason:');
-    
+    if (!declineReason) {
+      setErrorMessage('Decline reason is required');
+      return;
+    }
+
     try {
       await axios.post(`/api/hod/declineRequest/${requestId}`, { declineReason });
       setSuccessMessage('Request declined successfully!');
       fetchRequests();
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      setErrorMessage(error.response?.data?.message || 'Error declining request');
     }
   };
 
@@ -58,10 +60,10 @@ function HodCertificateRequestsPage() {
               <div key={request._id}>
                 <h3>{request.studentName}</h3>
                 <p>Request ID: {request._id}</p>
-                <p>Student ID: {request.registerNumber}</p>
+                <p>Student ID: {request.RegisterNo}</p>
                 <p>Student Name: {request.name}</p>
-                <p> Student Semester: {request.semester}</p>
-                <p>Course :{request.course}</p>
+                <p>Student Semester: {request.semester}</p>
+                <p>Course: {request.course}</p>
                 <p>Reason: {request.reason}</p>
                 <p>Selected Documents: {request.selectedDocuments.join(', ')}</p>
                 <p>Status: {request.HoDstatus}</p>
@@ -72,13 +74,13 @@ function HodCertificateRequestsPage() {
                   </>
                 )}
                 {request.HoDstatus === 'Accepted' && <p>Accepted By: {request.acceptedBy}</p>}
-                {request.HoDstatus === 'Declined' && <p>Decline Reason: {request.declineReason}</p>}
+                {request.HoDstatus === 'Declined' && <p>Decline Reason: {request.hodDeclineReason}</p>}
               </div>
             ))}
           </div>
         )}
-        {successMessage && <p>{successMessage}</p>}
-        {errorMessage && <p>{errorMessage}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
     </>
   );

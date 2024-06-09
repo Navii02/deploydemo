@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const certificateRequestSchema = new mongoose.Schema({
-  registerNumber:  { type: String },
+  RegisterNo:  { type: String },
   name: { type: String },
   userEmail: String,
   reason: String,

@@ -16,7 +16,8 @@ const TutorUpdates = () => {
     address: '',
     email: '',
     mobileNo: '',
-    collegemail: ''
+    collegemail: '',
+    RegisterNo: '',
   });
 
   useEffect(() => {
@@ -59,7 +60,8 @@ const TutorUpdates = () => {
       address: student.address,
       email: student.email,
       mobileNo: student.mobileNo,
-      collegemail: student.collegemail
+      collegemail: student.collegemail,
+      RegisterNo: student.RegisterNo
     });
   };
 
@@ -79,7 +81,8 @@ const TutorUpdates = () => {
       address: '',
       email: '',
       mobileNo: '',
-      collegemail: ''
+      collegemail: '',
+      RegisterNo: '',
     });
   };
 
@@ -146,6 +149,14 @@ const TutorUpdates = () => {
                     placeholder="Admission Number"
                     required
                   />
+                    <input
+                    type="text"
+                    name="RegisterNo"
+                    value={formData.RegisterNo}
+                    onChange={handleInputChange}
+                    placeholder="RegisterNo"
+                    required
+                  />
                   <input
                     type="date"
                     name="dateOfBirth"
@@ -192,7 +203,9 @@ const TutorUpdates = () => {
                 <>
                   <p><strong>Name:</strong> {student.name}</p>
                   <p><strong>Admission Number:</strong> {student.admissionNumber}</p>
+                  <p><strong>RegisterNo:</strong>{student.RegisterNo}</p>
                   <p><strong>Semester:</strong>{student.semester}</p>
+
                   <p><strong>AcademicYear:</strong>{student.academicYear}</p>
                   <p><strong>Date of Birth:</strong> {student.dateOfBirth ? formatDate(student.dateOfBirth) : ''}</p>
                   <p><strong>Address:</strong> {student.address}</p>

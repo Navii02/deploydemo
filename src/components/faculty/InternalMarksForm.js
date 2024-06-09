@@ -1,3 +1,4 @@
+// InternalMarksForm.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from "./FacultyNavbar";
@@ -48,6 +49,22 @@ const InternalMarksForm = () => {
     fetchStudents();
   };
 
+  const handleInputChange = (studentId, key, value) => {
+    const updatedStudents = students.map(student => {
+      if (student._id === studentId) {
+        const updatedMarks = student.internalMarks.map(mark => {
+          if (mark.subject === subject) {
+            return { ...mark, [key]: parseFloat(value) || 0 };
+          }
+          return mark;
+        });
+        return { ...student, internalMarks: updatedMarks };
+      }
+      return student;
+    });
+    setStudents(updatedStudents);
+  };
+
   const submitMarks = async (studentId, marks) => {
     try {
       await axios.post('/api/marks', { studentId, subject, marks });
@@ -57,25 +74,8 @@ const InternalMarksForm = () => {
     }
   };
 
-  const handleInputChange = (studentId, key, value) => {
-    const updatedStudents = students.map(student => {
-      if (student._id === studentId) {
-        const updatedMarks = student.internalMarks.find(mark => mark.subject === subject) || {};
-        updatedMarks[key] = value;
-        return {
-          ...student,
-          internalMarks: student.internalMarks.map(mark =>
-            mark.subject === subject ? updatedMarks : mark
-          )
-        };
-      }
-      return student;
-    });
-    setStudents(updatedStudents);
-  };
-
-  const calculateTotal = (examMarks, assignmentMarks, attendance) => {
-    return (parseFloat(examMarks) || 0) + (parseFloat(assignmentMarks) || 0) + (parseFloat(attendance) || 0);
+  const calculateTotal = (examMarks, assignmentMarks, attendancePercentage) => {
+    return (parseFloat(examMarks) || 0) + (parseFloat(assignmentMarks) || 0) + (parseFloat(attendancePercentage) || 0);
   };
 
   return (
@@ -151,7 +151,7 @@ const InternalMarksForm = () => {
                         ...subjectMarks,
                         examMarks: parseFloat(e.target.value) || 0,
                         assignmentMarks: subjectMarks.assignmentMarks || 0,
-                        attendance: subjectMarks.attendance || 0,
+                        attendance: subjectMarks.attendancePercentage || 0,
                       })}
                     />
                   </td>
@@ -164,15 +164,15 @@ const InternalMarksForm = () => {
                         ...subjectMarks,
                         examMarks: subjectMarks.examMarks || 0,
                         assignmentMarks: parseFloat(e.target.value) || 0,
-                        attendance: subjectMarks.attendance || 0,
+                        attendance: subjectMarks.attendancePercentage || 0,
                       })}
                     />
                   </td>
                   <td>
                     <input
                       type="text"
-                      value={subjectMarks.attendance || ''}
-                      onChange={(e) => handleInputChange(student._id, 'attendance', e.target.value)}
+                      value={subjectMarks.attendancePercentage || ''}
+                      onChange={(e) => handleInputChange(student._id, 'attendancePercentage', e.target.value)}
                       onBlur={(e) => submitMarks(student._id, {
                         ...subjectMarks,
                         examMarks: subjectMarks.examMarks || 0,
@@ -182,7 +182,7 @@ const InternalMarksForm = () => {
                     />
                   </td>
                   <td>
-                    {calculateTotal(subjectMarks.examMarks, subjectMarks.assignmentMarks, subjectMarks.attendance)}
+                    {calculateTotal(subjectMarks.examMarks, subjectMarks.assignmentMarks, subjectMarks.attendancePercentage)}
                   </td>
                 </tr>
               );

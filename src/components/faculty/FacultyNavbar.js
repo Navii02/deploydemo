@@ -50,11 +50,21 @@ function Navbar() {
                 Internal Marks
               </Link>
             </li>
-            <li className='nav-item'>
-              <Link to='/att' className='nav-links' onClick={closeMobileMenu}>
-                Attendance
+         
+            <li className='nav-item dropdown'>
+            <Link to='/att' className='nav-links' onClick={closeMobileMenu}>
+              Attendance<i className='fas fa-caret-down' />
+            </Link>
+            <div className='dropdown-content'>
+              <Link to='/att' className='dropdown-link' onClick={closeMobileMenu}>
+                Attendance Entry
               </Link>
-            </li>
+              <Link to='/att-table' className='dropdown-link' onClick={closeMobileMenu}>
+                AttendanceTable
+              </Link>
+             
+            </div>
+          </li>
             <li className='nav-item'>
               <Link to='/ast' className='nav-links' onClick={closeMobileMenu}>
                 Assignments

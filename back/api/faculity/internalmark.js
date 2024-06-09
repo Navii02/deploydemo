@@ -54,10 +54,10 @@ router.post('/marks', async (req, res) => {
       student.internalMarks[existingMarkIndex] = {
         subject,
         ...marks,
-        totalMarks: marks.examMarks + marks.assignmentMarks + marks.attendance
+        totalMarks: marks.examMarks + marks.assignmentMarks + marks.attendancePercentage
       };
     } else {
-      const totalMarks = marks.examMarks + marks.assignmentMarks + marks.attendance;
+      const totalMarks = marks.examMarks + marks.assignmentMarks + marks.attendancePercentage;
       student.internalMarks.push({ subject, ...marks, totalMarks });
     }
 

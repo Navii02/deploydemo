@@ -1,112 +1,233 @@
-// AttendanceForm.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './AttendanceForm.css'; // Import the CSS file
-import Navbar from './FacultyNavbar';
+import Navbar from "./FacultyNavbar";
 
 const AttendanceForm = () => {
-  const [branch, setBranch] = useState('');
   const [semester, setSemester] = useState('');
+  const [course, setCourse] = useState('');
   const [subject, setSubject] = useState('');
-  const [studentsData, setStudentsData] = useState([]);
+  const [hour, setHour] = useState('');
+  const [date, setDate] = useState('');
+  const [students, setStudents] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [semesters, setSemesters] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [teachername, setTeacherName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [markAllPresent, setMarkAllPresent] = useState(false);
 
-  // Fetch subjects based on branch and semester
   useEffect(() => {
-    const fetchSubjects = async () => {
+    const fetchCoursesAndSemesters = async () => {
+      const email = localStorage.getItem('email');
+
       try {
-        const response = await axios.get(`/api/subjects?branch=${branch}&semester=${semester}`);
-        setSubjects(response.data.subjects);
+        const response = await axios.post('/api/data/attendance', { email });
+        const { subjects, semesters, branches, teachername } = response.data;
+        setCourses(branches || []);
+        setSemesters(semesters || []);
+        setSubjects(subjects || []);
+        setTeacherName(teachername);
+        console.log(response.data);
       } catch (error) {
-        console.error('Error fetching subjects:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    if (branch && semester) {
-      fetchSubjects();
-    }
-  }, [branch, semester]);
+    fetchCoursesAndSemesters();
 
-  // Fetch students based on branch, semester, and subject
-  useEffect(() => {
-    const fetchStudentsData = async () => {
-      try {
-        const response = await axios.get(`/api/students?branch=${branch}&semester=${semester}&subject=${subject}`);
-        setStudentsData(response.data.studentsData);
-      } catch (error) {
-        console.error('Error fetching students data:', error);
+    // Set current date by default
+    const currentDate = new Date().toISOString().split('T')[0];
+    setDate(currentDate);
+  }, []);
+
+  const fetchStudents = async () => {
+    if (!course || !semester || !subject || !hour || !date) {
+      console.error('Please select a course, semester, subject, hour, and date');
+      return;
+    }
+  
+    console.log('Sending data to API:', { date, subject, hour, course, semester, teachername });
+  
+    try {
+      const response = await axios.get(`/api/students/faculty/${course}/${semester}`);
+      const fetchedStudents = response.data;
+  
+      const attendanceResponse = await axios.post('/api/attendance/check', {
+        date,
+        subject,
+        hour,
+        course,
+        semester,
+        teachername,
+      });
+      if ('hourMarkedBy' in attendanceResponse.data) {
+        // If attendance for the specified hour is marked by another teacher
+        const markedByTeacher = attendanceResponse.data.hourMarkedBy;
+        alert(`Attendance for this hour is already marked by ${markedByTeacher}.`);
+        return; // Stop further processing
       }
-    };
-
-    if (branch && semester && subject) {
-      fetchStudentsData();
+  
+      const attendanceData = attendanceResponse.data;
+      const updatedStudents = fetchedStudents.map(student => {
+        const attendanceRecord = attendanceData.find(record => record.studentId === student._id);
+        return {
+          ...student,
+          attendance: attendanceRecord ? attendanceRecord.status : (markAllPresent ? 'Present' : 'Absent')
+        };
+      });
+  
+      setStudents(updatedStudents);
+    } catch (error) {
+      console.error('Error fetching students:', error);
     }
-  }, [branch, semester, subject]);
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await fetchStudents();
+    setLoading(false);
+  };
 
-  const handleMarkAttendance = (index) => {
-    console.log(`Marking attendance for student: ${studentsData[index].name}`);
-    // You can send the attendance data to the backend here
+  const handleAttendanceChange = (studentId, isPresent) => {
+    setStudents(students.map(student =>
+      student._id === studentId ? { ...student, attendance: isPresent ? 'Present' : 'Absent' } : student
+    ));
+  };
+
+  const submitAttendance = async () => {
+    try {
+      await Promise.all(students.map(student =>
+        axios.post('/api/attendance', {
+          studentId: student._id,
+          date,
+          subject,
+          hour,
+          teachername,
+          attendance: student.attendance
+        })
+      ));
+
+      console.log('Attendance marked successfully!');
+    } catch (error) {
+      console.error('Error marking attendance:', error);
+    }
+  };
+
+  const handleMarkAllPresentChange = (e) => {
+    const isChecked = e.target.checked;
+    setMarkAllPresent(isChecked);
+    setStudents(students.map(student => ({
+      ...student,
+      attendance: isChecked ? 'Present' : 'Absent'
+    })));
   };
 
   return (
     <div>
-    <Navbar/>
-      <div className="selections">
+      <Navbar />
+      <form onSubmit={handleSubmit}>
         <label>
-          Branch:
-          <select value={branch} onChange={(e) => setBranch(e.target.value)}>
-            <option value="CSE">CSE</option>
-            <option value="ECE">ECE</option>
-            {/* Add other branches as needed */}
+          Course:
+          <select value={course} onChange={(e) => setCourse(e.target.value)}>
+            <option value="">Select Course</option>
+            {courses.map((course) => (
+              <option key={course} value={course}>
+                {course}
+              </option>
+            ))}
           </select>
         </label>
 
         <label>
           Semester:
           <select value={semester} onChange={(e) => setSemester(e.target.value)}>
-            <option value="s1">S1</option>
-            <option value="s2">S2</option>
-            <option value="s3">S3</option>
-            <option value="s4">S4</option>
-            <option value="s5">S5</option>
-            <option value="s6">S6</option>
-            <option value="s7">S7</option>
-            <option value="s8">S8</option>
+            <option value="">Select Semester</option>
+            {semesters.map((semester) => (
+              <option key={semester} value={semester}>
+                {semester}
+              </option>
+            ))}
           </select>
         </label>
 
         <label>
           Subject:
           <select value={subject} onChange={(e) => setSubject(e.target.value)}>
-            {subjects.map((subj) => (
-              <option key={subj} value={subj}>
-                {subj}
+            <option value="">Select Subject</option>
+            {subjects.map((subject) => (
+              <option key={subject} value={subject}>
+                {subject}
               </option>
             ))}
           </select>
         </label>
-      </div>
 
-      <table className="attendance-table">
-        <thead>
-          <tr>
-            <th>Student Name</th>
-            <th>Attendance Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {studentsData.map((student, index) => (
-            <tr key={index}>
-              <td>{student.name}</td>
-              <td contentEditable="true">{/* You can use checkboxes or input fields for marking attendance */}</td>
-              <td>
-                <button onClick={() => handleMarkAttendance(index)}>Mark Attendance</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        <label>
+          Hour:
+          <select value={hour} onChange={(e) => setHour(e.target.value)}>
+            <option value="">Select Hour</option>
+            {['1', '2', '3', '4', '5', '6'].map((hr) => (
+              <option key={hr} value={hr}>
+                {`${hr} hour`}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Date:
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        </label>
+
+        <button type="submit">Fetch Students</button>
+      </form>
+
+      {loading && <p>Loading...</p>}
+
+      {!loading && students.length > 0 && (
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={markAllPresent}
+              onChange={handleMarkAllPresentChange}
+            />
+            Mark All as Present
+          </label>
+          <table>
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Present</th>
+                <th>Absent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student) => (
+                <tr key={student._id}>
+                  <td>{student.name}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={student.attendance === 'Present'}
+                      onChange={(e) => handleAttendanceChange(student._id, e.target.checked)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={student.attendance === 'Absent'}
+                      onChange={(e) => handleAttendanceChange(student._id, !e.target.checked)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={submitAttendance}>Save Attendance</button>
+        </div>
+      )}
     </div>
   );
 };

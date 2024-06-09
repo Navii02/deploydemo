@@ -48,6 +48,7 @@ import InternalMarksForm from './components/faculty/InternalMarksForm'
 import AttendanceForm from './components/faculty/AttendanceForm'
 import AssignmentForm from './components/faculty/AssignmentForm'
 import FForgotPassword from './components/faculty/FacultyForgot'
+import AttendanceTable from './components/faculty/AttendanceTable'
 
 
 import TutorHome from './components/tutor/TutorHome'
@@ -153,6 +154,7 @@ function RoutesComp() {
             <Route path='/perf' element={<StudentPerformancePage/>}/>  
             <Route path='/upd' element={<TutorUpdates/>}/>  
             <Route path='/hperf' element={<HodPerformancePage/>}/>
+            <Route path='/att-table' element={<AttendanceTable/>}/> 
       </Routes>
     </>
   )

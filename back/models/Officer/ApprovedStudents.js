@@ -61,8 +61,8 @@ const ApprovedStudentSchema = new mongoose.Schema({
   exams: { type: String, default: 'Not Scheduled' },
   
   installmentsPaid: [Number],
-
-  registerNumber: { type: String },
+ 
+ RegisterNo: { type: String },
   email: { type: String, required: true },
   collegemail: String, // Array of strings (email addresses)
   tutormessage: [String], // Array of strings
@@ -73,9 +73,23 @@ const ApprovedStudentSchema = new mongoose.Schema({
       examMarks: Number,
       assignmentMarks: Number,
       attendance: Number,
-      totalMarks: Number
+      totalMarks: String
     }
   ],
+  attendance: [
+    {
+    date: { type: String, required: true },
+    subject: { type: String, required: true },
+    hour: { type: String, required: true },
+    teachername: { type: String, required: true },
+    status: { type: String, required: true }
+    }
+  ],
+  subjectPercentages: [{
+    subject: { type: String, required: true },
+    percentage: { type: Number, required: true }
+  }],
+
 });
 
 // Pre-save middleware to generate custom ID before saving
