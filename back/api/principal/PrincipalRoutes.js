@@ -79,7 +79,7 @@ router.post('/principallogin', async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, principalUser.password);
     if (isPasswordValid) {
       // If passwords match, return success message along with user's email
-      return res.status(200).json({ msg: 'You have logged in successfully', email: principalUser.email });
+      return res.status(200).json({ msg: 'You have logged in successfully', email: principalUser.email,name:officerUser.name });
     } 
     else {
       // If passwords do not match, return invalid credentials message

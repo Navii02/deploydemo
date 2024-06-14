@@ -68,7 +68,9 @@ function PrincipalLogin() {
 
       if (data) {
         localStorage.setItem('email', data.email);
+        localStorage.setItem('name', data.name); // Save the principal's name
         console.log('User Email:', localStorage.getItem('email'));
+        console.log('User Name:', localStorage.getItem('name'));
         navigate('/phome');
       } else {
         alert('Login failed');

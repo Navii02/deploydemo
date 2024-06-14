@@ -6,26 +6,32 @@ import './AssignmentForm.css'; // Import your CSS file
 import Navbar from './FacultyNavbar';
 
 const AssignmentForm = () => {
-  const [branch, setBranch] = useState('');
+  const [course, setCourse] = useState('');
   const [semester, setSemester] = useState('');
   const [subject, setSubject] = useState('');
-  const [teacherName, setTeacherName] = useState('');
+  const [courses, setCourses] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [teachername, setTeacherName] = useState('');
   const [assignmentDetails, setAssignmentDetails] = useState('');
 
   useEffect(() => {
-    // Fetch teacher name based on email from localStorage
-    const fetchTeacherName = async () => {
+    const fetchTeacherDetails = async () => {
       try {
         const email = localStorage.getItem('email');
         const response = await axios.get(`/api/teacher/by-email/${email}`);
-        setTeacherName(response.data.teacherName);
+        const { subjects, semesters, branches, teachername } = response.data;
+        setCourses(branches || []);
+        setSemesters(semesters || []);
+        setSubjects(subjects || []);
+        setTeacherName(teachername);
       } catch (error) {
-        console.error('Error fetching teacher name:', error);
+        console.error('Error fetching teacher details:', error);
         // Handle error, show an error message, etc.
       }
     };
 
-    fetchTeacherName();
+    fetchTeacherDetails();
   }, []); // Run only once when the component mounts
 
   const handleSubmit = async (e) => {
@@ -34,15 +40,15 @@ const AssignmentForm = () => {
     try {
       // Send assignment details to the backend
       await axios.post('/api/assignments', {
-        branch,
+        course,
         semester,
         subject,
-        teacherName,
+        teachername,
         assignmentDetails,
       });
 
       // Optionally, you can add a success message or reset the form
-      setBranch('');
+      setCourse('');
       setSemester('');
       setSubject('');
       setTeacherName('');
@@ -59,12 +65,14 @@ const AssignmentForm = () => {
       <div className="assignment-form-container">
         <form onSubmit={handleSubmit}>
           <label>
-            Branch:
-            <select value={branch} onChange={(e) => setBranch(e.target.value)}>
-              <option value="">Select Branch</option>
-              <option value="CSE">CSE</option>
-              <option value="ECE">ECE</option>
-              {/* Add other branches as needed */}
+            Course:
+            <select value={course} onChange={(e) => setCourse(e.target.value)}>
+              <option value="">Select Course</option>
+              {courses.map((course) => (
+                <option key={course} value={course}>
+                  {course}
+                </option>
+              ))}
             </select>
           </label>
 
@@ -72,25 +80,29 @@ const AssignmentForm = () => {
             Semester:
             <select value={semester} onChange={(e) => setSemester(e.target.value)}>
               <option value="">Select Semester</option>
-              <option value="s1">S1</option>
-              <option value="s2">S2</option>
-              <option value="s3">S3</option>
-              <option value="s4">S4</option>
-              <option value="s5">S5</option>
-              <option value="s6">S6</option>
-              <option value="s7">S7</option>
-              <option value="s8">S8</option>
+              {semesters.map((semester) => (
+                <option key={semester} value={semester}>
+                  {semester}
+                </option>
+              ))}
             </select>
           </label>
 
           <label>
             Subject:
-            <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} />
+            <select value={subject} onChange={(e) => setSubject(e.target.value)}>
+              <option value="">Select Subject</option>
+              {subjects.map((subject) => (
+                <option key={subject} value={subject}>
+                  {subject}
+                </option>
+              ))}
+            </select>
           </label>
 
           <label>
             Teacher Name:
-            <input type="text" value={teacherName} readOnly />
+            <input type="text" value={teachername} readOnly />
           </label>
 
           <label>

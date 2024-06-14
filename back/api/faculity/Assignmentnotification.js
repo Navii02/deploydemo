@@ -3,21 +3,21 @@
 const express = require('express');
 const router = express.Router();
 const Assignment = require('../../models/Faculity/AssignmentSchema');
-const Teacher = require('../../models/Faculity/FaculitySchema');
+const Teacher = require('../../models/hod/TeachersDetailSchema');
 
 router.use(express.json());
 
 // Endpoint to handle assignment submissions
 router.post('/assignments', async (req, res) => {
-  const { branch, semester, subject, teacherName, assignmentDetails } = req.body;
+  const { course, semester, subject, teachername, assignmentDetails } = req.body;
 
   try {
    
     const newAssignment = new Assignment({
-      branch,
+      course,
       semester,
       subject,
-      teacherName,
+      teachername,
       assignmentDetails,
     });
 
@@ -35,8 +35,10 @@ router.get('/teacher/by-email/:email', async (req, res) => {
       if (!teacher) {
         return res.status(404).json({ message: 'Teacher not found' });
       }
-  
-      res.json({ teacherName: teacher.name });
+      const { subjects, semesters, branches, teachername } = teacher;
+      res.json({ subjects, semesters, branches, teachername });
+      
+      
     } catch (error) {
       res.status(500).json({ message: 'Error fetching teacher name' });
     }

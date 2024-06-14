@@ -1,7 +1,7 @@
-// InternalMarksForm.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from "./FacultyNavbar";
+import styles from './InternalMarksForm.module.css'; // Import the CSS module
 
 const InternalMarksForm = () => {
   const [semester, setSemester] = useState('');
@@ -48,7 +48,6 @@ const InternalMarksForm = () => {
     e.preventDefault();
     fetchStudents();
   };
-
   const handleInputChange = (studentId, key, value) => {
     const updatedStudents = students.map(student => {
       if (student._id === studentId) {
@@ -64,131 +63,157 @@ const InternalMarksForm = () => {
     });
     setStudents(updatedStudents);
   };
-
+  
   const submitMarks = async (studentId, marks) => {
     try {
+      // Ensure marks are properly parsed to floats or integers
+      marks.examMarks = parseFloat(marks.examMarks) || 0;
+      marks.assignmentMarks = parseFloat(marks.assignmentMarks) || 0;
+      marks.attendance = parseFloat(marks.attendance) || 0;
+  
       await axios.post('/api/marks', { studentId, subject, marks });
       console.log('Marks submitted successfully!');
     } catch (error) {
       console.error('Error submitting marks:', error);
     }
   };
-
+  
   const calculateTotal = (examMarks, assignmentMarks, attendancePercentage) => {
     return (parseFloat(examMarks) || 0) + (parseFloat(assignmentMarks) || 0) + (parseFloat(attendancePercentage) || 0);
+  };
+
+  const getAttendancePercentage = (student) => {
+    const subjectPercentage = student.subjectPercentages.find(sp => sp.subject === subject);
+    return subjectPercentage ? subjectPercentage.percentage / 10 : 0;
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   return (
     <div>
       <Navbar />
-      <form onSubmit={handleSubmit}>
-        <label>
-          Course:
-          <select value={course} onChange={(e) => setCourse(e.target.value)}>
-            <option value="">Select Course</option>
-            {courses.map(course => (
-              <option key={course} value={course}>
-                {course}
-              </option>
-            ))}
-          </select>
-        </label>
+      <div className={styles.formContainer}>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>
+              Course:
+              <select value={course} onChange={(e) => setCourse(e.target.value)}>
+                <option value="">Select Course</option>
+                {courses.map(course => (
+                  <option key={course} value={course}>
+                    {course}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
 
-        <label>
-          Semester:
-          <select value={semester} onChange={(e) => setSemester(e.target.value)}>
-            <option value="">Select Semester</option>
-            {semesters.map(semester => (
-              <option key={semester} value={semester}>
-                {semester}
-              </option>
-            ))}
-          </select>
-        </label>
+          <div>
+            <label>
+              Semester:
+              <select value={semester} onChange={(e) => setSemester(e.target.value)}>
+                <option value="">Select Semester</option>
+                {semesters.map(semester => (
+                  <option key={semester} value={semester}>
+                    {semester}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
 
-        <label>
-          Subject:
-          <select value={subject} onChange={(e) => setSubject(e.target.value)}>
-            <option value="">Select Subject</option>
-            {subjects.map(subject => (
-              <option key={subject} value={subject}>
-                {subject}
-              </option>
-            ))}
-          </select>
-        </label>
+          <div>
+            <label>
+              Subject:
+              <select value={subject} onChange={(e) => setSubject(e.target.value)}>
+                <option value="">Select Subject</option>
+                {subjects.map(subject => (
+                  <option key={subject} value={subject}>
+                    {subject}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
 
-        <button type="submit">Fetch Students</button>
-      </form>
+          <button type="submit">Fetch Students</button>
+        </form>
+      </div>
 
       {students.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>Student Name</th>
-              <th>Course</th>
-              <th>Semester</th>
-              <th>Exam Marks</th>
-              <th>Assignment Marks</th>
-              <th>Attendance</th>
-              <th>Total Marks</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map(student => {
-              const subjectMarks = student.internalMarks.find(mark => mark.subject === subject) || {};
-              return (
-                <tr key={student._id}>
-                  <td>{student.name}</td>
-                  <td>{student.course}</td>
-                  <td>{student.semester}</td>
-                  <td>
-                    <input
-                      type="text"
-                      value={subjectMarks.examMarks || ''}
-                      onChange={(e) => handleInputChange(student._id, 'examMarks', e.target.value)}
-                      onBlur={(e) => submitMarks(student._id, {
-                        ...subjectMarks,
-                        examMarks: parseFloat(e.target.value) || 0,
-                        assignmentMarks: subjectMarks.assignmentMarks || 0,
-                        attendance: subjectMarks.attendancePercentage || 0,
-                      })}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={subjectMarks.assignmentMarks || ''}
-                      onChange={(e) => handleInputChange(student._id, 'assignmentMarks', e.target.value)}
-                      onBlur={(e) => submitMarks(student._id, {
-                        ...subjectMarks,
-                        examMarks: subjectMarks.examMarks || 0,
-                        assignmentMarks: parseFloat(e.target.value) || 0,
-                        attendance: subjectMarks.attendancePercentage || 0,
-                      })}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={subjectMarks.attendancePercentage || ''}
-                      onChange={(e) => handleInputChange(student._id, 'attendancePercentage', e.target.value)}
-                      onBlur={(e) => submitMarks(student._id, {
-                        ...subjectMarks,
-                        examMarks: subjectMarks.examMarks || 0,
-                        assignmentMarks: subjectMarks.assignmentMarks || 0,
-                        attendance: parseFloat(e.target.value) || 0,
-                      })}
-                    />
-                  </td>
-                  <td>
-                    {calculateTotal(subjectMarks.examMarks, subjectMarks.assignmentMarks, subjectMarks.attendancePercentage)}
-                  </td>
+        <div className={styles.tableContainer}>
+          <div id="printTable" className={styles.printTable}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Course</th>
+                  <th>Semester</th>
+                  <th>Exam Marks</th>
+                  <th>Assignment Marks</th>
+                  <th>Attendance</th>
+                  <th>Total Marks</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {students.map(student => {
+                  const subjectMarks = student.internalMarks.find(mark => mark.subject === subject) || {};
+                  const attendancePercentage = getAttendancePercentage(student);
+                  return (
+                    <tr key={student._id}>
+                      <td>{student.name}</td>
+                      <td>{student.course}</td>
+                      <td>{student.semester}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={subjectMarks.examMarks || ''}
+                          onChange={(e) => handleInputChange(student._id, 'examMarks', e.target.value)}
+                          onBlur={(e) => submitMarks(student._id, {
+                            ...subjectMarks,
+                            examMarks: e.target.value,
+                            assignmentMarks: subjectMarks.assignmentMarks || 0,
+                            attendance: attendancePercentage,
+                          })}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={subjectMarks.assignmentMarks || ''}
+                          onChange={(e) => handleInputChange(student._id, 'assignmentMarks', e.target.value)}
+                          onBlur={(e) => submitMarks(student._id, {
+                            ...subjectMarks,
+                            examMarks: subjectMarks.examMarks || 0,
+                            assignmentMarks: e.target.value,
+                            attendance: attendancePercentage,
+                          })}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={attendancePercentage}
+                          readOnly
+                        />
+                      </td>
+                      <td>
+                        {calculateTotal(
+                          subjectMarks.examMarks,
+                          subjectMarks.assignmentMarks,
+                          attendancePercentage
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <button onClick={handlePrint} className={styles.printButton}>Print</button>
+          </div>
+        </div>
       )}
     </div>
   );

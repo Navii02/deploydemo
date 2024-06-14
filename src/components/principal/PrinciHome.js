@@ -4,18 +4,15 @@ import Navbar from './PrinciNavbar'; // Assuming you have a Navbar component for
 import './PrinciHome.css'; // Import your CSS file
 
 function PrincipalHome() {
-  const [principalName, setPrincipalName] = useState('');
+  
   const [totalStudents, setTotalStudents] = useState(0);
   const [totalOfficers, setTotalOfficers] = useState(0);
   const [totalTeachers, setTotalTeachers] = useState(0);
-
+   const princpalname=localStorage.getItem('name');
   useEffect(() => {
     const fetchPrincipalData = async () => {
       try {
-        // Fetch principal's name
-        const responseName = await axios.get('/api/principal/name');
-        setPrincipalName(responseName.data.name);
-
+   
         // Fetch total number of students
         const responseStudents = await axios.get('/api/total-students');
         setTotalStudents(responseStudents.data.totalStudents);
@@ -40,7 +37,7 @@ function PrincipalHome() {
       <Navbar />
       <div className="principal-home-container">
         <div className="welcome-section">
-          <h1 className="welcome-header">Welcome, {principalName}!</h1>
+          <h1 className="welcome-header">Welcome, { princpalname}!</h1>
           <p className="welcome-text">
             This is your Principal home page. Review the key metrics and data about your institution.
           </p>

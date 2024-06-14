@@ -1,0 +1,83 @@
+/* Styles for the form */
+.formContainer {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .formContainer label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .formContainer select, .formContainer input[type="text"] {
+    width: calc(100% - 20px); /* Adjust width minus padding */
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+  
+  .formContainer button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .formContainer button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Styles for the table */
+  .tableContainer {
+    margin: 20px;
+  }
+  
+  .tableContainer table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tableContainer th, .tableContainer td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 14px;
+  }
+  
+  .tableContainer th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  /* Print styles */
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+  
+    .printTable, .printTable * {
+      visibility: visible;
+    }
+  
+    .printTable {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+  
+    .printButton {
+      display: none;
+    }
+  }
+  

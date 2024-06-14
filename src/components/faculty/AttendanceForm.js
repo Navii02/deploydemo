@@ -42,46 +42,47 @@ const AttendanceForm = () => {
 
   const fetchStudents = async () => {
     if (!course || !semester || !subject || !hour || !date) {
-      console.error('Please select a course, semester, subject, hour, and date');
-      return;
+        console.error('Please select a course, semester, subject, hour, and date');
+        return;
     }
-  
-    console.log('Sending data to API:', { date, subject, hour, course, semester, teachername });
-  
+
     try {
-      const response = await axios.get(`/api/students/faculty/${course}/${semester}`);
-      const fetchedStudents = response.data;
-  
-      const attendanceResponse = await axios.post('/api/attendance/check', {
-        date,
-        subject,
-        hour,
-        course,
-        semester,
-        teachername,
-      });
-      if ('hourMarkedBy' in attendanceResponse.data) {
-        // If attendance for the specified hour is marked by another teacher
-        const markedByTeacher = attendanceResponse.data.hourMarkedBy;
-        alert(`Attendance for this hour is already marked by ${markedByTeacher}.`);
-        return; // Stop further processing
-      }
-  
-      const attendanceData = attendanceResponse.data;
-      const updatedStudents = fetchedStudents.map(student => {
-        const attendanceRecord = attendanceData.find(record => record.studentId === student._id);
-        return {
-          ...student,
-          attendance: attendanceRecord ? attendanceRecord.status : (markAllPresent ? 'Present' : 'Absent')
-        };
-      });
-  
-      setStudents(updatedStudents);
+        const response = await axios.get(`/api/students/faculty/attendance/${course}/${semester}`);
+        const fetchedStudents = response.data;
+
+        const attendanceResponse = await axios.post('/api/attendance/check', {
+            date,
+            subject,
+            hour,
+            course,
+            semester,
+            teachername,
+        });
+
+        // Check if 'hourMarkedBy' is present in the response
+        if ('hourMarkedBy' in attendanceResponse.data) {
+            // If attendance for the specified hour is already marked by another teacher
+            const markedByTeachers = attendanceResponse.data.hourMarkedBy;
+            alert(`Attendance for this hour is already marked by ${markedByTeachers}.`);
+            return; // Stop further processing
+        }
+
+        const attendanceData = attendanceResponse.data;
+        const updatedStudents = fetchedStudents.map(student => {
+            const attendanceRecord = attendanceData.find(record => record.studentId === student._id);
+            return {
+                ...student,
+                attendance: attendanceRecord ? attendanceRecord.status : (markAllPresent ? 'Present' : 'Absent')
+            };
+        });
+
+        setStudents(updatedStudents);
     } catch (error) {
-      console.error('Error fetching students:', error);
+        console.error('Error fetching students or checking attendance:', error);
     }
-  };
-  
+};
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

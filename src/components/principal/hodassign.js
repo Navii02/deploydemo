@@ -17,7 +17,6 @@ const TeacherList = () => {
     subjects: '',
     subjectCode: '',
     course: '',
-   
   });
 
   useEffect(() => {
@@ -99,9 +98,9 @@ const TeacherList = () => {
           <ul>
             {teachers.map(teacher => (
               <li key={teacher._id}>
-                <strong>Name:</strong>{teacher.teachername}<br/>
+                <strong>Name:</strong> {teacher.teachername}<br />
                 <strong>Department:</strong> {teacher.course}<br />
-                <strong>Email:</strong> {teacher.email}<br/>
+                <strong>Email:</strong> {teacher.email}<br />
                 <button className="assign-button" onClick={() => setSelectedTeacherId(teacher._id)}>Assign as HOD</button>
                 {assignedTeacher && assignedTeacher === teacher.teachername && (
                   <p className="success-message">{teacher.teachername} has been assigned as HOD successfully!</p>
@@ -163,14 +162,35 @@ const TeacherList = () => {
                 onChange={handleAddHodChange}
                 required
               />
-              <input
-                type="text"
+              <select
                 name="semesters"
-                placeholder="Semesters"
                 value={newHod.semesters}
                 onChange={handleAddHodChange}
                 required
-              />
+              >
+                <option value="">Select Semester</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+              <select
+                name="course"
+                value={newHod.course}
+                onChange={handleAddHodChange}
+                required
+              >
+                <option value="">Select Course</option>
+                <option value="B.Tech CSE">B.Tech CSE</option>
+                <option value="B.Tech ECE">B.Tech ECE</option>
+                <option value="BCA">BCA</option>
+                <option value="BBA">BBA</option>
+                <option value="MCA">MCA</option>
+              </select>
               <input
                 type="text"
                 name="subjects"
@@ -187,15 +207,7 @@ const TeacherList = () => {
                 onChange={handleAddHodChange}
                 required
               />
-              <input
-                type="text"
-                name="course"
-                placeholder="course"
-                value={newHod.course}
-                onChange={handleAddHodChange}
-                required
-              />
-            
+              
               <button type="submit">Add HOD</button>
               <button type="button" className="cancel-button" onClick={() => setShowAddHodForm(false)}>Cancel</button>
             </form>

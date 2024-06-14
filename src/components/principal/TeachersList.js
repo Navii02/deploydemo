@@ -25,7 +25,7 @@ function TeacherPage() {
     };
 
     const filteredTeachers = selectedDepartment
-        ? teachers.filter(teacher => String(teacher.branches) === selectedDepartment)
+        ? teachers.filter(teacher => String(teacher.course) === selectedDepartment)
         : teachers;
 
     return (
@@ -36,8 +36,11 @@ function TeacherPage() {
                 <label htmlFor="departmentSelect">Select Department: </label>
                 <select id="departmentSelect" value={selectedDepartment} onChange={handleDepartmentChange}>
                     <option value="">All</option>
-                    <option value="CSE">CSE</option>
-                    <option value="ECE">ECE</option>
+                    <option value="B.Tech CSE">B.Tech CSE</option>
+                    <option value="B.Tech ECE">B.Tech ECE</option>
+                    <option value="MCA">MCA</option>
+                    <option value="BCA">BCA</option>
+                    <option value="BBA">BBA</option>
                     {/* Add more options for other departments */}
                 </select>
             </div>
@@ -54,7 +57,7 @@ function TeacherPage() {
                     {filteredTeachers.map(teacher => (
                         <tr key={teacher.id}>
                             <td>{teacher.teachername}</td>
-                            <td>{teacher.branches}</td>
+                            <td>{teacher.course}</td>
                             <td>{teacher.email}</td>
                             <td>{teacher.subjects.join(', ')}</td>
                         </tr>

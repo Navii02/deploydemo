@@ -77,6 +77,7 @@ import Pstudents from './components/principal/StudentsList'
 import Pteachers from './components/principal/TeachersList'
 import Pofficers from './components/principal/OfficersList'
 import Hodassign from './components/principal/hodassign'
+import SRequests from './components/principal/StudentRequest'
 
 
 
@@ -155,6 +156,7 @@ function RoutesComp() {
             <Route path='/upd' element={<TutorUpdates/>}/>  
             <Route path='/hperf' element={<HodPerformancePage/>}/>
             <Route path='/att-table' element={<AttendanceTable/>}/> 
+            <Route path='/srequests' element={<SRequests/>}/> 
       </Routes>
     </>
   )

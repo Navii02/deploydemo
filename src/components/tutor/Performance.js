@@ -14,7 +14,13 @@ const StudentPerformancePage = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('your_api_endpoint_here');
+      const academicYear = localStorage.getItem('academicYear');
+      if (!academicYear) {
+        console.error('Academic year not found in localStorage');
+        return;
+      }
+
+      const response = await axios.get(`/api/student-performance?academicYear=${academicYear}`);
       setStudentData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -31,9 +37,9 @@ const StudentPerformancePage = () => {
               <tr>
                 <th>Name</th>
                 <th>Roll Number</th>
-                {studentData.length > 0 && studentData[0].subjects.map((subject) => (
-                  <th key={subject.id}>
-                    <div>{subject.name}</div>
+                {studentData.length > 0 && studentData[0].subjects.map((subject, index) => (
+                  <th key={index}>
+                    <div>{subject.subject}</div>
                     <div>Internal Marks</div>
                     <div>Attendance Percentage</div>
                   </th>
@@ -41,12 +47,12 @@ const StudentPerformancePage = () => {
               </tr>
             </thead>
             <tbody>
-              {studentData.map((student) => (
-                <tr key={student.id}>
+              {studentData.map((student, studentIndex) => (
+                <tr key={studentIndex}>
                   <td>{student.name}</td>
                   <td>{student.rollNumber}</td>
-                  {student.subjects.map((subject) => (
-                    <td key={subject.id}>
+                  {student.subjects.map((subject, subjectIndex) => (
+                    <td key={subjectIndex}>
                       <div>{subject.internalMarks}</div>
                       <div>{subject.attendancePercentage}%</div>
                     </td>
