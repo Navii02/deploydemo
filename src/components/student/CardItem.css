@@ -1,0 +1,103 @@
+.cards__item {
+    position: relative;
+    display: flex;
+    flex: 1;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    max-width: 300px; /* Adjusted maximum width for better control on larger screens */
+  }
+  
+  .cards__item:hover {
+    transform: scale(1.05);
+  }
+  
+  .cards__item__link {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .cards__item__pic-wrap {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  .cards__item__img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+  }
+  
+  .cards__item__info {
+    background-color: #fff;
+    padding: 10px;
+  }
+  
+  /* Media query for full screen */
+  @media screen and (max-width: 768px) {
+    .cards__item--full-screen .cards__item__details {
+      width: 90%; /* Adjusted width for better fit on smaller screens */
+      height: 90%; /* Adjusted height for better fit on smaller screens */
+      padding: 10px;
+    }
+  
+    .cards__item--full-screen .cards__item__info--full-screen {
+      padding: 10px;
+    }
+  }
+  
+  /* Full screen layout styles */
+  .cards__item--full-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .cards__item__details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%; /* Adjusted width for better fit on smaller screens */
+    max-width: 90%; /* Adjusted maximum width for better fit on smaller screens */
+    height: 80%; /* Adjusted height for better fit on smaller screens */
+    max-height: 90%; /* Adjusted maximum height for better fit on smaller screens */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .cards__item__img--full-screen {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  
+  .cards__item__info--full-screen {
+    background-color: #fff;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 24px;
+  }
+  

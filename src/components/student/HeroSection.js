@@ -1,31 +1,23 @@
 import React from 'react';
-import '../../App.css'
-/*import { Button } from './Button';*/
+import '../../App.css';
 import './HeroSection.css';
+import { FaArrowDown } from 'react-icons/fa'; // Make sure to install react-icons if you haven't
 
 function HeroSection() {
+  const scrollToNotices = () => {
+    const noticesSection = document.getElementById('notices-section');
+    if (noticesSection) {
+      noticesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className='hero-container'>
       <video src='/videos/website_intro.mp4' autoPlay loop muted />
-      {/*<h1>ADVENTURE AWAITS</h1>
-      <p>What are you waiting for?</p>*/}
-      {/*<div className='hero-btns'>
-        <Button
-          className='btns'
-          buttonStyle='btn--outline'
-          buttonSize='btn--large'
-        >
-          GET STARTED
-        </Button>
-        <Button
-          className='btns'
-          buttonStyle='btn--primary'
-          buttonSize='btn--large'
-          onClick={console.log('hey')}
-        >
-          WATCH TRAILER <i className='far fa-play-circle' />
-        </Button>
-      </div>*/}
+      <div className='arrow-container' onClick={scrollToNotices}>
+        <FaArrowDown className='arrow-icon' />
+        <p className='arrow-text'>See Notices</p>
+      </div>
     </div>
   );
 }

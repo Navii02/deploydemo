@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
+//const path = require('path');
 const app = express();
 const Notice = require('../../models/Notice');
 
@@ -43,7 +43,7 @@ app.post('/photos', upload.single('image'), handleNoticeUpload);
 // Routes
 app.get('/notices', async (req, res) => {
   try {
-    const notices = await Notice.find();
+    const notices = await Notice.find().sort({ createdAt: -1 });
     res.json({ notices });
   } catch (error) {
     console.error(error);

@@ -10,18 +10,18 @@ const Reminders = () => {
   useEffect(() => {
     const categories = ['attendance', 'internalMarks', 'fees', 'assignments', 'updates'];
 
-    const fetchReminders = (category) => {
+    const fetchReminders = async (category) => {
       const apiEndpoint = `/api/reminders/${category}/${userEmail}`;
 
-      axios.get(apiEndpoint)
-        .then(response => {
-          const fetchedReminders = { category, data: response.data };
-          setReminders(prevReminders => [...prevReminders, fetchedReminders]);
-        })
-        .catch(error => {
-          console.error(`Error fetching ${category} reminders:`, error);
-          setReminders(prevReminders => [...prevReminders, { category, data: [] }]);
-        });
+      try {
+        const response = await axios.get(apiEndpoint);
+        //console.log(`Fetched reminders for ${category}:`, response.data);
+        const fetchedReminders = { category, data: response.data };
+        setReminders(prevReminders => [...prevReminders, fetchedReminders]);
+      } catch (error) {
+        console.error(`Error fetching ${category} reminders:`, error);
+        setReminders(prevReminders => [...prevReminders, { category, data: [] }]);
+      }
     };
 
     categories.forEach(category => {
@@ -52,39 +52,26 @@ const Reminders = () => {
       return null; // Handle case where reminder is undefined or null
     }
 
-    if (Array.isArray(reminder)) {
-      // Handle array of update messages
-      return (
-        <>
-          {reminder.map((message, index) => (
-            <div key={index}>
-              <strong>Update:</strong> {message}
-            </div>
-          ))}
-        </>
-      );
-    }
+    //console.log(`Rendering reminder for category ${category}:`, reminder);
 
-    const { subject, teacherName, message } = reminder;
+    const messageContent = Array.isArray(reminder) ? reminder.join(', ') : reminder.message || reminder;
 
     switch (category) {
       case 'assignments':
+        const { subject, teacherName } = reminder;
         return (
-          <>
-            <strong>{subject}</strong> Assignment by {teacherName}: {message}
-          </>
+          <div>
+            <strong>{subject}</strong> Assignment by {teacherName}: {messageContent}
+          </div>
         );
-       
       case 'updates':
         return (
-          <>
-            <strong>Update:</strong> {message}
-            
-          </>
+          <div>
+            <strong>Update:</strong> {messageContent}
+          </div>
         );
-       
-              default:
-        return <span>{message}</span>;
+      default:
+        return <div>{messageContent}</div>;
     }
   };
 
@@ -99,8 +86,8 @@ const Reminders = () => {
         {reminders.length === 0 ? (
           <p>Loading...</p>
         ) : (
-          reminders.map(reminder => (
-            <div className="reminder-category" key={reminder.category}>
+          reminders.map((reminder, index) => (
+            <div className="reminder-category" key={index}>
               <h2>{capitalizeFirstLetter(reminder.category)}</h2>
               {renderCategoryReminders(reminder)}
             </div>

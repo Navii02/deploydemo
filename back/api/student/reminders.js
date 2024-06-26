@@ -4,22 +4,20 @@ const ApprovedStudents = require('../../models/Officer/ApprovedStudents'); // Im
 
 // Route to fetch tutor messages (updates) by user email
 router.get('/reminders/updates/:email', async (req, res) => {
-  const Useremail = req.params.email;
-  console.log(Useremail);
-  
+  const userEmail = req.params.email;
 
   try {
     // Find the ApprovedStudents document for the specified user email
-    const student = await ApprovedStudents.findOne({ email:Useremail });
+    const student = await ApprovedStudents.findOne({ email: userEmail });
 
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
 
-    // Get the tutor messages (updates) from the student document
-    const message = student.tutormessage || []; // If tutormessage is undefined, default to an empty array
+    // Get the tutor updates from the student document
+    const updates = student.tutormessage || []; // Assuming tutorUpdates is the field in your schema
 
-    res.json(message);
+    res.json(updates);
   } catch (error) {
     console.error('Error fetching updates:', error);
     res.status(500).json({ message: 'Error fetching updates' });
