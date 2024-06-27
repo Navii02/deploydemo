@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from "./FacultyNavbar";
+import Navbar from './FacultyNavbar';
 
 const AttendanceForm = () => {
   const [semester, setSemester] = useState('');
@@ -15,6 +15,9 @@ const AttendanceForm = () => {
   const [teachername, setTeacherName] = useState('');
   const [loading, setLoading] = useState(false);
   const [markAllPresent, setMarkAllPresent] = useState(false);
+  const [alreadyMarked, setAlreadyMarked] = useState(false);
+  const [markedSubject, setMarkedSubject] = useState('');
+  const [existingAttendance, setExistingAttendance] = useState([]);
 
   useEffect(() => {
     const fetchCoursesAndSemesters = async () => {
@@ -27,7 +30,6 @@ const AttendanceForm = () => {
         setSemesters(semesters || []);
         setSubjects(subjects || []);
         setTeacherName(teachername);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -35,92 +37,105 @@ const AttendanceForm = () => {
 
     fetchCoursesAndSemesters();
 
-    // Set current date by default
     const currentDate = new Date().toISOString().split('T')[0];
     setDate(currentDate);
   }, []);
 
   const fetchStudents = async () => {
-    if (!course || !semester || !subject || !hour || !date) {
-        console.error('Please select a course, semester, subject, hour, and date');
-        return;
-    }
+    setLoading(true);
 
     try {
-        const response = await axios.get(`/api/students/faculty/attendance/${course}/${semester}`);
-        const fetchedStudents = response.data;
-
-        const attendanceResponse = await axios.post('/api/attendance/check', {
-            date,
-            subject,
-            hour,
-            course,
-            semester,
-            teachername,
-        });
-
-        // Check if 'hourMarkedBy' is present in the response
-        if ('hourMarkedBy' in attendanceResponse.data) {
-            // If attendance for the specified hour is already marked by another teacher
-            const markedByTeachers = attendanceResponse.data.hourMarkedBy;
-            alert(`Attendance for this hour is already marked by ${markedByTeachers}.`);
-            return; // Stop further processing
-        }
-
-        const attendanceData = attendanceResponse.data;
-        const updatedStudents = fetchedStudents.map(student => {
-            const attendanceRecord = attendanceData.find(record => record.studentId === student._id);
-            return {
-                ...student,
-                attendance: attendanceRecord ? attendanceRecord.status : (markAllPresent ? 'Present' : 'Absent')
-            };
-        });
-
-        setStudents(updatedStudents);
+      const response = await axios.get(`/api/students/faculty/attendance/${course}/${semester}`);
+      setLoading(false);
+      return response.data;
     } catch (error) {
-        console.error('Error fetching students or checking attendance:', error);
+      setLoading(false);
+      console.error('Error fetching students:', error);
+      throw error;
     }
-};
-
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await fetchStudents();
-    setLoading(false);
+
+    try {
+      const checkResponse = await axios.post('/api/attendance/check', {
+        date,
+        hour,
+        teachername,
+        subject,
+      });
+
+      if (checkResponse.data.isMarked) {
+        setAlreadyMarked(true);
+        setMarkedSubject(checkResponse.data.markedSubject);
+
+        if (checkResponse.data.teachername === teachername && checkResponse.data.markedSubject === subject) {
+          const response = await axios.post('/api/attendance/existing', {
+            date,
+            hour,
+            teachername,
+            subject,
+          });
+
+          setExistingAttendance(response.data);
+          setStudents(response.data.map(record => ({
+            ...record.student,
+            attendance: record.status
+          })));
+        } else {
+          setExistingAttendance([]);
+        }
+      } else {
+        const fetchedStudents = await fetchStudents();
+        setStudents(fetchedStudents);
+        setAlreadyMarked(false);
+        setExistingAttendance([]);
+      }
+    } catch (error) {
+      console.error('Error checking attendance or fetching students:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAttendanceChange = (studentId, isPresent) => {
-    setStudents(students.map(student =>
+    setStudents(students.map((student) =>
       student._id === studentId ? { ...student, attendance: isPresent ? 'Present' : 'Absent' } : student
     ));
   };
 
   const submitAttendance = async () => {
+    setLoading(true);
+
     try {
-      await Promise.all(students.map(student =>
+      await Promise.all(students.map((student) =>
         axios.post('/api/attendance', {
           studentId: student._id,
           date,
           subject,
           hour,
           teachername,
-          attendance: student.attendance
+          attendance: student.attendance,
         })
       ));
 
       console.log('Attendance marked successfully!');
+  alert('Attendance marked successfully!');
     } catch (error) {
       console.error('Error marking attendance:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleMarkAllPresentChange = (e) => {
     const isChecked = e.target.checked;
     setMarkAllPresent(isChecked);
-    setStudents(students.map(student => ({
+    setStudents(students.map((student) => ({
       ...student,
-      attendance: isChecked ? 'Present' : 'Absent'
+      attendance: isChecked ? 'Present' : 'Absent',
     })));
   };
 
@@ -168,7 +183,7 @@ const AttendanceForm = () => {
           Hour:
           <select value={hour} onChange={(e) => setHour(e.target.value)}>
             <option value="">Select Hour</option>
-            {['1', '2', '3', '4', '5', '6'].map((hr) => (
+            {[1, 2, 3, 4, 5, 6].map((hr) => (
               <option key={hr} value={hr}>
                 {`${hr} hour`}
               </option>
@@ -186,7 +201,49 @@ const AttendanceForm = () => {
 
       {loading && <p>Loading...</p>}
 
-      {!loading && students.length > 0 && (
+      {alreadyMarked && existingAttendance.length > 0 && (
+        <div>
+          <p>Attendance for {hour} hour on {date} is already marked for subject {markedSubject} by you.</p>
+          <p>Existing Attendance Details:</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Present</th>
+                <th>Absent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student) => (
+                <tr key={student._id}>
+                  <td>{student.name}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={student.attendance === 'Present'}
+                      onChange={(e) => handleAttendanceChange(student._id, e.target.checked)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={student.attendance === 'Absent'}
+                      onChange={(e) => handleAttendanceChange(student._id, !e.target.checked)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={submitAttendance}>Save Attendance</button>
+        </div>
+      )}
+
+      {alreadyMarked && existingAttendance.length === 0 && (
+        <p>Attendance for {hour} hour on {date} is already marked for a different subject.</p>
+      )}
+
+      {!loading && !alreadyMarked && students.length > 0 && (
         <div>
           <label>
             <input

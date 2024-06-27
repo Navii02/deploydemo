@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from "./FacultyNavbar";
+import Navbar from './FacultyNavbar';
 
 const AttendanceSummary = () => {
   const [course, setCourse] = useState('');
@@ -17,8 +17,8 @@ const AttendanceSummary = () => {
       const email = localStorage.getItem('email');
 
       try {
-        const response = await axios.post('/api/data', { email });
-        const { subjects, semesters, branches } = response.data;
+        const response = await axios.post('/api/data/attendance', { email });
+        const { subjects, semesters, branches} = response.data;
         setCourses(branches || []);
         setSemesters(semesters || []);
         setSubjects(subjects || []);
@@ -44,7 +44,14 @@ const AttendanceSummary = () => {
       console.error('Error fetching attendance summary:', error);
     }
   };
-
+ // Function to format date to dd/mm/yyyy
+ const formatDate = (dateString) => {
+  const dateObj = new Date(dateString);
+  const day = dateObj.getDate();
+  const month = dateObj.getMonth() + 1; // Months are zero-indexed
+  const year = dateObj.getFullYear();
+  return `${day}/${month}/${year}`;
+};
   return (
     <div>
       <Navbar />
@@ -92,9 +99,13 @@ const AttendanceSummary = () => {
           <thead>
             <tr>
               <th>Student Name</th>
-              <th>Attendance</th>
+            <th>No.of Present</th>
+            <th>No.of Absent</th>
+
               <th>Total Attendance</th>
+              <th></th>
               <th>Percentage</th>
+              <th>Absent Details</th> {/* New column for absent details */}
             </tr>
           </thead>
           <tbody>
@@ -102,13 +113,26 @@ const AttendanceSummary = () => {
               <tr key={students[index]._id}>
                 <td>{students[index].name}</td>
                 <td>
-                  Present: {data.attendance.present}, Absent: {data.attendance.absent}, Total: {data.attendance.total}
+                   {data.attendance.present} 
+                </td>
+                <td>
+               {data.attendance.absent}
+                </td>
+                <td>
+             {data.attendance.total}
                 </td>
                 <td>
                   {data.attendance.present}/{data.attendance.total}
                 </td>
                 <td>
                   {data.attendance.percentage}%
+                </td>
+                <td>
+                  {data.attendance.absentDetails.map((absent, idx) => (
+                    <div key={idx}>
+                       Date: {formatDate(absent.date)}, Hour: {absent.hour}
+                    </div>
+                  ))}
                 </td>
               </tr>
             ))}
