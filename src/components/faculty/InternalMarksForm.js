@@ -38,7 +38,11 @@ const InternalMarksForm = () => {
 
     try {
       const response = await axios.get(`/api/students/faculty/${course}/${semester}`);
-      setStudents(response.data);
+      const studentsData = response.data.map(student => ({
+        ...student,
+        internalMarks: student.internalMarks.map(mark => mark.subject === subject ? mark : { ...mark, subject, examMarks: 0, assignmentMarks: 0 })
+      }));
+      setStudents(studentsData);
     } catch (error) {
       console.error('Error fetching students:', error);
     }
@@ -48,36 +52,31 @@ const InternalMarksForm = () => {
     e.preventDefault();
     fetchStudents();
   };
+
   const handleInputChange = (studentId, key, value) => {
     const updatedStudents = students.map(student => {
       if (student._id === studentId) {
-        const updatedMarks = student.internalMarks.map(mark => {
-          if (mark.subject === subject) {
-            return { ...mark, [key]: parseFloat(value) || 0 };
-          }
-          return mark;
-        });
+        const updatedMarks = student.internalMarks.map(mark => mark.subject === subject ? { ...mark, [key]: parseFloat(value) || 0 } : mark);
         return { ...student, internalMarks: updatedMarks };
       }
       return student;
     });
     setStudents(updatedStudents);
   };
-  
+
   const submitMarks = async (studentId, marks) => {
     try {
-      // Ensure marks are properly parsed to floats or integers
       marks.examMarks = parseFloat(marks.examMarks) || 0;
       marks.assignmentMarks = parseFloat(marks.assignmentMarks) || 0;
       marks.attendance = parseFloat(marks.attendance) || 0;
-  
+
       await axios.post('/api/marks', { studentId, subject, marks });
       console.log('Marks submitted successfully!');
     } catch (error) {
       console.error('Error submitting marks:', error);
     }
   };
-  
+
   const calculateTotal = (examMarks, assignmentMarks, attendancePercentage) => {
     return (parseFloat(examMarks) || 0) + (parseFloat(assignmentMarks) || 0) + (parseFloat(attendancePercentage) || 0);
   };
@@ -159,7 +158,7 @@ const InternalMarksForm = () => {
               </thead>
               <tbody>
                 {students.map(student => {
-                  const subjectMarks = student.internalMarks.find(mark => mark.subject === subject) || {};
+                  const subjectMarks = student.internalMarks.find(mark => mark.subject === subject) || { examMarks: 0, assignmentMarks: 0 };
                   const attendancePercentage = getAttendancePercentage(student);
                   return (
                     <tr key={student._id}>
@@ -168,7 +167,7 @@ const InternalMarksForm = () => {
                       <td>{student.semester}</td>
                       <td>
                         <input
-                          type="text"
+                          type="number"
                           value={subjectMarks.examMarks || ''}
                           onChange={(e) => handleInputChange(student._id, 'examMarks', e.target.value)}
                           onBlur={(e) => submitMarks(student._id, {
@@ -181,7 +180,7 @@ const InternalMarksForm = () => {
                       </td>
                       <td>
                         <input
-                          type="text"
+                          type="number"
                           value={subjectMarks.assignmentMarks || ''}
                           onChange={(e) => handleInputChange(student._id, 'assignmentMarks', e.target.value)}
                           onBlur={(e) => submitMarks(student._id, {
@@ -194,8 +193,8 @@ const InternalMarksForm = () => {
                       </td>
                       <td>
                         <input
-                          type="text"
-                          value={attendancePercentage}
+                          type="number"
+                          value={attendancePercentage || ''}
                           readOnly
                         />
                       </td>

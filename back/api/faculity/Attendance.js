@@ -45,17 +45,17 @@ router.get('/students/faculty/attendance/:course/:semester', async (req, res) =>
 
 
 router.post('/attendance', async (req, res) => {
-  const { studentId, date, subject, hour, teachername, attendance } = req.body;
+  const { studentId, date, subject, hour, teachername, attendance ,course} = req.body;
 
   try {
-    const student = await Student.findById(studentId);
+    const student = await Student.findById(studentId,course);
 
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
 
     const existingAttendance = student.attendance.find(
-      record => record.date === date && record.subject === subject && record.hour === hour && record.teachername === teachername
+      record => record.date === date && record.subject === subject && record.hour === hour && record.teachername === teachername&& student.course===course
     );
 
     if (existingAttendance) {
@@ -86,7 +86,7 @@ router.post('/attendance', async (req, res) => {
 });
 
 router.post('/attendance/check', async (req, res) => {
-  const { date, hour, teachername, subject } = req.body;
+  const { date, hour, teachername, subject, course } = req.body;
 
   try {
     const existingAttendance = await Student.findOne({
@@ -94,19 +94,22 @@ router.post('/attendance/check', async (req, res) => {
       'attendance.hour': hour,
       'attendance.teachername': teachername,
       'attendance.subject': subject,
+      course: course // Check for the exact course
     });
 
     if (existingAttendance) {
       res.json({ isMarked: true, teachername, markedSubject: subject });
     } else {
-      const differentSubjectAttendance = await Student.findOne({
+      // Check if attendance is marked for any subject in a different course
+      const differentCourseAttendance = await Student.findOne({
         'attendance.date': date,
         'attendance.hour': hour,
-        'attendance.teachername': { $ne: teachername },
+        'attendance.teachername': teachername,
+        course: { $ne: course } // Ensure course is different
       });
 
-      if (differentSubjectAttendance) {
-        res.json({ isMarked: true, markedSubject: differentSubjectAttendance.attendance.subject });
+      if (differentCourseAttendance) {
+        res.json({ isMarked: true, markedSubject: differentCourseAttendance.attendance.subject });
       } else {
         res.json({ isMarked: false });
       }
@@ -118,7 +121,7 @@ router.post('/attendance/check', async (req, res) => {
 });
 
 router.post('/attendance/existing', async (req, res) => {
-  const { date, hour, teachername, subject } = req.body;
+  const { date, hour, teachername, subject,course } = req.body;
 
   try {
     const students = await Student.find({
@@ -126,6 +129,7 @@ router.post('/attendance/existing', async (req, res) => {
       'attendance.hour': hour,
       'attendance.teachername': teachername,
       'attendance.subject': subject,
+      'course': course
     });
 
     const existingAttendance = students.map(student => {
@@ -142,6 +146,7 @@ router.post('/attendance/existing', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 router.post('/attendance/summary', async (req, res) => {
   const { course, semester, subject } = req.body;
 
@@ -184,7 +189,5 @@ router.post('/attendance/summary', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
 
 module.exports = router;

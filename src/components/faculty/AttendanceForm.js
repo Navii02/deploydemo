@@ -65,6 +65,7 @@ const AttendanceForm = () => {
         hour,
         teachername,
         subject,
+        course,
       });
 
       if (checkResponse.data.isMarked) {
@@ -77,6 +78,7 @@ const AttendanceForm = () => {
             hour,
             teachername,
             subject,
+            course,
           });
 
           setExistingAttendance(response.data);

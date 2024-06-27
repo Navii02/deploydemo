@@ -1,4 +1,3 @@
-// Backend code (assuming you're using Node.js with Express)
 const express = require('express');
 const router = express.Router();
 const Teacher = require('../../models/hod/TeachersDetailSchema');
@@ -24,7 +23,6 @@ router.post('/data', async (req, res) => {
   }
 });
 
-
 // Route to fetch students based on semester and course
 router.get('/students/faculty/:course/:semester', async (req, res) => {
   const { course, semester } = req.params;
@@ -37,6 +35,7 @@ router.get('/students/faculty/:course/:semester', async (req, res) => {
     res.status(500).json({ message: 'Error fetching students' });
   }
 });
+
 // Route to submit or update internal marks
 router.post('/marks', async (req, res) => {
   const { studentId, subject, marks } = req.body;
@@ -50,14 +49,15 @@ router.post('/marks', async (req, res) => {
 
     const existingMarkIndex = student.internalMarks.findIndex(mark => mark.subject === subject);
 
+    const totalMarks = (marks.examMarks || 0) + (marks.assignmentMarks || 0) + (marks.attendance || 0);
+
     if (existingMarkIndex > -1) {
       student.internalMarks[existingMarkIndex] = {
         subject,
         ...marks,
-        totalMarks: marks.examMarks + marks.assignmentMarks + marks.attendancePercentage
+        totalMarks
       };
     } else {
-      const totalMarks = marks.examMarks + marks.assignmentMarks + marks.attendancePercentage;
       student.internalMarks.push({ subject, ...marks, totalMarks });
     }
 
