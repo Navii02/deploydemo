@@ -10,7 +10,7 @@ const hodDetailSchema = new mongoose.Schema({
   branches: [String],
   semesters: [String],
   academicYear: String,
-  course: String,
+  department: String,
   isHOD: {
     type: Boolean,
     default: false,

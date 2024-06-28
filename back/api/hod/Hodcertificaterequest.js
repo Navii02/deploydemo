@@ -8,8 +8,8 @@ router.get('/hod/certificateRequests/:branch', async (req, res) => {
   try {
     const branch = req.params.branch.toUpperCase();
     const courseMapping = {
-      'CSE': ['B.Tech CSE', 'M.Tech CSE', 'MCA', 'BBA', 'BCA'],
-      'ECE': ['B.Tech ECE']
+      'CS': ['B.Tech CSE',  'MCA', 'BBA', 'BCA'],
+      'EC': ['B.Tech ECE']
       // Add mappings for other branches
     };
 

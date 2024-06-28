@@ -14,13 +14,15 @@ const StudentPerformancePage = () => {
 
   const fetchData = async () => {
     try {
+      const tutorclass = localStorage.getItem('tutorclass');
+      console.log(tutorclass);
       const academicYear = localStorage.getItem('academicYear');
-      if (!academicYear) {
+      if (!academicYear&&!tutorclass) {
         console.error('Academic year not found in localStorage');
         return;
       }
 
-      const response = await axios.get(`/api/student-performance?academicYear=${academicYear}`);
+      const response = await axios.get(`/api/student-performance/${tutorclass}/${academicYear}`);
       setStudentData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);

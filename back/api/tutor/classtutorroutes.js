@@ -34,7 +34,7 @@ router.post(`/classtutorlogin`, async (req, res) => {
         return res.status(400).json({ msg: 'Academic year not set for the teacher' });
       }
 
-      return res.status(200).json({ msg: 'You have logged in successfully', academicYear: teacher.academicYear, department: teacher.course ,tutorclass:teacher.tutorclass});
+      return res.status(200).json({ msg: 'You have logged in successfully', academicYear: teacher.academicYear, department: teacher.department ,tutorclass:teacher.tutorclass});
     } else {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }

@@ -32,7 +32,7 @@ router.post('/hodlogin', async (req, res) => {
     const matchPassword = await bcrypt.compare(password, userInHodSchema.password);
     if (matchPassword) {
       // If password matches, send login success message
-      return res.status(200).json({ msg: 'You have logged in successfully', branch: userInHoddetails.branches, email: userInHodSchema.email });
+      return res.status(200).json({ msg: 'You have logged in successfully', department: userInHoddetails.department, email: userInHodSchema.email });
     } else {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }

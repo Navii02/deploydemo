@@ -7,11 +7,13 @@ const Student = require('../../models/Officer/ApprovedStudents');
 router.use(express.json());
 
 // Endpoint to fetch student performance data by academic year
-router.get('/student-performance', async (req, res) => {
-  const { academicYear } = req.query;
+
+router.get('/student-performance/:department/:academicYear', async (req, res) => {
+  const { department, academicYear } = req.params;
+  console.log(department,academicYear);
 
   try {
-    const students = await Student.find({ academicYear });
+    const students = await Student.find({ course: department, academicYear });
     if (students.length === 0) {
       return res.status(404).json({ message: 'No students found for the given academic year' });
     }

@@ -9,7 +9,8 @@ function StudentDetailsPage() {
 
   // Fetch student data based on the logged-in user's department
   const fetchStudents = async () => {
-    const department = localStorage.getItem('userDepartment');
+    const department = localStorage.getItem('branch');
+    console.log(department);
 
     try {
       const response = await axios.get(`/api/students?department=${department}`);

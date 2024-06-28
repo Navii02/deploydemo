@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/admin/teachers', async (req, res) => {
   try {
     const branch = req.query.branch;
-    const teachers = await Teacher.find({ course: branch });
+    const teachers = await Teacher.find({ department: branch });
     res.json({ teachers });
   } catch (error) {
     console.error('Error fetching teachers:', error);
@@ -54,9 +54,9 @@ router.delete('/admin/deleteTeacher/:id', async (req, res) => {
 
 // GET subjects based on course and semester
 router.get('/admin/subjects', async (req, res) => {
-  const { course, semester } = req.query;
+  const {department, semester } = req.query;
   try {
-    const subjects = await Subject.find({ course, semester });
+    const subjects = await Subject.find({ department, semester });
     res.json(subjects);
   } catch (error) {
     console.error('Error fetching subjects:', error);

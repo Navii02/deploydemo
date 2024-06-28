@@ -14,7 +14,7 @@ const teacherSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  course: String,
+  department: String,
   tutorassigned: {
     type: Boolean,
     default: false,

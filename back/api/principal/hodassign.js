@@ -36,8 +36,8 @@ router.get('/hod/hods', async (req, res) => {
 /// Route to assign a teacher as HOD and handle the HOD turn for specific branch
 router.post('/hod/assign', async (req, res) => {
   try {
-    const { teacherId, course } = req.body;
-    console.log(teacherId, course);
+    const { teacherId, department } = req.body;
+    console.log(teacherId, department);
 
     // Find the teacher to be assigned as HOD
     const teacher = await Teacher.findById(teacherId);
@@ -54,7 +54,7 @@ router.post('/hod/assign', async (req, res) => {
     await teacher.save();
 
     // Find and update the existing HOD for the specified course
-    const existingHOD = await HodDetails.findOne({ course: course, isHOD: true });
+    const existingHOD = await HodDetails.findOne({ department:department, isHOD: true });
     if (existingHOD) {
       // If an existing HOD is found for the specified course, make them no longer an HOD
       existingHOD.isHOD = false;
@@ -77,7 +77,7 @@ router.post('/hod/assign', async (req, res) => {
       subjectCode: teacher.subjectCode,
       branches: teacher.branches,
       semesters: teacher.semesters,
-      course: course, // Assign the specific course here
+      department:department, // Assign the specific course here
       isHOD: true,
       // Add other relevant HOD details here (e.g., department, designation)
     });

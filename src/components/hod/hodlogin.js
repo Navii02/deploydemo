@@ -75,10 +75,10 @@ function HodLogin() {
       if (data) {
         // Redirect the officer to the office page
         Navigate('/hodhome');
-        localStorage.setItem('branch', data.branch);
+        localStorage.setItem('branch', data.department);
         localStorage.setItem('email', data.email);
         console.log('email', data.email);
-        console.log('branch', data.branch);
+        console.log('branch', data.department);
       } else {
         alert('Login failed. Please contact the office.');
       }

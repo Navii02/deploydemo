@@ -6,12 +6,13 @@ import './HodHome.css'; // Import your CSS file
 function HodHome() {
   const [hodName, setHodName] = useState('');
   const [departmentName, setDepartmentName] = useState('');
-  const [teacherCounts, setTeacherCounts] = useState({}); // Object to store course ID and count
-   const [numStudents, setNumStudents] = useState(0);
+  const [teacherCounts, setTeacherCounts] = useState(0); // State to store teacher count
+  const [numStudents, setNumStudents] = useState(0);
+
   useEffect(() => {
     const fetchData = async () => {
       const hodEmail = localStorage.getItem('email'); // Assuming email is stored in localStorage
-      console.log('HOD Email:', hodEmail);
+      //console.log('HOD Email:', hodEmail);
 
       if (!hodEmail) {
         console.error('HOD email not found in localStorage');
@@ -20,24 +21,26 @@ function HodHome() {
 
       try {
         const response = await axios.get(`/api/hod-profile?email=${hodEmail}`);
-        console.log('Full Response:', response);
+        //console.log('Full Response:', response);
 
         const hodName = response.data.teachername; // Assuming name property in HOD profile
-        const departmentName = response.data.course;
+        const departmentName = response.data.department;
         const teacherCounts = response.data.teacherCounts; // Use the actual property name
-        const studentCounts = response.data.studentCounts;
-        console.log('Received Data:', {
+        const studentCounts = response.data.studentCounts || 0; // Default to 0 if not provided
+
+        /*console.log('Received Data:', {
           hodName,
           departmentName,
           teacherCounts,
-        });
+          studentCounts,
+        });*/
 
         setHodName(hodName);
         setDepartmentName(departmentName);
         setTeacherCounts(teacherCounts);
-          setNumStudents(studentCounts);
+        setNumStudents(studentCounts);
 
-        console.log('HOD:', hodName);
+        //console.log('HOD:', hodName);
       } catch (error) {
         console.error('Error fetching HOD profile:', error);
       }
@@ -45,8 +48,6 @@ function HodHome() {
 
     fetchData();
   }, []);
-
-  const totalFaculties = Object.values(teacherCounts).reduce((acc, count) => acc + count, 0);
 
   return (
     <div>
@@ -60,17 +61,12 @@ function HodHome() {
           <div className="associated-data">
             <h2>Your Department Information:</h2>
             <p>
-              <strong>Department Name:</strong> {departmentName} 
+              <strong>Department Name:</strong> {departmentName}
             </p>
-            {/* Details of faculties per course (optional) */}
-            {Object.keys(teacherCounts).length > 0 && (
-              <div>
-                <p>Number of Faculties : {totalFaculties}</p>
-               
-                
-              </div>
-            )}
-            <p><strong>Number of Students:</strong> {numStudents}(Data not available yet)</p>
+            <div>
+              <p>Number of Faculties: {teacherCounts}</p>
+            </div>
+            <p><strong>Number of Students:</strong> {numStudents}</p>
           </div>
         </div>
       </div>

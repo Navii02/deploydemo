@@ -16,7 +16,7 @@ const TeacherList = () => {
     semesters: '',
     subjects: '',
     subjectCode: '',
-    course: '',
+    department: '',
   });
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const TeacherList = () => {
     const selectedTeacher = teachers.find(teacher => teacher._id === teacherId);
     if (!selectedTeacher) return;
 
-    axios.post('/api/hod/assign', { teacherId, course: selectedTeacher.course })
+    axios.post('/api/hod/assign', { teacherId, department: selectedTeacher.department })
       .then(response => {
         console.log('HOD assigned successfully:', response.data);
         setAssignedTeacher(response.data.teachername);
@@ -79,7 +79,7 @@ const TeacherList = () => {
           semesters: '',
           subjects: '',
           subjectCode: '',
-          course: '',
+          department: '',
         });
         fetchTeachers();
         fetchHODs();
@@ -99,7 +99,7 @@ const TeacherList = () => {
             {teachers.map(teacher => (
               <li key={teacher._id}>
                 <strong>Name:</strong> {teacher.teachername}<br />
-                <strong>Department:</strong> {teacher.course}<br />
+                <strong>Department:</strong> {teacher.department}<br />
                 <strong>Email:</strong> {teacher.email}<br />
                 <button className="assign-button" onClick={() => setSelectedTeacherId(teacher._id)}>Assign as HOD</button>
                 {assignedTeacher && assignedTeacher === teacher.teachername && (
@@ -125,7 +125,7 @@ const TeacherList = () => {
             {hods.map(hod => (
               <li key={hod._id} className="hod-item">
                 <strong>Name:</strong> {hod.teachername}<br />
-                <strong>Department:</strong> {hod.course}<br />
+                <strong>Department:</strong> {hod.department}<br />
                 <strong>Email:</strong> {hod.email}
               </li>
             ))}
@@ -179,17 +179,17 @@ const TeacherList = () => {
                 <option value="8">Semester 8</option>
               </select>
               <select
-                name="course"
-                value={newHod.course}
+                name="department"
+                value={newHod.department}
                 onChange={handleAddHodChange}
                 required
               >
-                <option value="">Select Course</option>
-                <option value="B.Tech CSE">B.Tech CSE</option>
-                <option value="B.Tech ECE">B.Tech ECE</option>
-                <option value="BCA">BCA</option>
-                <option value="BBA">BBA</option>
-                <option value="MCA">MCA</option>
+                <option value="">Select Department</option>
+                <option value="CS">CS</option>
+                <option value="EC">EC</option>
+                <option value="EE">EE</option>
+                <option value="Aplied Science">Aplied Science</option>
+                
               </select>
               <input
                 type="text"
