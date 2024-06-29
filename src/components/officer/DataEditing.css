@@ -1,5 +1,7 @@
-/* Base styles for body and html */
+/* Importing Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+/* Base styles for body and html */
 body, html {
   overflow-x: hidden; /* Prevent horizontal scrollbar on the entire page */
   font-family: Arial, sans-serif;
@@ -13,15 +15,14 @@ body, html {
 /* Header container styling */
 .header-container {
   text-align: center;
-  margin-top: 30px;
-  margin-bottom: 20px;
+  margin: 30px 0 20px; /* Adjusted margin */
 }
 
 .header-container h1 {
   font-size: 3em;
   color: #333;
   margin-bottom: 10px;
-  font-family: 'Roboto', sans-serif; 
+  font-family: 'Roboto', sans-serif;
 }
 
 .header-container .divider {
@@ -36,11 +37,11 @@ body, html {
 .data-entry-container {
   width: 85%;
   margin: 30px auto;
-  overflow-x: hidden;
   background: #ffffff; /* White background for the form */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box; /* Ensure padding is included in width */
 }
 
 /* Form elements */
@@ -53,9 +54,9 @@ body, html {
   padding: 10px;
   border: 1px solid #bbb; /* Lighter border */
   border-radius: 4px;
-  box-sizing: border-box;
   font-size: 14px;
   transition: border-color 0.3s;
+  box-sizing: border-box; /* Ensure padding is included in width */
 }
 
 .data-entry-container input:focus,
@@ -78,19 +79,23 @@ body, html {
   color: #333;
   height: 40px;
 }
-
 /* Button styling */
-.data-entry-container .submit-button,
-.data-entry-container .clear-button,
-.data-entry-container .capture-button,
-.data-entry-container .upload-button  {
-  padding: 10px 20px;
+.data-entry-container .capture-button {
+  padding: 10px 20px; /* Ensure consistent padding */
   margin: 0 5px; /* Adjust margin */
   cursor: pointer;
   font-size: 16px;
   border: none;
   border-radius: 4px;
   transition: background-color 0.3s, transform 0.3s;
+  box-sizing: border-box; /* Ensure padding is included in width */
+  width: auto; /* Allow width to adjust based on content */
+}
+
+/* Ensure preview canvas does not affect button size */
+.data-entry-container .preview-canvas {
+  max-width: 100%; /* Adjust as needed */
+  max-height: 100%; /* Adjust as needed */
 }
 
 .data-entry-container .button-container {
@@ -119,20 +124,23 @@ body, html {
   transform: scale(1.05);
 }
 
-.data-entry-container .capture-button  {
-  background-color: #409240; /* Orange button */
+.data-entry-container .capture-button {
+  background-color: #409240; /* Green button */
   color: #fff;
 }
+
 .data-entry-container .capture-button:hover {
-  background-color: #175517; /* Darker red on hover */
+  background-color: #175517; /* Darker green on hover */
   transform: scale(1.05);
 }
+
 .data-entry-container .upload-button {
-  background-color: #3a8a3d; /* Green button */
+  background-color: #3a8a3d; /* Another green button */
   color: #fff;
 }
+
 .data-entry-container .upload-button:hover {
-  background-color: #0e592b; /* Darker red on hover */
+  background-color: #0e592b; /* Darker green on hover */
   transform: scale(1.05);
 }
 
@@ -210,21 +218,16 @@ body, html {
   flex: 1 1 calc(50% - 15px); /* Take full width on small screens, half on larger screens */
   min-width: 250px;
 }
-
+.qualified-details-row .form-group{
+  flex: 1 1 calc(50% - 15px); /* Take full width on small screens, half on larger screens */
+  min-width: 250px;
+}
 /* Styling for elements in a row */
 .data-entry-container .row {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 15px;
-}
-
-/* Styling for form headings */
-.data-entry-container h1 {
-  text-align: center;
-  font-size: 3em;
-  margin-bottom: 20px;
-  color: #333;
 }
 
 .data-entry-container .row .form-group {
@@ -235,4 +238,53 @@ body, html {
 
 .data-entry-container .row .form-group:last-child {
   margin-right: 0;
+}
+
+/* Styling for form headings */
+.data-entry-container h1 {
+  text-align: center;
+  font-size: 3em;
+  margin-bottom: 20px;
+  color: #333;
+}
+/* Radio button styling */
+.data-entry-container input[type="radio"] {
+  height: 16px; /* Adjust height */
+  width: 16px; /* Adjust width */
+  margin-top: 10px; /* Adjust margin */
+  appearance: none; /* Remove default appearance */
+  -webkit-appearance: none; /* For older versions of Safari */
+  border: 2px solid #757575; /* Default border color */
+  border-radius: 50%; /* Rounded shape */
+  outline: none; /* Remove outline on focus */
+  cursor: pointer; /* Add cursor pointer */
+}
+
+.radio-label {
+  margin-right: 2px; /* Adjust margin between radio button and text */
+}
+
+/* Radio button checked state */
+.data-entry-container input[type="radio"]:checked {
+  background-color: #03a9f4; /* Change background color when checked */
+  border-color: #03a9f4; /* Change border color when checked */
+}
+.capture-button, .upload-button {
+  width: 120px; /* Adjust width as needed */
+  height: 40px; /* Adjust height as needed */
+  font-size: 16px; 
+}
+
+
+.submit-button,
+.clear-button {
+  padding: 10px 20px;
+  margin: 0 10px; /* Adjust margin between buttons */
+  cursor: pointer;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s, transform 0.3s;
+  box-sizing: border-box;
+  width: auto;
 }

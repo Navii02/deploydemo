@@ -131,7 +131,7 @@ const AdminTeachersPage = () => {
                         </td>
                         <td>
                           <input
-                            type="text"
+                            type="email"
                             value={editingTeacher.email}
                             onChange={(e) => setEditingTeacher({ ...editingTeacher, email: e.target.value })}
                           />
@@ -207,25 +207,9 @@ const AdminTeachersPage = () => {
             <label>
               Email:
               <input
-                type="text"
+                type="email"
                 value={newTeacher.email}
                 onChange={(e) => setNewTeacher({ ...newTeacher, email: e.target.value })}
-              />
-            </label>
-            <label>
-              Subjects (comma-separated):
-              <input
-                type="text"
-                value={newTeacher.subjects.join(', ')} // Display as comma-separated string
-                onChange={(e) => handleArrayInputChange('subjects', e)}
-              />
-            </label>
-            <label>
-              Subject Code (comma-separated):
-              <input
-                type="text"
-                value={newTeacher.subjectCode.join(', ')} // Display as comma-separated string
-                onChange={(e) => handleArrayInputChange('subjectCode', e)}
               />
             </label>
             <label>
@@ -245,6 +229,23 @@ const AdminTeachersPage = () => {
                 onChange={(e) => handleArrayInputChange('semesters', e)}
               />
             </label>
+            <label>
+              Subjects (comma-separated):
+              <input
+                type="text"
+                value={newTeacher.subjects.join(', ')} // Display as comma-separated string
+                onChange={(e) => handleArrayInputChange('subjects', e)}
+              />
+            </label>
+            <label>
+              Subject Code (comma-separated):
+              <input
+                type="text"
+                value={newTeacher.subjectCode.join(', ')} // Display as comma-separated string
+                onChange={(e) => handleArrayInputChange('subjectCode', e)}
+              />
+            </label>
+            
             <button onClick={handleAddTeacher}>Add Teacher</button>
           </div>
         )}

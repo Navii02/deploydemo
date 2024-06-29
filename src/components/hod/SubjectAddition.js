@@ -3,15 +3,15 @@ import axios from 'axios';
 import HodNavbar from './HodNavbar';
 import styles from './AddSubjectForm.module.css';
 
-const ShowAddedSubjects = ({ selectedSemester }) => {
+const ShowAddedSubjects = ({ selectedSemester, selectedCourse }) => {
   const [addedSubjects, setAddedSubjects] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
   const [editedSubjects, setEditedSubjects] = useState([]);
   const fetchAddedSubjects = useCallback(async () => {
     try {
         let response;
-        const branch = localStorage.getItem('branch'); // Retrieve branch from localStorage
-        if (selectedSemester && selectedSemester >= 1) {
+        const branch = localStorage.getItem('branch');
+        if (selectedSemester && selectedSemester >= 1 && selectedCourse) {
             if (!branch) {
                 console.error('Branch not found in localStorage.');
                 return;
@@ -19,14 +19,14 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
             response = await axios.get('/api/hod/subjects', {
                 params: {
                     semester: selectedSemester,
-                    branch: branch // Pass branch as a query parameter
+                    course: selectedCourse, // Pass course as a query parameter
                 }
             });
         } else {
-            // If selected semester is not provided or is less than 3, fetch subjects without branch
             response = await axios.get('/api/hod/subjects', {
                 params: {
-                    semester: selectedSemester // Send request without branch
+                    semester: selectedSemester,
+                    course: selectedCourse // Send request with course
                 }
             });
         }
@@ -36,12 +36,11 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
     } catch (error) {
         console.error('Error fetching added subjects:', error);
     }
-}, [selectedSemester]);
-
+}, [selectedSemester, selectedCourse]);
 
   useEffect(() => {
     fetchAddedSubjects();
-  }, [fetchAddedSubjects, selectedSemester]);
+  }, [fetchAddedSubjects, selectedSemester, selectedCourse]);
 
   const handleEditSubject = (index) => {
     setEditingIndex(index);
@@ -64,7 +63,7 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
   };
 
   return (
-    <div className={styles.table}> {/* Use CSS module class */}
+    <div className={styles.table}>
       <table>
         <thead>
           <tr>
@@ -121,8 +120,11 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
       </table>
     </div>
   );
-};const AddSubjectForm = () => {
+};
+
+const AddSubjectForm = () => {
   const [selectedSemester, setSelectedSemester] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [semester, setSemester] = useState('');
   const [subjects, setSubjects] = useState([{ subjectName: '', subjectCode: '' }]);
@@ -141,19 +143,23 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
   };
 
   const handleChangeCourse = (e) => {
+    setSelectedCourse(e.target.value);
     setCourse(e.target.value);
   };
+
   useEffect(() => {
     const branchFromLocalStorage = localStorage.getItem('branch');
     setBranch(branchFromLocalStorage);
     // Update courses based on selected branch
-    if (branchFromLocalStorage === 'CSE') {
-      setCourses([ 'B.Tech CSE', 'BBA', 'BCA', 'MCA']);
-    } else if (branchFromLocalStorage === 'ECE') {
+    if (branchFromLocalStorage === 'CS') {
+      setCourses(['B.Tech CSE', 'MCA', 'BBA', 'BCA']);
+    } else if (branchFromLocalStorage === 'EC') {
       setCourses(['B.Tech ECE']);
+    } else if (branchFromLocalStorage === 'EE') {
+      setCourses(['B.Tech CSE', 'B.Tech ECE', 'MCA', 'BBA', 'BCA']);
     }
   }, []);
-  
+
   const handleChange = (index, event) => {
     const values = [...subjects];
     if (event.target.name === 'subjectName') {
@@ -192,16 +198,15 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
       alert('Error adding subjects.');
     }
   };
-  
+
   return (
     <div>
       <HodNavbar />
-      <div className={styles.container}> {/* Use CSS module class */}
-        
+      <div className={styles.container}>
         {branch && (
           <>
             <label htmlFor="courseFilter">Select Course:</label>
-            <select id="courseFilter" value={course} onChange={handleChangeCourse}>
+            <select id="courseFilter" value={selectedCourse} onChange={handleChangeCourse}>
               <option value="">Select Course</option>
               {courses.map((course, index) => (
                 <option key={index} value={course}>
@@ -212,7 +217,7 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
           </>
         )}
       </div>
-      <div className={styles.container}> {/* Use CSS module class */}
+      <div className={styles.container}>
         <label htmlFor="semesterFilter">Select Semester:</label>
         <select id="semesterFilter" value={selectedSemester} onChange={handleChangeSemester}>
           <option value="">Select Semester</option>
@@ -223,9 +228,9 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
           ))}
         </select>
       </div>
-      {showAddForm && selectedSemester && (
-        <div className={styles.container}> {/* Use CSS module class */}
-          <form onSubmit={handleSubmit} className={styles.form}> {/* Use CSS module class */}
+      {showAddForm && selectedSemester && selectedCourse && (
+        <div className={styles.container}>
+          <form onSubmit={handleSubmit} className={styles.form}>
             <div>
               {subjects.map((subject, index) => (
                 <div key={index}>
@@ -288,12 +293,12 @@ const ShowAddedSubjects = ({ selectedSemester }) => {
           </form>
         </div>
       )}
-      {!showAddForm && selectedSemester && (
-        <div className={styles.container}> {/* Use CSS module class */}
+      {!showAddForm && selectedSemester && selectedCourse && (
+        <div className={styles.container}>
           <button onClick={() => setShowAddForm(true)}>Add Subject</button>
         </div>
       )}
-      {selectedSemester && <ShowAddedSubjects selectedSemester={selectedSemester} />}
+      {selectedSemester && selectedCourse && <ShowAddedSubjects selectedSemester={selectedSemester} selectedCourse={selectedCourse} />}
     </div>
   );
 };

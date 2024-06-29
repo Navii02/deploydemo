@@ -60,11 +60,11 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   };
 
   const [formData, setFormData] = useState({ ...initialFormData });
-  const [copyClicked, setCopyClicked] = useState(false);
+  const [copyClicked] = useState(false);
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
- 
+  const [copyAddressOption, setCopyAddressOption] = useState(false);
 
   const handleCameraCapture = async () => {
     try {
@@ -79,47 +79,60 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       videoRef.current.style.display = 'block';
       canvasRef.current.style.display = 'block';
   
-      // Introduce a delay before capturing the photo
+      // Introduce a delay before capturing the photo (adjust as needed)
       await new Promise((resolve) => setTimeout(resolve, 5000));
   
       const canvas = canvasRef.current;
-      // Adjust the width and height of the canvas to change the resolution
-      canvas.width = 720; // New width
-      canvas.height = 480; // New height
-  
       const context = canvas.getContext('2d');
+  
+      // Ensure video dimensions match canvas dimensions
+      const { videoWidth, videoHeight } = videoRef.current;
+      canvas.width = videoWidth;
+      canvas.height = videoHeight;
+  
+      // Draw the video frame onto the canvas
+      context.translate(videoWidth, 0); // Flip horizontally
+      context.scale(-1, 1); // Mirror image horizontally
       context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+  
+      // Reset transformation to prevent further mirroring
+      context.setTransform(1, 0, 0, 1, 0, 0);
   
       // Show a confirmation dialog to capture the photo
       const captureConfirmed = window.confirm('Do you want to capture this photo?');
       if (captureConfirmed) {
-        canvas.toBlob((blob) => {
-          const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
-          setFormData({ ...formData, photo: file });
+        // Capture the photo from the canvas
+        const photoData = canvas.toDataURL('image/jpeg');
+        const blob = await fetch(photoData).then((res) => res.blob());
+        const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+        setFormData({ ...formData, photo: file });
   
-          // Hide the video and canvas elements after capturing the photo
-          videoRef.current.style.display = 'none';
-          canvasRef.current.style.display = 'none';
-        }, 'image/jpeg', 1);
+        // Hide the video and canvas elements after capturing the photo
+        videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+        videoRef.current.style.display = 'none';
+        canvasRef.current.style.display = 'none';
+      } else {
+        // If capture is cancelled, stop video stream and hide elements
+        mediaStream.getTracks().forEach((track) => track.stop());
+        videoRef.current.style.display = 'none';
+        canvasRef.current.style.display = 'none';
       }
-  
-      // Stop the media stream tracks
-      mediaStream.getTracks().forEach((track) => {
-        track.stop();
-      });
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
   };
+  
+  
   const handleCopyAddress = () => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      permanentAddress: prevFormData.address,
-    }));
-    setCopyClicked(true); // Set copyClicked to true when the button is clicked
+    setCopyAddressOption(!copyAddressOption);
+    if (!copyAddressOption) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        permanentAddress: prevFormData.address,
+      }));
+    }
   };
-
-
+  
   const handleFileInputChange = (event) => {
     const { name, files } = event.target;
     if (name === 'photo') {
@@ -174,6 +187,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       setFormData({ ...formData, [name]: value });
     }
   };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -301,11 +315,15 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 alt="Uploaded"
               />
             )}
-            {/* Video and canvas elements for camera capture */}
-            <video ref={videoRef} style={{ display: 'none' }}></video>
+        
+          </div>
+                {/* Video and canvas elements for camera capture */}
+                <video ref={videoRef} style={{ display: 'none' }}></video>
             <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+            
           </div>
-          </div>
+        
+        
             <div className="form-group">
               <label>Address:</label>
               <textarea
@@ -314,26 +332,31 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 onChange={handleChange}
                 required
               ></textarea>
-            </div>
-            <div className="button">
-            <button
-              type="button"
-              onClick={handleCopyAddress}
-              className={copyClicked ? 'clicked' : ''}
-            >
-              Copy Communication Address to Permanent Address
-            </button> 
-          </div>
-          <div className="form-group">
-            <label>Permanent Address:</label>
-            <textarea
-              name="permanentAddress"
-              value={copyClicked ? formData.address : formData.permanentAddress}
-              onChange={handleChange}
-              required
-            ></textarea>
-          </div>
-            
+            </div>   
+            <div className="form-group">
+  <label  className='radio-label'>
+  
+    <input
+  
+      type="radio"
+     
+      checked={copyAddressOption}
+      onChange={handleCopyAddress}
+    />
+Copy Address
+  </label>
+  <label>Permanent Address:</label>
+  <textarea
+    name="permanentAddress"
+    value={formData.permanentAddress}
+    onChange={handleChange}
+    disabled={copyAddressOption}
+    required
+  />
+</div>
+
+              
+           
             <div className="form-group">
               <label>pincode:</label>
               <input
@@ -344,7 +367,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               />
             </div>
+            <div className="row">
             <div className="form-group">
+           
               <label>Religion:</label>
               <input
                 type="text"
@@ -364,6 +389,19 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               />
             </div>
+            </div>
+            <div className="row">
+            <div className="form-group">
+            
+              <label>Date Of Birth:</label>
+              <input
+                type="date"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                required
+              />
+            </div>
             <div className="form-group">
               <label>Gender:</label>
               <select
@@ -378,16 +416,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 <option value="Transgender">Transgender</option>
               </select>
             </div>
-            <div className="form-group">
-              <label>Date Of Birth:</label>
-              <input
-                type="date"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            
             <div className="form-group">
               <label>Blood Group:</label>
               <input
@@ -397,6 +426,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 onChange={handleChange}
                 required
               />
+            </div>
             </div>
             <div className="form-group">
               <label>Mobile No:</label>
@@ -441,8 +471,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     onChange={handleChange}
     required
   />
-</div>
+</div><div className="parent-details-row">
             <div className="form-group">
+            
               <label>Entrance Roll No:</label>
               <input
                 type="text"
@@ -462,6 +493,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               />
             </div>
+            </div>
             <div className="form-group">
               <label>Aadhar No:</label>
               <input
@@ -475,78 +507,80 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               />
             </div>
             <div className="box">
-              <h4>Qualifying Examination Details</h4>
-              <div className="form-group">
-                <label>Qualification:</label>
-                <input
-                  type="text"
-                  name="qualify.exam"
-                  value={formData.qualify.exam}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Board:</label>
-                <input
-                  type="text"
-                  name="qualify.board"
-                  value={formData.qualify.board}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Institution:</label>
-                <input
-                  type="text"
-                  name="qualify.institution"
-                  value={formData.qualify.institution}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Register No:</label>
-                <input
-                  type="text"
-                  name="qualify.regNo"
-                  value={formData.qualify.regNo}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Exam Month and Year:</label>
-                <input
-                  type="text"
-                  name="qualify.examMonthYear"
-                  value={formData.qualify.examMonthYear}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Percentage:</label>
-                <input
-                  type="text"
-                  name="qualify.percentage"
-                  value={formData.qualify.percentage}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>CGPA:</label>
-                <input
-                  type="text"
-                  name="qualify.cgpa"
-                  value={formData.qualify.cgpa}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+            <div className="parent-details-row">
+            <div className="form-group">
+              <label>Qualifying Exam:</label>
+              <input
+                type="text"
+                name="qualify.exam"
+                value={formData.qualify.exam}
+                onChange={handleChange}
+                required
+              />
             </div>
+            <div className="form-group">
+              <label>Board:</label>
+              <input
+                type="text"
+                name="qualify.board"
+                value={formData.qualify.board}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Institution:</label>
+              <input
+                type="text"
+                name="qualify.institution"
+                value={formData.qualify.institution}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Reg No:</label>
+              <input
+                type="text"
+                name="qualify.regNo"
+                value={formData.qualify.regNo}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Exam Month/Year:</label>
+              <input
+                type="text"
+                name="qualify.examMonthYear"
+                value={formData.qualify.examMonthYear}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Percentage:</label>
+              <input
+                type="text"
+                name="qualify.percentage"
+                value={formData.qualify.percentage}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>CGPA:</label>
+              <input
+                type="text"
+                name="qualify.cgpa"
+                value={formData.qualify.cgpa}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            </div>
+        </div>
+         
             <div className="box">
   <h4>Parents Details</h4>
   <div className="parent-details-row">
@@ -618,7 +652,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     </div>
   </div>
 </div>
-
+<div className="row">
             <div className="form-group">
               <label>Annual Income:</label>
               <input
@@ -639,8 +673,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               />
             </div>
+            </div>
             <div className="box">
               <h4>Bank Details</h4>
+              <div className="parent-details-row">
               <div className="form-group">
                 <label>Bank Name:</label>
                 <input
@@ -680,10 +716,13 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                   required
                 />
+                </div>
               </div>
             </div>
             <div className="box">
-              <h4>Achievements</h4>
+            <h4>Achievements</h4>
+              <div className="row">
+   
               <div className="form-group">
                 <label>Arts:</label>
                 <input
@@ -711,6 +750,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
+            </div>
             </div>
             <div className="button-container">
             <button type="submit" className="submit-button">

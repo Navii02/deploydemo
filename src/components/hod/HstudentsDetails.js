@@ -20,8 +20,8 @@ function StudentDetailsPage() {
         const data = await response.json();
         setStudents(data.students);
 
-        const uniqueCourses = [...new Set(data.students.flatMap(student => student.course))];
-        setCourses(uniqueCourses);
+        const uniqueCourses = [...new Set(data.students.map(student => student.course))];
+        setCourseOptions(['All', ...uniqueCourses]);
       } catch (error) {
         console.error(error.message);
       }
@@ -29,9 +29,8 @@ function StudentDetailsPage() {
 
     const storedBranch = localStorage.getItem('branch');
     if (storedBranch) {
-      const mappedBranch = mapBranchName(storedBranch);
-      setBranch(mappedBranch);
-      fetchStudents(mappedBranch);
+      setBranch(storedBranch);
+      fetchStudents(storedBranch);
     }
   }, []); // No dependencies
 
@@ -46,21 +45,6 @@ function StudentDetailsPage() {
     setFilteredStudents(newFilteredStudents);
   }, [students, selectedSemester, selectedCourse]);
 
-  const mapBranchName = (branch) => {
-    switch (branch) {
-      case 'CSE':
-        return 'CSE';
-      case 'ECE':
-        return 'ECE';
-      default:
-        return branch;
-    }
-  };
-
-  const setCourses = (courses) => {
-    setCourseOptions(['All', ...courses]);
-  };
-
   const handleSemesterChange = (event) => {
     setSelectedSemester(event.target.value);
   };
@@ -71,56 +55,55 @@ function StudentDetailsPage() {
 
   return (
     <div>
-       <HodNavbar />
-    <div className="student-details-container">
-     
-      <h3 className="student-details-title">Branch: {branch}</h3>
-      <div className="student-details-label-select">
-        <label htmlFor="semester">Select Semester:</label>
-        <select id="semester" value={selectedSemester} onChange={handleSemesterChange}>
-          <option value="">All</option>
-          <option value="1">Semester 1</option>
-          <option value="2">Semester 2</option>
-          <option value="3">Semester 3</option>
-          <option value="4">Semester 4</option>
-          {/* Add options for other semesters */}
-        </select>
-      </div>
-      <div className="student-details-label-select">
-        <label htmlFor="course">Select Course:</label>
-        <select id="course" value={selectedCourse} onChange={handleCourseChange}>
-          {courseOptions.map((course, index) => (
-            <option key={index} value={course}>{course}</option>
-          ))}
-        </select>
-      </div>
-      <div className="student-details-table-container">
-        <table className="student-details-table">
-          <thead>
-            <tr>
-              <th>Register Number</th>
-              <th>Name</th>
-              <th>Course</th>
-              <th>Semester</th>
-              <th>Email</th>
-              {/* Add other table headers as needed */}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredStudents.map((student) => (
-              <tr key={student._id}>
-                <td>{student.admissionNumber}</td>
-                <td>{student.name}</td>
-                <td>{student.course}</td>
-                <td>{student.semester}</td>
-                <td>{student.email}</td>
-                {/* Add other table cells as needed */}
-              </tr>
+      <HodNavbar />
+      <div className="student-details-container">
+        <h3 className="student-details-title">Branch: {branch}</h3>
+        <div className="student-details-label-select">
+          <label htmlFor="semester">Select Semester:</label>
+          <select id="semester" value={selectedSemester} onChange={handleSemesterChange}>
+            <option value="">All</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            {/* Add options for other semesters */}
+          </select>
+        </div>
+        <div className="student-details-label-select">
+          <label htmlFor="course">Select Course:</label>
+          <select id="course" value={selectedCourse} onChange={handleCourseChange}>
+            {courseOptions.map((course, index) => (
+              <option key={index} value={course}>{course}</option>
             ))}
-          </tbody>
-        </table>
+          </select>
+        </div>
+        <div className="student-details-table-container">
+          <table className="student-details-table">
+            <thead>
+              <tr>
+                <th>Register Number</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Semester</th>
+                <th>Email</th>
+                {/* Add other table headers as needed */}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredStudents.map((student) => (
+                <tr key={student._id}>
+                  <td>{student.admissionNumber}</td>
+                  <td>{student.name}</td>
+                  <td>{student.course}</td>
+                  <td>{student.semester}</td>
+                  <td>{student.email}</td>
+                  {/* Add other table cells as needed */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
     </div>
   );
 }

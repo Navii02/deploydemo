@@ -4,7 +4,7 @@ const Subject = require('../../models/hod/SubjectAddition');
 
 // Route to add subjects
 router.post('/hod/subjects', async (req, res) => {
-    const { semester, subjects, minorSubject, minorSubjectCode,branch,course } = req.body;
+    const { semester, subjects, minorSubject, minorSubjectCode,branch,course} = req.body;
 
     // Validate request body
     if (!semester || !subjects || !Array.isArray(subjects)) {
@@ -55,7 +55,7 @@ router.put('/hod/subjects/:id', async (req, res) => {
 });
 
 router.get('/hod/subjects', async (req, res) => {
-    const { semester, branch } = req.query;
+    const { semester, course } = req.query;
 
     try {
         // Create a query object to filter subjects
@@ -67,12 +67,12 @@ router.get('/hod/subjects', async (req, res) => {
         }
 
         // Add branch filter if provided
-        if (branch) {
-            query.branch = branch;
+        if (course) {
+            query.branch = course;
         }
 
         // If branch is not provided, retrieve all subjects
-        if (!branch) {
+        if (!course) {
             const subjects = await Subject.find(query);
             res.json(subjects);
         } else {

@@ -45,6 +45,7 @@ const HodStudenlist=require('./api/hod/hodstudentlist');
 const Subject=require('./api/hod/SubjectAddition')
 const tutorassign = require('./api/hod/tutorassign')
 const Hodhome = require('./api/hod/hodhome');
+const HodPerformance = require('./api/hod/hodperformance');
 
 const tutorForget=require('./api/tutor/tutorForgot')
 const classtutorRoutes = require('./api/tutor/classtutorroutes')
@@ -162,6 +163,7 @@ app.use('/api',Hodhome)
 app.use('/api',Attendance)
 app.use('/api',Phome)
 app.use('/api',performance)
+app.use('/api',HodPerformance)
 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));
