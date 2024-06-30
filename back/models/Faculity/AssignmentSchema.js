@@ -8,6 +8,8 @@ const assignmentSchema = new mongoose.Schema({
   subject: String,
   teachername: String,
   assignmentDetails: String,
+  currentYear: String,
+  submissionDate: String,
   timestamp: { type: Date, default: Date.now },
 });
 

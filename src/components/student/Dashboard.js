@@ -17,6 +17,14 @@ function Dashboard() {
       }
       const data = await response.json();
       setStudentDetails(data);
+
+      // Save course and semester in localStorage
+      localStorage.setItem('course', data.course);
+      localStorage.setItem('semester', data.semester);
+    //const course =  localStorage.getItem('course');
+    //const semester = localStorage.getItem('semester');
+    //console.log(course, semester);
+
       setLoading(false);
     } catch (error) {
       console.error('Error:', error);

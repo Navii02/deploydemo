@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Chart from 'chart.js/auto';
+import Chart from 'chart.js';
+
 import './AdminDashboard.css'; 
 import Navbar from './AdminNavbar';
 import axios from 'axios';

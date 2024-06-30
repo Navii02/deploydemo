@@ -9,7 +9,7 @@ router.use(express.json());
 
 // Endpoint to handle assignment submissions
 router.post('/assignments', async (req, res) => {
-  const { course, semester, subject, teachername, assignmentDetails } = req.body;
+  const { course, semester, subject, teachername, assignmentDetails,currentYear,submissionDate} = req.body;
 
   try {
    
@@ -19,6 +19,8 @@ router.post('/assignments', async (req, res) => {
       subject,
       teachername,
       assignmentDetails,
+      currentYear,
+      submissionDate,
     });
 
     const savedAssignment = await newAssignment.save();

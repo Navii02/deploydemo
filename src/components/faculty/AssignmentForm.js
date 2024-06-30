@@ -1,5 +1,3 @@
-// AssignmentForm.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AssignmentForm.css'; // Import your CSS file
@@ -14,6 +12,8 @@ const AssignmentForm = () => {
   const [subjects, setSubjects] = useState([]);
   const [teachername, setTeacherName] = useState('');
   const [assignmentDetails, setAssignmentDetails] = useState('');
+  const [submissionDate, setSubmissionDate] = useState('');
+  const currentYear = new Date().getFullYear(); // Get the current year
 
   useEffect(() => {
     const fetchTeacherDetails = async () => {
@@ -45,14 +45,16 @@ const AssignmentForm = () => {
         subject,
         teachername,
         assignmentDetails,
+        submissionDate,
+        currentYear
       });
 
       // Optionally, you can add a success message or reset the form
       setCourse('');
       setSemester('');
       setSubject('');
-      setTeacherName('');
       setAssignmentDetails('');
+      setSubmissionDate('');
     } catch (error) {
       console.error('Error submitting assignment details:', error);
       // Handle error, show an error message, etc.
@@ -110,6 +112,15 @@ const AssignmentForm = () => {
             <textarea
               value={assignmentDetails}
               onChange={(e) => setAssignmentDetails(e.target.value)}
+            />
+          </label>
+
+          <label>
+            Submission Date:
+            <input
+              type="date"
+              value={submissionDate}
+              onChange={(e) => setSubmissionDate(e.target.value)}
             />
           </label>
 

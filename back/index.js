@@ -5,6 +5,8 @@ const path = require('path');
 const cors = require('cors');
 require('dotenv').config()
 const mongoose = require('mongoose')
+const cron = require('node-cron');
+const transferDataToAlumni = require('./api/transferDataToAlumni');
 const MongoDBStore = require('connect-mongodb-session')(session) 
 
 
