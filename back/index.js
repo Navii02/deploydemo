@@ -20,6 +20,7 @@ const loginRouter = require('./api/student/studentRoutes')
 const Dashboard=require('./api/student/studentdashboard')
 const studentForget=require('./api/student/studentForgot')
 const Reminders=require('./api/student/reminders')
+const FeeDetails=require('./api/student/feedetail')
 
 
 const Notice = require('./api/officer/Notice')
@@ -166,7 +167,9 @@ app.use('/api',Attendance)
 app.use('/api',Phome)
 app.use('/api',performance)
 app.use('/api',HodPerformance)
+ app.use('/api',FeeDetails)
 
+ 
 app.use('/uploads', express.static('uploads'));
 app.use('/certificate', express.static('certificate'));
 app.use('/studentsphoto', express.static('StudentsPhoto'));

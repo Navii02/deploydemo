@@ -7,6 +7,7 @@ function Dashboard() {
   const [student, setStudentDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
   const userEmail = localStorage.getItem('email'); // Get the user's email from localStorage
 
   const fetchStudentDetails = useCallback(async () => {
@@ -21,9 +22,6 @@ function Dashboard() {
       // Save course and semester in localStorage
       localStorage.setItem('course', data.course);
       localStorage.setItem('semester', data.semester);
-    //const course =  localStorage.getItem('course');
-    //const semester = localStorage.getItem('semester');
-    //console.log(course, semester);
 
       setLoading(false);
     } catch (error) {
@@ -44,6 +42,10 @@ function Dashboard() {
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const toggleDetails = () => {
+    setShowDetails(!showDetails);
   };
 
   if (loading) {
@@ -78,17 +80,98 @@ function Dashboard() {
               <div className="student-image">
                 {student.photo && <img src={student.photo} alt="Student" className="student-photo" />}
               </div>
-              <div className="student-text">
-                <h4>Name: {student.name}</h4>
-                <p>Email: {student.email}</p>
-                <p>Register Number: {student.admissionNumber}</p>
-                <p>Date of Birth: {formatDate(student.dateOfBirth)}</p>
-                <p>Branch: {student.course}</p>
-                <p>Semester: {student.semester}</p>
-                <p>Address: {student.address}</p>
-                <p>Gender: {student.gender}</p>
-                <p>Religion: {student.religion}</p>
-                <p>Caste: {student.community}</p>
+              <div className="student-table-container">
+                <table className="student-table">
+                  <tbody>
+                    <tr>
+                      <td className="table-heading">Name:</td>
+                      <td>{student.name}</td>
+                    </tr>
+                    <tr>
+                      <td className="table-heading">Email:</td>
+                      <td>{student.email}</td>
+                    </tr>
+                    <tr>
+                      <td className="table-heading">Register Number:</td>
+                      <td>{student.admissionNumber}</td>
+                    </tr>
+                    <tr>
+                      <td className="table-heading">Date of Birth:</td>
+                      <td>{formatDate(student.dateOfBirth)}</td>
+                    </tr>
+                    <tr>
+                      <td className="table-heading">Branch:</td>
+                      <td>{student.course}</td>
+                    </tr>
+                    <tr>
+                      <td className="table-heading">Semester:</td>
+                      <td>{student.semester}</td>
+                    </tr>
+                    {showDetails && (
+                      <>
+                        <tr>
+                          <td className="table-heading">Address:</td>
+                          <td>{student.address}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Gender:</td>
+                          <td>{student.gender}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Religion:</td>
+                          <td>{student.religion}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Caste:</td>
+                          <td>{student.community}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Mobile No:</td>
+                          <td>{student.mobileNo}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">WhatsApp No:</td>
+                          <td>{student.whatsappNo}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Entrance Exam:</td>
+                          <td>{student.entranceExam}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Entrance Roll No:</td>
+                          <td>{student.entranceRollNo}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Entrance Rank:</td>
+                          <td>{student.entranceRank}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Blood Group:</td>
+                          <td>{student.bloodGroup}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Aadhar No:</td>
+                          <td>{student.aadharNo}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Annual Income:</td>
+                          <td>{student.annualIncome}</td>
+                        </tr>
+                        <tr>
+                          <td className="table-heading">Nativity:</td>
+                          <td>{student.nativity}</td>
+                        </tr>
+                      
+                       
+                       
+                     
+                      </>
+                    )}
+                  </tbody>
+                </table>
+                <button className="toggle-details-btn" onClick={toggleDetails}>
+                  {showDetails ? 'Show Less' : 'Show More'}
+                </button>
               </div>
             </div>
           </div>

@@ -51,7 +51,7 @@ const Reminders = () => {
             setInternalMarksReminders(fetchedReminders.data);
             break;
           case 'updates':
-            setUpdatesReminders(fetchedReminders.data); // Add this line
+            setUpdatesReminders(fetchedReminders.data);
             break;
           default:
             setReminders(prevReminders => [...prevReminders, fetchedReminders]);
@@ -69,7 +69,7 @@ const Reminders = () => {
             setInternalMarksReminders([]);
             break;
           case 'updates':
-            setUpdatesReminders([]); // Add this line
+            setUpdatesReminders([]);
             break;
           default:
             setReminders(prevReminders => [...prevReminders, { category, data: [] }]);
@@ -236,7 +236,7 @@ const Reminders = () => {
           </div>
         )}
         {reminders.length === 0 ? (
-          <p>Loading...</p>
+        <p></p>
         ) : (
           reminders.map((reminder, index) => (
             <div className="reminder-category" key={index}>

@@ -1,106 +1,74 @@
-import React, { useState } from 'react';
-import './FeeDetails.css'; // Import your CSS file
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from './UserNavbar';
+//import Footer from './Footer';
+import './FeeDetails.css';
 
-const FeeDetails = () => {
-  const [paymentStatus] = useState({});
-  const userEmail = localStorage.getItem('email');
+function InstallmentPage() {
+  const [installments, setInstallments] = useState([]);
+  const [course, setCourse] = useState('');
+  const [error, setError] = useState('');
 
-  const handlePayment = async (year, type) => {
-    try {
-      const response = await fetch('http://localhost:3001/api/paytm/payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userEmail,
-          year,
-          type,
-        }),
-      });
+  useEffect(() => {
+    const fetchInstallments = async () => {
+      const email = localStorage.getItem('email');
+      const storedCourse = localStorage.getItem('course');
 
-      if (!response.ok) {
-        throw new Error('Payment initiation failed');
+      if (!email || !storedCourse) {
+        setError('Email or course not found in localStorage');
+        return;
       }
 
-      const paymentInitiationResponse = await response.json();
+      setCourse(storedCourse);
 
-      // Redirect to the Paytm payment page
-      window.location.href = paymentInitiationResponse.paymentUrl;
-    } catch (error) {
-      console.error('Payment initiation error:', error);
-      // Handle payment initiation error, display a message, etc.
-    }
+      try {
+        const response = await axios.post('/api/fetch-installments', {
+          email,
+          course: storedCourse,
+        });
+
+        setInstallments(response.data.installmentsPaid);
+      } catch (err) {
+        setError('Failed to fetch installments');
+      }
+    };
+
+    fetchInstallments();
+  }, []);
+
+  const getInstallmentCount = (course) => {
+    return course === 'MCA' ? 1 : 4;
   };
 
-  const feeDetails = [
-    { year: 'First Year', totalFees: 'Rs.43,965' },
-    { year: 'Second Year', totalFees: 'Rs.35,000*' },
-    { year: 'Third Year', totalFees: 'Rs.35,000*' },
-    { year: 'Fourth Year', totalFees: 'Rs.35,000*' },
-  ];
-
-  const additionalFeeDetails = [
-    { year: 'First Year', totalFees: 'Rs.73,965' },
-    { year: 'Second Year', totalFees: 'Rs.65,000' },
-    { year: 'Third Year', totalFees: 'Rs.65,000' },
-    { year: 'Fourth Year', totalFees: 'Rs.65,000' },
-  ];
-
   return (
-    <>
+    <div className="installment-page">
       <Navbar />
-      <div className="fee-details">
-        <h3>Fee Structure (Merit)</h3>
-        <table className="fee-details-table">
-          <thead>
-            <tr>
-              <th>Year of Study</th>
-              <th>Total Fees</th>
-              <th>Pay Now</th>
-            </tr>
-          </thead>
-          <tbody>
-            {feeDetails.map((fee) => (
-              <tr key={fee.year}>
-                <td>{fee.year}</td>
-                <td>{fee.totalFees}</td>
-                <td>
-                  <button onClick={() => handlePayment(fee.year, 'merit')}>Pay Now</button>
-                  <p>{paymentStatus[`merit-${fee.year}`]}</p>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="installment-container">
+        <h2>Installment Payment Status</h2>
+        {error && <p className="error">{error}</p>}
+        {course && (
+          <>
+            <div className="installment-list">
+              {[...Array(getInstallmentCount(course))].map((_, index) => {
+                const installmentNumber = index + 1;
+                const isPaid = installments.includes(installmentNumber);
 
-        <h3>Fee Structure (Management)</h3>
-        <table className="fee-details-table">
-          <thead>
-            <tr>
-              <th>Year of Study</th>
-              <th>Total Fees</th>
-              <th>Pay Now</th>
-            </tr>
-          </thead>
-          <tbody>
-            {additionalFeeDetails.map((fee) => (
-              <tr key={fee.year}>
-                <td>{fee.year}</td>
-                <td>{fee.totalFees}</td>
-                <td>
-                  <button onClick={() => handlePayment(fee.year, 'management')}>Pay Now</button>
-                  <p>{paymentStatus[`management-${fee.year}`]}</p>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p>Note*: Tuition Fee Waiver (TFW) for Top two candidates from each course.</p>
+                return (
+                  <div key={installmentNumber} className="installment-item">
+                    <p>Installment {installmentNumber}</p>
+                    <p className={isPaid ? 'paid' : 'not-paid'}>
+                      {isPaid ? 'Paid' : 'Not Paid'}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
-    </>
+     </div>
   );
-};
+ 
+}
 
-export default FeeDetails;
+export default InstallmentPage;
