@@ -1,18 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './Home.css'; // Import the CSS file
 
 const HomePage = () => {
-  const [isVisible, setIsVisible] = useState(false); // State to manage text visibility
-
-  useEffect(() => {
-    // Set timeout to delay visibility toggle
-    const timeout = setTimeout(() => {
-      setIsVisible(true);
-    }, 0.5); // Adjust the delay as needed
-
-    return () => clearTimeout(timeout); // Cleanup function
-  }, []); // Run effect only once on component mount
-
   const handleSelection = (event) => {
     const selectedUser = event.target.value;
     switch (selectedUser) {
@@ -49,7 +38,7 @@ const HomePage = () => {
     <div className="office-home-page">
       <h1 className="animate-left">Welcome to CAP</h1>
       <h5 className="animate-right">Your Personal Assistant for College</h5>
-      <h6 className={isVisible ? 'animate-fade-in' : 'animate-fade-out'}>Who are You?</h6>
+      <h6>Who are You?</h6>
       <div className="dropdown-container">
         <select onChange={handleSelection}>
           <option value="">Select User Type</option>

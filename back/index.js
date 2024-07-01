@@ -55,6 +55,7 @@ const classtutorRoutes = require('./api/tutor/classtutorroutes')
 const tstudentlist = require('./api/tutor/tstudentlist')
 const Update = require('./api/tutor/update')
 const performance = require('./api/tutor/performance')
+const TutorHome = require('./api/tutor/tutorhome')
 
 const PrincipalRoutes = require('./api/principal/PrincipalRoutes')
 const principalForget=require('./api/principal/principalForgot')
@@ -168,6 +169,7 @@ app.use('/api',Phome)
 app.use('/api',performance)
 app.use('/api',HodPerformance)
  app.use('/api',FeeDetails)
+ app.use('/api',TutorHome)
 
  
 app.use('/uploads', express.static('uploads'));

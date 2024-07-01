@@ -39,16 +39,16 @@ function Footer  ()  {
       <section class='social-media'>
         <div class='social-media-wrap'>
           <div class='footer-logo'>
-            <Link to='/' className='social-logo'>
+            <Link to='https://cep.ac.in/' className='social-logo'>
               CAP
               <i class='fa fa-graduation-cap' />
             </Link>
           </div>
-          <small class='website-rights'>College Of Engineering Poonjar © 2023</small>
+          <small class='website-rights'>College Of Engineering Poonjar © 2024</small>
           <div class='social-icons'>
             <Link
               class='social-icon-link facebook'
-              to='/'
+              to='https://www.facebook.com/profile.php?id=100013005493803&mibextid=ZbWKwL'
               target='_blank'
               aria-label='Facebook'
             >
@@ -56,7 +56,7 @@ function Footer  ()  {
             </Link>
             <Link
               class='social-icon-link instagram'
-              to='/'
+              to='https://www.instagram.com/cepoonjar?igsh=czRhMmVtZ3l6ZnJw'
               target='_blank'
               aria-label='Instagram'
             >
@@ -64,7 +64,7 @@ function Footer  ()  {
             </Link>
             <Link
               class='social-icon-link youtube'
-              to='/'
+              to='https://youtube.com/@cepfilmsociety?si=1IQzud2MvnvWl0z_'
               target='_blank'
               aria-label='Youtube'
             >
@@ -80,7 +80,7 @@ function Footer  ()  {
             </Link>*/}
             <Link
               class='social-icon-link twitter'
-              to='/'
+              to='https://www.linkedin.com/school/college-of-engineering-poonjar-kottayam/'
               target='_blank'
               aria-label='LinkedIn'
             >

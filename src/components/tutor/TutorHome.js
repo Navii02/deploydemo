@@ -4,42 +4,40 @@ import Navbar from "./TutorNavbar";
 import "./TutorHome.css"; // Import your CSS file
 
 function TutorHome() {
-  const [tutorName, setTutorName] = useState('');
+  const [teachername, setTutorName] = useState('');
   const [className, setClassName] = useState('');
   const [totalStudents, setTotalStudents] = useState(0);
-  const [subjectsCovered, setSubjectsCovered] = useState([]);
+  const [subjects, setSubjectsCovered] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const tutorEmail = localStorage.getItem('email');
-      console.log('Tutor Email:', tutorEmail);
+      const academicYear = localStorage.getItem('academicYear'); // Assuming academic year is stored in localStorage
+      const course = localStorage.getItem('tutorclass'); // Assuming course is stored in localStorage
 
-      if (!tutorEmail) {
-        console.error('Tutor email not found in localStorage');
+      if (!tutorEmail || !academicYear || !course) {
+        console.error('Required data not found in localStorage');
         return;
       }
 
       try {
+        // Fetch tutor profile details
         const response = await axios.get(`/api/tutor-profile?email=${tutorEmail}`);
-        console.log('Full Response:', response);
+        const { teachername, tutorclass, subjects } = response.data;
 
-        const { tutorName, className, totalStudents, subjectsCovered } = response.data;
+        // Fetch number of students based on academic year and course
+        const studentsResponse = await axios.get(`/api/students-count?academicYear=${academicYear}&course=${course}`);
+        const { totalStudents } = studentsResponse.data;
 
-        console.log('Received Data:', {
-          tutorName,
-          className,
-          totalStudents,
-          subjectsCovered,
-        });
-
-        setTutorName(tutorName);
-        setClassName(className);
+        setTutorName(teachername);
+        setClassName(tutorclass);
+        setSubjectsCovered(subjects);
         setTotalStudents(totalStudents);
-        setSubjectsCovered(subjectsCovered);
 
-        console.log('Tutor:', tutorName);
+        console.log('Tutor:', teachername);
+        console.log('Total Students:', totalStudents);
       } catch (error) {
-        console.error('Error fetching tutor profile:', error);
+        console.error('Error fetching tutor profile or student count:', error);
       }
     };
 
@@ -48,15 +46,15 @@ function TutorHome() {
 
   useEffect(() => {
     // Log the updated state
-    console.log('Tutor:', tutorName);
-  }, [tutorName]);
+    console.log('Tutor:', teachername);
+  }, [teachername]);
 
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className="tutor-home-container">
         <div className="welcome-section">
-          <h1 className="welcome-header">Welcome, {tutorName}!</h1>
+          <h1 className="welcome-header">Welcome, {teachername}!</h1>
           <p className="welcome-text">
             This is your tutor home page. Explore the features and modules available for you.
           </p>
@@ -64,7 +62,7 @@ function TutorHome() {
             <h2>Your Associated Data:</h2>
             <p><strong>Class Assigned:</strong> {className}</p>
             <p><strong>Total Students:</strong> {totalStudents}</p>
-            <p><strong>Subjects Covered:</strong> {subjectsCovered.join(", ")}</p>
+            <p><strong>Subjects Covered:</strong> {subjects.join(", ")}</p>
           </div>
         </div>
       </div>
