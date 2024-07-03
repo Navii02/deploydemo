@@ -39,7 +39,7 @@ function Dashboard() {
 
   const fetchPhoto = async (photo) => {
     try {
-      const response = await fetch(`${baseurl}/${photo}`);
+      const response = await fetch(`${baseurl}/api/${photo}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
