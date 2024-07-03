@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 //const path = require('path');
 const app = express();
-const Notice = require('../../models/Notice');
+const Notice = require('../../models/notice');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({

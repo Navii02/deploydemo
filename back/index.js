@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const cron = require('node-cron');
 const transferDataToAlumni = require('./api/transferDataToAlumni');
 const MongoDBStore = require('connect-mongodb-session')(session) 
-
+const port = process.env.PORT || 5000;
 
 
 
@@ -79,7 +79,7 @@ const Feereminder = require('./api/feereminder')
 const app = express();
 const MAX_AGE = 1000 * 60 * 60 * 3 //3hrs
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:4000',
   optionSuccessStatus:200,
 }
 mongoose.Promise = global.Promise
@@ -190,7 +190,7 @@ app.use('/images', express.static(path.join(__dirname, 'uploads'), {
 
 app.use('/api', express.static('certificate'));
 
-app.listen(5000, function() {
-  console.log("connected to server")
+app.listen(port, () => {
+  console.log(`Server is running`);
 });
 module.exports =app
