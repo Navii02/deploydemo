@@ -9,7 +9,6 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
-  const [photoUrl, setPhotoUrl] = useState(null);
   const userEmail = localStorage.getItem('email'); // Get the user's email from localStorage
 
   const fetchStudentDetails = useCallback(async () => {
@@ -25,10 +24,6 @@ function Dashboard() {
       localStorage.setItem('course', data.course);
       localStorage.setItem('semester', data.semester);
 
-      if (data.photo) {
-        fetchPhoto(data.photo);
-      }
-
       setLoading(false);
     } catch (error) {
       console.error('Error:', error);
@@ -36,21 +31,6 @@ function Dashboard() {
       setLoading(false);
     }
   }, [userEmail]);
-
-  const fetchPhoto = async (photo) => {
-    try {
-      const response = await fetch(`${baseurl}/api/${photo}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      setPhotoUrl(url);
-    } catch (error) {
-      console.error('Error fetching photo:', error);
-      setError(error.message);
-    }
-  };
 
   useEffect(() => {
     fetchStudentDetails();
@@ -99,7 +79,7 @@ function Dashboard() {
           <div className="student-details">
             <div className="student-info">
               <div className="student-image">
-                {photoUrl && <img src={photoUrl} alt="Student" className="student-photo" />}
+                {student.photo && <img src={`${baseurl}/${student.photo}`} alt="Student" className="student-photo" />}
               </div>
               <div className="student-table-container">
                 <table className="student-table">
