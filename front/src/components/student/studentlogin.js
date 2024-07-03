@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import validator from 'validator';
 import { regexPassword } from '../../utils';
 import '../Login.css'; // Add your CSS file if needed
+import {baseurl} from '../../url';
 
 function StudentLogin() {
   const Navigate = useNavigate();
@@ -50,7 +51,7 @@ function StudentLogin() {
     event.preventDefault();
 
     try {
-      const res = await fetch('/api/login', {
+      const res = await fetch(`${baseurl}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

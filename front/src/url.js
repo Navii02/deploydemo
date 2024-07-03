@@ -1,0 +1,1 @@
+export const baseurl = "https://cap-es9s.onrender.com"
