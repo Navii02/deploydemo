@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import '../../App.css';
+import {baseurl} from '../../url';
 import Navbar from './UserNavbar';
 import './Dashboard.css';
+
 
 function Dashboard() {
   const [student, setStudentDetails] = useState(null);
@@ -12,7 +14,7 @@ function Dashboard() {
 
   const fetchStudentDetails = useCallback(async () => {
     try {
-      const response = await fetch(`/api/student/${userEmail}`);
+      const response = await fetch(`${baseurl}/api/student/${userEmail}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
