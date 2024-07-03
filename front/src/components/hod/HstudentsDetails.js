@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import HodNavbar from './HodNavbar';
 import './HstudentDetail.css';
+import {baseurl} from '../../url';
+
 
 function StudentDetailsPage() {
   const [branch, setBranch] = useState('');
@@ -13,7 +15,7 @@ function StudentDetailsPage() {
   useEffect(() => {
     const fetchStudents = async (branch) => {
       try {
-        const response = await fetch(`/api/students/${branch}`);
+        const response = await fetch(`${baseurl}/api/students/${branch}`);
         if (!response.ok) {
           throw new Error('Failed to fetch student details');
         }

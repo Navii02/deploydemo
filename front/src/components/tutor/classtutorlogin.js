@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import validator from 'validator';
 import { regexPassword } from '../../utils';
 import '../Login.css'; // Add your CSS file if needed
+import { baseurl } from '../../url';
 
 function TutorLogin() {
   const Navigate = useNavigate();
@@ -49,7 +50,7 @@ function TutorLogin() {
     event.preventDefault();
   
     try {
-      const res = await fetch('/api/classtutorlogin', {
+      const res = await fetch(`${baseurl}/api/classtutorlogin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

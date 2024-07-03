@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Updated import statement
 import validator from 'validator';
 import '../signup.css';
+import {baseurl} from '../../url';
 
 function usePrincipalSignup() {
   const navigate = useNavigate(); // Updated hook
@@ -59,7 +60,7 @@ function usePrincipalSignup() {
     event.preventDefault();
 
     try {
-      const res = await fetch('/api/principalregister', {
+      const res = await fetch(`${baseurl}/api/principalregister`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

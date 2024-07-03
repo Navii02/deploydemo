@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PrinciNavbar from './PrinciNavbar';
+import {baseurl} from '../../url';
 
 function StudentPage() {
     const [students, setStudents] = useState([]);
@@ -12,7 +13,7 @@ function StudentPage() {
 
     const fetchStudentData = async () => {
         try {
-            const response = await fetch('/api/principal/student');
+            const response = await fetch(`${baseurl}/api/principal/student`);
             const data = await response.json();
             console.log('Fetched data:', data); // Log the fetched data
             setStudents(data); // Assuming the data is an array of student objects

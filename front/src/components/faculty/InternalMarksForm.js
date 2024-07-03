@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from "./FacultyNavbar";
+import {baseurl} from '../../url';
 import styles from './InternalMarksForm.module.css'; // Import the CSS module
 
 const InternalMarksForm = () => {
@@ -17,7 +18,7 @@ const InternalMarksForm = () => {
       const email = localStorage.getItem('email');
 
       try {
-        const response = await axios.post('/api/data', { email });
+        const response = await axios.post(`${baseurl}/api/data`, { email });
         const { subjects, semesters, branches } = response.data;
         setCourses(branches || []);
         setSemesters(semesters || []);
@@ -37,7 +38,7 @@ const InternalMarksForm = () => {
     }
 
     try {
-      const response = await axios.get(`/api/students/faculty/${course}/${semester}`);
+      const response = await axios.get(`${baseurl}/api/students/faculty/${course}/${semester}`);
       const studentsData = response.data.map(student => ({
         ...student,
         internalMarks: student.internalMarks.map(mark => mark.subject === subject ? mark : { ...mark, subject, examMarks: 0, assignmentMarks: 0 })
@@ -70,7 +71,7 @@ const InternalMarksForm = () => {
       marks.assignmentMarks = parseFloat(marks.assignmentMarks) || 0;
       marks.attendance = parseFloat(marks.attendance) || 0;
 
-      await axios.post('/api/marks', { studentId, subject, marks });
+      await axios.post(`${baseurl}/api/marks`, { studentId, subject, marks });
       console.log('Marks submitted successfully!');
     } catch (error) {
       console.error('Error submitting marks:', error);

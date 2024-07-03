@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AssignmentForm.css'; // Import your CSS file
 import Navbar from './FacultyNavbar';
+import {baseurl} from '../../url';
 
 const AssignmentForm = () => {
   const [course, setCourse] = useState('');
@@ -19,7 +20,7 @@ const AssignmentForm = () => {
     const fetchTeacherDetails = async () => {
       try {
         const email = localStorage.getItem('email');
-        const response = await axios.get(`/api/teacher/by-email/${email}`);
+        const response = await axios.get(`${baseurl}/api/teacher/by-email/${email}`);
         const { subjects, semesters, branches, teachername } = response.data;
         setCourses(branches || []);
         setSemesters(semesters || []);

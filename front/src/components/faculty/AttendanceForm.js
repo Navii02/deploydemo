@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {baseurl} from '../../url';
 import Navbar from './FacultyNavbar';
 
 const AttendanceForm = () => {
@@ -24,7 +25,7 @@ const AttendanceForm = () => {
       const email = localStorage.getItem('email');
 
       try {
-        const response = await axios.post('/api/data/attendance', { email });
+        const response = await axios.post(`${baseurl}/api/data/attendance`, { email });
         const { subjects, semesters, branches, teachername } = response.data;
         setCourses(branches || []);
         setSemesters(semesters || []);
@@ -45,7 +46,7 @@ const AttendanceForm = () => {
     setLoading(true);
 
     try {
-      const response = await axios.get(`/api/students/faculty/attendance/${course}/${semester}`);
+      const response = await axios.get(`${baseurl}/api/students/faculty/attendance/${course}/${semester}`);
       setLoading(false);
       return response.data;
     } catch (error) {
@@ -60,7 +61,7 @@ const AttendanceForm = () => {
     setLoading(true);
 
     try {
-      const checkResponse = await axios.post('/api/attendance/check', {
+      const checkResponse = await axios.post(`${baseurl}/api/attendance/check`, {
         date,
         hour,
         teachername,
@@ -73,7 +74,7 @@ const AttendanceForm = () => {
         setMarkedSubject(checkResponse.data.markedSubject);
 
         if (checkResponse.data.teachername === teachername && checkResponse.data.markedSubject === subject) {
-          const response = await axios.post('/api/attendance/existing', {
+          const response = await axios.post(`${baseurl}/api/attendance/existing`, {
             date,
             hour,
             teachername,
@@ -113,7 +114,7 @@ const AttendanceForm = () => {
 
     try {
       await Promise.all(students.map((student) =>
-        axios.post('/api/attendance', {
+        axios.post(`${baseurl}/api/attendance`, {
           studentId: student._id,
           date,
           subject,

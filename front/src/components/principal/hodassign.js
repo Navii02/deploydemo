@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './PrinciNavbar';
+import {baseurl} from '../../url';
 import './Hodassign.css'; // Import CSS file for styling
 
 const TeacherList = () => {
@@ -25,7 +26,7 @@ const TeacherList = () => {
   }, []);
 
   const fetchTeachers = () => {
-    axios.get('/api/hod/teachers')
+    axios.get(`${baseurl}/api/hod/teachers`)
       .then(response => {
         setTeachers(response.data);
       })
@@ -35,7 +36,7 @@ const TeacherList = () => {
   };
 
   const fetchHODs = () => {
-    axios.get('/api/hod/hods')
+    axios.get(`${baseurl}/api/hod/hods`)
       .then(response => {
         setHods(response.data);
       })
@@ -48,7 +49,7 @@ const TeacherList = () => {
     const selectedTeacher = teachers.find(teacher => teacher._id === teacherId);
     if (!selectedTeacher) return;
 
-    axios.post('/api/hod/assign', { teacherId, department: selectedTeacher.department })
+    axios.post(`${baseurl}/api/hod/assign`, { teacherId, department: selectedTeacher.department })
       .then(response => {
         console.log('HOD assigned successfully:', response.data);
         setAssignedTeacher(response.data.teachername);
@@ -68,7 +69,7 @@ const TeacherList = () => {
 
   const handleAddHodSubmit = (e) => {
     e.preventDefault();
-    axios.post('/api/admin/addTeacher', newHod)
+    axios.post(`${baseurl}/api/admin/addTeacher`, newHod)
       .then(response => {
         console.log('HOD added successfully:', response.data);
         setShowAddHodForm(false);

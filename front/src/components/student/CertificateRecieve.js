@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './CertificateRecieve.css'
 import Navbar from './UserNavbar'
+import {baseurl} from '../../url';
 
 const CertificateRequestsPage = () => {
   const [requests, setRequests] = useState([]);
@@ -14,7 +15,7 @@ const CertificateRequestsPage = () => {
 
     const fetchRequests = async () => {
       try {
-        const response = await axios.get(`/api/student/certificateRequests/${userEmailFromLocalStorage}`);
+        const response = await axios.get(`${baseurl}/api/student/certificateRequests/${userEmailFromLocalStorage}`);
         setRequests(response.data.requests);
       } catch (error) {
         setErrorMessage(error.response?.data?.message || 'Error fetching requests');

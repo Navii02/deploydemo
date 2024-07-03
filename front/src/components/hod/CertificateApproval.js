@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {baseurl} from '../../url';
 import HodNavbar from './HodNavbar';
 
 function HodCertificateRequestsPage() {
@@ -14,7 +15,7 @@ function HodCertificateRequestsPage() {
   const fetchRequests = async () => {
     try {
       const storedBranch = localStorage.getItem('branch');
-      const response = await axios.get(`/api/hod/certificateRequests/${storedBranch}`);
+      const response = await axios.get(`${baseurl}/api/hod/certificateRequests/${storedBranch}`);
       setRequests(response.data.requests.reverse());
     } catch (error) {
       setErrorMessage(error.response?.data?.message || 'Error fetching requests');
@@ -23,7 +24,7 @@ function HodCertificateRequestsPage() {
 
   const handleAccept = async (requestId) => {
     try {
-      await axios.post(`/api/hod/acceptRequest/${requestId}`);
+      await axios.post(`${baseurl}/api/hod/acceptRequest/${requestId}`);
       setSuccessMessage('Request accepted successfully!');
       fetchRequests();
     } catch (error) {
@@ -39,7 +40,7 @@ function HodCertificateRequestsPage() {
     }
 
     try {
-      await axios.post(`/api/hod/declineRequest/${requestId}`, { declineReason });
+      await axios.post(`${baseurl}/api/hod/declineRequest/${requestId}`, { declineReason });
       setSuccessMessage('Request declined successfully!');
       fetchRequests();
     } catch (error) {

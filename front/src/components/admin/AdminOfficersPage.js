@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {baseurl} from '../../url';
 import Navbar from './AdminNavbar';
 
 const AdminOfficersPage = () => {
@@ -10,7 +11,7 @@ const AdminOfficersPage = () => {
 
   const fetchOfficers = async () => {
     try {
-      const response = await axios.get('/api/admin/officers');
+      const response = await axios.get(`${baseurl}/api/admin/officers`);
       setOfficers(response.data.officers);
     } catch (error) {
       setErrorMessage(error.response.data.message);
@@ -33,7 +34,7 @@ const AdminOfficersPage = () => {
 
   const handleUpdateOfficer = async () => {
     try {
-      await axios.put(`/api/admin/updateOfficer/${editingOfficer._id}`, editingOfficer);
+      await axios.put(`${baseurl}/api/admin/updateOfficer/${editingOfficer._id}`, editingOfficer);
       fetchOfficers();
       setEditingOfficer(null);
     } catch (error) {
@@ -43,7 +44,7 @@ const AdminOfficersPage = () => {
 
   const handleDeleteOfficer = async (officerId) => {
     try {
-      await axios.delete(`/api/admin/deleteOfficer/${officerId}`);
+      await axios.delete(`${baseurl}/api/admin/deleteOfficer/${officerId}`);
       fetchOfficers();
     } catch (error) {
       setErrorMessage(error.response.data.message);

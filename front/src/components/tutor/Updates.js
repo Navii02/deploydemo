@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { baseurl } from '../../url';
 import './Updates.css';
 import Navbar from './TutorNavbar';
 
@@ -26,7 +27,7 @@ const TutorUpdates = () => {
 
   const fetchStudents = async (tutorclass, academicYear) => {
     try {
-      const response = await axios.get(`/api/students/${tutorclass}/${academicYear}`);
+      const response = await axios.get(`${baseurl}/api/students/${tutorclass}/${academicYear}`);
       setStudents(response.data);
       console.log(response.data);
     } catch (error) {
@@ -51,7 +52,7 @@ const TutorUpdates = () => {
 
   const handleSendMessage = async () => {
     try {
-      const response = await axios.post('/api/sendMessage', {
+      const response = await axios.post(`${baseurl}/api/sendMessage`, {
         selectedStudents,
         message,
       });

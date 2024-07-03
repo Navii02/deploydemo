@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {baseurl} from '../../url';
 import Navbar from './FacultyNavbar';
 
 const AttendanceSummary = () => {
@@ -17,7 +18,7 @@ const AttendanceSummary = () => {
       const email = localStorage.getItem('email');
 
       try {
-        const response = await axios.post('/api/data/attendance', { email });
+        const response = await axios.post(`${baseurl}/api/data/attendance`, { email });
         const { subjects, semesters, branches} = response.data;
         setCourses(branches || []);
         setSemesters(semesters || []);
@@ -37,7 +38,7 @@ const AttendanceSummary = () => {
     }
 
     try {
-      const response = await axios.post('/api/attendance/summary', { course, semester, subject });
+      const response = await axios.post(`${baseurl}/api/attendance/summary`, { course, semester, subject });
       setStudents(response.data.students || []);
       setAttendanceData(response.data.attendance || []);
     } catch (error) {

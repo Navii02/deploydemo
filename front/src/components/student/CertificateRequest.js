@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './UserNavbar';
 import './CertificateRequest.css';
+import {baseurl} from '../../url';
 
 function StudentCertificateRequestPage() {
   const [RegisterNo, setRegisterNumber] = useState('');
@@ -20,7 +21,7 @@ function StudentCertificateRequestPage() {
   useEffect(() => {
     const fetchStudentDetails = async () => {
       try {
-        const response = await axios.get(`/api/student/details/${userEmail}`);
+        const response = await axios.get(`${baseurl}/api/student/details/${userEmail}`);
         const { RegisterNo, admissionNumber, mobileNo, name, semester, course } = response.data;
        
         if (RegisterNo) {
@@ -55,7 +56,7 @@ function StudentCertificateRequestPage() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('/api/student/submitRequest', {
+      const response = await axios.post(`${baseurl}/api/student/submitRequest`, {
         userEmail,
         reason,
         selectedDocuments,

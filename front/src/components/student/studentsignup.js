@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import '../signup.css';
+import { baseurl } from '../../url';
 
 function useStudentSignup() {
   const navigate = useNavigate(); // Updated hook
@@ -59,7 +60,7 @@ function useStudentSignup() {
     event.preventDefault();
 
     try {
-      const res = await fetch('/api/register', {
+      const res = await fetch(`${baseurl}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

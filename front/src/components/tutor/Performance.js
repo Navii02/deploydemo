@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { baseurl } from '../../url';
 import './Performance.css';
 import Navbar from './TutorNavbar';
 
@@ -22,7 +23,7 @@ const StudentPerformancePage = () => {
         return;
       }
 
-      const response = await axios.get(`/api/student-performance/${tutorclass}/${academicYear}`);
+      const response = await axios.get(`${baseurl}/api/student-performance/${tutorclass}/${academicYear}`);
       setStudentData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);

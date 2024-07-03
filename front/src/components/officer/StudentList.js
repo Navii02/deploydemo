@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {baseurl} from '../../url';
 import Navbar from './OfficerNavbar';
 
 const ApprovedAndRemoved = () => {
@@ -62,7 +63,7 @@ const ApprovedAndRemoved = () => {
 
 
   useEffect(() => {
-    axios.get('/api/officer/approvedStudents')
+    axios.get(`${baseurl}/api/officer/approvedStudents`)
       .then(response => {
         setApprovedStudents(response.data);
       })
@@ -81,7 +82,7 @@ const ApprovedAndRemoved = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put(`/api/updateStudent/${studentId}`, formData)
+    axios.put(`${baseurl}/api/updateStudent/${studentId}`, formData)
       .then(response => {
         console.log('Student details updated successfully:', response.data);
         setEditMode(false);
@@ -99,7 +100,7 @@ const ApprovedAndRemoved = () => {
 
   const handlePrintPreview = (_id) => {
     console.log('Admission ID for Print Preview:', _id);
-    axios.get(`/api/approvedstudentDetails/${_id}`)
+    axios.get(`${baseurl}/api/approvedstudentDetails/${_id}`)
       .then(response => {
         const studentDetails = response.data.studentDetails;
         //console.log(studentDetails);
@@ -216,7 +217,7 @@ const ApprovedAndRemoved = () => {
           Poonjar Thekkekara P.O. Kottayam Dist. PIN 686 582<br />
           Academic Year: ${academicYear}
         </div>
-        <img src="${studentDetails.photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
+        <img src="${baseurl}/${studentDetails.photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
       </td>
     </tr>
     <tr>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import OfficerNavbar from './OfficerNavbar';
+import {baseurl} from '../../url';
 
 const ApprovedAndRemoved = () => {
   const [approvedStudents, setApprovedStudents] = useState([]);
@@ -64,7 +65,7 @@ const ApprovedAndRemoved = () => {
 
   useEffect(() => {
     // Fetch approved students from the server
-    axios.get('/api/approvedStudents')
+    axios.get(`${baseurl}/api/approvedStudents`)
       .then(response => {
         const currentYear = new Date().getFullYear().toString().slice(-2);
         const filteredStudents = response.data.filter(student => {
@@ -78,7 +79,7 @@ const ApprovedAndRemoved = () => {
       });
 
     // Fetch removed students from the server
-    axios.get('/api/removedStudents')
+    axios.get(`${baseurl}/api/removedStudents`)
       .then(response => {
         setRemovedStudents(response.data);
       })
@@ -97,7 +98,7 @@ const ApprovedAndRemoved = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put(`/api/updateStudent/${studentId}`, formData)
+    axios.put(`${baseurl}/api/updateStudent/${studentId}`, formData)
       .then(response => {
         console.log('Student details updated successfully:', response.data);
         setEditMode(false);
@@ -114,7 +115,7 @@ const ApprovedAndRemoved = () => {
 
   const handlePrintPreview = (_id) => {
     console.log('Admission ID for Print Preview:', _id);
-    axios.get(`/api/approvedstudentDetails/${_id}`)
+    axios.get(`${baseurl}/api/approvedstudentDetails/${_id}`)
       .then(response => {
         const studentDetails = response.data.studentDetails;
         console.log(studentDetails.photoUrl);

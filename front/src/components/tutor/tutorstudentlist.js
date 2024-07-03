@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { baseurl } from '../../url';
 import Navbar from './TutorNavbar';
 
 const TutorUpdates = () => {
@@ -32,7 +33,7 @@ const TutorUpdates = () => {
   const fetchStudents = async (tutorclass, academicYear) => {
     try {
       console.log(tutorclass,academicYear);
-      const response = await axios.get(`/api/students/tutor/${tutorclass}/${academicYear}`);
+      const response = await axios.get(`${baseurl}/api/students/tutor/${tutorclass}/${academicYear}`);
       setStudents(response.data);
     } catch (error) {
       console.error('Error fetching students:', error);
@@ -97,7 +98,7 @@ const TutorUpdates = () => {
     }
 
     try {
-      await axios.put(`/api/students/${selectedStudent}`, formData);
+      await axios.put(`${baseurl}/api/students/${selectedStudent}`, formData);
       fetchStudents(localStorage.getItem('class'), localStorage.getItem('academicYear'));
       setSelectedStudent(null);
       resetFormData();

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
+import {baseurl} from '../../url';
 import './AdminTeachersPage.css'; // Assuming this CSS file exists
 import HodNavbar from './HodNavbar';
 
@@ -32,7 +33,7 @@ const AdminTeachersPage = () => {
   const fetchTeachers = async () => {
     try {
       const storedBranch = localStorage.getItem('branch');
-      const response = await axios.get(`/api/admin/teachers?branch=${storedBranch}`);
+      const response = await axios.get(`${baseurl}/api/admin/teachers?branch=${storedBranch}`);
       console.log(storedBranch);
       setTeachers(response.data.teachers);
     } catch (error) {
@@ -47,7 +48,7 @@ const AdminTeachersPage = () => {
   const handleAddTeacher = async () => {
     try {
       const department = localStorage.getItem('branch');
-      await axios.post('/api/admin/addTeacher', { ...newTeacher, department: department });
+      await axios.post(`${baseurl}/api/admin/addTeacher`, { ...newTeacher, department: department });
       fetchTeachers();
       
       // Resetting form fields
@@ -68,7 +69,7 @@ const AdminTeachersPage = () => {
 
   const handleUpdateTeacher = async () => {
     try {
-      await axios.put(`/api/admin/updateTeacher/${editingTeacher._id}`, { ...editingTeacher });
+      await axios.put(`${baseurl}/api/admin/updateTeacher/${editingTeacher._id}`, { ...editingTeacher });
       fetchTeachers();
       setEditingTeacher(null);
     } catch (error) {
@@ -78,7 +79,7 @@ const AdminTeachersPage = () => {
 
   const handleDeleteTeacher = async (teacherId) => {
     try {
-      await axios.delete(`/api/admin/deleteTeacher/${teacherId}`);
+      await axios.delete(`${baseurl}/api/admin/deleteTeacher/${teacherId}`);
       fetchTeachers();
     } catch (error) {
       setErrorMessage(error.response?.data?.message || 'Error deleting teacher');

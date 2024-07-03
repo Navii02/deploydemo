@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from "./OfficerNavbar";
 import './DataTable.css'
+import {baseurl} from '../../url';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
     // Fetch students from the server
-    axios.get('/api/studentAdmission')
+    axios.get(`${baseurl}/api/studentAdmission`)
       .then(response => {
         setStudents(response.data);
       })
@@ -33,7 +34,7 @@ const StudentList = () => {
   };
   
   const handleDecline = (_id) => {
-    axios.post(`/api/decline/${_id}`)
+    axios.post(`${baseurl}/api/decline/${_id}`)
       .then(response => {
         console.log(response.data);
         // Reload the students after declining
@@ -50,7 +51,7 @@ const StudentList = () => {
     console.log('Photo URL:', photoUrl);
 
     // Fetch the details of the selected student
-    axios.get(`/api/studentDetails/${_id}`)
+    axios.get(`${baseurl}/api/studentDetails/${_id}`)
       .then(response => {
         const studentDetails = response.data.studentDetails;
         console.log(studentDetails.photoUrl);
@@ -168,7 +169,7 @@ console.log(academicYear); // Output: "2024-25"
               <br/>
             
               Academic Year: ${academicYear}
-              <img src="${studentDetails.photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
+              <img src="${baseurl}/${studentDetails.photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
             </td>
           </tr>
           <tr>

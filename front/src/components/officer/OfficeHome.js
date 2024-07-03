@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './OfficerNavbar';
 import './OfficeHome.css';
+import {baseurl} from '../../url';
 
 function OfficeHome() {
   const [officerName, setOfficerName] = useState('');
@@ -20,7 +21,7 @@ function OfficeHome() {
       }
 
       try {
-        const response = await axios.get(`/api/officerprofile/${userEmail}`);
+        const response = await axios.get(`${baseurl}/api/officerprofile/${userEmail}`);
         console.log('Officer Profile Response:', response.data);
 
         const { name, post } = response.data;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Cards.css';
 import CardItem from './CardItem';
 import axios from 'axios';
-
+import {baseurl} from '../../url';
 function Cards() {
   const [notices, setNotices] = useState([]);
 
@@ -12,7 +12,7 @@ function Cards() {
 
   const fetchNotices = async () => {
     try {
-      const response = await axios.get('/api/notices');
+      const response = await axios.get(`${baseurl}/api/notices`);
       const reversedNotices = response.data.notices.reverse();
       setNotices(reversedNotices.slice(0, 3));
     } catch (error) {
@@ -29,7 +29,7 @@ function Cards() {
             {notices.map((notice, index) => (
               <CardItem
                 key={index}
-                src={`/uploads/${notice.image}`}
+                src={`${baseurl}/uploads/${notice.image}`}
                 text={notice.notice}
                 label='Notice'
               />

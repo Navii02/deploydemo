@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './PrinciNavbar';
 import './StudentRequest.css';
+import {baseurl} from '../../url';
 
 function OfficerCertificateRequestsPage() {
   const [requests, setRequests] = useState([]);
@@ -17,7 +18,7 @@ function OfficerCertificateRequestsPage() {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.get('/api/officer/certificateRequests');
+      const response = await axios.get(`${baseurl}/api/officer/certificateRequests`);
       setRequests(response.data.requests);
     } catch (error) {
       setErrorMessage(error.response.data.message);
@@ -48,7 +49,7 @@ function OfficerCertificateRequestsPage() {
 
   const handleDecline = async (requestId) => {
     try {
-      await axios.post(`/api/officer/declineRequest/${requestId}`, { declineReason });
+      await axios.post(`${baseurl}/api/officer/declineRequest/${requestId}`, { declineReason });
 
       setSuccessMessage('Request declined successfully!');
       fetchRequests();

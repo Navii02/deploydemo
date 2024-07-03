@@ -3,6 +3,7 @@ import axios from 'axios';
 import '../../App.css';
 import './NoticeUpdates.css';
 import Navbar from './OfficerNavbar';
+import {baseurl} from '../../url';
 
 function NoticeUpdates() {
   const [notice, setNotice] = useState('');
@@ -18,7 +19,7 @@ function NoticeUpdates() {
 
   const fetchNotices = async () => {
     try {
-      const response = await axios.get('/api/notices');
+      const response = await axios.get(`${baseurl}/api/notices`);
       setNotices(response.data.notices.reverse());
     } catch (error) {
       console.log(error);
@@ -33,7 +34,7 @@ function NoticeUpdates() {
       formData.append('notice', notice);
       formData.append('image', image);
 
-      const response = await axios.post('/api/photos', formData, {
+      const response = await axios.post(`${baseurl}/api/photos`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -98,7 +99,7 @@ function NoticeUpdates() {
         <div className="notice-list">
           {notices.slice(0, visibleNotices).map((notice) => (
             <div key={notice._id} className="notice-item">
-              <img src={`/uploads/${notice.image}`} alt="Notice" />
+              <img src={`${baseurl}/uploads/${notice.image}`} alt="Notice" />
               <h3>{notice.notice}</h3>
             </div>
           ))}

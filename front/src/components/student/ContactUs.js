@@ -9,7 +9,7 @@ const ContactUs = () => {
 
   const emailIds = [
     { label: 'Primary Mail ID', email: 'bettinakpeter@gmail.com' },
-    { label: 'Alternate Mail ID', email: 'bettipeter7@gmail.com' },
+    { label: 'Alternate Mail ID', email: 'naveenshaji456@gmail.com' },
   ];
 
   const handleCall = (phoneNumber) => {

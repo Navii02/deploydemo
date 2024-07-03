@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './HodNavbar'; // Assuming you have a Navbar component for HOD
 import './HodHome.css'; // Import your CSS file
+import {baseurl} from '../../url';
 
 function HodHome() {
   const [hodName, setHodName] = useState('');
@@ -20,7 +21,7 @@ function HodHome() {
       }
 
       try {
-        const response = await axios.get(`/api/hod-profile?email=${hodEmail}`);
+        const response = await axios.get(`${baseurl}/api/hod-profile?email=${hodEmail}`);
         //console.log('Full Response:', response);
 
         const hodName = response.data.teachername; // Assuming name property in HOD profile

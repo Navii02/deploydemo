@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from 'axios'
+import {baseurl} from '../../url';
 import Navbar from './UserNavbar';
 //import Footer from './Footer';
 import './FeeDetails.css';
@@ -22,7 +23,7 @@ function InstallmentPage() {
       setCourse(storedCourse);
 
       try {
-        const response = await axios.post('/api/fetch-installments', {
+        const response = await axios.post(`${baseurl}/api/fetch-installments`, {
           email,
           course: storedCourse,
         });

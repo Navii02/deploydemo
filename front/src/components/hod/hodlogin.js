@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import validator from 'validator';
 import { regexPassword } from '../../utils';
+import {baseurl} from '../../url';
 import '../Login.css'; // Add your CSS file if needed
 
 function HodLogin() {
@@ -50,7 +51,7 @@ function HodLogin() {
     event.preventDefault();
 
     try {
-      const res = await fetch('/api/hodlogin', {
+      const res = await fetch(`${baseurl}/api/hodlogin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

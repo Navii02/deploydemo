@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import Navbar from "./OfficerNavbar";
 import './DataEditing.css'
+import {baseurl} from '../../url';
 
 const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   const initialFormData = {
@@ -204,7 +205,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     }
 
     try {
-      const response = await axios.post('/api/studentadmission', sendData);
+      const response = await axios.post(`${baseurl}/api/studentadmission`, sendData);
       console.log(response.data);
       setFormData({ ...initialFormData });
       fetchStudents();
