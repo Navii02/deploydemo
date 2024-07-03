@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import '../../App.css';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
 import Navbar from './UserNavbar';
 import './Dashboard.css';
-
 
 function Dashboard() {
   const [student, setStudentDetails] = useState(null);
@@ -80,7 +79,7 @@ function Dashboard() {
           <div className="student-details">
             <div className="student-info">
               <div className="student-image">
-                {student.photo && <img src={student.photo} alt="Student" className="student-photo" />}
+                {student.photo && <img src={`${baseurl}${student.photo}`} alt="Student" className="student-photo" />}
               </div>
               <div className="student-table-container">
                 <table className="student-table">
@@ -163,10 +162,6 @@ function Dashboard() {
                           <td className="table-heading">Nativity:</td>
                           <td>{student.nativity}</td>
                         </tr>
-                      
-                       
-                       
-                     
                       </>
                     )}
                   </tbody>
