@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 
 const User = require('../../models/Student/UserSchema'); // Import User model
@@ -27,6 +28,14 @@ app.get('/student/:email', (req, res) => {
       console.error('Error:', error);
       res.status(500).json({ error: 'An error occurred' });
     });
+});
+app.get('/photo/:photoPath', (req, res) => {
+  const photo = req.params.photoPath;
+  res.sendFile(path.join(__dirname,  photo), (err) => {
+    if (err) {
+      res.status(404).json({ message: 'Photo not found' });
+    }
+  });
 });
 
 module.exports = app
