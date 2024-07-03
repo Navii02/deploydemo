@@ -79,7 +79,7 @@ function Dashboard() {
           <div className="student-details">
             <div className="student-info">
               <div className="student-image">
-                {student.photo && <img src={`${baseurl}${student.photo}`} alt="Student" className="student-photo" />}
+                {student.photo && <img src={`${baseurl}/${student.photo}`} alt="Student" className="student-photo" />}
               </div>
               <div className="student-table-container">
                 <table className="student-table">
