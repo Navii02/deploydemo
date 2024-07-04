@@ -99,7 +99,7 @@ function NoticeUpdates() {
         <div className="notice-list">
           {notices.slice(0, visibleNotices).map((notice) => (
             <div key={notice._id} className="notice-item">
-              <img src={`${baseurl}/uploads/${notice.image}`} alt="Notice" />
+              <img src={`/uploads/${notice.image}`} alt="Notice" />
               <h3>{notice.notice}</h3>
             </div>
           ))}
