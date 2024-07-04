@@ -36,7 +36,7 @@ const InternalMarksForm = () => {
       console.error('Please select a course, semester, and subject');
       return;
     }
-
+  
     try {
       const response = await axios.get(`${baseurl}/api/students/faculty/${course}/${semester}`);
       const studentsData = response.data.map(student => ({
@@ -44,11 +44,13 @@ const InternalMarksForm = () => {
         internalMarks: student.internalMarks.map(mark => mark.subject === subject ? mark : { ...mark, subject, examMarks: 0, assignmentMarks: 0 })
       }));
       setStudents(studentsData);
+      console.log(studentsData);
     } catch (error) {
       console.error('Error fetching students:', error);
+      // Add further error handling as needed
     }
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     fetchStudents();
