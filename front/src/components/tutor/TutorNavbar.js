@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../Navbar.css';
+import ProtectedComponent from '../../ProtectedRoutes';
 import { Button } from '../Button';
 
 function TutorNavbar() {
@@ -20,11 +21,12 @@ function TutorNavbar() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('role');
     // Clear user session (update based on your implementation)
     localStorage.removeItem('email');
 
     // Redirect to the login page
-    navigate('/classtutorlogin');
+    navigate('/');
   };
 
   useEffect(() => {
@@ -35,6 +37,7 @@ function TutorNavbar() {
 
   return (
     <>
+    
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/thome' className='navbar-logo' onClick={closeMobileMenu}>
@@ -61,7 +64,7 @@ function TutorNavbar() {
               </Link>
             </li>
             <li>
-              <Link to='/classtutorlogin' className='nav-links-mobile' onClick={handleLogout}>
+              <Link to='/' className='nav-links-mobile' onClick={handleLogout}>
                 Log Out
               </Link>
             </li>
@@ -73,7 +76,9 @@ function TutorNavbar() {
           )}
         </div>
       </nav>
+      
     </>
+    
   );
 }
 

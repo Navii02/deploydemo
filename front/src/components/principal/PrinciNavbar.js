@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../Navbar.css';
 import { Button } from '../Button';
 
+
 function PrinciNavbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
@@ -12,29 +13,25 @@ function PrinciNavbar() {
   const closeMobileMenu = () => setClick(false);
 
   const showButton = () => {
-    if (window.innerWidth <= 960) {
-      setButton(false);
-    } else {
-      setButton(true);
-    }
+    setButton(window.innerWidth > 960);
   };
 
   const handleLogout = () => {
-    // Clear user session (update based on your implementation)
     localStorage.removeItem('email');
-
-    // Redirect to the login page
-    navigate('/principallogin');
+    localStorage.removeItem('role'); // Clear the role as well
+    navigate('/');
   };
 
   useEffect(() => {
     showButton();
+    window.addEventListener('resize', showButton);
+    return () => {
+      window.removeEventListener('resize', showButton);
+    };
   }, []);
 
-  window.addEventListener('resize', showButton);
-
   return (
-    <>
+  
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/phome' className='navbar-logo' onClick={closeMobileMenu}>
@@ -45,21 +42,19 @@ function PrinciNavbar() {
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-
-          <li className='nav-item dropdown'>
-            <Link to='/pstudents' className='nav-links' onClick={closeMobileMenu}>
-              Student<i className='fas fa-caret-down' />
-            </Link>
-            <div className='dropdown-content'>
-              <Link to='/pstudents' className='dropdown-link' onClick={closeMobileMenu}>
-              Student Details
+            <li className='nav-item dropdown'>
+              <Link to='/pstudents' className='nav-links' onClick={closeMobileMenu}>
+                Student<i className='fas fa-caret-down' />
               </Link>
-              <Link to='/srequests' className='dropdown-link' onClick={closeMobileMenu}>
-            Student Requests
-              </Link>
-             
-            </div>
-          </li>
+              <div className='dropdown-content'>
+                <Link to='/pstudents' className='dropdown-link' onClick={closeMobileMenu}>
+                  Student Details
+                </Link>
+                <Link to='/srequests' className='dropdown-link' onClick={closeMobileMenu}>
+                  Student Requests
+                </Link>
+              </div>
+            </li>
             <li className='nav-item dropdown'>
               <Link to='/pteachers' className='nav-links' onClick={closeMobileMenu}>
                 Faculty<i className='fas fa-caret-down' />
@@ -83,15 +78,15 @@ function PrinciNavbar() {
                 Log Out
               </Link>
             </li>
-            </ul>
-            {button && (
-              <Button buttonStyle='btn--outline' onClick={handleLogout}>
-                LOG OUT
-              </Button>
-            )}
-          </div>
+          </ul>
+          {button && (
+            <Button buttonStyle='btn--outline' onClick={handleLogout}>
+              LOG OUT
+            </Button>
+          )}
+        </div>
       </nav>
-    </>
+    
   );
 }
 

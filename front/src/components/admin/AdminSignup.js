@@ -69,6 +69,7 @@ function useAdminSignup() {
           name: values.name,
           email: values.email,
           password: values.password,
+            role:'admin',
         }),
       });
 

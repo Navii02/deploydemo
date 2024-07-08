@@ -6,10 +6,10 @@ const router = express.Router();
 const emailTransporter = require('../../nodemailer');
 
 router.post('/principalregister', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
-  if (!email || !password || !name) {
-    return res.status(400).json({ msg: 'Name, email, and password are required' });
+  if (!name || !email || !password || !role) {
+    return res.status(400).json({ msg: 'Name, email, password, and role are required' });
   }
 
   if (password.length < 8) {
@@ -23,7 +23,7 @@ router.post('/principalregister', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new PrincipalSchema({ name, email, password: hashedPassword });
+    const newUser = new PrincipalSchema({ name, email, password: hashedPassword, role });
 
     const savedUser = await newUser.save();
     if (savedUser) {
@@ -49,48 +49,39 @@ router.post('/principalregister', async (req, res) => {
     return res.status(500).json({ msg: 'Error saving user to the database' });
   }
 });
+
 router.post('/principallogin', async (req, res) => {
   const { email, password, post } = req.body;
 
-  // Check if email, password, and role are provided
   if (!email || !password || !post) {
-    return res.status(400).json({ msg: 'Email, password, and role are required' });
+    return res.status(400).json({ msg: 'Email, password, and post are required' });
   }
 
   try {
-    // Find the user in the Principal database
     const principalUser = await PrincipalSchema.findOne({ email });
     if (!principalUser) {
       return res.status(400).json({ msg: 'User not found in Principal database' });
     }
-  // Check if the user is listed as an officer
 
-
-    // Check if the user is listed as an officer
-    const officerUser = await OfficerListSchema.findOne({ email});
+    const officerUser = await OfficerListSchema.findOne({ email });
     if (!officerUser) {
       return res.status(400).json({ msg: 'User not found in Officer database. Please contact Admin' });
     }
-    const officerUserpost = await OfficerListSchema.findOne({ post });
-    if (!officerUserpost) {
+
+    if (officerUser.post !== post) {
       return res.status(400).json({ msg: 'User is not assigned as principal' });
     }
-    // Compare the provided password with the hashed password in PrincipalSchema
+
     const isPasswordValid = await bcrypt.compare(password, principalUser.password);
     if (isPasswordValid) {
-      // If passwords match, return success message along with user's email
-      return res.status(200).json({ msg: 'You have logged in successfully', email: principalUser.email,name:officerUser.name });
-    } 
-    else {
-      // If passwords do not match, return invalid credentials message
+      return res.status(200).json({ msg: 'You have logged in successfully', email: principalUser.email, name: officerUser.name, role: principalUser.role });
+    } else {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
   } catch (error) {
-    // If any errors occur, return a generic server error message
     console.error(error);
     return res.status(500).json({ msg: 'Server error, please try again later' });
   }
 });
-
 
 module.exports = router;

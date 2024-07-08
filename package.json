@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@vercel/speed-insights": "^1.0.12"
+    "@vercel/speed-insights": "^1.0.12",
+    "chart.js": "^3.7.0"
   }
 }

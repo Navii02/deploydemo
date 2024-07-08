@@ -1,0 +1,30 @@
+.sloading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(to right, #f8f9fa, #e0e0e0); /* Light gray to light blue gradient */
+}
+
+.sloading-spinner {
+  border: 8px solid transparent; /* Remove solid border */
+  border-top: 8px solid #3498db; /* Blue top border */
+  border-left: 8px solid #e84a5f; /* Pink left border */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1.5s linear infinite;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.sloading-container p {
+  margin-top: 15px; /* Adjust margin */
+  font-size: 1.5em; /* Larger font */
+  color: #2980b9; /* Darker blue text */
+}

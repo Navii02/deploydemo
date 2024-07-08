@@ -69,6 +69,7 @@ function useHODSignup() {
           name: values.name,
           email: values.email,
           password: values.password,
+            role:'hod',
         }),
       });
 

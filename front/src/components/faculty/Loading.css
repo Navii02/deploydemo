@@ -1,0 +1,45 @@
+.floading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full viewport height */
+  background-color: #f0f2f5; /* Light background color */
+  font-family: 'Arial', sans-serif; /* Modern font */
+  color: #333;
+}
+
+.floading-spinner {
+  border: 8px solid #f3f3f3; /* Light gray border */
+  border-top: 8px solid #3498db; /* Blue border on top */
+  border-right: 8px solid #e74c3c; /* Red border on the right */
+  border-bottom: 8px solid #f39c12; /* Yellow border at the bottom */
+  border-left: 8px solid #2ecc71; /* Green border on the left */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1.5s linear infinite, pulsate 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulsate {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.floading-container p {
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #555;
+  text-align: center; /* Centered text */
+  animation: fadeIn 2s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}

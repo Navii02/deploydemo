@@ -75,6 +75,7 @@ function FacultyLogin() {
 
       if (data) {
         // Save the email to local storage
+        localStorage.setItem('role', data.role);
         localStorage.setItem('email', data.email);
         localStorage.setItem('branch', data.branch);
         // Retrieve the email from local storage

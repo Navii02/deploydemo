@@ -74,11 +74,12 @@ function TutorLogin() {
   
       if (data && data.academicYear && data.department&&data.tutorclass) {
         // Save the email and academic year to local storage
-        localStorage.setItem('email', values.email);
+        localStorage.setItem('email', data.email);
+        localStorage.setItem('role', data.role);
         localStorage.setItem('academicYear', data.academicYear);
         localStorage.setItem('department', data.department);
         localStorage.setItem('tutorclass', data.tutorclass);
-        console.log('Email and academic year saved to local storage:', values.email, data.academicYear,data.department,data.tutorclass);
+        console.log('Email and academic year saved to local storage:', data.email, data.academicYear,data.department,data.tutorclass);
         
         // Redirect the user to the dashboard page
         Navigate('/thome');

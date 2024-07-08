@@ -32,7 +32,7 @@ router.post('/hodlogin', async (req, res) => {
     const matchPassword = await bcrypt.compare(password, userInHodSchema.password);
     if (matchPassword) {
       // If password matches, send login success message
-      return res.status(200).json({ msg: 'You have logged in successfully', department: userInHoddetails.department, email: userInHodSchema.email });
+      return res.status(200).json({ msg: 'You have logged in successfully', department: userInHoddetails.department, email: userInHodSchema.email ,role:userInHodSchema.role});
     } else {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
@@ -43,7 +43,7 @@ router.post('/hodlogin', async (req, res) => {
 });
 
 router.post('/hodregister', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password,role} = req.body;
 
   if (!email || !password || !name)
     return res.status(400).json({ msg: 'Name, email, and password are required' });
@@ -57,7 +57,7 @@ router.post('/hodregister', async (req, res) => {
   const user = await HodSchema.findOne({ email }); // finding user in db
   if (user) return res.status(400).json({ msg: 'User already exists' });
 
-  const newUser = new HodSchema({ name, email, password });
+  const newUser = new HodSchema({ name, email, password,role});
   // hashing the password
   bcrypt.hash(password, 7, async (err, hash) => {
     if (err)

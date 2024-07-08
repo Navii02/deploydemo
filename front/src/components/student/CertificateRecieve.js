@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './CertificateRecieve.css'
-import Navbar from './UserNavbar'
-import {baseurl} from '../../url';
+import './CertificateRecieve.css';
+import Navbar from './UserNavbar';
+import { baseurl } from '../../url';
+import Loading from './Loading'; // Import the Loading component
 
 const CertificateRequestsPage = () => {
   const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
   const [errorMessage, setErrorMessage] = useState('');
   const [userEmail, setUserEmail] = useState('');
 
@@ -19,6 +21,8 @@ const CertificateRequestsPage = () => {
         setRequests(response.data.requests);
       } catch (error) {
         setErrorMessage(error.response?.data?.message || 'Error fetching requests');
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
@@ -42,6 +46,10 @@ const CertificateRequestsPage = () => {
       console.error('Error downloading file:', error);
     }
   };
+
+  if (loading) {
+    return <Loading />; // Show loading component while data is being fetched
+  }
 
   return (
     <>

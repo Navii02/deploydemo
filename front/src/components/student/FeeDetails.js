@@ -4,10 +4,12 @@ import {baseurl} from '../../url';
 import Navbar from './UserNavbar';
 //import Footer from './Footer';
 import './FeeDetails.css';
+import Loading from './Loading';
 
 function InstallmentPage() {
   const [installments, setInstallments] = useState([]);
   const [course, setCourse] = useState('');
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -31,6 +33,8 @@ function InstallmentPage() {
         setInstallments(response.data.installmentsPaid);
       } catch (err) {
         setError('Failed to fetch installments');
+      } finally {
+      setLoading(false); // Set loading to false after fetching data
       }
     };
 
@@ -40,7 +44,9 @@ function InstallmentPage() {
   const getInstallmentCount = (course) => {
     return course === 'MCA' ? 1 : 4;
   };
-
+  if (loading) {
+    return <Loading />; // Show loading component while data is being fetched
+  }
   return (
     <div className="installment-page">
       <Navbar />

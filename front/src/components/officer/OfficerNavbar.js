@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../Navbar.css';
+
 import { Button } from '../Button';
 
 function OfficerNavbar() {
@@ -23,9 +24,9 @@ function OfficerNavbar() {
   const handleLogout = () => {
     // Clear user session
     localStorage.removeItem('email');
-
+    localStorage.removeItem('role');
     // Redirect to the login page
-    navigate('/officerlogin');
+    navigate('/');
   };
 
   useEffect(() => {
@@ -38,6 +39,7 @@ function OfficerNavbar() {
   }, []);
 
   return (
+   
     <nav className='navbar'>
       <div className='navbar-container'>
         <Link to='/office' className='navbar-logo' onClick={closeMobileMenu}>
@@ -100,6 +102,7 @@ function OfficerNavbar() {
         )}
       </div>
     </nav>
+    
   );
 }
 

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './UserNavbar';
 import './reminders.css';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
+import Loading from './Loading'; // Import the Loading component
 
 const Reminders = () => {
   const [reminders, setReminders] = useState([]);
@@ -10,6 +11,7 @@ const Reminders = () => {
   const [attendanceReminders, setAttendanceReminders] = useState([]);
   const [internalMarksReminders, setInternalMarksReminders] = useState([]);
   const [updatesReminders, setUpdatesReminders] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
   const userEmail = localStorage.getItem('email');
   const course = localStorage.getItem('course');
   const semester = localStorage.getItem('semester');
@@ -75,6 +77,8 @@ const Reminders = () => {
           default:
             setReminders(prevReminders => [...prevReminders, { category, data: [] }]);
         }
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
@@ -190,6 +194,10 @@ const Reminders = () => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
+  if (loading) {
+    return <Loading />; // Show loading component while data is being fetched
+  }
+
   return (
     <>
       <Navbar />
@@ -237,7 +245,7 @@ const Reminders = () => {
           </div>
         )}
         {reminders.length === 0 ? (
-        <p></p>
+          <p>No reminders available.</p>
         ) : (
           reminders.map((reminder, index) => (
             <div className="reminder-category" key={index}>
