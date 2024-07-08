@@ -75,7 +75,7 @@ function StudentLogin() {
       if (data) {
         // Save the email to local storage
         localStorage.setItem('email', data.email);
-        console.log('Email saved to local storage:', data.email);
+        console.log('Email saved to local storage:', data.email,data.role);
         localStorage.setItem('role', data.role);
         // Retrieve the email from local storage
         const userEmail = localStorage.getItem('email');
