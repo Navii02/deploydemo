@@ -394,6 +394,22 @@ function RoutesComp() {
             </PrivateRoute>
           }
         />
+           <Route
+          path='/teacher-details'
+          element={
+            <PrivateRoute>
+              <AdminTeachersPage/>
+            </PrivateRoute>
+          }
+        />
+           <Route
+          path='/asigntutor'
+          element={
+            <PrivateRoute>
+              <AssignTutor/>
+            </PrivateRoute>
+          }
+        />
         <Route path='/hforgot' element={<HForgotPassword />} />
 
         {/* Principal Routes */}
