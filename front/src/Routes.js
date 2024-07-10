@@ -72,7 +72,7 @@ import Pofficers from './components/principal/OfficersList';
 import Hodassign from './components/principal/hodassign';
 import SRequests from './components/principal/StudentRequest';
 
-import PrivateRoute from './components/PrivateRoute'; // Import the PrivateRoute component
+import PrivateRoute from './ProtectedRoutes'; // Import the PrivateRoute component
 
 function RoutesComp() {
   return (
