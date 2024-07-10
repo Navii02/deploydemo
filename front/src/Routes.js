@@ -33,7 +33,7 @@ import AForgotPassword from './components/admin/AdminForgot';
 import AdminSignup from './components/admin/AdminSignup';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminOfficersPage from './components/admin/AdminOfficersPage';
-
+import AdminTeachersPage from './components/hod/AdminTeachersPage';
 import AssignTutor from './components/hod/Assigntutor';
 
 import FacultyHome from './components/faculty/FacultyHome';
@@ -61,7 +61,6 @@ import CertificateApproval from './components/hod/CertificateApproval';
 import HodStudenlist from './components/hod/HstudentsDetails';
 import SubjectAdd from './components/hod/SubjectAddition';
 import HodPerformancePage from './components/hod/HodPerformance';
-import HodTeachersPage from './components/hod/AdminTeachersPage';
 
 import PrinciHome from './components/principal/PrinciHome';
 import PrincipalSignup from './components/principal/principalsignup';
@@ -73,7 +72,7 @@ import Pofficers from './components/principal/OfficersList';
 import Hodassign from './components/principal/hodassign';
 import SRequests from './components/principal/StudentRequest';
 
-import ProtectedRoute from './ProtectedRoutes';
+import PrivateRoute from './components/PrivateRoute'; // Import the PrivateRoute component
 
 function RoutesComp() {
   return (
@@ -82,70 +81,373 @@ function RoutesComp() {
         <Route path='/' element={<HomePage />} />
         <Route path='/studentlogin' element={<Login />} />
         <Route path='/studentsignup' element={<Signup />} />
+        <Route
+          path='/user'
+          element={
+            <PrivateRoute>
+              <UserHome />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/dashboard'
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/about-us'
+          element={
+            <PrivateRoute>
+              <AboutUs />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/contact'
+          element={
+            <PrivateRoute>
+              <ContactUs />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/certificates-user'
+          element={
+            <PrivateRoute>
+              <Certificates />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/certificate-distribution'
+          element={
+            <PrivateRoute>
+              <CertificateDistribution />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/fee-details'
+          element={
+            <PrivateRoute>
+              <FeeDetails />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/scholarships'
+          element={
+            <PrivateRoute>
+              <ScholarshipDetails />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/rem'
+          element={
+            <PrivateRoute>
+              <Reminders />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/cert'
+          element={
+            <PrivateRoute>
+              <CertificateRecieve />
+            </PrivateRoute>
+          }
+        />
+        <Route path='/sforgot' element={<SForgotPassword />} />
+
+        {/* Officer Routes */}
         <Route path='/officersignup' element={<OfficerSignup />} />
         <Route path='/officerlogin' element={<Officerlogin />} />
-        <Route path='/facultylogin' element={<FaculityLogin />} />
-        <Route path='/faculitysignup' element={<FaculitySignup />} />
-        <Route path='/classtutorlogin' element={<ClasstutorLogin />} />
-        <Route path='/classtutorsignup' element={<ClasstutorSignup />} />
+        <Route
+          path='/office'
+          element={
+            <PrivateRoute>
+              <OfficeHome />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/data-editing'
+          element={
+            <PrivateRoute>
+              <DataEntryForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/data-table'
+          element={
+            <PrivateRoute>
+              <DataViewEdit />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/fee-reminders'
+          element={
+            <PrivateRoute>
+              <FeeReminders />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/notice-updates'
+          element={
+            <PrivateRoute>
+              <NoticeUpdates />
+            </PrivateRoute>
+          }
+        />
+        <Route path='/oforgot' element={<OForgotPassword />} />
+        <Route
+          path='/payment'
+          element={
+            <PrivateRoute>
+              <PaymentAndReminders />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/certificate-distribution'
+          element={
+            <PrivateRoute>
+              <CertificateDistribution />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/ar'
+          element={
+            <PrivateRoute>
+              <ApprovedAndRemoved />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/feepayment'
+          element={
+            <PrivateRoute>
+              <FeePayment />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/sdata'
+          element={
+            <PrivateRoute>
+              <StudentListPage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Admin Routes */}
         <Route path='/adminlogin' element={<AdminLogin />} />
         <Route path='/adminsignup' element={<AdminSignup />} />
+        <Route
+          path='/dash'
+          element={
+            <PrivateRoute>
+              <AdminDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/officer-details'
+          element={
+            <PrivateRoute>
+              <AdminOfficersPage />
+            </PrivateRoute>
+          }
+        />
+        <Route path='/aforgot' element={<AForgotPassword />} />
+
+        {/* Faculty Routes */}
+        <Route path='/faculitysignup' element={<FaculitySignup />} />
+        <Route path='/facultylogin' element={<FaculityLogin />} />
+        <Route
+          path='/fchome'
+          element={
+            <PrivateRoute>
+              <FacultyHome />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/int'
+          element={
+            <PrivateRoute>
+              <InternalMarksForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/att'
+          element={
+            <PrivateRoute>
+              <AttendanceForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/ast'
+          element={
+            <PrivateRoute>
+              <AssignmentForm />
+            </PrivateRoute>
+          }
+        />
+        <Route path='/fforgot' element={<FForgotPassword />} />
+        <Route
+          path='/att-table'
+          element={
+            <PrivateRoute>
+              <AttendanceTable />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Tutor Routes */}
+        <Route path='/classtutorlogin' element={<ClasstutorLogin />} />
+        <Route path='/classtutorsignup' element={<ClasstutorSignup />} />
+        <Route
+          path='/thome'
+          element={
+            <PrivateRoute>
+              <TutorHome />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/tstudents'
+          element={
+            <PrivateRoute>
+              <Tutorstudentlist />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/perf'
+          element={
+            <PrivateRoute>
+              <StudentPerformancePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/upd'
+          element={
+            <PrivateRoute>
+              <TutorUpdates />
+            </PrivateRoute>
+          }
+        />
+        <Route path='/tforgot' element={<TForgotPassword />} />
+
+        {/* HOD Routes */}
         <Route path='/hodlogin' element={<HodLogin />} />
         <Route path='/hodsignup' element={<HodSignup />} />
-        <Route path="/principallogin" element={<PrincipalLogin />} />
-        <Route path="/principalsignup" element={<PrincipalSignup />} />
-        <Route path="/office" element={<ProtectedRoute allowedRoles={['officer']}> <OfficeHome /></ProtectedRoute>} />
-        <Route path="/data-editing" element={<ProtectedRoute allowedRoles={['officer']}><DataEntryForm /></ProtectedRoute>} />
-        <Route path="/data-table" element={<ProtectedRoute allowedRoles={['officer']}><DataViewEdit /></ProtectedRoute>} />
-        <Route path="/fee-reminders" element={<ProtectedRoute allowedRoles={['officer']}><FeeReminders /></ProtectedRoute>} />
-        <Route path="/notice-updates" element={<ProtectedRoute allowedRoles={['officer']}><NoticeUpdates /></ProtectedRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['student']}><Dashboard /></ProtectedRoute>} />
-        <Route path="/user" element={<ProtectedRoute allowedRoles={['student']}><UserHome /></ProtectedRoute>} />
-        <Route path="/about-us" element={<ProtectedRoute allowedRoles={['student']}><AboutUs /></ProtectedRoute>} />
-        <Route path="/contact" element={<ProtectedRoute allowedRoles={['student']}><ContactUs /></ProtectedRoute>} />
-        <Route path="/certificates-user" element={<ProtectedRoute allowedRoles={['student']}><Certificates /></ProtectedRoute>} />
-        <Route path="/certificate-distribution" element={<ProtectedRoute allowedRoles={['officer']}><CertificateDistribution /></ProtectedRoute>} />
-        <Route path="/fee-details" element={<ProtectedRoute allowedRoles={['student']}><FeeDetails /></ProtectedRoute>} />
-        <Route path="/scholarships" element={<ProtectedRoute allowedRoles={['student']}><ScholarshipDetails /></ProtectedRoute>} />
-        <Route path="/dash" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/fchome" element={<ProtectedRoute allowedRoles={['faculty']}><FacultyHome /></ProtectedRoute>} />
-        <Route path="/thome" element={<ProtectedRoute allowedRoles={['tutor']}><TutorHome /></ProtectedRoute>} />
-        <Route path="/hodhome" element={<ProtectedRoute allowedRoles={['hod']}><HodHome /></ProtectedRoute>} />
-        <Route path="/phome" element={<ProtectedRoute allowedRoles={['principal']}><PrinciHome /></ProtectedRoute>} />
-        <Route path="/rem" element={<ProtectedRoute allowedRoles={['student']}><Reminders /></ProtectedRoute>} />
-        <Route path="/int" element={<ProtectedRoute allowedRoles={['faculty']}><InternalMarksForm /></ProtectedRoute>} />
-        <Route path="/att" element={<ProtectedRoute allowedRoles={['faculty']}><AttendanceForm /></ProtectedRoute>} />
-        <Route path="/ast" element={<ProtectedRoute allowedRoles={['faculty']}><AssignmentForm /></ProtectedRoute>} />
-        <Route path="/cert" element={<ProtectedRoute allowedRoles={['student']}><CertificateRecieve /></ProtectedRoute>} />
-        <Route path="/officer-details" element={<ProtectedRoute allowedRoles={['admin']}><AdminOfficersPage /></ProtectedRoute>} />
-       
-        <Route path="/payment" element={<ProtectedRoute allowedRoles={['officer']}><PaymentAndReminders /></ProtectedRoute>} />
-        <Route path="/aforgot" element={<AForgotPassword />} />
-        <Route path="/fforgot" element={<FForgotPassword />} />
-        <Route path="/hforgot" element={<HForgotPassword />} />
-        <Route path="/oforgot" element={<OForgotPassword />} />
-        <Route path="/pforgot" element={<PForgotPassword />} />
-        <Route path="/sforgot" element={<SForgotPassword />} />
-        <Route path="/tforgot" element={<TForgotPassword />} />
-        <Route path="/certificate-approval" element={<ProtectedRoute allowedRoles={['hod']}><CertificateApproval /></ProtectedRoute>} />
-        <Route path="/ar" element={<ProtectedRoute allowedRoles={['officer']}><ApprovedAndRemoved /></ProtectedRoute>} />
-        <Route path="/pstudents" element={<ProtectedRoute allowedRoles={['principal']}><Pstudents /></ProtectedRoute>} />
-        <Route path="/pteachers" element={<ProtectedRoute allowedRoles={['principal']}><Pteachers /></ProtectedRoute>} />
-        <Route path="/pOffice" element={<ProtectedRoute allowedRoles={['principal']}><Pofficers /></ProtectedRoute>} />
-        <Route path="/hodassign" element={<ProtectedRoute allowedRoles={['principal']}><Hodassign /></ProtectedRoute>} />
-        <Route path="/hstudents" element={<ProtectedRoute allowedRoles={['hod']}><HodStudenlist /></ProtectedRoute>} />
-        <Route path="/feepayment" element={<ProtectedRoute allowedRoles={['officer']}><FeePayment /></ProtectedRoute>} />
-        <Route path="/subject" element={<ProtectedRoute allowedRoles={['hod']}><SubjectAdd /></ProtectedRoute>} />
-        <Route path="/asigntutor" element={<ProtectedRoute allowedRoles={['hod']}><AssignTutor /></ProtectedRoute>} />
-        <Route path="/tstudents" element={<ProtectedRoute allowedRoles={['tutor']}><Tutorstudentlist /></ProtectedRoute>} />
-        <Route path="/sdata" element={<ProtectedRoute allowedRoles={['officer']}><StudentListPage /></ProtectedRoute>} />
-        <Route path="/perf" element={<ProtectedRoute allowedRoles={['tutor']}><StudentPerformancePage /></ProtectedRoute>} />
-        <Route path="/upd" element={<ProtectedRoute allowedRoles={['tutor']}><TutorUpdates /></ProtectedRoute>} />
-        <Route path="/hperf" element={<ProtectedRoute allowedRoles={['hod']}><HodPerformancePage /></ProtectedRoute>} />
-        <Route path="/hodhome" element={<ProtectedRoute allowedRoles={['hod']}><HodHome/></ProtectedRoute>} />
-        <Route path="/teacher-details" element={<ProtectedRoute allowedRoles={['hod']}><HodTeachersPage /></ProtectedRoute>} />
-        <Route path="/att-table" element={<ProtectedRoute allowedRoles={['faculty']}><AttendanceTable /></ProtectedRoute>} />
-        <Route path="/srequests" element={<ProtectedRoute allowedRoles={['principal']}><SRequests /></ProtectedRoute>} />
+        <Route
+          path='/hodhome'
+          element={
+            <PrivateRoute>
+              <HodHome />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/certificate-approval'
+          element={
+            <PrivateRoute>
+              <CertificateApproval />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/hstudents'
+          element={
+            <PrivateRoute>
+              <HodStudenlist />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/subject'
+          element={
+            <PrivateRoute>
+              <SubjectAdd />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/hperf'
+          element={
+            <PrivateRoute>
+              <HodPerformancePage />
+            </PrivateRoute>
+          }
+        />
+        <Route path='/hforgot' element={<HForgotPassword />} />
+
+        {/* Principal Routes */}
+        <Route path='/principallogin' element={<PrincipalLogin />} />
+        <Route path='/principalsignup' element={<PrincipalSignup />} />
+        <Route
+          path='/phome'
+          element={
+            <PrivateRoute>
+              <PrinciHome />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/pstudents'
+          element={
+            <PrivateRoute>
+              <Pstudents />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/pteachers'
+          element={
+            <PrivateRoute>
+              <Pteachers />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/pOffice'
+          element={
+            <PrivateRoute>
+              <Pofficers />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/hodassign'
+          element={
+            <PrivateRoute>
+              <Hodassign />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/srequests'
+          element={
+            <PrivateRoute>
+              <SRequests />
+            </PrivateRoute>
+          }
+        />
+        <Route path='/pforgot' element={<PForgotPassword />} />
       </Routes>
     </>
   );
