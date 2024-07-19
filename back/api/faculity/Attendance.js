@@ -33,6 +33,8 @@ router.post('/data/attendance', async (req, res) => {
 // Route to fetch students based on semester and course
 router.get('/students/faculty/attendance/:course/:semester', async (req, res) => {
   const { course, semester } = req.params;
+  
+  //console.log(semester,course);
 
   try {
     const students = await Student.find({ course, semester });

@@ -20,7 +20,7 @@ router.post('/admin/addTeacher', async (req, res) => {
   const newTeacherData = req.body;
   try {
     const newTeacher = await Teacher.create(newTeacherData);
-    res.json({ newTeacher });
+    res.status(201).json({ newTeacher });
   } catch (error) {
     console.error('Error adding teacher:', error);
     res.status(500).json({ message: 'Failed to add teacher' });
@@ -33,6 +33,9 @@ router.put('/admin/updateTeacher/:id', async (req, res) => {
   const updatedTeacherData = req.body;
   try {
     const updatedTeacher = await Teacher.findByIdAndUpdate(teacherId, updatedTeacherData, { new: true });
+    if (!updatedTeacher) {
+      return res.status(404).json({ message: 'Teacher not found' });
+    }
     res.json({ updatedTeacher });
   } catch (error) {
     console.error('Error updating teacher:', error);
@@ -44,7 +47,10 @@ router.put('/admin/updateTeacher/:id', async (req, res) => {
 router.delete('/admin/deleteTeacher/:id', async (req, res) => {
   const teacherId = req.params.id;
   try {
-    await Teacher.findByIdAndDelete(teacherId);
+    const deletedTeacher = await Teacher.findByIdAndDelete(teacherId);
+    if (!deletedTeacher) {
+      return res.status(404).json({ message: 'Teacher not found' });
+    }
     res.json({ message: 'Teacher deleted successfully' });
   } catch (error) {
     console.error('Error deleting teacher:', error);
@@ -52,16 +58,16 @@ router.delete('/admin/deleteTeacher/:id', async (req, res) => {
   }
 });
 
-// GET subjects based on course and semester
-router.get('/admin/subjects', async (req, res) => {
-  const {department, semester } = req.query;
+router.get('/subjects/:department/:semester', async (req, res) => {
+  const { department, semester } = req.params;
   try {
-    const subjects = await Subject.find({ department, semester });
-    res.json(subjects);
+    const subjects = await Subject.find({ course: department, semester: semester });
+    res.json({ subjects });
   } catch (error) {
     console.error('Error fetching subjects:', error);
     res.status(500).json({ message: 'Failed to fetch subjects' });
   }
 });
+
 
 module.exports = router;

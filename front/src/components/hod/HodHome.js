@@ -67,7 +67,7 @@ function HodHome() {
             <div>
               <p>Number of Faculties: {teacherCounts}</p>
             </div>
-            <p><strong>Number of Students:</strong> {numStudents}</p>
+             
           </div>
         </div>
       </div>

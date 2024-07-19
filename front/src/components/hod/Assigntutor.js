@@ -58,7 +58,9 @@ function AssignTutorPage() {
       <HodNavbar />
       <div className={styles.container}>
         <div>
-          <label className={styles.label} htmlFor="academicYear">Academic Year:</label>
+          <label className={styles.label} htmlFor="academicYear">Academic Year:
+          <label>yyyy-yyyy</label> </label>
+          
           <input
             className={styles.input}
             type="text"

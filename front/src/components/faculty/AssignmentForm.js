@@ -40,7 +40,7 @@ const AssignmentForm = () => {
 
     try {
       // Send assignment details to the backend
-      await axios.post(`{baseurl}/api/assignments`, {
+      await axios.post(`${baseurl}/api/assignments`, {
         course,
         semester,
         subject,

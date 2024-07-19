@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
 import Navbar from './FacultyNavbar';
 
 const AttendanceForm = () => {
@@ -19,6 +19,7 @@ const AttendanceForm = () => {
   const [alreadyMarked, setAlreadyMarked] = useState(false);
   const [markedSubject, setMarkedSubject] = useState('');
   const [existingAttendance, setExistingAttendance] = useState([]);
+  const [noStudentsMessage, setNoStudentsMessage] = useState(false);
 
   useEffect(() => {
     const fetchCoursesAndSemesters = async () => {
@@ -92,6 +93,11 @@ const AttendanceForm = () => {
         }
       } else {
         const fetchedStudents = await fetchStudents();
+        if (fetchedStudents.length === 0) {
+          setNoStudentsMessage(true);
+        } else {
+          setNoStudentsMessage(false);
+        }
         setStudents(fetchedStudents);
         setAlreadyMarked(false);
         setExistingAttendance([]);
@@ -125,7 +131,7 @@ const AttendanceForm = () => {
       ));
 
       console.log('Attendance marked successfully!');
-  alert('Attendance marked successfully!');
+      alert('Attendance marked successfully!');
     } catch (error) {
       console.error('Error marking attendance:', error);
     } finally {
@@ -203,6 +209,8 @@ const AttendanceForm = () => {
       </form>
 
       {loading && <p>Loading...</p>}
+
+      {noStudentsMessage && <p>The selected subject and semester combination is not exist.</p>}
 
       {alreadyMarked && existingAttendance.length > 0 && (
         <div>

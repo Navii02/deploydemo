@@ -236,16 +236,8 @@ const Reminders = () => {
             {renderCategoryReminders({ category: 'updates', data: updatesReminders })}
           </div>
         )}
-        {reminders.length === 0 ? (
-        <p></p>
-        ) : (
-          reminders.map((reminder, index) => (
-            <div className="reminder-category" key={index}>
-              <h2>{capitalizeFirstLetter(reminder.category)}</h2>
-              {renderCategoryReminders(reminder)}
-            </div>
-          ))
-        )}
+       
+       
       </div>
     </>
   );
