@@ -2,20 +2,22 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './UserNavbar';
 import './CertificateRequest.css';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
+import Loading from './Loading';
 
 function StudentCertificateRequestPage() {
   const [RegisterNo, setRegisterNumber] = useState('');
   const [admissionNumber, setAdmissionNumber] = useState('');
   const [mobileNo, setMobileNumber] = useState('');
+  const [loading, setLoading] = useState(true);
   const [reason, setReason] = useState('');
   const [selectedDocuments, setSelectedDocuments] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [userName, setUserName] = useState('');
-  const [semester, setSemester] = useState(''); // New state for semester
-  const [course, setCourse] = useState(''); // New state for course
-  const userEmail = localStorage.getItem('email');
+  const [semester, setSemester] = useState('');
+  const [course, setCourse] = useState('');
+  const [userEmail, setUserEmail] = useState(localStorage.getItem('email') || ''); // Use state for userEmail
   const [manualRegisterNo, setManualRegisterNumber] = useState('');
 
   useEffect(() => {
@@ -23,7 +25,7 @@ function StudentCertificateRequestPage() {
       try {
         const response = await axios.get(`${baseurl}/api/student/details/${userEmail}`);
         const { RegisterNo, admissionNumber, mobileNo, name, semester, course } = response.data;
-       
+        
         if (RegisterNo) {
           setRegisterNumber(RegisterNo);
         } else {
@@ -33,11 +35,13 @@ function StudentCertificateRequestPage() {
         setAdmissionNumber(admissionNumber);
         setMobileNumber(mobileNo);
         setUserName(name);
-        setSemester(semester); // Set semester from backend
-        setCourse(course); // Set course from backend
+        setSemester(semester);
+        setCourse(course);
+        setLoading(false); // Set loading to false after fetching data
       } catch (error) {
         console.error('Error fetching student details:', error);
         setErrorMessage('Failed to fetch student details');
+        setLoading(false); // Set loading to false on error
       }
     };
 
@@ -55,6 +59,7 @@ function StudentCertificateRequestPage() {
   };
 
   const handleSubmit = async () => {
+    setLoading(true); // Set loading to true before submission
     try {
       const response = await axios.post(`${baseurl}/api/student/submitRequest`, {
         userEmail,
@@ -66,7 +71,6 @@ function StudentCertificateRequestPage() {
         name: userName,
         semester,
         course,
-         // Use fetched name from state
       });
 
       setSuccessMessage(response.data.message);
@@ -80,12 +84,14 @@ function StudentCertificateRequestPage() {
       setMobileNumber('');
       setUserName('');
       setErrorMessage('');
+      setLoading(false); // Set loading to false after successful submission
       setTimeout(() => {
         setSuccessMessage('');
       }, 3000);
     } catch (error) {
       console.error('Error submitting request:', error);
       setErrorMessage(error.response?.data?.message || 'Failed to submit request');
+      setLoading(false); // Set loading to false on error
     }
   };
 
@@ -106,6 +112,10 @@ function StudentCertificateRequestPage() {
   const areOriginalDocumentsSelected = documentOptions
     .slice(0, 2)
     .some((document) => selectedDocuments.includes(document));
+
+  if (loading) {
+    return <Loading />; // Show loading component while data is being fetched or submitted
+  }
 
   return (
     <>

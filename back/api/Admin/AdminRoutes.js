@@ -11,7 +11,7 @@ const allowedUsersFilePath = '../back/api/adminaccess.json';
 
 // Register endpoint
 router.post('/adminregister', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password,role } = req.body;
 
   // Check if the name and email are allowed
   const allowedUsersData = JSON.parse(fs.readFileSync(allowedUsersFilePath));
@@ -36,7 +36,7 @@ router.post('/adminregister', async (req, res) => {
     if (user) return res.status(400).json({ msg: 'User already exists' });
 
     // Create a new user instance
-    const newUser = new AdminSchema({ name, email, password });
+    const newUser = new AdminSchema({ name, email, password,role});
 
     // Hash the password
     bcrypt.hash(password, 7, async (err, hash) => {
@@ -87,7 +87,7 @@ router.post(`/adminlogin`, async (req, res) => {
   if (matchPassword) {
     return res
       .status(200)
-      .json({ msg: 'You have logged in successfully', email: user.email });
+      .json({ msg: 'You have logged in successfully', email: user.email,role:user.role });
   } else {
     return res.status(400).json({ msg: 'Invalid credentials' });
   }

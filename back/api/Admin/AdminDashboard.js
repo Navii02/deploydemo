@@ -3,7 +3,7 @@ const router = express.Router();
 const Principal = require('../../models/Principal/PrincipalSchema');
 const HOD = require('../../models/Principal/HODDetail');
 const ClassTutor = require('../../models/Tutor/TutorSchema');
-const Faculty = require('../../models/Faculity/FaculitySchema');
+const Faculty = require('../../models/hod/TeachersDetailSchema');
 const Officer = require('../../models/Admin/OfficersDetailSchema');
 const Student = require('../../models/Officer/ApprovedStudents');
 

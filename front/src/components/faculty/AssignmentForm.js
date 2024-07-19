@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AssignmentForm.css'; // Import your CSS file
 import Navbar from './FacultyNavbar';
-import {baseurl} from '../../url';
+import Loading from './Loading'; // Import the Loading component
+import { baseurl } from '../../url';
 
 const AssignmentForm = () => {
   const [course, setCourse] = useState('');
@@ -14,6 +15,7 @@ const AssignmentForm = () => {
   const [teachername, setTeacherName] = useState('');
   const [assignmentDetails, setAssignmentDetails] = useState('');
   const [submissionDate, setSubmissionDate] = useState('');
+  const [loading, setLoading] = useState(true); // Add loading state
   const currentYear = new Date().getFullYear(); // Get the current year
 
   useEffect(() => {
@@ -26,9 +28,11 @@ const AssignmentForm = () => {
         setSemesters(semesters || []);
         setSubjects(subjects || []);
         setTeacherName(teachername);
+        setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.error('Error fetching teacher details:', error);
         // Handle error, show an error message, etc.
+        setLoading(false); // Set loading to false even if there's an error
       }
     };
 
@@ -62,6 +66,9 @@ const AssignmentForm = () => {
     }
   };
 
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div>
       <Navbar />

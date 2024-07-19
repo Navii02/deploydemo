@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../Navbar.css';
+
 import { Button } from '../Button';
 
 function Navbar() {
@@ -22,9 +23,9 @@ function Navbar() {
   const handleLogout = () => {
     // Clear user session (update based on your implementation)
     localStorage.removeItem('email');
-
+    localStorage.removeItem('role');
     // Redirect to the login page
-    navigate('/faculitylogin');
+    navigate('/');
   };
 
   useEffect(() => {
@@ -35,6 +36,7 @@ function Navbar() {
 
   return (
     <>
+   
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/fchome' className='navbar-logo' onClick={closeMobileMenu}>
@@ -83,7 +85,9 @@ function Navbar() {
           )}
         </div>
       </nav>
+     
     </>
+    
   );
 }
 

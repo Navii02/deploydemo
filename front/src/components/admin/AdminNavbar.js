@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../Button';
+
 import { Link, useNavigate } from 'react-router-dom';
 import '../Navbar.css'
 
@@ -22,9 +23,9 @@ function Navbar() {
   const handleLogout = () => {
     // Clear user session (update based on your implementation)
     localStorage.removeItem('email');
-
+    localStorage.removeItem('role');
     // Redirect to the login page
-    navigate('/studentlogin');
+    navigate('/');
   };
 
   useEffect(() => {
@@ -35,6 +36,7 @@ function Navbar() {
 
   return (
     <>
+    
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/dash' className='navbar-logo' onClick={closeMobileMenu}>
@@ -73,6 +75,7 @@ function Navbar() {
           )}
         </div>
       </nav>
+      
     </>
   );
 }

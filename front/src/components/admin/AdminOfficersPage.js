@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
 import Navbar from './AdminNavbar';
+import Loading from './Loading'; // Assuming you have a Loading component
 
 const AdminOfficersPage = () => {
   const [officers, setOfficers] = useState([]);
-  const [newOfficer, setNewOfficer] = useState({ name: '', post: '', email: '' });
+  const [newOfficer, setNewOfficer] = useState({ name: '', post: '', email: '', number: '' });
   const [editingOfficer, setEditingOfficer] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(true); // State for loading indicator
 
   const fetchOfficers = async () => {
     try {
       const response = await axios.get(`${baseurl}/api/admin/officers`);
       setOfficers(response.data.officers);
+      setLoading(false); // Set loading to false once data is fetched
     } catch (error) {
       setErrorMessage(error.response.data.message);
+      setLoading(false); // Also set loading to false on error
     }
   };
 
@@ -24,9 +28,9 @@ const AdminOfficersPage = () => {
 
   const handleAddOfficer = async () => {
     try {
-      await axios.post('/api/admin/addOfficer', newOfficer);
+      await axios.post(`${baseurl}/api/admin/addOfficer`, newOfficer);
       fetchOfficers();
-      setNewOfficer({ name: '', post: '', email: '',number: '',});
+      setNewOfficer({ name: '', post: '', email: '', number: '' });
     } catch (error) {
       setErrorMessage(error.response.data.message);
     }
@@ -50,6 +54,10 @@ const AdminOfficersPage = () => {
       setErrorMessage(error.response.data.message);
     }
   };
+
+  if (loading) {
+    return <Loading />; // Show loading indicator while fetching data
+  }
 
   return (
     <div className="admin-officers-page">

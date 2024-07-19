@@ -76,6 +76,7 @@ function HodLogin() {
       if (data) {
         // Redirect the officer to the office page
         Navigate('/hodhome');
+        localStorage.setItem('role', data.role);
         localStorage.setItem('branch', data.department);
         localStorage.setItem('email', data.email);
         console.log('email', data.email);

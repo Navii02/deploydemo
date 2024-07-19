@@ -34,7 +34,7 @@ router.post(`/classtutorlogin`, async (req, res) => {
         return res.status(400).json({ msg: 'Academic year not set for the teacher' });
       }
 
-      return res.status(200).json({ msg: 'You have logged in successfully', academicYear: teacher.academicYear, department: teacher.department ,tutorclass:teacher.tutorclass});
+      return res.status(200).json({ msg: 'You have logged in successfully', academicYear: teacher.academicYear, department: teacher.department ,tutorclass:teacher.tutorclass,role:user.role,email:user.email});
     } else {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
@@ -46,7 +46,7 @@ router.post(`/classtutorlogin`, async (req, res) => {
 
 
 router.post('/classtutorregister', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password,role } = req.body;
 
   if (!email || !password || !name)
     return res.status(400).json({ msg: 'Password, email, and name are required' });
@@ -61,7 +61,7 @@ router.post('/classtutorregister', async (req, res) => {
 
   if (user) return res.status(400).json({ msg: 'User already exists' });
 
-  const newUser = new TutorSchema({ name, email, password });
+  const newUser = new TutorSchema({ name, email, password, role });
 
   // Hashing the password
   bcrypt.hash(password, 7, async (err, hash) => {

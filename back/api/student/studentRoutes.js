@@ -8,7 +8,7 @@ const emailTransporter = require('../../nodemailer');
 
 // Register endpoint
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password,role } = req.body;
 
   // Validation checks
   if (!email || !password || !name)
@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
     if (user) return res.status(400).json({ msg: 'User already exists' });
 
     // Create a new user instance
-    const newUser = new UserSchema({ name, email, password });
+    const newUser = new UserSchema({ name, email, password,role });
 
     // Hash the password
     bcrypt.hash(password, 7, async (err, hash) => {
@@ -89,7 +89,7 @@ router.post(`/login`, async (req, res) => {
       const userEmail = user.email;
       return res
         .status(200)
-        .json({ msg: 'You have logged in successfully', email: userEmail });
+        .json({ msg: 'You have logged in successfully', email: userEmail,role:user.role });
     } else {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }

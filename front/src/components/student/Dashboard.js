@@ -3,6 +3,7 @@ import '../../App.css';
 import { baseurl } from '../../url';
 import Navbar from './UserNavbar';
 import './Dashboard.css';
+import Loading from './Loading'; // Import the Loading component
 
 function Dashboard() {
   const [student, setStudentDetails] = useState(null);
@@ -53,9 +54,7 @@ function Dashboard() {
     return (
       <>
         <Navbar />
-        <div className="dashboard-container">
-          <p className="loading-text">Loading...</p>
-        </div>
+        <Loading /> {/* Use the Loading component */}
       </>
     );
   }

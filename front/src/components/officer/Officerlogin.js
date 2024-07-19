@@ -76,6 +76,7 @@ function OfficerLogin() {
       if (data) {
         // Save the email to local storage
         localStorage.setItem('email', data.email);
+        localStorage.setItem('role', data.role);
 
         // Retrieve the email from local storage
         const userEmail = localStorage.getItem('email');

@@ -69,6 +69,7 @@ function useTutorSignup() {
           name: values.name,
           email: values.email,
           password: values.password,
+          role:'tutor'
         }),
       });
 

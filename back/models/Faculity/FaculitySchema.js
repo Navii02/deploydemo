@@ -18,6 +18,10 @@ const FaculitySchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  role: {
+    type: String,
+    required: true,
+  },
   date: {
     type: Date,
     default: Date.now,
