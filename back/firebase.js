@@ -1,5 +1,4 @@
 const { initializeApp } = require('firebase/app');
-const { getFirestore } = require('firebase/firestore');
 const { getStorage, ref, uploadBytes, getDownloadURL } = require('firebase/storage');
 
 
@@ -12,9 +11,8 @@ const firebaseConfig = {
   appId: "1:785224452873:web:d5bbc054da9deec67c21d8",
   measurementId: "G-PJLCFFJLLD"
 };
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
 const storage = getStorage(app);
 
-module.exports = { db, storage, ref, uploadBytes, getDownloadURL };
+module.exports = { storage, ref, uploadBytes, getDownloadURL };

@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../../App.css';
 import './NoticeUpdates.css';
 import Navbar from './OfficerNavbar';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
 
 function NoticeUpdates() {
   const [notice, setNotice] = useState('');
@@ -12,6 +12,7 @@ function NoticeUpdates() {
   const [errorMessage, setErrorMessage] = useState('');
   const [notices, setNotices] = useState([]);
   const [visibleNotices, setVisibleNotices] = useState(3); // Number of notices to initially display
+  const [loading, setLoading] = useState(false); // State for loading animation
 
   useEffect(() => {
     fetchNotices();
@@ -28,6 +29,8 @@ function NoticeUpdates() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true); // Start loading animation
 
     try {
       const formData = new FormData();
@@ -55,6 +58,8 @@ function NoticeUpdates() {
       setTimeout(() => {
         setErrorMessage('');
       }, 3000); // Hide error message after 3 seconds
+    } finally {
+      setLoading(false); // Stop loading animation
     }
   };
 
@@ -84,7 +89,7 @@ function NoticeUpdates() {
             ></textarea>
           </label>
           <label>
-            <br/>Image:
+            <br />Image:
             <input
               type="file"
               name="image"
@@ -93,13 +98,18 @@ function NoticeUpdates() {
           </label>
           <button type="submit">Add Notice</button>
         </form>
+        {loading && (
+          <div className="full-page-loader">
+            <div className="pulsing-dot"></div>
+          </div>
+        )}
         {successMessage && <p className="success-message">{successMessage}</p>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <div className="notice-list">
           {notices.slice(0, visibleNotices).map((notice) => (
             <div key={notice._id} className="notice-item">
-              <img src={`${baseurl}/uploads/${notice.image}`} alt="Notice" />
+              <img src={notice.image} alt="Notice" style={{ maxWidth: '100%' }} />
               <h3>{notice.notice}</h3>
             </div>
           ))}

@@ -1,33 +1,31 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
-const app = express();
+const { storage, ref, uploadBytes, getDownloadURL } = require('../../firebase');
 const Notice = require('../../models/notice');
+const { v4: uuidv4 } = require('uuid'); // To generate unique file names
+
+const app = express();
 
 // Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../../uploads/')); // Use absolute path
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage });
-
-// Serve static files from 'uploads' directory
-app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
+const upload = multer({ storage: multer.memoryStorage() }); // Store files in memory
 
 // Function to handle notice upload
 const handleNoticeUpload = async (req, res) => {
   try {
     const { notice } = req.body;
-    const { filename } = req.file;
+    const file = req.file;
+    const uniqueFilename = `${uuidv4()}_${file.originalname}`;
+
+    // Upload file to Firebase Storage
+    const fileRef = ref(storage, `notices/${uniqueFilename}`);
+    await uploadBytes(fileRef, file.buffer);
+
+    // Get the download URL
+    const downloadURL = await getDownloadURL(fileRef);
 
     const newNotice = new Notice({
       notice,
-      image: filename,
+      image: downloadURL,
     });
 
     await newNotice.save();

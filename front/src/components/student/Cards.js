@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './Cards.css';
 import CardItem from './CardItem';
 import axios from 'axios';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
+
+
 function Cards() {
   const [notices, setNotices] = useState([]);
 
@@ -15,10 +17,15 @@ function Cards() {
       const response = await axios.get(`${baseurl}/api/notices`);
       const reversedNotices = response.data.notices.reverse();
       setNotices(reversedNotices.slice(0, 3));
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching notices:', error);
     }
+    
   };
+  
+
+  
 
   return (
     <div className='cards'>
@@ -29,7 +36,7 @@ function Cards() {
             {notices.map((notice, index) => (
               <CardItem
                 key={index}
-                src={`${baseurl}/uploads/${notice.image}`}
+                src={notice.image} // Updated
                 text={notice.notice}
                 label='Notice'
               />
