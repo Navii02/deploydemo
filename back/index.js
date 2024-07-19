@@ -173,9 +173,9 @@ app.use('/api',HodPerformance)
  app.use('/api',TutorHome)
 
  
-app.use('/uploads', express.static('uploads'));
-app.use('/certificate', express.static('certificate'));
-app.use('/studentsphoto', express.static('StudentsPhoto'));
+ app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
+app.use('/certificate', express.static(path.join(__dirname, '../../certificate')));
+app.use('/studentsphoto', express.static(path.join(__dirname, '../../StudentsPhoto')));
 
 // Serve the images
 app.use('/images', express.static(path.join(__dirname, 'uploads'), {
