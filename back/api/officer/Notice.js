@@ -1,13 +1,13 @@
 const express = require('express');
 const multer = require('multer');
-//const path = require('path');
+const path = require('path');
 const app = express();
 const Notice = require('../../models/notice');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, path.join(__dirname, '../../uploads/')); // Use absolute path
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -16,7 +16,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
+// Serve static files from 'uploads' directory
+app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 
 // Function to handle notice upload
 const handleNoticeUpload = async (req, res) => {
@@ -38,6 +39,7 @@ const handleNoticeUpload = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
 app.post('/photos', upload.single('image'), handleNoticeUpload);
 
 // Routes
@@ -50,6 +52,5 @@ app.get('/notices', async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 });
-
 
 module.exports = app;

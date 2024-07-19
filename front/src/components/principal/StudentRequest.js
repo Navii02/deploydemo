@@ -34,7 +34,7 @@ function OfficerCertificateRequestsPage() {
       const formData = new FormData();
       formData.append('file', file);
 
-      await axios.post(`/api/officer/approveRequest/${requestId}`, formData, {
+      await axios.post(`${baseurl}/api/officer/approveRequest/${requestId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
