@@ -20,6 +20,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.post('/add/studentAdmission', upload.single('photo'), async (req, res) => {
   try {
     const formData = req.body;
+    console.log('Request body:', req.body);
+    console.log('File data:', req.file);
 
     if (req.file) {
       // Generate a unique filename
