@@ -215,7 +215,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       fetchStudents();
       onDataEntered(formData);
       setIsSubmitting(true);
-      window.location.reload();
+    
     } catch (error) {
       console.error('Error submitting form:', error);
     }

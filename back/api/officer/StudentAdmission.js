@@ -19,7 +19,6 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 router.post('/add/studentAdmission', upload.single('photo'), async (req, res) => {
   try {
-    const formData = req.body;
     console.log('Request body:', req.body);
     console.log('File data:', req.file);
 
@@ -28,19 +27,21 @@ router.post('/add/studentAdmission', upload.single('photo'), async (req, res) =>
       const fileId = uuidv4();
       const studentName = sanitizeFilename(req.body.name || 'unknown');
       const filename = `${studentName}_${fileId}${path.extname(req.file.originalname)}`;
-      
-      // Specify the folder where you want to save the file
-      const folder = 'student_photos'; // Change this to your desired folder
+      const folder = 'student_photos';
       const filePath = `${folder}/${filename}`;
+
+      console.log('Uploading file to:', filePath);
 
       // Create a reference to the file in Firebase Storage
       const storageRef = ref(storage, filePath);
 
       // Upload the file to Firebase Storage
       await uploadBytes(storageRef, req.file.buffer, { contentType: req.file.mimetype });
-      
+
       // Get the download URL for the uploaded file
       const publicUrl = await getDownloadURL(storageRef);
+
+      console.log('File uploaded successfully, public URL:', publicUrl);
 
       formData.photo = publicUrl;
 
@@ -72,9 +73,10 @@ router.post('/add/studentAdmission', upload.single('photo'), async (req, res) =>
       res.status(400).json({ error: 'Photo file is required' });
     }
   } catch (error) {
-    console.error('Error saving data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error details:', error.message);
+    res.status(500).json({ error: error.message });
   }
 });
+
 
 module.exports = router;
