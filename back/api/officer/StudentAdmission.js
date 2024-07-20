@@ -5,8 +5,6 @@ const mongoose = require('mongoose');
 const { getStorage, ref, uploadBytes, getDownloadURL } = require('../../firebase'); // Import Firebase Storage methods
 
 const Student = require('../../models/Officer/StudentAdmission');
-const ApprovedStudent = require('../../models/Officer/ApprovedStudents');
-const NotAdmittedStudent = require('../../models/Officer/NotApprovedstudents');
 
 const router = express.Router();
 
@@ -46,6 +44,7 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
 
     const admissionYear = new Date().getFullYear(); // Get the current year
 
+    // Find the last admitted student to calculate the next admission ID
     const lastStudent = await Student.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
 
     let nextAdmissionId;
@@ -56,18 +55,19 @@ router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
       nextAdmissionId = `${nextAdmissionNumber}/${admissionYear}`;
     } else {
       // If no previous admission, start from a default number
-      nextAdmissionId = '1000/' + admissionYear;
+      nextAdmissionId = `1000/${admissionYear}`;
     }
     formData.admissionId = nextAdmissionId;
 
+    // Check for duplicate register number in the "plusTwo" field
     if (formData.plusTwo && formData.plusTwo.registerNo) {
-      const existingStudent = await Student.findOne({ 'plusTwo.regNo': formData.plusTwo.regNo });
-
+      const existingStudent = await Student.findOne({ 'plusTwo.registerNo': formData.plusTwo.registerNo });
       if (existingStudent) {
-        return res.status(400).json({ error: 'Duplicate registerNumber' });
+        return res.status(400).json({ error: 'Duplicate register number' });
       }
     }
 
+    // Save the new student data to the database
     const newStudent = new Student(formData);
     await newStudent.save();
 
