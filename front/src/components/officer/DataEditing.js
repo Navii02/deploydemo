@@ -196,6 +196,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     setIsSubmitting(true);
     window.location.reload();
     const sendData = new FormData();
+    console.log(sendData);
     for (const key in formData) {
       if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
         for (const subKey in formData[key]) {
