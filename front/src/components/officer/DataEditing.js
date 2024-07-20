@@ -205,7 +205,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     }
 
     try {
-      const response = await axios.post(`${baseurl}/api/studentadmission`, sendData);
+      const response = await axios.put(`${baseurl}/api/studentadmission`, sendData);
       console.log('Data submitted successfully:', response.data);
       console.log(response.data);
       setFormData({ ...initialFormData });
