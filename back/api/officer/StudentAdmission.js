@@ -2,6 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
+const { storage, ref, uploadBytes, getDownloadURL } = require('../../firebase'); // Ensure this path is correct
 
 const Student = require('../../models/Officer/StudentAdmission');
 const ApprovedStudent = require('../../models/Officer/ApprovedStudents');
@@ -9,69 +11,71 @@ const NotAdmittedStudent = require('../../models/Officer/NotApprovedstudents');
 
 const router = express.Router();
 
-// Multer storage configuration for handling file uploads
+// Function to sanitize filenames
 const sanitizeFilename = (name) => {
   return name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 };
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, '../../studentsphoto/');
-  },
-  filename: function (req, file, cb) {
-    const fileId = new mongoose.Types.ObjectId();
-    const studentName = sanitizeFilename(req.body.name || 'unknown'); // Fallback to 'unknown' if name is not provided
-    const filename = `${studentName}_${fileId}${path.extname(file.originalname)}`;
-    cb(null, filename);
-  },
-});
+// Multer memory storage to handle file uploads in memory
+const upload = multer({ storage: multer.memoryStorage() });
 
-const upload = multer({ storage: storage });
-
-
-// Express middleware to handle file upload
 router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
   try {
     const formData = req.body;
-    formData.photo = req.file ? req.file.path : null;
 
-    const admissionYear = new Date().getFullYear(); // Get the current year
+    if (req.file) {
+      // Generate a unique filename
+      const fileId = uuidv4();
+      const studentName = sanitizeFilename(req.body.name || 'unknown');
+      const filename = `${studentName}_${fileId}${path.extname(req.file.originalname)}`;
+      
+      // Specify the folder where you want to save the file
+      const folder = 'student_photos'; // Change this to your desired folder
+      const filePath = `${folder}/${filename}`;
 
-    
+      // Create a reference to the file in Firebase Storage
+      const storageRef = ref(storage, filePath);
 
-    const lastStudent = await Student.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
+      // Upload the file to Firebase Storage
+      await uploadBytes(storageRef, req.file.buffer, { contentType: req.file.mimetype });
+      
+      // Get the download URL for the uploaded file
+      const publicUrl = await getDownloadURL(storageRef);
 
-    let nextAdmissionId;
-    if (lastStudent) {
-      // Extract the last admission ID and increment it by one
-      const lastAdmissionId = lastStudent.admissionId.split('/')[0];
-      const nextAdmissionNumber = parseInt(lastAdmissionId) + 1;
-      nextAdmissionId = `${nextAdmissionNumber}/${admissionYear}`;
-    } else {
-      // If no previous admission, start from a default number
-      nextAdmissionId = '1000/' +admissionYear;
-    }
-    formData.admissionId = nextAdmissionId;
-   
+      formData.photo = publicUrl;
 
-    if (formData.plusTwo && formData.plusTwo.registerNo) {
-      const existingStudent = await Student.findOne({ 'plusTwo.regNo': formData.plusTwo.regNo });
+      // Save student data
+      const admissionYear = new Date().getFullYear();
+      const lastStudent = await Student.findOne().sort({ _id: -1 }).limit(1);
 
-      if (existingStudent) {
-        return res.status(400).json({ error: 'Duplicate registerNumber' });
+      let nextAdmissionId;
+      if (lastStudent) {
+        const lastAdmissionId = lastStudent.admissionId.split('/')[0];
+        const nextAdmissionNumber = parseInt(lastAdmissionId) + 1;
+        nextAdmissionId = `${nextAdmissionNumber}/${admissionYear}`;
+      } else {
+        nextAdmissionId = `1000/${admissionYear}`;
       }
+      formData.admissionId = nextAdmissionId;
+
+      if (formData.plusTwo?.registerNo) {
+        const existingStudent = await Student.findOne({ 'plusTwo.regNo': formData.plusTwo.registerNo });
+        if (existingStudent) {
+          return res.status(400).json({ error: 'Duplicate register number' });
+        }
+      }
+
+      const newStudent = new Student(formData);
+      await newStudent.save();
+      res.status(201).json({ message: 'Data saved successfully' });
+    } else {
+      res.status(400).json({ error: 'Photo file is required' });
     }
-
-    const newStudent = new Student(formData);
-    await newStudent.save();
-
-    res.status(201).json({ message: 'Data saved successfully' });
   } catch (error) {
     console.error('Error saving data:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 router.get('/studentAdmission', async (req, res) => {
   try {
@@ -94,7 +98,7 @@ router.get('/studentDetails/:id', async (req, res) => {
     }
 
     // Extract necessary details for print preview
-    const { name, admissionType, admissionId,admissionNumber, allotmentCategory, feeCategory, address,permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity } = student;
+    const { name, admissionType, admissionId, admissionNumber, allotmentCategory, feeCategory, address, permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity } = student;
     const { parentDetails } = student;
     const { bankDetails } = student;
     const { achievements } = student;
@@ -135,8 +139,7 @@ router.get('/studentDetails/:id', async (req, res) => {
           examMonthYear: qualify.examMonthYear,
           percentage: qualify.percentage,
           institution: qualify.institution,
-          cgpa:qualify.cgpa,
-
+          cgpa: qualify.cgpa,
         },
         parentDetails: {
           fatherName: parentDetails.fatherName,
@@ -185,6 +188,21 @@ router.post('/decline/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+router.get('/image/:path', async (req, res) => {
+  const imagePath = req.params.path;
+  const imageRef = ref(storage, imagePath);
+
+  try {
+    const url = await getDownloadURL(imageRef);
+    res.redirect(url); // Redirect to the image URL
+  } catch (error) {
+    console.error('Error fetching image URL:', error);
+    res.status(500).send('Error fetching image');
+  }
+});
+
+
 router.post('/approve/:id', async (req, res) => {
   const studentId = req.params.id;
 
@@ -211,16 +229,16 @@ router.post('/approve/:id', async (req, res) => {
     // Determine the academic year for certain admission types and courses
     let academicYear;
     
-    if (['KEAM',].includes(student.admissionType) || [ 'BBA', 'BCA','B.Tech CSE','B.Tech ECE'].includes(student.course)) {
+    if (['KEAM',].includes(student.admissionType) || ['BBA', 'BCA', 'B.Tech CSE', 'B.Tech ECE'].includes(student.course)) {
       const currentYear = new Date().getFullYear();
       const endYear = currentYear + 4;
       academicYear = `${currentYear}-${endYear}`;
-    }else if(['LET'].includes(student.admissionType)) {
+    } else if (['LET'].includes(student.admissionType)) {
       const currentYear = new Date().getFullYear();
-      const startyear = currentYear-1;
+      const startyear = currentYear - 1;
       const endYear = startyear + 4;
       academicYear = `${startyear}-${endYear}`;
-    }else if(['MCA'].includes(student.course)) {
+    } else if (['MCA'].includes(student.course)) {
       const currentYear = new Date().getFullYear();
       const endYear = currentYear + 1;
       academicYear = `${currentYear}-${endYear}`;
@@ -264,6 +282,5 @@ router.post('/approve/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 module.exports = router;

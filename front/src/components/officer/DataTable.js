@@ -1,178 +1,141 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from "./OfficerNavbar";
-import './DataTable.css'
-import {baseurl} from '../../url';
+import './DataTable.css';
+import { baseurl } from '../../url';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    // Fetch students from the server
-    axios.get(`${baseurl}/api/studentAdmission`)
-      .then(response => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get(`${baseurl}/api/studentAdmission`);
         setStudents(response.data);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching students:', error);
-      });
+      }
+    };
+
+    fetchStudents();
   }, []);
 
-  const handleApprove = (_id) => {
-    axios.post(`/api/approve/${_id}`)
-      .then(response => {
-        console.log(response.data);
-        // Reload the students after approval
-        window.location.reload();
-      })
-      .catch(error => {
-        console.error('Error approving student:', error);
-        if (error.response && error.response.data) {
-          console.error('Server Error:', error.response.data);
-        }
-      });
-  };
-  
-  const handleDecline = (_id) => {
-    axios.post(`${baseurl}/api/decline/${_id}`)
-      .then(response => {
-        console.log(response.data);
-        // Reload the students after declining
-        window.location.reload();
-      })
-      .catch(error => {
-        console.error('Error declining student:', error);
-      });
+  const handleApprove = async (_id) => {
+    try {
+      await axios.post(`${baseurl}/api/approve/${_id}`);
+      setStudents(prevStudents => prevStudents.filter(student => student._id !== _id));
+    } catch (error) {
+      console.error('Error approving student:', error);
+    }
   };
 
-  const handlePrintPreview = (_id,photoUrl) => {
-    // Log the student ID when clicking on "Print Preview"
-    console.log('Student ID for Print Preview:', _id);
-    console.log('Photo URL:', photoUrl);
+  const handleDecline = async (_id) => {
+    try {
+      await axios.post(`${baseurl}/api/decline/${_id}`);
+      setStudents(prevStudents => prevStudents.filter(student => student._id !== _id));
+    } catch (error) {
+      console.error('Error declining student:', error);
+    }
+  };
 
-    // Fetch the details of the selected student
-    axios.get(`${baseurl}/api/studentDetails/${_id}`)
-      .then(response => {
-        const studentDetails = response.data.studentDetails;
-        console.log(studentDetails.photoUrl);
+  const handlePrintPreview = async (_id, photoPath) => {
+    try {
+      const photoUrl = `${baseurl}/api/ApprovedRemoved/image/${encodeURIComponent(photoPath)}`;
+      const response = await axios.get(`${baseurl}/api/studentDetails/${_id}`);
+      const studentDetails = response.data.studentDetails;
+      if (!studentDetails || !studentDetails.parentDetails) {
+        console.error('Error: Invalid student details received');
+        return;
+      }
 
-        if (!studentDetails || !studentDetails.parentDetails) {
-          console.error('Error: Invalid student details received');
-          return;
-        }
+      const printWindow = window.open('', '_blank');
+      const formatDate = (dateString) => {
+        const dateOfBirth = new Date(dateString);
+        const day = String(dateOfBirth.getDate()).padStart(2, '0');
+        const month = String(dateOfBirth.getMonth() + 1).padStart(2, '0');
+        const year = dateOfBirth.getFullYear();
+        return `${day}-${month}-${year}`;
+      };
 
-        // Open a new tab with the student details for print preview
-        const printWindow = window.open('', '_blank');
-        const formatDate = (dateString) => {
-          const dateOfBirth = new Date(dateString);
-          const day = String(dateOfBirth.getDate()).padStart(2, '0');
-          const month = String(dateOfBirth.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-          const year = dateOfBirth.getFullYear();
-          return `${day}-${month}-${year}`;
-        };
-        const admissionID=studentDetails.admissionId;
-// Example function to calculate academic year from admission ID year
-const getAcademicYear = (admissionID) => {
-  // Extract the year from the admission ID
-  const yearString = admissionID.split('/')[1];
-  const year = parseInt(yearString) ;
+      const admissionID = studentDetails.admissionId;
+      const getAcademicYear = (admissionID) => {
+        const yearString = admissionID.split('/')[1];
+        const year = parseInt(yearString);
+        const nextYear = year + 1;
+        return `${year}-${nextYear.toString().slice(-2)}`;
+      };
 
-  // Calculate the next year
-  const nextYear = year + 1;
+      const academicYear = getAcademicYear(admissionID);
 
-  // Format academic year as "yyyy-yyyy"
-  const academicYear = `${year}-${nextYear.toString().slice(-2)}`;
-
-  return academicYear;
-};
-
-const academicYear = getAcademicYear(admissionID);
-console.log(academicYear); // Output: "2024-25"
-
-
-        printWindow.document.write(`
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="UTF-8">
-            <title>${studentDetails.name}'s Details</title>
-            <style>
-              body {
-                margin: 0;
-                padding: 0;
-                font-family: Calibri, sans-serif;
-                font-size: 11pt;
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <title>${studentDetails.name}'s Details</title>
+          <style>
+            body {
+              margin: 0;
+              padding: 0;
+              font-family: Calibri, sans-serif;
+              font-size: 11pt;
+            }
+            h1 {
+              font-weight: bold;
+              text-align: center;
+            }
+            table {
+              border-collapse: collapse;
+              width: 100%;
+              page-break-before: always;
+            }
+            td, th {
+              border: 1pt solid black;
+              padding: 5pt;
+            }
+            .header {
+              text-align: center;
+              position: relative;
+            }
+            .logo {
+              position: absolute;
+              left: 10px;
+              top: 5px;
+            }
+            .photo {
+              position: absolute;
+              right: 0px;
+              top: 0px;
+            }
+            @media print {
+              .hide-on-print {
+                display: none;
               }
-
-              h1 {
-                font-weight: bold;
-                text-align: center;
+              .print-table {
+                page-break-inside: avoid;
               }
-
-              table {
-                border-collapse: collapse;
-                width: 100%;
-                page-break-before: always; /* Ensure each table starts on a new page */
-              }
-
-              td,
-              th {
-                border: 1pt solid black;
-                padding: 5pt;
-              }
-
-              .header {
-                text-align: center;
-                position: relative;
-              }
-
-              .logo {
-                position: absolute;
-                left: 10px; /* Adjust as needed */
-                top: 5px; /* Adjust as needed */
-              }
-
-              .photo {
-                position: absolute;
-                right: 0px; /* Adjust as needed */
-                top: 0px; /* Adjust as needed */
-              }
-
-              @media print {
-                .hide-on-print {
-                  display: none;
-                }
-
-                .print-table {
-                  page-break-inside: avoid;
-                }
-              }
-
-              @page {
-                size: A4;
-              }
-
-              /* Add more styles as needed for printing */
-
-            </style>
-          </head>
-          <body>
-            <table class="print-table">
+            }
+            @page {
+              size: A4;
+            }
+          </style>
+        </head>
+        <body>
+          <table class="print-table">
             <tr style="height: 100px;">
-            <td colspan="2" class="header">
-            <img src="/images/college__2_-removebg-preview.png" alt="College Logo" class="logo" width="100">
-              COLLEGE OF ENGINEERING POONJAR
-              <br />
-              Managed by IHRD, Govt. of Kerala
-              <br />
-              Poonjar Thekkekara P.O. Kottayam Dist. PIN 686 582
-              <br/>
-            
-              Academic Year: ${academicYear}
-              <img src="${baseurl}/${studentDetails.photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
-            </td>
-          </tr>
-          <tr>
+              <td colspan="2" class="header">
+                <img src="/images/college__2_-removebg-preview.png" alt="College Logo" class="logo" width="100">
+                COLLEGE OF ENGINEERING POONJAR
+                <br />
+                Managed by IHRD, Govt. of Kerala
+                <br />
+                Poonjar Thekkekara P.O. Kottayam Dist. PIN 686 582
+                <br/>
+                Academic Year: ${academicYear}
+                <img src="${photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
+              </td>
+            </tr>
+            <tr>
             <td colspan="2" style="font-weight:bold;">Admission ID: ${studentDetails.admissionId}</td>
           </tr>
           <tr>
@@ -364,42 +327,43 @@ console.log(academicYear); // Output: "2024-25"
             </table>
             <button class="hide-on-print" onclick="window.print()">Print</button>
           </body>
-          </html>
-        `);
+        </html>
+      `);
 
-      })
-      .catch(error => {
-        console.error('Error fetching student details:', error);
-
-        if (error.response && error.response.data) {
-          console.error('Server Error:', error.response.data);
-        }
-      });
+      printWindow.document.close();
+    } catch (error) {
+      console.error('Error generating print preview:', error);
+    }
   };
 
   return (
     <div>
       <Navbar />
-      <table class="students-table">
-  <thead>
-    <tr>
-      <th class="name-column">Name</th>
-      <th class="actions-column">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {students.map(student => (
-      <tr key={student._id}>
-        <td class="name-cell">{student.name}</td>
-        <td class="actions-cell">
-          <button class="approve-btn" onClick={() => handleApprove(student._id)}>Approve</button>
-          <button class="decline-btn" onClick={() => handleDecline(student._id)}>Decline</button>
-          <button class="print-preview-btn" onClick={() => handlePrintPreview(student._id,student.photo)}>Print Preview</button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+      <h1>Student List</h1>
+      <table className="students-table">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Admission ID</th>
+            <th>Course</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.map(student => (
+            <tr key={student._id}>
+              <td>{student.name}</td>
+              <td>{student.admissionId}</td>
+              <td>{student.course}</td>
+              <td>
+                <button className="approve-btn" onClick={() => handleApprove(student._id)}>Approve</button>
+                <button className="decline-btn" onClick={() => handleDecline(student._id)}>Decline</button>
+                <button className="print-preview-btn" onClick={() => handlePrintPreview(student._id, student.photo)}>Print Preview</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

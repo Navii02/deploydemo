@@ -6,12 +6,12 @@ import { baseurl } from '../../url';
 import Loading from './Loading'; // Import the Loading component
 
 const Reminders = () => {
-  const [reminders, setReminders] = useState([]);
   const [assignmentReminders, setAssignmentReminders] = useState([]);
   const [attendanceReminders, setAttendanceReminders] = useState([]);
   const [internalMarksReminders, setInternalMarksReminders] = useState([]);
   const [updatesReminders, setUpdatesReminders] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
+  const [error, setError] = useState(null); // Add error state
   const userEmail = localStorage.getItem('email');
   const course = localStorage.getItem('course');
   const semester = localStorage.getItem('semester');
@@ -39,52 +39,39 @@ const Reminders = () => {
 
       try {
         const response = await axios.get(apiEndpoint);
-        const fetchedReminders = { category, data: response.data };
+        const fetchedReminders = response.data;
 
         console.log(`Fetched ${category} reminders:`, fetchedReminders);
 
         switch (category) {
           case 'attendance':
-            setAttendanceReminders(fetchedReminders.data);
+            setAttendanceReminders(fetchedReminders);
             break;
           case 'assignments':
-            setAssignmentReminders(fetchedReminders.data);
+            setAssignmentReminders(fetchedReminders);
             break;
           case 'internalMarks':
-            setInternalMarksReminders(fetchedReminders.data);
+            setInternalMarksReminders(fetchedReminders);
             break;
           case 'updates':
-            setUpdatesReminders(fetchedReminders.data);
+            setUpdatesReminders(fetchedReminders);
             break;
           default:
-            setReminders(prevReminders => [...prevReminders, fetchedReminders]);
+            break;
         }
       } catch (error) {
         console.error(`Error fetching ${category} reminders:`, error);
-        switch (category) {
-          case 'attendance':
-            setAttendanceReminders([]);
-            break;
-          case 'assignments':
-            setAssignmentReminders([]);
-            break;
-          case 'internalMarks':
-            setInternalMarksReminders([]);
-            break;
-          case 'updates':
-            setUpdatesReminders([]);
-            break;
-          default:
-            setReminders(prevReminders => [...prevReminders, { category, data: [] }]);
-        }
-      } finally {
-        setLoading(false); // Set loading to false after fetching data
+        setError(error.message);
       }
     };
 
-    categories.forEach(category => {
-      fetchReminders(category);
-    });
+    const fetchAllReminders = async () => {
+      const fetchPromises = categories.map(category => fetchReminders(category));
+      await Promise.all(fetchPromises);
+      setLoading(false);
+    };
+
+    fetchAllReminders();
   }, [userEmail, course, semester, currentYear]);
 
   const renderCategoryReminders = (categoryReminders) => {
@@ -190,12 +177,12 @@ const Reminders = () => {
     }
   };
 
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
   if (loading) {
     return <Loading />; // Show loading component while data is being fetched
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -244,8 +231,6 @@ const Reminders = () => {
             {renderCategoryReminders({ category: 'updates', data: updatesReminders })}
           </div>
         )}
-       
-       
       </div>
     </>
   );
