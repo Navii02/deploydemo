@@ -65,6 +65,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [copyAddressOption, setCopyAddressOption] = useState(false);
 
   const handleCameraCapture = async () => {
@@ -192,6 +193,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsSubmitting(true);
     window.location.reload();
     const sendData = new FormData();
     for (const key in formData) {
@@ -202,18 +204,21 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       } else {
         sendData.append(key, formData[key]? formData[key] : 'nil');
       }
+      setIsSubmitting(false);
     }
 
     try {
-      const response = await axios.post(`${baseurl}/api/studentadmission`, sendData);
+      const response = await axios.post(`${baseurl}/api/add/studentadmission`, sendData);
       console.log(response.data);
       setFormData({ ...initialFormData });
       fetchStudents();
       onDataEntered(formData);
+      setIsSubmitting(true);
       window.location.reload();
     } catch (error) {
       console.error('Error submitting form:', error);
     }
+    setIsSubmitting(false);
   };
   
   return (
@@ -754,8 +759,8 @@ Copy Address
             </div>
             </div>
             <div className="button-container">
-            <button type="submit" className="submit-button">
-                Submit
+            <button type="submit" disabled={isSubmitting} className="submit-button">
+            {isSubmitting ? "Submitting..." : "Submit"}
               </button>
               <button
                 type="button"

@@ -63,7 +63,7 @@ const ApprovedAndRemoved = () => {
 
 
   useEffect(() => {
-    axios.get(`${baseurl}/api/officer/approvedStudents`)
+    axios.get(`${baseurl}/api/approvedStudents`)
       .then(response => {
         setApprovedStudents(response.data);
       })

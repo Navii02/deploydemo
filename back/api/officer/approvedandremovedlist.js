@@ -54,7 +54,11 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
-    const { name, admissionType, admissionId, admissionNumber, allotmentCategory, feeCategory, address, permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity, parentDetails, bankDetails, achievements, qualify } = student;
+    const { name, admissionType, admissionId, admissionNumber, allotmentCategory, feeCategory, address, permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity } = student;
+    const { parentDetails } = student;
+    const { bankDetails } = student;
+    const { achievements } = student;
+    const { qualify } = student;
     const photoUrl = photo ? `${req.protocol}://${req.get('host')}/ApprovedRemoved/image/${encodeURIComponent(photo)}` : null;
     res.json({
       studentDetails: {
@@ -83,11 +87,35 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
         annualIncome,
         nativity,
         photoUrl,
-        qualify,
-        parentDetails,
-        bankDetails,
-        achievements
-      },
+        qualify: {
+          exam: qualify.exam,
+          board: qualify.board,
+          regNo: qualify.regNo,
+          examMonthYear: qualify.examMonthYear,
+          percentage: qualify.percentage,
+          institution: qualify.institution,
+          cgpa: qualify.cgpa,
+        },
+        parentDetails: {
+          fatherName: parentDetails.fatherName,
+          fatherOccupation: parentDetails.fatherOccupation,
+          fatherMobileNo: parentDetails.fatherMobileNo,
+          motherName: parentDetails.motherName,
+          motherOccupation: parentDetails.motherOccupation,
+          motherMobileNo: parentDetails.motherMobileNo,
+        },
+        bankDetails: {
+          bankName: bankDetails.bankName,
+          branch: bankDetails.branch,
+          accountNo: bankDetails.accountNo,
+          ifscCode: bankDetails.ifscCode,
+        },
+        achievements: {
+          arts: achievements.arts,
+          sports: achievements.sports,
+          other: achievements.other,
+        },
+      }
     });
   } catch (error) {
     console.error('Error fetching student details:', error);
@@ -105,7 +133,7 @@ router.post('/upload/:studentId', upload.single('file'), async (req, res) => {
   const file = req.file;
   const fileExtension = path.extname(file.originalname);
   const fileName = `${Date.now()}${fileExtension}`;
-  const fileRef = ref(storage, `studentphoto/${fileName}`);
+  const fileRef = ref(storage, `student_photos/${fileName}`);
 
   try {
     // Upload file to Firebase Storage
@@ -133,6 +161,7 @@ router.post('/upload/:studentId', upload.single('file'), async (req, res) => {
 // Route to serve images from Firebase
 router.get('/ApprovedRemoved/image/:path', async (req, res) => {
   const imagePath = req.params.path;
+  console.log('Image path:', imagePath);
   const imageRef = ref(storage, `images/${imagePath}`);
 
   try {

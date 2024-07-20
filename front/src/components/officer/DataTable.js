@@ -37,18 +37,17 @@ const StudentList = () => {
       console.error('Error declining student:', error);
     }
   };
-
   const handlePrintPreview = async (_id, photoPath) => {
     try {
-      const photoUrl = `${baseurl}/api/ApprovedRemoved/image/${encodeURIComponent(photoPath)}`;
+      const photoUrl = `${baseurl}/api/image/${encodeURIComponent(photoPath)}`;
       const response = await axios.get(`${baseurl}/api/studentDetails/${_id}`);
       const studentDetails = response.data.studentDetails;
+
       if (!studentDetails || !studentDetails.parentDetails) {
         console.error('Error: Invalid student details received');
         return;
       }
 
-      const printWindow = window.open('', '_blank');
       const formatDate = (dateString) => {
         const dateOfBirth = new Date(dateString);
         const day = String(dateOfBirth.getDate()).padStart(2, '0');
@@ -59,14 +58,14 @@ const StudentList = () => {
 
       const admissionID = studentDetails.admissionId;
       const getAcademicYear = (admissionID) => {
-        const yearString = admissionID.split('/')[1];
-        const year = parseInt(yearString);
+        const year = parseInt(admissionID.split('/')[1]);
         const nextYear = year + 1;
         return `${year}-${nextYear.toString().slice(-2)}`;
       };
 
       const academicYear = getAcademicYear(admissionID);
 
+      const printWindow = window.open('', '_blank');
       printWindow.document.write(`
         <!DOCTYPE html>
         <html lang="en">
@@ -87,7 +86,6 @@ const StudentList = () => {
             table {
               border-collapse: collapse;
               width: 100%;
-              page-break-before: always;
             }
             td, th {
               border: 1pt solid black;
@@ -135,7 +133,7 @@ const StudentList = () => {
                 <img src="${photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
               </td>
             </tr>
-            <tr>
+             <tr>
             <td colspan="2" style="font-weight:bold;">Admission ID: ${studentDetails.admissionId}</td>
           </tr>
           <tr>
@@ -329,12 +327,14 @@ const StudentList = () => {
           </body>
         </html>
       `);
-
       printWindow.document.close();
+      printWindow.focus();
     } catch (error) {
       console.error('Error generating print preview:', error);
     }
   };
+
+
 
   return (
     <div>
