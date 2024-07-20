@@ -3,8 +3,14 @@ import axios from 'axios';
 import OfficerNavbar from './OfficerNavbar';
 import { baseurl } from '../../url';
 
-const initialFormData = {
-  name: '',
+
+
+const ApprovedAndRemoved = () => {
+  const [approvedStudents, setApprovedStudents] = useState([]);
+  const [removedStudents, setRemovedStudents] = useState([]);
+  const [showRemoved, setShowRemoved] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
     address: '',
     permanentAddress: '',
     pincode: '',
@@ -52,13 +58,7 @@ const initialFormData = {
 
     annualIncome: '',
     nativity: ''
-};
-
-const ApprovedAndRemoved = () => {
-  const [approvedStudents, setApprovedStudents] = useState([]);
-  const [removedStudents, setRemovedStudents] = useState([]);
-  const [showRemoved, setShowRemoved] = useState(false);
-  const [formData, setFormData] = useState(initialFormData);
+  });
   const [editMode, setEditMode] = useState(false);
   const [studentId, setStudentId] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
@@ -211,7 +211,7 @@ const ApprovedAndRemoved = () => {
               </td>
             </tr>
              <tr>
-            <td colspan="2" style="font-weight:bold;">Admission ID: ${studentDetails.admissionId}</td>
+            <td colspan="2" style="font-weight:bold;">Admission No: ${studentDetails.admissionNumber}</td>
           </tr>
           <tr>
             <td>Admission Type</td>
@@ -412,13 +412,57 @@ const ApprovedAndRemoved = () => {
   };
 
   const handleEdit = (student) => {
+    const formattedDateOfBirth = new Date(student.dateOfBirth).toISOString().split('T')[0];
     setFormData({
-      ...initialFormData,
-      ...student,
-      qualify: student.qualify || {},
-      parentDetails: student.parentDetails || {},
-      bankDetails: student.bankDetails || {},
-      achievements: student.achievements || {}
+      ...formData,
+      name: student.name,
+      address: student.address,
+      permanentAddress:student.permanentAddress,
+      pincode: student.pincode,
+      religion: student.religion,
+      community: student.community,
+      gender: student.gender,
+      dateOfBirth: formattedDateOfBirth,
+      bloodGroup: student.bloodGroup,
+      mobileNo:  student.mobileNo,
+      whatsappNo: student.whatsappNo,
+      email: student.email,
+      entranceExam: student.entranceExam,
+      entranceRollNo: student.entranceRollNo,
+      entranceRank: student.entranceRank,
+      aadharNo: student.aadharNo,
+      course: student.course,
+      qualify: {
+        exam:student.qualify.exam || '',
+        board:student.qualify.board || '',
+        regNo:student.qualify.regNo|| '',
+        examMonthYear:student.qualify.examMonthYear|| '',
+        percentage:student.qualify.percentage || '',
+        cgpa:student.qualify.cgpa|| '',
+        institution:student.qualify.institution|| '',
+      },
+      parentDetails: {
+        fatherName: student.parentDetails.fatherName || '',
+        fatherOccupation: student.parentDetails.fatherOccupation || '',
+        fatherMobileNo: student.parentDetails.fatherMobileNo || '',
+        motherName: student.parentDetails.motherName || '',
+        motherOccupation: student.parentDetails.motherOccupation || '',
+        motherMobileNo: student.parentDetails.motherMobileNo || ''
+      },
+      bankDetails: {
+        bankName: student.bankDetails.bankName || '',
+        branch: student.bankDetails.branch || '',
+        accountNo: student.bankDetails.accountNo || '',
+        ifscCode: student.bankDetails.ifscCode || ''
+      },
+      achievements:{
+        arts: student.achievements.arts ||'',
+        sports: student.achievements.sports || '',
+        other: student.achievements.other ||'',
+      },
+      
+      annualIncome: student.annualIncome || '',
+      nativity: student.nativity || ''
     });
     setStudentId(student._id);
     setEditMode(true);

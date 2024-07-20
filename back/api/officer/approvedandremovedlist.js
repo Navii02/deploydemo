@@ -161,7 +161,7 @@ router.post('/upload/:studentId', upload.single('file'), async (req, res) => {
 // Route to serve images from Firebase
 router.get('/ApprovedRemoved/image/:path', async (req, res) => {
   const imagePath = req.params.path;
-  console.log('Image path:', imagePath);
+  //console.log('Image path:', imagePath);
   const imageRef = ref(storage, `images/${imagePath}`);
 
   try {
@@ -172,5 +172,6 @@ router.get('/ApprovedRemoved/image/:path', async (req, res) => {
     res.status(500).send('Error fetching image');
   }
 });
+
 
 module.exports = router;
