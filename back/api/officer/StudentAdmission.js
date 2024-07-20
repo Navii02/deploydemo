@@ -20,7 +20,7 @@ const sanitizeFilename = (name) => {
 };
 
 // Express middleware to handle file upload
-router.post('/add/studentAdmission', upload.single('photo'), async (req, res) => {
+router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
   try {
     const formData = req.body;
     let photoUrl = null;
@@ -33,7 +33,7 @@ router.post('/add/studentAdmission', upload.single('photo'), async (req, res) =>
       const filename = `${studentName}_${fileId}${path.extname(req.file.originalname)}`;
 
       // Create a reference to the file in Firebase Storage
-      const storageRef = ref(getStorage(), `studentsphoto/${filename}`);
+      const storageRef = ref(getStorage(), `students_photos/${filename}`);
 
       // Upload file to Firebase Storage
       await uploadBytes(storageRef, file);
@@ -74,7 +74,7 @@ router.post('/add/studentAdmission', upload.single('photo'), async (req, res) =>
     res.status(201).json({ message: 'Data saved successfully' });
   } catch (error) {
     console.error('Error saving data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 });
 
