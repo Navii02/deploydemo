@@ -18,7 +18,7 @@ const sanitizeFilename = (name) => {
 };
 
 // Express middleware to handle file upload
-router.post('/studentAdmission', upload.single('photo'), async (req, res) => {
+router.post('/studentadmission', upload.single('photo'), async (req, res) => {
   try {
     const formData = req.body;
     let photoUrl = null;
