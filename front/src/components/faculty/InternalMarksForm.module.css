@@ -1,7 +1,7 @@
 /* Styles for the form */
 .formContainer {
-    margin: 20px;
-    padding: 10px;
+    margin: 100px 20px 0px 20px;
+    padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
@@ -14,7 +14,7 @@
   }
   
   .formContainer select, .formContainer input[type="text"] {
-    width: calc(100% - 20px); /* Adjust width minus padding */
+    width: calc(100%); /* Adjust width minus padding */
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;

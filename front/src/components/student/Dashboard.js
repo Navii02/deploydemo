@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import '../../App.css';
 import { baseurl } from '../../url';
-import Navbar from './UserNavbar';
+import UserNavbar from './UserNavbar';
 import './Dashboard.css';
 import Loading from './Loading'; // Import the Loading component
 
@@ -53,7 +53,7 @@ function Dashboard() {
   if (loading) {
     return (
       <>
-        <Navbar />
+        <UserNavbar />
         <Loading /> {/* Use the Loading component */}
       </>
     );
@@ -62,7 +62,7 @@ function Dashboard() {
   if (error) {
     return (
       <>
-        <Navbar />
+        <UserNavbar />
         <div className="dashboard-container">
           <p className="error-text">Error: {error}</p>
         </div>
@@ -72,7 +72,7 @@ function Dashboard() {
 
   return (
     <>
-      <Navbar />
+      <UserNavbar />
       <div className="dashboard-container">
         {student ? (
           <div className="student-details">

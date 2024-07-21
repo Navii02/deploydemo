@@ -1,6 +1,6 @@
 import React from 'react';
 import './ScholarshipDetails.css';
-import Navbar from './UserNavbar';
+import UserNavbar from './UserNavbar';
 
 const scholarships = [
   {
@@ -59,7 +59,7 @@ const ScholarshipDetails = () => {
 
   return (
     <>
-      <Navbar />
+      <UserNavbar />
     <div className="scholarships">
       <table className='sch-table'>
         <thead>

@@ -6,6 +6,7 @@
   height: 100vh;
   background-color: #000;
   overflow: hidden;
+  padding-top: 80px;
 }
 
 .hero-container video {
@@ -16,7 +17,7 @@
 
 .arrow-container {
   position: absolute;
-  bottom: 80px; /* Adjusted from 20px to 40px */
+  bottom: 20px; /* Adjusted from 20px to 40px */
   cursor: pointer;
   display: flex;
   flex-direction: column;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from './UserNavbar';
+import UserNavbar from './UserNavbar';
 import './CertificateRequest.css';
 import { baseurl } from '../../url';
 import Loading from './Loading';
@@ -119,7 +119,7 @@ function StudentCertificateRequestPage() {
 
   return (
     <>
-      <Navbar />
+      <UserNavbar />
       <div className="certificate-request-form">
         <div className='form-header'>
           <h1>COLLEGE OF ENGINEERING POONJAR</h1>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './CertificateRecieve.css';
-import Navbar from './UserNavbar';
+import UserNavbar from './UserNavbar';
 import { baseurl } from '../../url';
 import Loading from './Loading'; // Import the Loading component
 
@@ -53,7 +53,7 @@ const CertificateRequestsPage = () => {
 
   return (
     <>
-      <Navbar />
+      <UserNavbar />
       <div className="certificate-requests-page">
         {requests.length === 0 ? (
           <p>No certificate requests found for the logged-in user.</p>

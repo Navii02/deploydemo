@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {baseurl} from '../../url';
 import Navbar from './FacultyNavbar';
+import './AttendanceForm.css'
 
 const AttendanceSummary = () => {
   const [course, setCourse] = useState('');
@@ -56,6 +57,7 @@ const AttendanceSummary = () => {
   return (
     <div>
       <Navbar />
+      <div className="attendance-form">
       <form onSubmit={(e) => { e.preventDefault(); fetchAttendance(); }}>
         <label>
           Course:
@@ -140,6 +142,7 @@ const AttendanceSummary = () => {
           </tbody>
         </table>
       )}
+    </div>
     </div>
   );
 };

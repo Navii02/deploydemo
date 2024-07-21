@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'
-import {baseurl} from '../../url';
-import Navbar from './UserNavbar';
-//import Footer from './Footer';
+import axios from 'axios';
+import { baseurl } from '../../url';
+import UserNavbar from './UserNavbar';
 import './FeeDetails.css';
 import Loading from './Loading';
 
@@ -34,7 +33,7 @@ function InstallmentPage() {
       } catch (err) {
         setError('Failed to fetch installments');
       } finally {
-      setLoading(false); // Set loading to false after fetching data
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
@@ -44,38 +43,37 @@ function InstallmentPage() {
   const getInstallmentCount = (course) => {
     return course === 'MCA' ? 1 : 4;
   };
+
   if (loading) {
     return <Loading />; // Show loading component while data is being fetched
   }
+
   return (
-    <div className="installment-page">
-      <Navbar />
+    <>
+      <UserNavbar />
       <div className="installment-container">
         <h2>Installment Payment Status</h2>
         {error && <p className="error">{error}</p>}
         {course && (
-          <>
-            <div className="installment-list">
-              {[...Array(getInstallmentCount(course))].map((_, index) => {
-                const installmentNumber = index + 1;
-                const isPaid = installments.includes(installmentNumber);
+          <div className="installment-list">
+            {[...Array(getInstallmentCount(course))].map((_, index) => {
+              const installmentNumber = index + 1;
+              const isPaid = installments.includes(installmentNumber);
 
-                return (
-                  <div key={installmentNumber} className="installment-item">
-                    <p>Installment {installmentNumber}</p>
-                    <p className={isPaid ? 'paid' : 'not-paid'}>
-                      {isPaid ? 'Paid' : 'Not Paid'}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </>
+              return (
+                <div key={installmentNumber} className="installment-item">
+                  <p>Installment {installmentNumber}</p>
+                  <p className={isPaid ? 'paid' : 'not-paid'}>
+                    {isPaid ? 'Paid' : 'Not Paid'}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
-     </div>
+    </>
   );
- 
 }
 
 export default InstallmentPage;

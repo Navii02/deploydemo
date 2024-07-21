@@ -3,7 +3,7 @@
 .faculty-home-container {
     max-width: 100%;
     margin: auto;
-    padding: 20px;
+    padding: 80px;
     text-align: center;
     background-image: url('../../../public/images/WhatsApp\ Image\ 2024-02-01\ at\ 14.57.55_0b5938a6.jpg');
     background-size: cover;
@@ -16,6 +16,10 @@
     align-items: center;
     justify-content: center;
     position: relative;
+  }
+
+  .welcome-section{
+    padding-top: 80px;
   }
   
   .overlay {

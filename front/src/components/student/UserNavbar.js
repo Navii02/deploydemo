@@ -31,7 +31,6 @@ function UserNavbar() {
   }, []);
 
   return (
-    
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/user' className='navbar-logo' onClick={closeMobileMenu}>

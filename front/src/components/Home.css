@@ -75,17 +75,18 @@
   border-right: 4px solid; /* Add a caret */
   width: 12ch; /* Adjust based on the length of the text */
   animation: typing 2s steps(12, end) forwards, blink-caret 0.75s step-end infinite;
+  height: 1.2em; /* Set the height of the line here */
+  line-height: 1.2em; /* Set the line height to match the height of the line */
 }
 
 /* Dropdown Container */
 .office-home-page .dropdown-container {
   margin-top: 30px;
- 
   background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), );
   border: 2px solid rgba(0, 0, 0, 0.1);
   border-radius: 30px;
   box-shadow: 0 8px 16px rgba(236, 236, 236, 0.1);
-overflow: hidden;
+  overflow: hidden;
   transition: all 0.3s ease;
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from './UserNavbar';
+import UserNavbar from './UserNavbar';
 import './reminders.css';
 import { baseurl } from '../../url';
 import Loading from './Loading'; // Import the Loading component
@@ -200,7 +200,7 @@ const Reminders = () => {
 
   return (
     <>
-      <Navbar />
+      <UserNavbar />
       <div className="reminder-page-container">
         {assignmentReminders.length > 0 && (
           <div className="reminder-category">

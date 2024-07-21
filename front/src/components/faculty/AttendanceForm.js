@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { baseurl } from '../../url';
 import Navbar from './FacultyNavbar';
+import './AttendanceForm.css'
 
 const AttendanceForm = () => {
   const [semester, setSemester] = useState('');
@@ -151,6 +152,7 @@ const AttendanceForm = () => {
   return (
     <div>
       <Navbar />
+      <div className="attendance-form">
       <form onSubmit={handleSubmit}>
         <label>
           Course:
@@ -297,6 +299,7 @@ const AttendanceForm = () => {
           <button onClick={submitAttendance}>Save Attendance</button>
         </div>
       )}
+    </div>
     </div>
   );
 };

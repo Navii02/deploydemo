@@ -3,12 +3,12 @@ import '../../App.css';
 import HeroSection from './HeroSection';
 import Footer from './Footer';
 import Cards from './Cards';
-import Navbar from './UserNavbar';
+import UserNavbar from './UserNavbar';
 
 function UserHome() {
   return (
     <>
-      <Navbar/>
+      <UserNavbar/>
       <HeroSection/>
       <Cards/>
       <Footer/>
