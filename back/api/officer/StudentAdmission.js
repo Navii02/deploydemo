@@ -8,7 +8,6 @@ const Student = require('../../models/Officer/StudentAdmission');
 
 const router = express.Router();
 
-
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.post('/studentadmission', upload.single('photo'), async (req, res) => {
@@ -19,28 +18,23 @@ router.post('/studentadmission', upload.single('photo'), async (req, res) => {
       const snapshot = await uploadBytes(storageRef, req.file.buffer);
       photoUrl = await getDownloadURL(snapshot.ref);
     }
-    const admissionYear = new Date().getFullYear(); // Get the current year
 
-    
+    // Generate new admission ID
+    const currentYear = new Date().getFullYear().toString().slice(-2); // Get last 2 digits of current year
+    const lastStudent = await Student.findOne().sort({ admissionId: -1 });
 
-    const lastStudent = await Student.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
-
-    let nextAdmissionId;
-    if (lastStudent) {
-      // Extract the last admission ID and increment it by one
+    let newAdmissionId = '001'; // Default ID if no previous students found
+    if (lastStudent && lastStudent.admissionId) {
       const lastAdmissionId = lastStudent.admissionId.split('/')[0];
-      const nextAdmissionNumber = parseInt(lastAdmissionId) + 1;
-      nextAdmissionId = `${nextAdmissionNumber}/${admissionYear}`;
+      const newIdNumber = (parseInt(lastAdmissionId, 10) + 1).toString().padStart(3, '0');
+      newAdmissionId = `${newIdNumber}/${currentYear}`;
     } else {
-      // If no previous admission, start from a default number
-      nextAdmissionId = '1000/' +admissionYear;
+      newAdmissionId = `001/${currentYear}`;
     }
-    formData.admissionId = nextAdmissionId;
-   
 
     const newStudent = new Student({
       ...req.body,
-      admissionId: nextAdmissionId,
+      admissionId: newAdmissionId,
       photo: photoUrl,
       qualify: {
         exam: req.body['qualify.exam'],
@@ -79,6 +73,5 @@ router.post('/studentadmission', upload.single('photo'), async (req, res) => {
     res.status(500).json({ message: 'Error saving student data', error });
   }
 });
-
 
 module.exports = router;
