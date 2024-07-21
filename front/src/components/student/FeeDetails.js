@@ -16,27 +16,33 @@ function InstallmentPage() {
     const fetchInstallments = async () => {
       const email = localStorage.getItem('email');
       const storedCourse = localStorage.getItem('course');
-
+    
       if (!email || !storedCourse) {
         setError('Email or course not found in localStorage');
+        setLoading(false);
         return;
       }
-
+    
       setCourse(storedCourse);
-
+    
       try {
-        const response = await axios.post(`${baseurl}/api/fetch-installments`, {
+        const response = await axios.post(`${baseurl}/api/student/fetch-installments`, {
           email,
           course: storedCourse,
         });
-
-        setInstallments(response.data.installmentsPaid);
+    
+        if (response.data && response.data.installmentsPaid) {
+          setInstallments(response.data.installmentsPaid);
+        } else {
+          setError('No installments data found');
+        }
       } catch (err) {
-        setError('Failed to fetch installments');
+        setError('Failed to fetch installments. Please try again later.');
       } finally {
-      setLoading(false); // Set loading to false after fetching data
+        setLoading(false);
       }
     };
+    
 
     fetchInstallments();
   }, []);
