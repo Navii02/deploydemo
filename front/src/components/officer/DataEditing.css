@@ -125,22 +125,22 @@ body, html {
 }
 
 .data-entry-container .capture-button {
-  background-color: #409240; /* Green button */
+  background-color: #264fa9; /* Green button */
   color: #fff;
 }
 
 .data-entry-container .capture-button:hover {
-  background-color: #175517; /* Darker green on hover */
+  background-color: #3a30e9; /* Darker green on hover */
   transform: scale(1.05);
 }
 
 .data-entry-container .upload-button {
-  background-color: #3a8a3d; /* Another green button */
+  background-color: #503dcb; /* Another green button */
   color: #fff;
 }
 
 .data-entry-container .upload-button:hover {
-  background-color: #0e592b; /* Darker green on hover */
+  background-color: #3723cf; /* Darker green on hover */
   transform: scale(1.05);
 }
 
@@ -287,4 +287,38 @@ body, html {
   transition: background-color 0.3s, transform 0.3s;
   box-sizing: border-box;
   width: auto;
+}
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Optional: Adjust text style */
+.loading-overlay p {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-top: 20px;
 }

@@ -89,6 +89,10 @@ const ApprovedStudentSchema = new mongoose.Schema({
     subject: { type: String, required: true },
     percentage: { type: Number, required: true }
   }],
+  submissionDate: {
+    type: Date,
+   // Set the default value to the current date and time
+  },
 
 });
 

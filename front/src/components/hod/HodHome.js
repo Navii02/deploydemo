@@ -8,7 +8,7 @@ function HodHome() {
   const [hodName, setHodName] = useState('');
   const [departmentName, setDepartmentName] = useState('');
   const [teacherCounts, setTeacherCounts] = useState(0); // State to store teacher count
-  const [numStudents, setNumStudents] = useState(0);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,8 +27,7 @@ function HodHome() {
         const hodName = response.data.teachername; // Assuming name property in HOD profile
         const departmentName = response.data.department;
         const teacherCounts = response.data.teacherCounts; // Use the actual property name
-        const studentCounts = response.data.studentCounts || 0; // Default to 0 if not provided
-
+       
         /*console.log('Received Data:', {
           hodName,
           departmentName,
@@ -39,7 +38,7 @@ function HodHome() {
         setHodName(hodName);
         setDepartmentName(departmentName);
         setTeacherCounts(teacherCounts);
-        setNumStudents(studentCounts);
+        
 
         //console.log('HOD:', hodName);
       } catch (error) {

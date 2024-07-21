@@ -51,4 +51,19 @@ app.get('/notices', async (req, res) => {
   }
 });
 
+// DELETE /api/notices/:id
+app.delete('/notices/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Notice.findByIdAndDelete(id);
+    res.json({ message: 'Notice deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+
+
+
 module.exports = app;

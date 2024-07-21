@@ -26,6 +26,8 @@ const FeeDetails=require('./api/student/feedetail')
 const Notice = require('./api/officer/Notice')
 const OfficerRoutes = require('./api/officer/OfficerRoutes')
 const certificate = require('./api/officer/certificate')
+const Slist = require('./api/officer/StudentList')
+const DataTable = require('./api/officer/DataTable')
 const StudentAdmission =require('./api/officer/StudentAdmission');
 const officerForget=require('./api/officer/officerForgot')
 const aprrovedLists = require('./api/officer/approvedandremovedlist')
@@ -129,6 +131,7 @@ app.use('/api',PrincipalRoutes)
 app.use('/api',FaculityRoutes)
 app.use('/api',classtutorRoutes)
 
+
 app.use('/api',StudentData)
 app.use('/api',Notice)
 app.use('/api',CertificateUser)
@@ -168,9 +171,14 @@ app.use('/api',Hodhome)
 app.use('/api',Attendance)
 app.use('/api',Phome)
 app.use('/api',performance)
+app.use('/api',Slist)
+app.use('/api/student',FeeDetails)
 app.use('/api',HodPerformance)
- app.use('/api',FeeDetails)
+
  app.use('/api',TutorHome)
+ app.use('/api',DataTable)
+ 
+ 
 
  
  app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));

@@ -83,6 +83,10 @@ const studentSchema = new mongoose.Schema({
       default: 'Nil',
     },
   },
+  submissionDate: {
+    type: Date,
+   // Set the default value to the current date and time
+  },
 });
 
 
