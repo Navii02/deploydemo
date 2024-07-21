@@ -66,6 +66,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [copyAddressOption, setCopyAddressOption] = useState(false);
+  const [loading, setLoading] = useState(false); 
 
   const handleCameraCapture = async () => {
     try {
@@ -192,6 +193,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     const sendData = new FormData();
     for (const key in formData) {
       if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
@@ -214,6 +216,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     
     } catch (error) {
       console.error('Error submitting form:', error);
+    } finally {
+      setLoading(false); // Stop loading animation
     }
   };
   
@@ -767,9 +771,15 @@ Copy Address
               </button>
             </div>
           </form>
-        </div>
+       
+          {loading && (
+          <div className="loading-overlay">
+            <div className="loading-spinner"></div>
+            <p>Saving...</p>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
-
+};
 export default DataEntryForm;

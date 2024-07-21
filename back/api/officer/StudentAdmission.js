@@ -15,7 +15,7 @@ router.post('/studentadmission', upload.single('photo'), async (req, res) => {
   try {
     let photoUrl = '';
     if (req.file) {
-      const storageRef = ref(storage, `photos/${Date.now()}_${req.file.originalname}`);
+      const storageRef = ref(storage, `student_photos/${Date.now()}_${req.body.name.replace(/\s+/g, '_')}_${req.file.originalname}`);
       const snapshot = await uploadBytes(storageRef, req.file.buffer);
       photoUrl = await getDownloadURL(snapshot.ref);
     }
