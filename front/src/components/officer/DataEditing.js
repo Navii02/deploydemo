@@ -228,7 +228,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     <div>
       <Navbar />
       <div className="data-entry-container">
-        <h1>Admission Form</h1>
+      <div className="page-title">Admission Form</div>
         <hr class="divider"></hr>
         <form className="form" onSubmit={handleSubmit}>
           <div className="row">
