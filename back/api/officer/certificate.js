@@ -6,26 +6,13 @@ const fs = require('fs');
 const CertificateRequest = require('../../models/CertificateRequest');
 const StudentData = require('../../models/Student/StudentData');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = 'certificate/';
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath);
-    }
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    const requestId = req.params.id;
-    const fileName = `${requestId}.pdf`;
-    cb(null, fileName);
-  },
-});
+const { storage, ref, uploadBytes, getDownloadURL } = require('../../firebase'); // Adjust path accordingly
 
-const upload = multer({ storage });
+const upload = multer({ storage: multer.memoryStorage() }); // Use memory storage for multer
 
 router.get('/officer/certificateRequests', async (req, res) => {
   try {
-    const requests = await CertificateRequest.find({HoDstatus:'Accepted'}).sort({ createdAt: -1 });
+    const requests = await CertificateRequest.find({ HoDstatus: 'Accepted' }).sort({ createdAt: -1 });
 
     const requestsWithStudentData = await Promise.all(
       requests.map(async (request) => {
@@ -47,7 +34,16 @@ router.get('/officer/certificateRequests', async (req, res) => {
 router.post('/officer/approveRequest/:id', upload.single('file'), async (req, res) => {
   try {
     const requestId = req.params.id;
-    const fileUrl = req.file ? `/certificate/${req.file.filename}` : null;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const fileName = `${requestId}.pdf`;
+    const fileRef = ref(storage, `certificates/${fileName}`);
+    await uploadBytes(fileRef, file.buffer);
+    const fileUrl = await getDownloadURL(fileRef);
 
     await CertificateRequest.findByIdAndUpdate(requestId, { status: 'Approved', fileUrl });
 

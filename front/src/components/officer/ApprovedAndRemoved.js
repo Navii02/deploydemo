@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+
 import OfficerNavbar from "./OfficerNavbar";
 import { baseurl } from "../../url";
 import "./DataEditing.css";
@@ -471,7 +472,7 @@ const ApprovedAndRemoved = () => {
       .split("T")[0];
     setFormData({
       ...formData,
-     
+
       feeCategory: student.feeCategory,
       name: student.name,
       address: student.address,
@@ -556,6 +557,7 @@ const ApprovedAndRemoved = () => {
           <button onClick={() => setShowRemoved(!showRemoved)}>
             {showRemoved ? "Show Approved Students" : "Show Removed Students"}
           </button>
+
           {showRemoved ? (
             <div>
               <h2>Removed Students</h2>
@@ -563,26 +565,20 @@ const ApprovedAndRemoved = () => {
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Admission Number</th>
+                    <th>Admission ID</th>
+                    <th>submission Date</th>
                     <th>Course</th>
-                    <th>Action</th>
+                   
                   </tr>
                 </thead>
                 <tbody>
                   {removedStudents.map((student) => (
                     <tr key={student._id}>
                       <td>{student.name}</td>
-                      <td>{student.admissionNumber}</td>
+                     <td>{student.admissionId}</td>
+                     <td>{student.submissionDate}</td>
                       <td>{student.course}</td>
-                      <td>
-                        <button
-                          onClick={() =>
-                            handlePrintPreview(student._id, student.photo)
-                          }
-                        >
-                          Print
-                        </button>
-                      </td>
+                     
                     </tr>
                   ))}
                 </tbody>
@@ -632,38 +628,38 @@ const ApprovedAndRemoved = () => {
             Back to Student Details
           </button>
           <div className="data-entry-container">
-            <h1>Admission Form</h1>
+            <div className="page-title">Admission Form</div>
             <hr class="divider"></hr>
             <form className="form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Fee Category:</label>
-              <select
-                name="feeCategory"
-                value={formData.feeCategory}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Fee Category</option>
-                <option value="Merit Lower Fee">Merit Lower Fee</option>
-                <option value="Merit Higher Fee">Merit Higher Fee</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Course:</label>
-              <select
-                name="course"
-                value={formData.course}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Course</option>
-                <option value="B.Tech CSE">B.Tech CSE</option>
-                <option value="B.Tech ECE">B.Tech ECE</option>
-                <option value="MCA">MCA</option>
-                <option value="BCA">BCA</option>
-                <option value="BBA">BBA</option>
-              </select>
-            </div>
+              <div className="form-group">
+                <label>Fee Category:</label>
+                <select
+                  name="feeCategory"
+                  value={formData.feeCategory}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select Fee Category</option>
+                  <option value="Merit Lower Fee">Merit Lower Fee</option>
+                  <option value="Merit Higher Fee">Merit Higher Fee</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Course:</label>
+                <select
+                  name="course"
+                  value={formData.course}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select Course</option>
+                  <option value="B.Tech CSE">B.Tech CSE</option>
+                  <option value="B.Tech ECE">B.Tech ECE</option>
+                  <option value="MCA">MCA</option>
+                  <option value="BCA">BCA</option>
+                  <option value="BBA">BBA</option>
+                </select>
+              </div>
               <div className="form-group">
                 <label>Name:</label>
                 <input
@@ -727,21 +723,21 @@ const ApprovedAndRemoved = () => {
                 </div>
               </div>
               <div className="row">
-              <div className="form-group">
-              <label>Gender:</label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Transgender">Transgender</option>
-                <option value="Prefer to not say">Prefer to not say</option>
-              </select>
-            </div>
+                <div className="form-group">
+                  <label>Gender:</label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Transgender">Transgender</option>
+                    <option value="Prefer to not say">Prefer to not say</option>
+                  </select>
+                </div>
                 <div className="form-group">
                   <label>Blood Group:</label>
                   <input
@@ -808,17 +804,17 @@ const ApprovedAndRemoved = () => {
                 />
               </div>
               <div className="parent-details-row">
-              <div className="form-group">
-                <label>Entrance Exam Name:</label>
-                <input
-                  type="text"
-                  name="entranceExam"
-                  value={formData.entranceExam}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-             
+                <div className="form-group">
+                  <label>Entrance Exam Name:</label>
+                  <input
+                    type="text"
+                    name="entranceExam"
+                    value={formData.entranceExam}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
                 <div className="form-group">
                   <label>Entrance Roll No:</label>
                   <input
@@ -841,9 +837,8 @@ const ApprovedAndRemoved = () => {
                 </div>
               </div>
               <div className="box">
-              
-                  <h4>Qualifying Examination Details</h4>
-                  <div className="parent-details-row">
+                <h4>Qualifying Examination Details</h4>
+                <div className="parent-details-row">
                   <div className="form-group">
                     <label>Qualification:</label>
                     <input
@@ -949,7 +944,7 @@ const ApprovedAndRemoved = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Mother Occupation:</label>
                     <input
@@ -972,7 +967,7 @@ const ApprovedAndRemoved = () => {
                       title="Please enter a valid 10-digit phone number"
                     />
                   </div>
-                
+
                   <div className="form-group">
                     <label>Mother Mobile No:</label>
                     <input
@@ -1012,78 +1007,78 @@ const ApprovedAndRemoved = () => {
               <div className="box">
                 <h4>Bank Details</h4>
                 <div className="parent-details-row">
-                <div className="form-group">
-                  <label>Bank Name:</label>
-                  <input
-                    type="text"
-                    name="bankDetails.bankName"
-                    value={formData.bankDetails.bankName}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Branch:</label>
-                  <input
-                    type="text"
-                    name="bankDetails.branch"
-                    value={formData.bankDetails.branch}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Account No:</label>
-                  <input
-                    type="text"
-                    name="bankDetails.accountNo"
-                    value={formData.bankDetails.accountNo}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>IFSC Code:</label>
-                  <input
-                    type="text"
-                    name="bankDetails.ifscCode"
-                    value={formData.bankDetails.ifscCode}
-                    onChange={handleInputChange}
-                    required
-                  />
+                  <div className="form-group">
+                    <label>Bank Name:</label>
+                    <input
+                      type="text"
+                      name="bankDetails.bankName"
+                      value={formData.bankDetails.bankName}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Branch:</label>
+                    <input
+                      type="text"
+                      name="bankDetails.branch"
+                      value={formData.bankDetails.branch}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Account No:</label>
+                    <input
+                      type="text"
+                      name="bankDetails.accountNo"
+                      value={formData.bankDetails.accountNo}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>IFSC Code:</label>
+                    <input
+                      type="text"
+                      name="bankDetails.ifscCode"
+                      value={formData.bankDetails.ifscCode}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                 </div>
               </div>
               <div className="box">
                 <h4>Achievements</h4>
                 <div className="row">
-                <div className="form-group">
-                  <label>Arts:</label>
-                  <input
-                    type="text"
-                    name="achievements.arts"
-                    value={formData.achievements.arts}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>sports:</label>
-                  <input
-                    type="text"
-                    name="achivements.sports"
-                    value={formData.achievements.sports}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Other:</label>
-                  <input
-                    type="text"
-                    name="achivements.other"
-                    value={formData.achievements.other}
-                    onChange={handleInputChange}
-                  />
-                </div>
+                  <div className="form-group">
+                    <label>Arts:</label>
+                    <input
+                      type="text"
+                      name="achievements.arts"
+                      value={formData.achievements.arts}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>sports:</label>
+                    <input
+                      type="text"
+                      name="achivements.sports"
+                      value={formData.achievements.sports}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Other:</label>
+                    <input
+                      type="text"
+                      name="achivements.other"
+                      value={formData.achievements.other}
+                      onChange={handleInputChange}
+                    />
+                  </div>
                 </div>
               </div>
               <button type="submit" onClick={handleSave}>
