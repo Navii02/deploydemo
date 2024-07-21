@@ -1,7 +1,8 @@
 /* Styles for the form */
 .formContainer {
-    margin: 100px 20px 0px 20px;
-    padding: 20px;
+  margin: 100px auto 20px auto;
+  width:80%;
+  padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
@@ -31,6 +32,7 @@
     border-radius: 3px;
     cursor: pointer;
     font-size: 14px;
+    width:25%;
   }
   
   .formContainer button:hover {

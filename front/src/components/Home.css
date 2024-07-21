@@ -17,6 +17,11 @@
   z-index: 0; /* Ensure the blur is behind other content */
 }
 
+/* Hide the scrollbar on the home page */
+html.homepage, body.homepage {
+  overflow: hidden;
+}
+
 /* Blurred Background */
 .office-home-page::before {
   content: '';

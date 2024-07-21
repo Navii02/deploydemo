@@ -1,40 +1,48 @@
 /* Updates.css */
 
 .update-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .student-selection {
-    margin-top:20px;
-    margin-bottom: 20px;
-  }
-
-  .all{
-    display: flex;
-    justify-content: center;
+  margin: 100px auto 20px auto;
+  width:50%;
+  padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     align-items: center;
-  }
+}
 
-  .student-checkbox,
-  .select-all {
-    display: flex;
-    margin-bottom: 5px;
-    width: 500px;
-  }
-  
-  .student-checkbox span {
-    margin-right: 10px;
-  }
-  
-  .select-all input[type="checkbox"] {
-    margin-right: 5px;
-  }
+.update-container textarea{
+  margin-left: 20px;
+}
 
-  .update-container .error-message,.success-message {
-    font-size: small;
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 4px;
-  }
+.student-selection {
+  margin-top:20px;
+  margin-bottom: 20px;
+}
+
+.all{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.student-checkbox,
+.select-all {
+  display: flex;
+  margin-bottom: 5px;
+  width: 500px;
+}
+
+.student-checkbox span {
+  margin-right: 10px;
+}
+
+.select-all input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.update-container .error-message,.success-message {
+  font-size: small;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+}

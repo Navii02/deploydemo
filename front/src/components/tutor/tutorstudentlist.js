@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { baseurl } from '../../url';
 import Navbar from './TutorNavbar';
+import './tutorstudentlist.css'
 
 const TutorUpdates = () => {
   const [students, setStudents] = useState([]);
@@ -119,8 +120,8 @@ const TutorUpdates = () => {
   return (
     <>
       <Navbar />
-      <div className="update-container">
-        <h2>Student Details</h2>
+      <div className="student-list-container">
+        <h1>Student Details</h1>
         <div className="student-list">
           {students.map((student) => (
             <div key={student._id} className="student-item">

@@ -1,7 +1,19 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './Home.css'; // Import the CSS file
 
 const HomePage = () => {
+  useEffect(() => {
+    // Add 'homepage' class to body
+    document.documentElement.classList.add('homepage');
+    document.body.classList.add('homepage');
+
+    // Cleanup by removing the class when the component unmounts
+    return () => {
+      document.documentElement.classList.remove('homepage');
+      document.body.classList.remove('homepage');
+    };
+  }, []);
+
   const handleSelection = (event) => {
     const selectedUser = event.target.value;
     switch (selectedUser) {
