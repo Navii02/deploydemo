@@ -51,13 +51,13 @@ function NoticeUpdates() {
 
       setTimeout(() => {
         setSuccessMessage('');
-      }, 3000); // Hide success message after 3 seconds
+      }, 1000); // Hide success message after 3 seconds
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      setErrorMessage(error.response?.data?.message || 'An error occurred');
 
       setTimeout(() => {
         setErrorMessage('');
-      }, 3000); // Hide error message after 3 seconds
+      }, 1000); // Hide error message after 3 seconds
     } finally {
       setLoading(false); // Stop loading animation
     }
@@ -73,6 +73,18 @@ function NoticeUpdates() {
 
   const handleShowLess = () => {
     setVisibleNotices(3); // Show only the initial 3 notices
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this notice?')) {
+      try {
+        await axios.delete(`${baseurl}/api/notices/${id}`);
+        setSuccessMessage('Notice deleted successfully');
+        fetchNotices(); // Refresh notices list
+      } catch (error) {
+        setErrorMessage(error.response?.data?.message || 'An error occurred');
+      }
+    }
   };
 
   return (
@@ -111,6 +123,7 @@ function NoticeUpdates() {
             <div key={notice._id} className="notice-item">
               <img src={notice.image} alt="Notice" style={{ maxWidth: '100%' }} />
               <h3>{notice.notice}</h3>
+              <button onClick={() => handleDelete(notice._id)} className="delete-button">Delete</button>
             </div>
           ))}
         </div>
