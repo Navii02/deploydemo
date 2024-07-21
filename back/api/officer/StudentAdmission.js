@@ -36,6 +36,7 @@ router.post('/studentadmission', upload.single('photo'), async (req, res) => {
       ...req.body,
       admissionId: newAdmissionId,
       photo: photoUrl,
+      submissionDate: new Date(), 
       qualify: {
         exam: req.body['qualify.exam'],
         board: req.body['qualify.board'],

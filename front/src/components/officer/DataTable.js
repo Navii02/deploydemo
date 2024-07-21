@@ -11,7 +11,8 @@ const StudentList = () => {
     const fetchStudents = async () => {
       try {
         const response = await axios.get(`${baseurl}/api/studentAdmission`);
-        setStudents(response.data);
+        const sortedStudents = response.data.sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate));
+        setStudents(sortedStudents);
       } catch (error) {
         console.error('Error fetching students:', error);
       }
@@ -322,6 +323,10 @@ const StudentList = () => {
       <td>Other</td>
       <td>${studentDetails.achievements.other ?? 'Nil'}</td>
     </tr>
+         <tr>
+              <td>Submission Date</td>
+              <td>${studentDetails.submissionDate ? new Date(studentDetails.submissionDate).toLocaleDateString() : 'Not Provided'}</td>
+            </tr>
             </table>
             <button class="hide-on-print" onclick="window.print()">Print</button>
           </body>
@@ -339,14 +344,16 @@ const StudentList = () => {
   return (
     <div>
       <Navbar />
-      <h1>Student List</h1>
+      <h1> New Admission Student List</h1>
       <table className="students-table">
         <thead>
           <tr>
             <th>Student Name</th>
             <th>Admission ID</th>
             <th>Course</th>
+            <th>Submission Date</th>
             <th>Action</th>
+            
           </tr>
         </thead>
         <tbody>
@@ -355,6 +362,7 @@ const StudentList = () => {
               <td>{student.name}</td>
               <td>{student.admissionId}</td>
               <td>{student.course}</td>
+              <td>{student.submissionDate ? new Date(student.submissionDate).toLocaleDateString() : 'Not Provided'}</td> {/* New Data */}
               <td>
                 <button className="approve-btn" onClick={() => handleApprove(student._id)}>Approve</button>
                 <button className="decline-btn" onClick={() => handleDecline(student._id)}>Decline</button>

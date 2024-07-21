@@ -1,0 +1,38 @@
+/* DataEditing.css */
+
+/* Container for the filter */
+.filter-container {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Label for the filter */
+  .filter-label {
+    font-size: 16px;
+    margin-right: 10px;
+    font-weight: 600;
+  }
+  
+  /* Dropdown styling */
+  .filter-dropdown {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    background-color: #fff;
+    transition: border-color 0.2s ease-in-out;
+  }
+  
+  /* Dropdown focus effect */
+  .filter-dropdown:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(38, 143, 255, 0.2);
+  }
+  
+  /* Additional styling for dropdown options */
+  .filter-dropdown option {
+    padding: 8px 12px;
+  }
+  

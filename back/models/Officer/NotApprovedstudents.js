@@ -99,6 +99,10 @@ const notAdmittedStudentSchema = new mongoose.Schema({
     type: String,
     default: 'N/A',
   },
+  submissionDate: {
+    type: Date,
+   // Set the default value to the current date and time
+  },
   installmentsPaid: [Number],
   registerNumber: String,
   collegemail: {
@@ -106,6 +110,7 @@ const notAdmittedStudentSchema = new mongoose.Schema({
     default: [],    // Default value is an empty array
    
   }
+
   
 });
  

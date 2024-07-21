@@ -10,6 +10,7 @@ const ApprovedAndRemoved = () => {
   const [showRemoved, setShowRemoved] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    feeCategory: "",
     address: "",
     permanentAddress: "",
     pincode: "",
@@ -470,6 +471,8 @@ const ApprovedAndRemoved = () => {
       .split("T")[0];
     setFormData({
       ...formData,
+     
+      feeCategory: student.feeCategory,
       name: student.name,
       address: student.address,
       permanentAddress: student.permanentAddress,
@@ -632,6 +635,35 @@ const ApprovedAndRemoved = () => {
             <h1>Admission Form</h1>
             <hr class="divider"></hr>
             <form className="form" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Fee Category:</label>
+              <select
+                name="feeCategory"
+                value={formData.feeCategory}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Fee Category</option>
+                <option value="Merit Lower Fee">Merit Lower Fee</option>
+                <option value="Merit Higher Fee">Merit Higher Fee</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Course:</label>
+              <select
+                name="course"
+                value={formData.course}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Course</option>
+                <option value="B.Tech CSE">B.Tech CSE</option>
+                <option value="B.Tech ECE">B.Tech ECE</option>
+                <option value="MCA">MCA</option>
+                <option value="BCA">BCA</option>
+                <option value="BBA">BBA</option>
+              </select>
+            </div>
               <div className="form-group">
                 <label>Name:</label>
                 <input
@@ -695,21 +727,21 @@ const ApprovedAndRemoved = () => {
                 </div>
               </div>
               <div className="row">
-                <div className="form-group">
-                  <label>Gender:</label>
-                  <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <option value="">{formData.gender}</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="transgender">Transgender</option>
-                    <option value="Prefer to not say">Prefer to not say</option>
-                  </select>
-                </div>
+              <div className="form-group">
+              <label>Gender:</label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Transgender">Transgender</option>
+                <option value="Prefer to not say">Prefer to not say</option>
+              </select>
+            </div>
                 <div className="form-group">
                   <label>Blood Group:</label>
                   <input

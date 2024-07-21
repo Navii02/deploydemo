@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const { storage, ref, uploadBytes, getDownloadURL } = require('../../firebase');
 const ApprovedStudent = require('../../models/Officer/ApprovedStudents');
-
+const Alumni = require('../../models/Officer/Alumni');
 
 // Route to fetch approved students
 router.get('/officerstudent/approvedStudents', async (req, res) => {
@@ -117,6 +117,16 @@ router.get('/officerstudent/approvedstudentDetails/:id', async (req, res) => {
         console.error('Error fetching image URL:', error);
         res.status(500).send('Error fetching image');
     }
+});
+
+router.get('/officerstudent/alumni', async (req, res) => {
+  try {
+    const alumni = await Alumni.find();
+    res.json(alumni);
+  } catch (error) {
+    console.error('Error fetching alumni details:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
   
