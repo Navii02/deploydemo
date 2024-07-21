@@ -19,9 +19,28 @@ router.post('/studentadmission', upload.single('photo'), async (req, res) => {
       const snapshot = await uploadBytes(storageRef, req.file.buffer);
       photoUrl = await getDownloadURL(snapshot.ref);
     }
+    const admissionYear = new Date().getFullYear(); // Get the current year
+
+    
+
+    const lastStudent = await Student.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
+
+    let nextAdmissionId;
+    if (lastStudent) {
+      // Extract the last admission ID and increment it by one
+      const lastAdmissionId = lastStudent.admissionId.split('/')[0];
+      const nextAdmissionNumber = parseInt(lastAdmissionId) + 1;
+      nextAdmissionId = `${nextAdmissionNumber}/${admissionYear}`;
+    } else {
+      // If no previous admission, start from a default number
+      nextAdmissionId = '1000/' +admissionYear;
+    }
+    formData.admissionId = nextAdmissionId;
+   
 
     const newStudent = new Student({
       ...req.body,
+      admissionId: nextAdmissionId,
       photo: photoUrl,
       qualify: {
         exam: req.body['qualify.exam'],
