@@ -192,7 +192,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    window.location.reload();
     const sendData = new FormData();
     for (const key in formData) {
       if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
@@ -200,22 +199,19 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
           sendData.append(`${key}.${subKey}`, formData[key][subKey]);
         }
       } else {
-        sendData.append(key, formData[key]? formData[key] : 'nil');
+        sendData.append(key, formData[key] ? formData[key] : 'nil');
       }
     }
-
+  
     try {
-      const response = await axios.put(`${baseurl}/api/studentadmission`, sendData,{
+      const response = await axios.post(`${baseurl}/api/studentadmission`, sendData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
       console.log('Data submitted successfully:', response.data);
-      console.log(response.data);
       setFormData({ ...initialFormData });
-      fetchStudents();
-      onDataEntered(formData);
-      window.location.reload();
+    
     } catch (error) {
       console.error('Error submitting form:', error);
     }
