@@ -1,4 +1,4 @@
-/* Login.css */
+/* Login.module.css */
 
 .login-background-image {
   background-color: white;
@@ -50,7 +50,7 @@ h2 {
   right: 10px;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #777; /* Adjust the color as needed */
+  color: #777;
 }
 
 input {
@@ -86,21 +86,26 @@ span {
   text-align: center;
 }
 
-.login-button-container button {
-  background-color: rgb(85, 145, 240);
-  color: #fff;
-  padding: 10px;
+.login-button {
+  background-color: #007bff;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
+  padding: 10px 20px;
   cursor: pointer;
-  width: 50%;
   font-size: 16px;
+  transition: background-color 0.3s ease;
+  width: 50%;
   margin: 0 auto;
   margin-bottom: 20px;
 }
 
-.login-button-container button:disabled {
-  background-color: #ccc;
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+.login-button:disabled {
+  background-color: #c0c0c0;
   cursor: not-allowed;
 }
 
@@ -122,7 +127,7 @@ span {
   border-radius: 10px;
   padding: 2px;
   text-align: center;
-  margin-bottom: 10px; /* Adjust as needed */
+  margin-bottom: 10px;
 }
 
 .signup-link p {
@@ -131,13 +136,13 @@ span {
 }
 
 .signup-link p a {
-  color: rgb(85, 145, 240); /* or any color you prefer */
-  text-decoration: none; /* Remove underline */
+  color: rgb(85, 145, 240);
+  text-decoration: none;
   font-size: 15px;
 }
 
 .signup-link p a:hover {
-  text-decoration: underline; /* Add underline on hover if desired */
+  text-decoration: underline;
 }
 
 .forgot-show-password-links {
@@ -156,7 +161,7 @@ span {
   cursor: pointer;
   color: #007bff;
   text-decoration: underline;
-  margin: 0 5px; /* Add margin between the links */
+  margin: 0 5px;
 }
 
 .show-password-link:hover,
@@ -166,7 +171,6 @@ span {
 
 .forgot-password-link {
   color: #007bff;
-  text-decoration: underline;
 }
 
 .forgot-password-link:hover {

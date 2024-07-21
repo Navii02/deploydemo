@@ -125,22 +125,22 @@ body, html {
 }
 
 .data-entry-container .capture-button {
-  background-color: #409240; /* Green button */
+  background-color: #264fa9; /* Green button */
   color: #fff;
 }
 
 .data-entry-container .capture-button:hover {
-  background-color: #175517; /* Darker green on hover */
+  background-color: #3a30e9; /* Darker green on hover */
   transform: scale(1.05);
 }
 
 .data-entry-container .upload-button {
-  background-color: #3a8a3d; /* Another green button */
+  background-color: #503dcb; /* Another green button */
   color: #fff;
 }
 
 .data-entry-container .upload-button:hover {
-  background-color: #0e592b; /* Darker green on hover */
+  background-color: #3723cf; /* Darker green on hover */
   transform: scale(1.05);
 }
 

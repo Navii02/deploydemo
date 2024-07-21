@@ -108,7 +108,9 @@ function NoticeUpdates() {
               onChange={handleImageChange}
             ></input>
           </label>
-          <button type="submit">Add Notice</button>
+          <button 
+          className='savebutton'
+          type="submit">Add Notice</button>
         </form>
         {loading && (
           <div className="full-page-loader">
