@@ -109,7 +109,7 @@ function AssignTutorPage() {
         <button className={styles.button} onClick={handleAssignTutor}>Assign Tutor</button>
         {assignSuccess && <p className={styles.successMessage}>Tutor assigned successfully!</p>}
 
-        <h2 className={styles.assignedTutorsHeader}>Assigned Tutors:</h2>
+        <h1 className={styles.assignedTutorsHeader}>Assigned Tutors:</h1>
         <table className={styles.table}>
           <thead>
             <tr>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {baseurl} from '../../url';
 import HodNavbar from './HodNavbar';
+import './CertificateApproval.css'
 
 function HodCertificateRequestsPage() {
   const [requests, setRequests] = useState([]);
@@ -52,7 +53,7 @@ function HodCertificateRequestsPage() {
     <>
       <HodNavbar />
       <div className="certificate-requests">
-        <h2>Certificate Requests</h2>
+        <h1>Certificate Requests</h1>
         {requests.length === 0 ? (
           <p>No requests available.</p>
         ) : (

@@ -1,6 +1,10 @@
 /* AdminTeachersPage styles */
 .admin-teachers-page {
-  padding: 20px;
+  margin: 100px 20px 0px 20px;
+}
+
+.teachers-list-section button{
+  margin-right:10px;
 }
 
 .teachers-list-section {
