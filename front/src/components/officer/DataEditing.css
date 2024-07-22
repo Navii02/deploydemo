@@ -12,13 +12,17 @@ body, html {
   padding: 0;
 }
 
+.approvedandremoved-list-container{
+  margin: 100px 20px 20px 20px;
+}
+
 /* Header container styling */
 .header-container {
   text-align: center;
   margin: 30px 0 20px; /* Adjusted margin */
 }
 .page-title {
-  font-size: 3em; /* Adjust size as needed */
+  font-size: 2em; /* Adjust size as needed */
   font-weight: bold;
   margin: 0;
   padding: 0;

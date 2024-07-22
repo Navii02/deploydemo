@@ -344,6 +344,7 @@ const StudentList = () => {
   return (
     <div>
       <Navbar />
+      <div className="data-table-container">
       <h1> New Admission Student List</h1>
       <table className="students-table">
         <thead>
@@ -372,6 +373,7 @@ const StudentList = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

@@ -4,6 +4,15 @@
   border-collapse: collapse;
 }
 
+.data-table-container{
+  margin: 100px 20px 20px 20px;
+
+}
+
+.data-table-container h1{
+  font-size: larger;
+}
+
 .name-column, .actions-column {
   padding: 10px;
   text-align: left;

@@ -552,6 +552,7 @@ const ApprovedAndRemoved = () => {
   return (
     <div>
       <OfficerNavbar />
+      <div className="approvedandremoved-list-container">
       {!editMode ? (
         <div>
           <button onClick={() => setShowRemoved(!showRemoved)}>
@@ -1093,6 +1094,7 @@ const ApprovedAndRemoved = () => {
       )}
 
       {isSuccess && <p>Update successful!</p>}
+    </div>
     </div>
   );
 };

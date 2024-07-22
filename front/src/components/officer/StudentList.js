@@ -563,6 +563,7 @@ const StudentListOfficer = () => {
   return (
     <div>
       <OfficerNavbar />
+      <div className="student-display-container">
       {!editMode ? (
         <div>
           <button onClick={() => setShowAlumni(!showAlumni)}>
@@ -1143,6 +1144,7 @@ const StudentListOfficer = () => {
       )}
 
       {isSuccess && <p>Update successful!</p>}
+    </div>
     </div>
   );
 };

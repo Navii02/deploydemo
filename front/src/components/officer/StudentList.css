@@ -1,8 +1,11 @@
 /* DataEditing.css */
 
 /* Container for the filter */
+.student-display-container{
+  margin: 100px 20px 20px 20px;
+}
+
 .filter-container {
-  margin: 0px auto 0px auto;
     display: flex;
     align-items: center;
   }
@@ -17,7 +20,7 @@
   
   /* Dropdown styling */
   .filter-dropdown {
-    margin-top: 20px;
+    margin-top: 0px;
     margin-bottom: 20px;
     padding: 8px 12px;
     border-radius: 4px;
