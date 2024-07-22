@@ -1,753 +1,1029 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import OfficerNavbar from './OfficerNavbar'; // Assuming you want to use Navbar instead of OfficerNavbar
+import React, { useState, useRef } from "react";
+import axios from "axios";
+import Navbar from "./OfficerNavbar";
+import "./DataEditing.css";
+import { baseurl } from "../../url";
 
-const ApprovedAndRemoved = () => {
-  const [approvedStudents, setApprovedStudents] = useState([]);
-  const [removedStudents, setRemovedStudents] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState('');
-  const [showRemoved, setShowRemoved] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    admissionNumber: '',
-    entranceExam: '',
-    entranceRollNo: '',
-    entranceRank: '',
-    aadharNo: '',
-    course: '',
-    plusTwo: {
-      board: '',
-      regNo: '',
-      examMonthYear: '',
-      percentage: '',
-      schoolName: '',
-      physics: '',
-      chemistry: '',
-      mathematics: ''
+const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
+  const initialFormData = {
+    admissionType: "",
+    admissionId: "",
+    allotmentCategory: "",
+    feeCategory: "",
+    name: "",
+    photo: null,
+    address: "",
+    permanentAddress: "",
+    pincode: "",
+    religion: "",
+    community: "",
+    gender: "",
+    dateOfBirth: "",
+    bloodGroup: "",
+    mobileNo: "",
+    whatsappNo: "",
+    email: "",
+    entranceExam: "",
+    entranceRollNo: "",
+    entranceRank: "",
+    aadharNo: "",
+    course: "",
+    qualify: {
+      exam: "",
+      board: "",
+      regNo: "",
+      examMonthYear: "",
+      percentage: "",
+      cgpa: "",
+      institution: "",
     },
     parentDetails: {
-      fatherName: '',
-      fatherOccupation: '',
-      fatherMobileNo: '',
-      motherName: '',
-      motherOccupation: '',
-      motherMobileNo: ''
+      fatherName: "",
+      fatherOccupation: "",
+      fatherMobileNo: "",
+      motherName: "",
+      motherOccupation: "",
+      motherMobileNo: "",
     },
+    annualIncome: "",
+    nativity: "",
     bankDetails: {
-      bankName: '',
-      branch: '',
-      accountNo: '',
-      ifscCode: ''
+      bankName: "",
+      branch: "",
+      accountNo: "",
+      ifscCode: "",
     },
     achievements: {
-      arts: '',
-      sports: '',
-      other: ''
+      arts: "",
+      sports: "",
+      other: "",
     },
-    annualIncome: '',
-    nativity: ''
+  };
+
+  const [formData, setFormData] = useState({ ...initialFormData });
+  const [copyClicked] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [showExtraFields, setShowExtraFields] = useState(false);
+  const fileInputRef = useRef(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [copyAddressOption, setCopyAddressOption] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [certificates, setCertificates] = useState({
+    tenthCertificate: false,
+    twelfthCertificate: false,
+    dataSheet: false,
+    tc: false,
+    PhysicalFitness: false,
+    PassportsizePhoto: false,
+    Income: false,
+    Community: false,
+    Caste: false,
+    Aadhar: false,
+    others: false,
   });
-  const [isEditing, setIsEditing] = useState(false);
-  const [studentId, setStudentId] = useState(null);
-  const [isSuccess, setIsSuccess] = useState(false);
 
-  useEffect(() => {
-    // Fetch approved students from the server
-    axios.get('/api/approvedStudents')
-      .then(response => {
-        const currentYear = new Date().getFullYear().toString().slice(-2);
-        const filteredStudents = response.data.filter(student => {
-          const admissionYear = student.admissionNumber.split('/')[1];
-          return admissionYear === currentYear;
-        });
-        setApprovedStudents(filteredStudents);
-      })
-      .catch(error => {
-        console.error('Error fetching approved students:', error);
+  const handleCameraCapture = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
       });
 
-    // Fetch removed students from the server
-    axios.get('/api/removedStudents')
-      .then(response => {
-        setRemovedStudents(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching removed students:', error);
-      });
-  }, []);
+      videoRef.current.srcObject = mediaStream;
+      videoRef.current.play(); // Start playing the video
 
-  const handleCourseChange = (event) => {
-    setSelectedCourse(event.target.value);
-  };
+      // Display both video and canvas elements
+      videoRef.current.style.display = "block";
+      canvasRef.current.style.display = "block";
 
-  const handleEditClick = (student) => {
-    setFormData(student);
-    setIsEditing(true);
-    setStudentId(student.id);
-  };
+      // Introduce a delay before capturing the photo (adjust as needed)
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    const keys = name.split('.');
-    if (keys.length > 1) {
-      setFormData(prevState => ({
-        ...prevState,
-        [keys[0]]: {
-          ...prevState[keys[0]],
-          [keys[1]]: value
-        }
-      }));
-    } else {
-      setFormData(prevState => ({
-        ...prevState,
-        [name]: value
-      }));
-    }
-  };
+      const canvas = canvasRef.current;
+      const context = canvas.getContext("2d");
 
-  const handlePrintPreview = (_id) => {
-    console.log('Admission ID for Print Preview:', _id);
-    axios.get(`/api/approvedstudentDetails/${_id}`)
-      .then(response => {
-        const studentDetails = response.data.studentDetails;
-        console.log(studentDetails.photoUrl);
+      // Ensure video dimensions match canvas dimensions
+      const { videoWidth, videoHeight } = videoRef.current;
+      canvas.width = videoWidth;
+      canvas.height = videoHeight;
 
-        if (!studentDetails || !studentDetails.parentDetails) {
-          console.error('Error: Invalid student details received');
-          return;
-        }
+      // Draw the video frame onto the canvas
+      context.translate(videoWidth, 0); // Flip horizontally
+      context.scale(-1, 1); // Mirror image horizontally
+      context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(`
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="UTF-8">
-            <title>${studentDetails.name}'s Details</title>
-            <style>
-              body {
-                margin: 0;
-                padding: 0;
-                font-family: Calibri, sans-serif;
-                font-size: 11pt;
-              }
+      // Reset transformation to prevent further mirroring
+      context.setTransform(1, 0, 0, 1, 0, 0);
 
-              h1 {
-                font-weight: bold;
-                text-align: center;
-              }
+      // Show a confirmation dialog to capture the photo
+      const captureConfirmed = window.confirm(
+        "Do you want to capture this photo?"
+      );
+      if (captureConfirmed) {
+        // Capture the photo from the canvas
+        const photoData = canvas.toDataURL("image/jpeg");
+        const blob = await fetch(photoData).then((res) => res.blob());
+        const file = new File([blob], "photo.jpg", { type: "image/jpeg" });
+        setFormData({ ...formData, photo: file });
 
-              table {
-                border-collapse: collapse;
-                width: 100%;
-                page-break-before: always; /* Ensure each table starts on a new page */
-              }
-
-              td,
-              th {
-                border: 1pt solid black;
-                padding: 5pt;
-              }
-
-              .header {
-                text-align: center;
-                position: relative;
-              }
-
-              .logo {
-                position: absolute;
-                left: 10px; /* Adjust as needed */
-                top: 5px; /* Adjust as needed */
-              }
-
-              .photo {
-                position: absolute;
-                right: 0px; /* Adjust as needed */
-                top: 0px; /* Adjust as needed */
-              }
-
-              @media print {
-                .hide-on-print {
-                  display: none;
-                }
-
-                .print-table {
-                  page-break-inside: avoid;
-                }
-              }
-
-              @page {
-                size: A4;
-              }
-
-              /* Add more styles as needed for printing */
-
-            </style>
-          </head>
-          <body>
-            <table class="print-table">
-              <tr style="height: 100px;">
-                <td colspan="2" class="header">
-                  <img src="/images/college__2_-removebg-preview.png" alt="College Logo" class="logo" width="100">
-                  COLLEGE OF ENGINEERING POONJAR
-                  <br />
-                  Managed by IHRD, Govt. of Kerala
-                  <br />
-                  Poonjar Thekkekara P.O. Kottayam Dist. PIN 686 582
-                  <br/>
-                  Academic Year: 2023-24
-                  <img src="${studentDetails.photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" style="font-weight:bold;">Admission ID: ${studentDetails.admissionId}</td>
-              </tr>
-              <tr>
-                <td>Admission Type</td>
-                <td>${studentDetails.admissionType}</td>
-              </tr>
-              <tr>
-                <td>Allotment Category</td>
-                <td>${studentDetails.allotmentCategory}</td>
-              </tr>
-              <tr>
-                <td>Fee Category</td>
-                <td>${studentDetails.feeCategory}</td>
-              </tr>
-              <tr>
-                <td>Course</td>
-                <td>${studentDetails.course}</td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: center; font-weight: bold;">Student Details</td>
-              </tr>
-              <tr>
-                <td>Name of the Candidate</td>
-                <td>${studentDetails.name}</td>
-              </tr>
-              <tr>
-                <td>Address</td>
-                <td>${studentDetails.address}</td>
-              </tr>
-              <tr>
-                <td>Pin Code</td>
-                <td>${studentDetails.pincode}</td>
-              </tr>
-              <tr>
-                <td>Religion</td>
-                <td>${studentDetails.religion}</td>
-              </tr>
-              <tr>
-                <td>Community</td>
-                <td>${studentDetails.community}</td>
-              </tr>
-              <tr>
-                <td>Gender</td>
-                <td>${studentDetails.gender}</td>
-              </tr>
-              <tr>
-                <td>Date of Birth</td>
-                <td>${studentDetails.dateOfBirth}</td>
-              </tr>
-              <tr>
-                <td>Blood Group</td>
-                <td>${studentDetails.bloodGroup}</td>
-              </tr>
-              <tr>
-                <td>Mobile No</td>
-                <td>${studentDetails.mobileNo}</td>
-              </tr>
-              <tr>
-                <td>WhatsApp No</td>
-                <td>${studentDetails.whatsappNo}</td>
-              </tr>
-              <tr>
-                <td>Email</td>
-                <td>${studentDetails.email}</td>
-              </tr>
-              <tr>
-                <td>Aadhar No</td>
-                <td>${studentDetails.aadharNo}</td>
-              </tr>
-              <tr>
-                <td>Nativity</td>
-                <td>${studentDetails.nativity}</td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: center; font-weight: bold;">Entrance Exam Details</td>
-              </tr>
-              <tr>
-                <td>Entrance Exam Name</td>
-                <td>${studentDetails.entranceExam}</td>
-              </tr>
-              <tr>
-                <td>Entrance Roll No</td>
-                <td>${studentDetails.entranceRollNo}</td>
-              </tr>
-              <tr>
-                <td>Entrance Rank</td>
-                <td>${studentDetails.entranceRank}</td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: center; font-weight: bold;">Plus Two Details</td>
-              </tr>
-              <tr>
-                <td>Plus Two Board</td>
-                <td>${studentDetails.plusTwo?.board}</td>
-              </tr>
-              <tr>
-                <td>Plus Two Register No</td>
-                <td>${studentDetails.plusTwo?.regNo}</td>
-              </tr>
-              <tr>
-                <td>Plus Two Exam Month/Year</td>
-                <td>${studentDetails.plusTwo?.examMonthYear}</td>
-              </tr>
-              <tr>
-                <td>Plus Two Percentage</td>
-                <td>${studentDetails.plusTwo?.percentage}</td>
-              </tr>
-              <tr>
-                <td>Plus Two School Name</td>
-                <td>${studentDetails.plusTwo?.schoolName}</td>
-              </tr>
-              <tr>
-                <td>Physics</td>
-                <td>${studentDetails.plusTwo?.physics}</td>
-              </tr>
-              <tr>
-                <td>Chemistry</td>
-                <td>${studentDetails.plusTwo?.chemistry}</td>
-              </tr>
-              <tr>
-                <td>Mathematics</td>
-                <td>${studentDetails.plusTwo?.mathematics}</td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: center; font-weight: bold;">Parent Details</td>
-              </tr>
-              <tr>
-                <td>Father's Name</td>
-                <td>${studentDetails.parentDetails?.fatherName}</td>
-              </tr>
-              <tr>
-                <td>Father's Occupation</td>
-                <td>${studentDetails.parentDetails?.fatherOccupation}</td>
-              </tr>
-              <tr>
-                <td>Father's Mobile No</td>
-                <td>${studentDetails.parentDetails?.fatherMobileNo}</td>
-              </tr>
-              <tr>
-                <td>Mother's Name</td>
-                <td>${studentDetails.parentDetails?.motherName}</td>
-              </tr>
-              <tr>
-                <td>Mother's Occupation</td>
-                <td>${studentDetails.parentDetails?.motherOccupation}</td>
-              </tr>
-              <tr>
-                <td>Mother's Mobile No</td>
-                <td>${studentDetails.parentDetails?.motherMobileNo}</td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: center; font-weight: bold;">Bank Details</td>
-              </tr>
-              <tr>
-                <td>Bank Name</td>
-                <td>${studentDetails.bankDetails?.bankName}</td>
-              </tr>
-              <tr>
-                <td>Branch</td>
-                <td>${studentDetails.bankDetails?.branch}</td>
-              </tr>
-              <tr>
-                <td>Account No</td>
-                <td>${studentDetails.bankDetails?.accountNo}</td>
-              </tr>
-              <tr>
-                <td>IFSC Code</td>
-                <td>${studentDetails.bankDetails?.ifscCode}</td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: center; font-weight: bold;">Additional Information</td>
-              </tr>
-              <tr>
-                <td>Arts</td>
-                <td>${studentDetails.achievements?.arts}</td>
-              </tr>
-              <tr>
-                <td>Sports</td>
-                <td>${studentDetails.achievements?.sports}</td>
-              </tr>
-              <tr>
-                <td>Other Achievements</td>
-                <td>${studentDetails.achievements?.other}</td>
-              </tr>
-              <tr>
-                <td>Annual Income</td>
-                <td>${studentDetails.annualIncome}</td>
-              </tr>
-            </table>
-          </body>
-          </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
-      })
-      .catch(error => {
-        console.error('Error fetching student details:', error);
-      });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const updatedData = {
-      ...formData,
-      plusTwo: {
-        board: formData.plusTwo.board,
-        regNo: formData.plusTwo.regNo,
-        examMonthYear: formData.plusTwo.examMonthYear,
-        percentage: formData.plusTwo.percentage,
-        schoolName: formData.plusTwo.schoolName,
-        physics: formData.plusTwo.physics,
-        chemistry: formData.plusTwo.chemistry,
-        mathematics: formData.plusTwo.mathematics
-      },
-      parentDetails: {
-        fatherName: formData.parentDetails.fatherName,
-        fatherOccupation: formData.parentDetails.fatherOccupation,
-        fatherMobileNo: formData.parentDetails.fatherMobileNo,
-        motherName: formData.parentDetails.motherName,
-        motherOccupation: formData.parentDetails.motherOccupation,
-        motherMobileNo: formData.parentDetails.motherMobileNo
-      },
-      bankDetails: {
-        bankName: formData.bankDetails.bankName,
-        branch: formData.bankDetails.branch,
-        accountNo: formData.bankDetails.accountNo,
-        ifscCode: formData.bankDetails.ifscCode
-      },
-      achievements: {
-        arts: formData.achievements.arts,
-        sports: formData.achievements.sports,
-        other: formData.achievements.other
+        // Hide the video and canvas elements after capturing the photo
+        videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+        videoRef.current.style.display = "none";
+        canvasRef.current.style.display = "none";
+      } else {
+        // If capture is cancelled, stop video stream and hide elements
+        mediaStream.getTracks().forEach((track) => track.stop());
+        videoRef.current.style.display = "none";
+        canvasRef.current.style.display = "none";
       }
-    };
+    } catch (error) {
+      console.error("Error accessing camera:", error);
+    }
+  };
+  const handleCertificatesChange = (e) => {
+    const { name, checked } = e.target;
+    setCertificates((prevCertificates) => ({
+      ...prevCertificates,
+      [name]: checked,
+    }));
+  };
 
-    if (isEditing && studentId) {
-      // Send the updated data to the server
-      axios.put(`/api/student/${studentId}`, updatedData)
-        .then(response => {
-          console.log('Data updated successfully');
-          setIsSuccess(true);
-          setIsEditing(false);
-          setStudentId(null);
-          setFormData({
-            name: '',
-            admissionNumber: '',
-            entranceExam: '',
-            entranceRollNo: '',
-            entranceRank: '',
-            aadharNo: '',
-            course: '',
-            plusTwo: {
-              board: '',
-              regNo: '',
-              examMonthYear: '',
-              percentage: '',
-              schoolName: '',
-              physics: '',
-              chemistry: '',
-              mathematics: ''
-            },
-            parentDetails: {
-              fatherName: '',
-              fatherOccupation: '',
-              fatherMobileNo: '',
-              motherName: '',
-              motherOccupation: '',
-              motherMobileNo: ''
-            },
-            bankDetails: {
-              bankName: '',
-              branch: '',
-              accountNo: '',
-              ifscCode: ''
-            },
-            achievements: {
-              arts: '',
-              sports: '',
-              other: ''
-            },
-            annualIncome: '',
-            nativity: ''
-          });
-
-          // Fetch updated removed students from the server
-          axios.get('/api/removedStudents')
-            .then(response => {
-              setRemovedStudents(response.data);
-            })
-            .catch(error => {
-              console.error('Error fetching removed students:', error);
-            });
-
-        })
-        .catch(error => {
-          console.error('Error updating data:', error);
-        });
+  const handleCopyAddress = () => {
+    setCopyAddressOption(!copyAddressOption);
+    if (!copyAddressOption) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        permanentAddress: prevFormData.address,
+      }));
+    }
+  };
+  const handleCourseChange = (event) => {
+    const course = event.target.value;
+    setSelectedCourse(course);
+    if (course === "B.Tech CSE" || course === "B.Tech ECE") {
+      setShowExtraFields(true);
+    } else {
+      setShowExtraFields(false);
     }
   };
 
-  const handleShowRemoved = () => {
-    setShowRemoved(true);
+  const handleFileInputChange = (event) => {
+    const { name, files } = event.target;
+    if (name === "photo") {
+      setFormData({ ...formData, [name]: files[0] });
+    }
   };
 
-  const handleBackToApproved = () => {
-    setShowRemoved(false);
+  const handleChange = (event) => {
+    const { name, value, files } = event.target;
+    if (name === "photo") {
+      setFormData({ ...formData, [name]: files[0] });
+    } else if (name === "permanentAddress" && copyClicked) {
+      // Allow manual typing if the copy button is clicked
+      setFormData({ ...formData, [name]: value });
+    } else if (name.includes("qualify")) {
+      const [, subField] = name.split(".");
+      setFormData({
+        ...formData,
+        qualify: {
+          ...formData.qualify,
+          [subField]: value,
+        },
+      });
+    } else if (name.includes("parentDetails")) {
+      const [, subField] = name.split(".");
+      setFormData({
+        ...formData,
+        parentDetails: {
+          ...formData.parentDetails,
+          [subField]: value,
+        },
+      });
+    } else if (name.startsWith("bankDetails")) {
+      const [, subField] = name.split(".");
+      setFormData({
+        ...formData,
+        bankDetails: {
+          ...formData.bankDetails,
+          [subField]: value,
+        },
+      });
+    } else if (name.startsWith("achievements")) {
+      // Handle achievements fields
+      setFormData({
+        ...formData,
+        achievements: {
+          ...formData.achievements,
+          [name.split(".")[1]]: value,
+        },
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    const sendData = new FormData();
+    for (const key in formData) {
+      if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
+        for (const subKey in formData[key]) {
+          sendData.append(`${key}.${subKey}`, formData[key][subKey]);
+        }
+      } else {
+        sendData.append(key, formData[key] ? formData[key] : "nil");
+      }
+    }
+
+    try {
+      const response = await axios.post(
+        `${baseurl}/api/studentadmission`,
+        sendData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Data submitted successfully:", response.data);
+      setFormData({ ...initialFormData });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setLoading(false); // Stop loading animation
+    }
   };
 
   return (
     <div>
-      <OfficerNavbar />
-      {/* Course Filter */}
-      <div>
-        <label htmlFor="course">Select Department: </label>
-        <select id="course" value={selectedCourse} onChange={handleCourseChange}>
-          <option value="">All</option>
-          <option value="computerScience">Computer Science (CSE)</option>
-          <option value="electronicsAndCommunication">Electronics and Communication (EC)</option>
-        </select>
-      </div>
+      <Navbar />
+      <div className="data-entry-container">
+        <div className="page-title">Admission Form</div>
+        <hr class="divider"></hr>
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="row">
+            <div className="form-group">
+              <label>Admission Type:</label>
+              <select
+                name="admissionType"
+                value={formData.admissionType}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Admission Type</option>
+                <option value="KEAM">KEAM</option>
+                <option value="SPOT">SPOT</option>
+                <option value="LET">LET</option>
+              </select>
+            </div>
 
-      {/* Approved Students */}
-      {!showRemoved && (
-        <div>
-          <h2>Approved Students</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Admission Number</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {approvedStudents
-                .filter(student => {
-                  // Apply filter for course
-                  let passCourseFilter = !selectedCourse || String(student.course) === selectedCourse;
-                  return passCourseFilter;
-                })
-                .map(student => (
-                  <tr key={student.admissionNumber}>
-                    <td>{student.admissionNumber}</td>
-                    <td>{student.name}</td>
-                    <td>{student.course}</td>
-                    <td>
-                      <button onClick={() => handlePrintPreview(student._id)}>Print Preview</button>
-                      <button onClick={() => handleEditClick(student)}>Edit</button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Show Removed Students Button */}
-      {!showRemoved && (
-        <button className="show-non-approved-button" onClick={handleShowRemoved}>Show Removed Students</button>
-      )}
-
-      {/* Removed Students */}
-      {showRemoved && (
-        <div>
-          <h2>Removed Students</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Admission ID</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {removedStudents.map(student => (
-                <tr key={student.admissionId}>
-                  <td>{student.admissionId}</td>
-                  <td>{student.name}</td>
-                  <td>{student.course}</td>
-                  <td>
-                   
-                    <button onClick={() => handlePrintPreview(student._id)}>Print Preview</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <button onClick={handleBackToApproved}>Back to Approved Students</button>
-        </div>
-      )}
-
-      {isEditing && (
-        <form onSubmit={handleSubmit}>
-          {/* Student details form */}
-          <div>
-            <label>
-              Name:
-              <input type="text" name="name" value={formData.name} onChange={handleInputChange} />
-            </label>
-            <label>
-              Admission Number:
-              <input type="text" name="admissionNumber" value={formData.admissionNumber} onChange={handleInputChange} />
-            </label>
-            <label>
-              Entrance Exam:
-              <input type="text" name="entranceExam" value={formData.entranceExam} onChange={handleInputChange} />
-            </label>
-            <label>
-              Entrance Roll No:
-              <input type="text" name="entranceRollNo" value={formData.entranceRollNo} onChange={handleInputChange} />
-            </label>
-            <label>
-              Entrance Rank:
-              <input type="text" name="entranceRank" value={formData.entranceRank} onChange={handleInputChange} />
-            </label>
-            <label>
-              Aadhar No:
-              <input type="text" name="aadharNo" value={formData.aadharNo} onChange={handleInputChange} />
-            </label>
-            <label>
-              Course:
-              <input type="text" name="course" value={formData.course} onChange={handleInputChange} />
-            </label>
+            <div className="form-group">
+              <label>Allotment Category:</label>
+              <select
+                name="allotmentCategory"
+                value={formData.allotmentCategory}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Allotment Category</option>
+                <option value="State Merit">SM</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Fee Category:</label>
+              <select
+                name="feeCategory"
+                value={formData.feeCategory}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Fee Category</option>
+                <option value="Merit Lower Fee">Merit Lower Fee</option>
+                <option value="Merit Higher Fee">Merit Higher Fee</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="courseSelect">Select Course:</label>
+              <select
+                id="courseSelect"
+                value={selectedCourse}
+                onChange={handleCourseChange}
+              >
+                <option value="">Select a course</option>
+                <option value="B.Tech CSE">B.Tech CSE</option>
+                <option value="B.Tech ECE">B.Tech ECE</option>
+                <option value="MCA">MCA</option>
+                <option value="BBA">BBA</option>
+                <option value="BCA">BCA</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Name:</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Photo:</label>
+            <div className="button-container">
+              <input
+                ref={fileInputRef}
+                type="file"
+                name="photo"
+                onChange={handleFileInputChange}
+                accept="image/*"
+                style={{ opacity: 0, position: "absolute", zIndex: -1 }} // Hide but keep accessible
+              />
+              <button
+                type="button"
+                className="capture-button"
+                onClick={handleCameraCapture}
+              >
+                Capture Photo
+              </button>
+              <button
+                type="button"
+                className="upload-button"
+                onClick={() => fileInputRef.current.click()}
+              >
+                Upload Photo
+              </button>
+              {formData.photo && (
+                <img
+                  className="photo-preview"
+                  src={URL.createObjectURL(formData.photo)}
+                  alt="Uploaded"
+                />
+              )}
+            </div>
+            {/* Video and canvas elements for camera capture */}
+            <video ref={videoRef} style={{ display: "none" }}></video>
+            <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
           </div>
 
-          {/* Plus two details form */}
-          <div>
-            <label>
-              Plus Two Board:
-              <input type="text" name="plusTwo.board" value={formData.plusTwo.board} onChange={handleInputChange} />
+          <div className="form-group">
+            <label>Address:</label>
+            <textarea
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            ></textarea>
+          </div>
+          <div className="form-group">
+            <label className="radio-label">
+              <input
+                type="radio"
+                checked={copyAddressOption}
+                onChange={handleCopyAddress}
+              />
+              Copy Address
             </label>
-            <label>
-              Plus Two Register No:
-              <input type="text" name="plusTwo.regNo" value={formData.plusTwo.regNo} onChange={handleInputChange} />
-            </label>
-            <label>
-              Plus Two Exam Month/Year:
-              <input type="text" name="plusTwo.examMonthYear" value={formData.plusTwo.examMonthYear} onChange={handleInputChange} />
-            </label>
-            <label>
-              Plus Two Percentage:
-              <input type="text" name="plusTwo.percentage" value={formData.plusTwo.percentage} onChange={handleInputChange} />
-            </label>
-            <label>
-              Plus Two School Name:
-              <input type="text" name="plusTwo.schoolName" value={formData.plusTwo.schoolName} onChange={handleInputChange} />
-            </label>
-            <label>
-              Physics:
-              <input type="text" name="plusTwo.physics" value={formData.plusTwo.physics} onChange={handleInputChange} />
-            </label>
-            <label>
-              Chemistry:
-              <input type="text" name="plusTwo.chemistry" value={formData.plusTwo.chemistry} onChange={handleInputChange} />
-            </label>
-            <label>
-              Mathematics:
-              <input type="text" name="plusTwo.mathematics" value={formData.plusTwo.mathematics} onChange={handleInputChange} />
-            </label>
+            <label>Permanent Address:</label>
+            <textarea
+              name="permanentAddress"
+              value={formData.permanentAddress}
+              onChange={handleChange}
+              disabled={copyAddressOption}
+              required
+            />
           </div>
 
-          {/* Parent details form */}
-          <div>
-            <label>
-              Father's Name:
-              <input type="text" name="parentDetails.fatherName" value={formData.parentDetails.fatherName} onChange={handleInputChange} />
-            </label>
-            <label>
-              Father's Occupation:
-              <input type="text" name="parentDetails.fatherOccupation" value={formData.parentDetails.fatherOccupation} onChange={handleInputChange} />
-            </label>
-            <label>
-              Father's Mobile No:
-              <input type="text" name="parentDetails.fatherMobileNo" value={formData.parentDetails.fatherMobileNo} onChange={handleInputChange} />
-            </label>
-            <label>
-              Mother's Name:
-              <input type="text" name="parentDetails.motherName" value={formData.parentDetails.motherName} onChange={handleInputChange} />
-            </label>
-            <label>
-              Mother's Occupation:
-              <input type="text" name="parentDetails.motherOccupation" value={formData.parentDetails.motherOccupation} onChange={handleInputChange} />
-            </label>
-            <label>
-              Mother's Mobile No:
-              <input type="text" name="parentDetails.motherMobileNo" value={formData.parentDetails.motherMobileNo} onChange={handleInputChange} />
-            </label>
+          <div className="form-group">
+            <label>pincode:</label>
+            <input
+              type="text"
+              name="pincode"
+              value={formData.pincode}
+              onChange={handleChange}
+              required
+            />
           </div>
-
-          {/* Bank details form */}
-          <div>
-            <label>
-              Bank Name:
-              <input type="text" name="bankDetails.bankName" value={formData.bankDetails.bankName} onChange={handleInputChange} />
-            </label>
-            <label>
-              Branch:
-              <input type="text" name="bankDetails.branch" value={formData.bankDetails.branch} onChange={handleInputChange} />
-            </label>
-            <label>
-              Account No:
-              <input type="text" name="bankDetails.accountNo" value={formData.bankDetails.accountNo} onChange={handleInputChange} />
-            </label>
-            <label>
-              IFSC Code:
-              <input type="text" name="bankDetails.ifscCode" value={formData.bankDetails.ifscCode} onChange={handleInputChange} />
-            </label>
+          <div className="row">
+            <div className="form-group">
+              <label>Religion:</label>
+              <input
+                type="text"
+                name="religion"
+                value={formData.religion}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Community:</label>
+              <input
+                type="text"
+                name="community"
+                value={formData.community}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
+          <div className="row">
+            <div className="form-group">
+              <label>Date Of Birth:</label>
+              <input
+                type="date"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Gender:</label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Transgender">Transgender</option>
+                <option value="Prefer to not say">Prefer to not say</option>
+              </select>
+            </div>
 
-          {/* Achievements form */}
-          <div>
-            <label>
-              Arts:
-              <input type="text" name="achievements.arts" value={formData.achievements.arts} onChange={handleInputChange} />
-            </label>
-            <label>
-              Sports:
-              <input type="text" name="achievements.sports" value={formData.achievements.sports} onChange={handleInputChange} />
-            </label>
-            <label>
-              Other Achievements:
-              <input type="text" name="achievements.other" value={formData.achievements.other} onChange={handleInputChange} />
-            </label>
-            <label>
-              Annual Income:
-              <input type="text" name="annualIncome" value={formData.annualIncome} onChange={handleInputChange} />
-            </label>
-            <label>
-              Nativity:
-              <input type="text" name="nativity" value={formData.nativity} onChange={handleInputChange} />
-            </label>
+            <div className="form-group">
+              <label>Blood Group:</label>
+              <input
+                type="text"
+                name="bloodGroup"
+                value={formData.bloodGroup}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
+          <div className="form-group">
+            <label>Mobile No:</label>
+            <input
+              type="tel"
+              name="mobileNo"
+              value={formData.mobileNo}
+              onChange={handleChange}
+              required
+              pattern="[0-9]{10}"
+              title="Please enter a valid 10-digit phone number"
+            />
+          </div>
+          <div className="form-group">
+            <label>WhatsApp No:</label>
+            <input
+              type="tel"
+              name="whatsappNo"
+              value={formData.whatsappNo}
+              onChange={handleChange}
+              required
+              pattern="[0-9]{10}"
+              title="Please enter a valid 10-digit phone number"
+            />
+          </div>
+          <div className="form-group">
+            <label>Email:</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Entrance Exam Name:</label>
+            <input
+              type="text"
+              name="entranceExam"
+              value={formData.entranceExam}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="parent-details-row">
+            <div className="form-group">
+              <label>Entrance Roll No:</label>
+              <input
+                type="text"
+                name="entranceRollNo"
+                value={formData.entranceRollNo}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Entrance Rank:</label>
+              <input
+                type="text"
+                name="entranceRank"
+                value={formData.entranceRank}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Aadhar No:</label>
+            <input
+              type="text"
+              name="aadharNo"
+              value={formData.aadharNo}
+              onChange={handleChange}
+              pattern="[2-9]{1}[0-9]{3}[0-9]{4}[0-9]{4}"
+              title="Please enter a valid Aadhar number"
+              required
+            />
+          </div>
+          <div className="box">
+            <div className="parent-details-row">
+              <div className="form-group">
+                <label>Qualifying Exam:</label>
+                <input
+                  type="text"
+                  name="qualify.exam"
+                  value={formData.qualify.exam}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Board:</label>
+                <input
+                  type="text"
+                  name="qualify.board"
+                  value={formData.qualify.board}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Institution:</label>
+                <input
+                  type="text"
+                  name="qualify.institution"
+                  value={formData.qualify.institution}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Reg No:</label>
+                <input
+                  type="text"
+                  name="qualify.regNo"
+                  value={formData.qualify.regNo}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Exam Month/Year:</label>
+                <input
+                  type="text"
+                  name="qualify.examMonthYear"
+                  value={formData.qualify.examMonthYear}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Percentage:</label>
+                <input
+                  type="text"
+                  name="qualify.percentage"
+                  value={formData.qualify.percentage}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>CGPA:</label>
+                <input
+                  type="text"
+                  name="qualify.cgpa"
+                  value={formData.qualify.cgpa}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          {showExtraFields && (
+            <div className="box">
+              <h4>Plus Two Mark</h4>
+              <label>(Please Enter Plus Mark Only)</label>
+              <div className="radio-group-row">
+                <label>
+                  <input
+                    type="radio"
+                    name="boardType"
+                    value="State"
+                    checked={formData.boardType === "State"}
+                    onChange={handleChange}
+                  />
+                  State
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="boardType"
+                    value="CBSE"
+                    checked={formData.boardType === "CBSE"}
+                    onChange={handleChange}
+                  />
+                  CBSE
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="boardType"
+                    value="ICSE"
+                    checked={formData.boardType === "ICSE"}
+                    onChange={handleChange}
+                  />
+                  ICSE
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="boardType"
+                    value="Others"
+                    checked={formData.boardType === "Others"}
+                    onChange={handleChange}
+                  />
+                  Others
+                </label>
+              </div>
+              <div className="row">
+                <div className="form-group">
+                  <label htmlFor="physics">Physics:</label>
+                  <input
+                    type="text"
+                    id="physics"
+                    name="physics"
+                    value={formData.physics}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="chemistry">Chemistry:</label>
+                  <input
+                    type="text"
+                    id="chemistry"
+                    name="chemistry"
+                    value={formData.chemistry}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="maths">Maths:</label>
+                  <input
+                    type="text"
+                    id="maths"
+                    name="maths"
+                    value={formData.maths}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
-          <button type="submit">Update</button>
+          <div className="box">
+            <h4>Parents Details</h4>
+            <div className="parent-details-row">
+              <div className="form-group">
+                <label>Father's Name:</label>
+                <input
+                  type="text"
+                  name="parentDetails.fatherName"
+                  value={formData.parentDetails.fatherName}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Mother's Name:</label>
+                <input
+                  type="text"
+                  name="parentDetails.motherName" // Changed from "parentDetails.mother.name"
+                  value={formData.parentDetails.motherName}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Father's Occupation:</label>
+                <input
+                  type="text"
+                  name="parentDetails.fatherOccupation"
+                  value={formData.parentDetails.fatherOccupation}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Mother's Occupation:</label>
+                <input
+                  type="text"
+                  name="parentDetails.motherOccupation"
+                  value={formData.parentDetails.motherOccupation}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Father's Mobile No:</label>
+                <input
+                  type="tel"
+                  name="parentDetails.fatherMobileNo"
+                  value={formData.parentDetails.fatherMobileNo}
+                  onChange={handleChange}
+                  pattern="[0-9]{10}"
+                  title="Please enter a valid 10-digit phone number"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Mother's Mobile No:</label>
+                <input
+                  type="tel"
+                  name="parentDetails.motherMobileNo"
+                  value={formData.parentDetails.motherMobileNo}
+                  onChange={handleChange}
+                  pattern="[0-9]{10}"
+                  title="Please enter a valid 10-digit phone number"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="form-group">
+              <label>Annual Income:</label>
+              <input
+                type="text"
+                name="annualIncome"
+                value={formData.annualIncome}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Nativity:</label>
+              <input
+                type="text"
+                name="nativity"
+                value={formData.nativity}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+          <div className="box">
+            <h4>Bank Details</h4>
+            <div className="parent-details-row">
+              <div className="form-group">
+                <label>Bank Name:</label>
+                <input
+                  type="text"
+                  name="bankDetails.bankName"
+                  value={formData.bankDetails.bankName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Branch:</label>
+                <input
+                  type="text"
+                  name="bankDetails.branch"
+                  value={formData.bankDetails.branch}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Account No:</label>
+                <input
+                  type="text"
+                  name="bankDetails.accountNo"
+                  value={formData.bankDetails.accountNo}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>IFSC Code:</label>
+                <input
+                  type="text"
+                  name="bankDetails.ifscCode"
+                  value={formData.bankDetails.ifscCode}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div className="box">
+            <h4>Achievements</h4>
+            <div className="row">
+              <div className="form-group">
+                <label>Arts:</label>
+                <input
+                  type="text"
+                  name="achievements.arts"
+                  value={formData.achievements.arts}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Sports:</label>
+                <input
+                  type="text"
+                  name="achievements.sports"
+                  value={formData.achievements.sports}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Other:</label>
+                <input
+                  type="text"
+                  name="achievements.other"
+                  value={formData.achievements.other}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="certificates-container">
+      <h3>Certificates</h3>
+      <label>
+        <input
+          type="checkbox"
+          name="tenthCertificate"
+          checked={certificates.tenthCertificate}
+          onChange={handleCertificatesChange}
+        />
+        10th Certificate
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="twelfthCertificate"
+          checked={certificates.twelfthCertificate}
+          onChange={handleCertificatesChange}
+        />
+        12th Certificate
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="tc"
+          checked={certificates.tc}
+          onChange={handleCertificatesChange}
+        />
+        TC
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="dataSheet"
+          checked={certificates.dataSheet}
+          onChange={handleCertificatesChange}
+        />
+        Data Sheet
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="physicalFitness"
+          checked={certificates.physicalFitness}
+          onChange={handleCertificatesChange}
+        />
+        Physical Fitness
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="passportSizePhoto"
+          checked={certificates.passportSizePhoto}
+          onChange={handleCertificatesChange}
+        />
+        Passport Size Photo (2 Nos)
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="income"
+          checked={certificates.income}
+          onChange={handleCertificatesChange}
+        />
+        Income Certificate
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="community"
+          checked={certificates.community}
+          onChange={handleCertificatesChange}
+        />
+        Community certificate
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="caste Certificate"
+          checked={certificates.casteCertificate}
+          onChange={handleCertificatesChange}
+        />
+        Caste Certificate
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="CopyofAadhaar"
+          checked={certificates.CopyofAadhaar}
+          onChange={handleCertificatesChange}
+        />
+        Copy Of Aadhaar
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          name="others"
+          checked={certificates.others}
+          onChange={handleCertificatesChange}
+        />
+        Others
+      </label>
+    </div>
+
+          <div className="button-container">
+            <button type="button" className="submit-button">
+              Submit
+            </button>
+            <button
+              type="button"
+              className="clear-button"
+              onClick={() => setFormData({ ...initialFormData })}
+            >
+              Clear
+            </button>
+          </div>
         </form>
-      )}
 
-      {/* Success message */}
-      {isSuccess && (
-        <div>
-          <p>Student information updated successfully!</p>
-        </div>
-      )}
+        {loading && (
+          <div className="loading-overlay">
+            <div className="loading-spinner"></div>
+            <p>Saving...</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
-
-export default ApprovedAndRemoved;
+export default DataEntryForm;
+<table className="students-table">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Admission ID</th>
+    <th>Course</th>
+    <th>submission Date</th>
+    <th>Next Admission Number</th>
+    <th>Action</th>
+  </tr>
+</thead>
+<tbody>
+  {students.map(student => (
+    <tr key={student._id}>
+      <td>{student.name}</td>
+      <td>{student.admissionId}</td>
+      <td>{student.course}</td>
+      <td>{student.submissionDate ? new Date(student.submissionDate).toLocaleDateString() : 'Not Provided'}</td> 
+      <td>
+        <input
+          type="text"
+          value={editableNumbers[student.course] || lastAdmissionNumbers[student.course]}
+          onChange={(e) => handleEditableNumberChange(student.course, e.target.value)}
+        />
+      </td>
+      <td>
+      <button className="approve-btn" onClick={() => handleApprove(student._id)}>Approve</button>
+      <button className="decline-btn" onClick={() => handleDecline(student._id)}>Decline</button>
+      <button className="print-preview-btn" onClick={() => handlePrintPreview(student._id, student.photo)}>Print Preview</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+</table>
+</div>
+</div>
+);
+};

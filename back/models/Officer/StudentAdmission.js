@@ -94,4 +94,3 @@ const StudentAdmission = mongoose.model('StudentAdmission', studentSchema);
 
 
 module.exports = StudentAdmission;
-

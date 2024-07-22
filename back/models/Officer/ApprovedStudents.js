@@ -24,6 +24,10 @@ const ApprovedStudentSchema = new mongoose.Schema({
   entranceRollNo: String,
   entranceRank: String,
   aadharNo: String,
+  physics: String,
+  chemistry: String,
+  maths: String,
+  boardType:String, 
   course: { type: String },
   qualify: {
     exam: String,
