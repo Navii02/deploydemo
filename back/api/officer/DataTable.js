@@ -34,7 +34,10 @@ router.get('/studentDetails/:id', async (req, res) => {
     }
 
     // Extract necessary details for print preview
-    const { name, admissionType, admissionId, admissionNumber, allotmentCategory, feeCategory, address, permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity,      submissionDate, } = student;
+    const { name, admissionType, admissionId, admissionNumber, allotmentCategory, 
+      feeCategory, address, permanentAddress, photo, pincode, religion, community, gender, 
+      dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo,
+       entranceRank, aadharNo, course, annualIncome, nativity,      submissionDate, } = student;
     const { parentDetails } = student;
     const { bankDetails } = student;
     const { achievements } = student;
@@ -173,20 +176,20 @@ router.post('/approve/:id', async (req, res) => {
       const endYear = startYear + 4;
       academicYear = `${startYear}-${endYear}`;
     } else if (['MCA'].includes(student.course)) {
-      const endYear = currentYear + 1;
+      const endYear = currentYear + 2;
       academicYear = `${currentYear}-${endYear}`;
     }
 
     // Determine the next admission number based on the course
     let startingNumber;
     if (['B.Tech CSE', 'B.Tech ECE'].includes(student.course)) {
-      startingNumber = 3333;
+      startingNumber = 3434;
     } else if (['BCA'].includes(student.course)) {
-      startingNumber = 20;
+      startingNumber = 1;
     } else if (['MCA'].includes(student.course)) {
-      startingNumber = 30;
+      startingNumber = 23;
     } else if (['BBA'].includes(student.course)) {
-      startingNumber = 400;
+      startingNumber = 10;
     } else {
       return res.status(400).json({ error: 'Invalid course' });
     }
