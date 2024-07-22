@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import OfficerNavbar from './OfficerNavbar';
-import './CertificateDistribution.css';
+import './CertificateDistribution.css'
 import {baseurl} from '../../url';
 
 function OfficerCertificateRequestsPage() {

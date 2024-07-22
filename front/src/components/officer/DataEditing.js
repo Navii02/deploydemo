@@ -752,7 +752,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             </div>
           </div>
           <div className="button-container">
-            <button type="submit" className="submit-button">
+            <button type="button" className="submit-button">
               Submit
             </button>
             <button

@@ -46,9 +46,8 @@ body, html {
 /* Container for data entry form */
 .data-entry-container {
   width: 85%;
-  margin: 30px auto;
   background: #ffffff; /* White background for the form */
-  padding: 20px;
+  margin: 80px auto 20px auto;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box; /* Ensure padding is included in width */
@@ -90,7 +89,7 @@ body, html {
   height: 40px;
 }
 /* Button styling */
-.data-entry-container .capture-button {
+.data-entry-container .capture-button ,.data-entry-container .upload-button {
   padding: 10px 20px; /* Ensure consistent padding */
   margin: 0 5px; /* Adjust margin */
   cursor: pointer;
@@ -145,12 +144,12 @@ body, html {
 }
 
 .data-entry-container .upload-button {
-  background-color: #503dcb; /* Another green button */
+  background-color: #264fa9; /* Another green button */
   color: #fff;
 }
 
 .data-entry-container .upload-button:hover {
-  background-color: #3723cf; /* Darker green on hover */
+  background-color: #3a30e9;; /* Darker green on hover */
   transform: scale(1.05);
 }
 
@@ -286,8 +285,8 @@ body, html {
 }
 
 
-.submit-button,
-.clear-button {
+.submit-button, .clear-button
+ {
   padding: 10px 20px;
   margin: 0 10px; /* Adjust margin between buttons */
   cursor: pointer;
@@ -297,7 +296,10 @@ body, html {
   transition: background-color 0.3s, transform 0.3s;
   box-sizing: border-box;
   width: auto;
+  height: 40px;
+  margin-bottom: 10px;
 }
+
 /* Loading Overlay */
 .loading-overlay {
   position: fixed;

@@ -88,7 +88,7 @@ function OfficerNavbar() {
             </div>
           </li>
           {isLoggedIn && (
-            <li className='nav-item'>
+            <li>
               <Link to='/officerlogin' className='nav-links-mobile' onClick={handleLogout}>
                 Log Out
               </Link>
