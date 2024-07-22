@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import "./StudentList.css";
 import OfficerNavbar from "./OfficerNavbar";
 import { baseurl } from "../../url";
 import "./DataEditing.css";
@@ -552,7 +552,7 @@ const ApprovedAndRemoved = () => {
   return (
     <div>
       <OfficerNavbar />
-      <div className="approvedandremoved-list-container">
+      <div className="student-display-container">
       {!editMode ? (
         <div>
           <button onClick={() => setShowRemoved(!showRemoved)}>
@@ -1082,12 +1082,14 @@ const ApprovedAndRemoved = () => {
                   </div>
                 </div>
               </div>
-              <button type="submit" onClick={handleSave}>
+              <div className="button-container">
+              <button class="submit-button" onClick={handleSave}>
                 Save
               </button>
-              <button type="button" onClick={handleCancel}>
+              <button class="clear-button" onClick={handleCancel}>
                 Cancel
               </button>
+              </div>
             </form>
           </div>
         </div>

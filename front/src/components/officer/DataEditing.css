@@ -265,8 +265,8 @@ body, html {
   height: 16px; /* Adjust height */
   width: 16px; /* Adjust width */
   margin-top: 10px; /* Adjust margin */
-  appearance: none; /* Remove default appearance */
   -webkit-appearance: none; /* For older versions of Safari */
+  appearance: none; /* Remove default appearance */
   border: 2px solid #757575; /* Default border color */
   border-radius: 50%; /* Rounded shape */
   outline: none; /* Remove outline on focus */

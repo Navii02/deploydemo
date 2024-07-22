@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './PrinciNavbar';
-import './StudentRequest.css';
+
 import {baseurl} from '../../url';
 
 function OfficerCertificateRequestsPage() {
@@ -65,7 +65,7 @@ function OfficerCertificateRequestsPage() {
   return (
     <>
       <Navbar />
-      <div className="certificate-requests">
+      <div className="certificate-distribution-container">
         <div className="request-list">
           {requests.slice(0, showAllRequests ? requests.length : 3).map((request) => (
             <div key={request._id}>

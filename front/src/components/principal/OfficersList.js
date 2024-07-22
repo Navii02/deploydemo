@@ -22,7 +22,7 @@ function OfficerPage() {
     return (
         <div>
             <PrinciNavbar/>
-            &nbsp;
+            <div className="admin-teachers-page">
             <table>
                 <thead>
                     <tr>
@@ -43,6 +43,7 @@ function OfficerPage() {
                     ))}
                 </tbody>
             </table>
+        </div>
         </div>
     );
 }

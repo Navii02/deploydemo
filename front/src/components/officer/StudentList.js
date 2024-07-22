@@ -1132,12 +1132,14 @@ const StudentListOfficer = () => {
                   </div>
                 </div>
               </div>
-              <button type="submit" onClick={handleSave}>
+              <div className="button-container">
+              <button class="submit-button" onClick={handleSave}>
                 Save
               </button>
-              <button type="button" onClick={handleCancel}>
+              <button class="clear-button" onClick={handleCancel}>
                 Cancel
               </button>
+              </div>
             </form>
           </div>
         </div>

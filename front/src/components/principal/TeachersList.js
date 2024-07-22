@@ -32,8 +32,7 @@ function TeacherPage() {
     return (
         <div>
            <PrinciNavbar/>
-           &nbsp;
-            <div>
+            <div className="student-display-container">
                 <label htmlFor="departmentSelect">Select Department: </label>
                 <select id="departmentSelect" value={selectedDepartment} onChange={handleDepartmentChange}>
                     <option value="">All</option>

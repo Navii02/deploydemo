@@ -93,8 +93,8 @@ const TeacherList = () => {
   return (
     <div>
       <Navbar />
-      <div className="teacher-list-container">
-        <div>
+      <div className="student-list-container">
+        <div className="teacher-list-container">
           <h3>List of Teachers</h3>
           <ul>
             {teachers.map(teacher => (
@@ -120,7 +120,7 @@ const TeacherList = () => {
           </div>
         )}
 
-        <div>
+        <div className="teacher-list-container">
           <h3>List of HODs</h3>
           <ul>
             {hods.map(hod => (

@@ -2,9 +2,12 @@
 
 /* Container Styles */
 .teacher-list-container {
-  max-width: 800px;
-  margin: 0 auto;
+  margin: 30px auto 30px auto;
+  width:100%;
   padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
 .teacher-list-container h3 {
@@ -60,9 +63,9 @@
 
 .add-hod-form select {
   background-color: #fff;
-  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   cursor: pointer;
 }
 

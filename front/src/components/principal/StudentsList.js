@@ -104,10 +104,10 @@ function StudentPage() {
   return (
     <div>
       <PrinciNavbar />
+      <div className="student-display-container">
       <div>
         {!showAlumni && (
           <div>
-            &nbsp;
             <label htmlFor="courseSelect">Select Course: </label>
             <select id="courseSelect" value={selectedCourse} onChange={handleCourseChange}>
               <option value="">All</option>
@@ -132,7 +132,6 @@ function StudentPage() {
             </select>
           </div>
         )}
-        &nbsp;
         {showAlumni && (
           <div>
             <label htmlFor="alumniCourseSelect">Select Alumni Course: </label>
@@ -154,8 +153,8 @@ function StudentPage() {
             </select>
           </div>
         )}
+        &nbsp;
       </div>
-      &nbsp;
       <button onClick={showAlumni ? handleHideAlumni : handleShowAlumni}>
         {showAlumni ? 'Hide Alumni' : 'Show Alumni'}
       </button>
@@ -231,6 +230,7 @@ function StudentPage() {
           </tbody>
         </table>
       )}
+    </div>
     </div>
   );
 }
