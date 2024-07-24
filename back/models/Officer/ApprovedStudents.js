@@ -28,7 +28,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
   chemistry: String,
   maths: String,
   boardType:String, 
-  course: { type: String },
+  course: String,
   qualify: {
     exam: String,
     board: String,
@@ -60,7 +60,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
     other: { type: String, default: 'Nil' },
   },
   academicYear: String,
-  semester: { type: String, required: true },
+  semester: String,
   assignments: { type: String, default: 'Not Assigned' },
   exams: { type: String, default: 'Not Scheduled' },
   
@@ -89,6 +89,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
     status: { type: String, required: true }
     }
   ],
+  lab: { type: String,default:'lab 1'},
   subjectPercentages: [{
     subject: { type: String, required: true },
     percentage: { type: Number, required: true }

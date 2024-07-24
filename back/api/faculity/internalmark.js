@@ -24,12 +24,17 @@ router.post('/data', async (req, res) => {
 });
 
 // Route to fetch students based on semester and course
-router.get('/students/faculty/:course/:semester', async (req, res) => {
-  const { course, semester } = req.params;
+router.get('/students/faculty/:course/:semester/:subject', async (req, res) => {
+  const { course, semester, subject } = req.params;
 
   try {
-    const students = await Student.find({ course: course, semester: semester });
-    res.json(students);
+    const students = await Student.find({ course, semester });
+    const studentsWithMarks = students.map(student => {
+      const subjectMarks = student.internalMarks.find(mark => mark.subject === subject) || { examMarks: 0, assignmentMarks: 0, attendance: 0, totalMarks: 0 };
+      return { ...student.toObject(), subjectMarks };
+    });
+
+    res.json(studentsWithMarks);
   } catch (error) {
     console.error('Error fetching students:', error);
     res.status(500).json({ message: 'Error fetching students' });

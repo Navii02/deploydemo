@@ -47,5 +47,29 @@ router.get('/students/tutor/:department/:academicYear', async (req, res) => {
     res.status(500).json({ message: 'Error fetching students' });
   }
 });
+router.put('/students/semester/:department/:academicYear', async (req, res) => {
+  const { department, academicYear } = req.params;
+  const { semester } = req.body;
+
+  console.log(`Updating semester for department: ${department}, academicYear: ${academicYear} to ${semester}`);
+
+  try {
+    const result = await Student.updateMany(
+      { course: department, academicYear },
+      { $set: { semester } }
+    );
+    console.log('Update result:', result);
+    res.json(result);
+  } catch (error) {
+    console.error('Error updating semesters:', error);
+    res.status(500).json({ message: 'Error updating semesters', error });
+  }
+});
+
+// routes/students.js or equivalent
+// Bulk update semester for all students
+
+
+
 
 module.exports = router;

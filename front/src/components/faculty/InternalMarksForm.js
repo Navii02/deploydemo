@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from "./FacultyNavbar";
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
 import styles from './InternalMarksForm.module.css'; // Import the CSS module
 
 const InternalMarksForm = () => {
@@ -12,11 +12,14 @@ const InternalMarksForm = () => {
   const [courses, setCourses] = useState([]);
   const [semesters, setSemesters] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchCoursesAndSemesters = async () => {
       const email = localStorage.getItem('email');
-
+      setLoading(true);
+      setError('');
       try {
         const response = await axios.post(`${baseurl}/api/data`, { email });
         const { subjects, semesters, branches } = response.data;
@@ -25,6 +28,9 @@ const InternalMarksForm = () => {
         setSubjects(subjects || []);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setError('Failed to fetch courses and semesters.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -36,21 +42,20 @@ const InternalMarksForm = () => {
       console.error('Please select a course, semester, and subject');
       return;
     }
-  
+
+    setLoading(true);
+    setError('');
     try {
-      const response = await axios.get(`${baseurl}/api/students/faculty/${course}/${semester}`);
-      const studentsData = response.data.map(student => ({
-        ...student,
-        internalMarks: student.internalMarks.map(mark => mark.subject === subject ? mark : { ...mark, subject, examMarks: 0, assignmentMarks: 0 })
-      }));
-      setStudents(studentsData);
-      console.log(studentsData);
+      const response = await axios.get(`${baseurl}/api/students/faculty/${course}/${semester}/${subject}`);
+      setStudents(response.data);
     } catch (error) {
       console.error('Error fetching students:', error);
-      // Add further error handling as needed
+      setError('Error fetching students');
+    } finally {
+      setLoading(false);
     }
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     fetchStudents();
@@ -59,8 +64,16 @@ const InternalMarksForm = () => {
   const handleInputChange = (studentId, key, value) => {
     const updatedStudents = students.map(student => {
       if (student._id === studentId) {
-        const updatedMarks = student.internalMarks.map(mark => mark.subject === subject ? { ...mark, [key]: parseFloat(value) || 0 } : mark);
-        return { ...student, internalMarks: updatedMarks };
+        const updatedMarks = {
+          ...student.subjectMarks,
+          [key]: parseFloat(value) || 0,
+          totalMarks: calculateTotal(
+            key === 'examMarks' ? parseFloat(value) : student.subjectMarks.examMarks,
+            key === 'assignmentMarks' ? parseFloat(value) : student.subjectMarks.assignmentMarks,
+            key === 'attendance' ? parseFloat(value) : student.subjectMarks.attendance
+          )
+        };
+        return { ...student, subjectMarks: updatedMarks };
       }
       return student;
     });
@@ -82,11 +95,6 @@ const InternalMarksForm = () => {
 
   const calculateTotal = (examMarks, assignmentMarks, attendancePercentage) => {
     return (parseFloat(examMarks) || 0) + (parseFloat(assignmentMarks) || 0) + (parseFloat(attendancePercentage) || 0);
-  };
-
-  const getAttendancePercentage = (student) => {
-    const subjectPercentage = student.subjectPercentages.find(sp => sp.subject === subject);
-    return subjectPercentage ? subjectPercentage.percentage / 10 : 0;
   };
 
   const handlePrint = () => {
@@ -144,6 +152,9 @@ const InternalMarksForm = () => {
         </form>
       </div>
 
+      {loading && <div>Loading...</div>}
+      {error && <div className="error">{error}</div>}
+
       {students.length > 0 && (
         <div className={styles.tableContainer}>
           <div id="printTable" className={styles.printTable}>
@@ -161,8 +172,7 @@ const InternalMarksForm = () => {
               </thead>
               <tbody>
                 {students.map(student => {
-                  const subjectMarks = student.internalMarks.find(mark => mark.subject === subject) || { examMarks: 0, assignmentMarks: 0 };
-                  const attendancePercentage = getAttendancePercentage(student);
+                  const subjectMarks = student.subjectMarks;
                   return (
                     <tr key={student._id}>
                       <td>{student.name}</td>
@@ -176,8 +186,9 @@ const InternalMarksForm = () => {
                           onBlur={(e) => submitMarks(student._id, {
                             ...subjectMarks,
                             examMarks: e.target.value,
-                            assignmentMarks: subjectMarks.assignmentMarks || 0,
-                            attendance: attendancePercentage,
+                            assignmentMarks: subjectMarks.assignmentMarks,
+                            attendance: subjectMarks.attendance,
+                            totalMarks: calculateTotal(e.target.value, subjectMarks.assignmentMarks, subjectMarks.attendance)
                           })}
                         />
                       </td>
@@ -188,32 +199,23 @@ const InternalMarksForm = () => {
                           onChange={(e) => handleInputChange(student._id, 'assignmentMarks', e.target.value)}
                           onBlur={(e) => submitMarks(student._id, {
                             ...subjectMarks,
-                            examMarks: subjectMarks.examMarks || 0,
+                            examMarks: subjectMarks.examMarks,
                             assignmentMarks: e.target.value,
-                            attendance: attendancePercentage,
+                            attendance: subjectMarks.attendance,
+                            totalMarks: calculateTotal(subjectMarks.examMarks, e.target.value, subjectMarks.attendance)
                           })}
                         />
                       </td>
-                      <td>
-                        <input
-                          type="number"
-                          value={attendancePercentage || ''}
-                          readOnly
-                        />
-                      </td>
-                      <td>
-                        {calculateTotal(
-                          subjectMarks.examMarks,
-                          subjectMarks.assignmentMarks,
-                          attendancePercentage
-                        )}
-                      </td>
+                      <td>{subjectMarks.attendance}</td>
+                      <td>{calculateTotal(subjectMarks.examMarks, subjectMarks.assignmentMarks, subjectMarks.attendance)}</td>
                     </tr>
                   );
                 })}
               </tbody>
             </table>
-            <button onClick={handlePrint} className={styles.printButton}>Print</button>
+          </div>
+          <div className={styles.printButtonContainer}>
+            <button onClick={handlePrint}>Print</button>
           </div>
         </div>
       )}

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { baseurl } from '../../url';
 import Navbar from './FacultyNavbar';
-import './AttendanceForm.css'
 
 const AttendanceForm = () => {
   const [semester, setSemester] = useState('');
@@ -25,7 +24,6 @@ const AttendanceForm = () => {
   useEffect(() => {
     const fetchCoursesAndSemesters = async () => {
       const email = localStorage.getItem('email');
-
       try {
         const response = await axios.post(`${baseurl}/api/data/attendance`, { email });
         const { subjects, semesters, branches, teachername } = response.data;
@@ -46,15 +44,14 @@ const AttendanceForm = () => {
 
   const fetchStudents = async () => {
     setLoading(true);
-
     try {
-      const response = await axios.get(`${baseurl}/api/students/faculty/attendance/${course}/${semester}`);
+      const response = await axios.post(`${baseurl}/api/attendance/fetch`, { course, semester});
       setLoading(false);
+      //console.log(response);
       return response.data;
     } catch (error) {
       setLoading(false);
       console.error('Error fetching students:', error);
-      throw error;
     }
   };
 
@@ -83,7 +80,6 @@ const AttendanceForm = () => {
             subject,
             course,
           });
-
           setExistingAttendance(response.data);
           setStudents(response.data.map(record => ({
             ...record.student,
@@ -111,14 +107,15 @@ const AttendanceForm = () => {
   };
 
   const handleAttendanceChange = (studentId, isPresent) => {
-    setStudents(students.map((student) =>
-      student._id === studentId ? { ...student, attendance: isPresent ? 'Present' : 'Absent' } : student
-    ));
+    setStudents(prevStudents =>
+      prevStudents.map((student) =>
+        student._id === studentId ? { ...student, attendance: isPresent ? 'Present' : 'Absent' } : student
+      )
+    );
   };
 
   const submitAttendance = async () => {
     setLoading(true);
-
     try {
       await Promise.all(students.map((student) =>
         axios.post(`${baseurl}/api/attendance`, {
@@ -130,9 +127,13 @@ const AttendanceForm = () => {
           attendance: student.attendance,
         })
       ));
-
-      console.log('Attendance marked successfully!');
       alert('Attendance marked successfully!');
+      // Reset the form after successful submission
+      setCourse('');
+      setSemester('');
+      setSubject('');
+      setHour('');
+      setStudents([]);
     } catch (error) {
       console.error('Error marking attendance:', error);
     } finally {
@@ -143,7 +144,7 @@ const AttendanceForm = () => {
   const handleMarkAllPresentChange = (e) => {
     const isChecked = e.target.checked;
     setMarkAllPresent(isChecked);
-    setStudents(students.map((student) => ({
+    setStudents(prevStudents => prevStudents.map((student) => ({
       ...student,
       attendance: isChecked ? 'Present' : 'Absent',
     })));
@@ -154,65 +155,53 @@ const AttendanceForm = () => {
       <Navbar />
       <div className="attendance-form">
       <form onSubmit={handleSubmit}>
+        {/* Form fields */}
         <label>
           Course:
           <select value={course} onChange={(e) => setCourse(e.target.value)}>
             <option value="">Select Course</option>
             {courses.map((course) => (
-              <option key={course} value={course}>
-                {course}
-              </option>
+              <option key={course} value={course}>{course}</option>
             ))}
           </select>
         </label>
-
         <label>
           Semester:
           <select value={semester} onChange={(e) => setSemester(e.target.value)}>
             <option value="">Select Semester</option>
             {semesters.map((semester) => (
-              <option key={semester} value={semester}>
-                {semester}
-              </option>
+              <option key={semester} value={semester}>{semester}</option>
             ))}
           </select>
         </label>
-
         <label>
           Subject:
           <select value={subject} onChange={(e) => setSubject(e.target.value)}>
             <option value="">Select Subject</option>
             {subjects.map((subject) => (
-              <option key={subject} value={subject}>
-                {subject}
-              </option>
+              <option key={subject} value={subject}>{subject}</option>
             ))}
           </select>
         </label>
-
         <label>
           Hour:
           <select value={hour} onChange={(e) => setHour(e.target.value)}>
             <option value="">Select Hour</option>
             {[1, 2, 3, 4, 5, 6].map((hr) => (
-              <option key={hr} value={hr}>
-                {`${hr} hour`}
-              </option>
+              <option key={hr} value={hr}>{`${hr} hour`}</option>
             ))}
           </select>
         </label>
-
         <label>
           Date:
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
         </label>
-
         <button type="submit">Fetch Students</button>
       </form>
 
       {loading && <p>Loading...</p>}
 
-      {noStudentsMessage && <p>The selected subject and semester combination is not exist.</p>}
+      {noStudentsMessage && <p>The selected subject and semester combination does not exist.</p>}
 
       {alreadyMarked && existingAttendance.length > 0 && (
         <div>
@@ -299,8 +288,8 @@ const AttendanceForm = () => {
           <button onClick={submitAttendance}>Save Attendance</button>
         </div>
       )}
-    </div>
-    </div>
+      </div>
+   </div>
   );
 };
 

@@ -31,13 +31,12 @@ router.post('/data/attendance', async (req, res) => {
 });
 
 // Route to fetch students based on semester and course
-router.get('/students/faculty/attendance/:course/:semester', async (req, res) => {
-  const { course, semester } = req.params;
-  
-  //console.log(semester,course);
-
+router.post('/attendance/fetch', async (req, res) => {
+  //console.log('Route hit'); // Simple log to check if the route is being accessed
+  const { course, semester } = req.body;
   try {
     const students = await Student.find({ course, semester });
+    //console.log('Fetched students:', students); // Log fetched data
     res.json(students);
   } catch (error) {
     console.error('Error fetching students:', error);
@@ -45,19 +44,19 @@ router.get('/students/faculty/attendance/:course/:semester', async (req, res) =>
   }
 });
 
-
+// Route to mark attendance
 router.post('/attendance', async (req, res) => {
-  const { studentId, date, subject, hour, teachername, attendance ,course} = req.body;
+  const { studentId, date, subject, hour, teachername, attendance, course } = req.body;
 
   try {
-    const student = await Student.findById(studentId,course);
+    const student = await Student.findById(studentId);
 
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
 
     const existingAttendance = student.attendance.find(
-      record => record.date === date && record.subject === subject && record.hour === hour && record.teachername === teachername&& student.course===course
+      record => record.date === date && record.subject === subject && record.hour === hour && record.teachername === teachername && student.course === course
     );
 
     if (existingAttendance) {
@@ -87,6 +86,7 @@ router.post('/attendance', async (req, res) => {
   }
 });
 
+// Route to check if attendance is already marked
 router.post('/attendance/check', async (req, res) => {
   const { date, hour, teachername, subject, course } = req.body;
 
@@ -102,7 +102,6 @@ router.post('/attendance/check', async (req, res) => {
     if (existingAttendance) {
       res.json({ isMarked: true, teachername, markedSubject: subject });
     } else {
-      // Check if attendance is marked for any subject in a different course
       const differentCourseAttendance = await Student.findOne({
         'attendance.date': date,
         'attendance.hour': hour,
@@ -122,8 +121,9 @@ router.post('/attendance/check', async (req, res) => {
   }
 });
 
+// Route to fetch existing attendance records
 router.post('/attendance/existing', async (req, res) => {
-  const { date, hour, teachername, subject,course } = req.body;
+  const { date, hour, teachername, subject, course } = req.body;
 
   try {
     const students = await Student.find({
@@ -149,6 +149,7 @@ router.post('/attendance/existing', async (req, res) => {
   }
 });
 
+// Route to get attendance summary
 router.post('/attendance/summary', async (req, res) => {
   const { course, semester, subject } = req.body;
 
@@ -159,7 +160,6 @@ router.post('/attendance/summary', async (req, res) => {
       const presentCount = attendanceRecords.filter(record => record.status === 'Present').length;
       const absentCount = attendanceRecords.filter(record => record.status === 'Absent').length;
 
-      // Collect absent dates and hours for the subject
       const absentDetails = attendanceRecords
         .filter(record => record.status === 'Absent')
         .map(record => ({
@@ -168,8 +168,6 @@ router.post('/attendance/summary', async (req, res) => {
         }));
 
       const total = presentCount + absentCount;
-
-      // Find the subject-specific attendance percentage
       const subjectPercentageRecord = student.subjectPercentages.find(record => record.subject === subject);
       const percentage = subjectPercentageRecord ? subjectPercentageRecord.percentage : 0;
 
@@ -180,7 +178,7 @@ router.post('/attendance/summary', async (req, res) => {
           absent: absentCount,
           total,
           percentage,
-          absentDetails, // Include absent details in the response
+          absentDetails,
         },
       };
     });
