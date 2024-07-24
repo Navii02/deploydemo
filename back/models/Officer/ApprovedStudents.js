@@ -59,6 +59,27 @@ const ApprovedStudentSchema = new mongoose.Schema({
     sports: { type: String, default: 'Nil' },
     other: { type: String, default: 'Nil' },
   },
+  marks:{
+    physics:String,
+    chemistry: String,
+    maths: String,
+  },
+  
+  certificates: {
+    tenth: { type: Boolean, default: false },
+    plusTwo: { type: Boolean, default: false },
+    tcandconduct: { type: Boolean, default: false },
+    allotmentmemo: { type: Boolean, default: false },
+    Datasheet: { type: Boolean, default: false },
+    physicalfitness: { type: Boolean, default: false },
+    passportsizephoto: { type: Boolean, default: false },
+    incomecertificates: { type: Boolean, default: false },
+    communitycertificate: { type: Boolean, default: false },
+    castecertificates: { type: Boolean, default: false },
+    aadhaar: { type: Boolean, default: false },
+    other: { type: Boolean, default: false },
+  },
+
   academicYear: String,
   semester: String,
   assignments: { type: String, default: 'Not Assigned' },

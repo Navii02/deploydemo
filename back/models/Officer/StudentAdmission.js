@@ -1,5 +1,5 @@
 // models/student.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const studentSchema = new mongoose.Schema({
   admissionType: String,
@@ -7,7 +7,7 @@ const studentSchema = new mongoose.Schema({
   allotmentCategory: String,
   feeCategory: String,
   name: String,
-  otherCertificate:String,
+  otherCertificate: String,
   photo: String, // Store file path for photo
   address: String,
   permanentAddress: String,
@@ -32,33 +32,32 @@ const studentSchema = new mongoose.Schema({
     examMonthYear: String,
     percentage: String,
     institution: String,
-    cgpa:String,
-    
+    cgpa: String,
   },
   parentDetails: {
-    fatherName:{
+    fatherName: {
       type: String,
-      default: 'Nil',
+      default: "Nil",
     },
-    fatherOccupation:{
+    fatherOccupation: {
       type: String,
-      default: 'Nil',
+      default: "Nil",
     },
-    fatherMobileNo:{
+    fatherMobileNo: {
       type: String,
-      default: 'Nil',
+      default: "Nil",
     },
-    motherName:{
+    motherName: {
       type: String,
-      default: 'Nil',
+      default: "Nil",
     },
-    motherOccupation:{
+    motherOccupation: {
       type: String,
-      default: 'Nil',
+      default: "Nil",
     },
     motherMobileNo: {
       type: String,
-      default: 'Nil',
+      default: "Nil",
     },
   },
   annualIncome: String,
@@ -69,28 +68,46 @@ const studentSchema = new mongoose.Schema({
     accountNo: String,
     ifscCode: String,
   },
-  achievements:{
-    arts:{
+  achievements: {
+    arts: {
       type: String,
-      default: 'Nil',
+      default: "Nil",
     },
-    sports:{
+    sports: {
       type: String,
-      default: 'Nil',
+      default: "Nil",
     },
-    other:{
+    other: {
       type: String,
-      default: 'Nil',
+      default: "Nil",
     },
+  },
+  marks: {
+    boardType: String,
+    physics: String,
+    chemistry: String,
+    maths: String,
+  },
+  certificates: {
+    tenth: { type: Boolean, default: false },
+    plusTwo: { type: Boolean, default: false },
+    tcandconduct: { type: Boolean, default: false },
+    allotmentmemo: { type: Boolean, default: false },
+    Datasheet: { type: Boolean, default: false },
+    physicalfitness: { type: Boolean, default: false },
+    passportsizephoto: { type: Boolean, default: false },
+    incomecertificates: { type: Boolean, default: false },
+    communitycertificate: { type: Boolean, default: false },
+    castecertificates: { type: Boolean, default: false },
+    aadhaar: { type: Boolean, default: false },
+    other: { type: Boolean, default: false },
   },
   submissionDate: {
     type: Date,
-   // Set the default value to the current date and time
+    // Set the default value to the current date and time
   },
 });
 
-
-const StudentAdmission = mongoose.model('StudentAdmission', studentSchema);
-
+const StudentAdmission = mongoose.model("StudentAdmission", studentSchema);
 
 module.exports = StudentAdmission;

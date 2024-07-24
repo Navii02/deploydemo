@@ -109,6 +109,11 @@ const notAdmittedStudentSchema = new mongoose.Schema({
     type: [String], // Array of strings (email addresses)
     default: [],    // Default value is an empty array
    
+  },
+  marks:{
+    physics:String,
+    chemistry: String,
+    maths: String,
   }
 
   

@@ -332,9 +332,161 @@ body, html {
   100% { transform: rotate(360deg); }
 }
 
+
 /* Optional: Adjust text style */
 .loading-overlay p {
   color: #fff;
   font-size: 1.5rem;
   margin-top: 20px;
+}
+/* Style the container for checkboxes */
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Hide default checkbox appearance */
+.checkbox-container input[type="checkbox"] {
+  display: none;
+}
+
+/* Style the custom checkbox container */
+.checkbox-custom {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  position: relative;
+}
+
+/* Style the box */
+.checkbox-custom .checkmark {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #0b0a0a;
+  border-radius: 4px;
+  background-color: #fff;
+  margin-right: 10px; /* Space between checkbox and label */
+  transition: background-color 0.3s, border-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hide the box when checked */
+.checkbox-custom input[type="checkbox"]:checked + .checkmark {
+  display: none;
+}
+
+/* Add a checkmark icon */
+.checkbox-custom input[type="checkbox"]:checked + .checkmark::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  border: solid #4caf50;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+  top: 50%; /* Center the checkmark vertically */
+  left: 50%; /* Center the checkmark horizontally */
+  margin-top: -7px; /* Adjust for vertical alignment */
+  margin-left: -4px; /* Adjust for horizontal alignment */
+}
+
+/* Style the label text */
+.checkbox-custom label {
+  font-size: 16px;
+}
+.box {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+}
+
+/* Style the heading */
+.box h4 {
+  margin: 0;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* Style the label inside the box */
+.box label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+/* Style the container for the radio group row */
+.radio-group-row {
+  display: flex;
+  gap: 20px; /* Space between each radio button */
+}
+
+/* Style each radio label */
+.radio-group-row label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Hide default radio button appearance */
+.radio-group-row input[type="radio"] {
+  display: none;
+}
+
+/* Style the custom radio button */
+.radio-group-row input[type="radio"] + span {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #0b0a0a;
+  border-radius: 50%;
+  background-color: #fff;
+  margin-right: 8px; /* Space between custom radio and label text */
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Style the radio button when checked */
+.radio-group-row input[type="radio"]:checked + span {
+  background-color: #4caf50;
+  border-color: #4caf50;
+}
+
+/* Add a checkmark when checked */
+.radio-group-row input[type="radio"]:checked + span::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+/* Style the label text */
+.radio-group-row label span {
+  margin-left: 10px;
+}
+ label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+/* Style the required field with a red asterisk */
+ label.required::after {
+  content: '*';
+  color: red;
+  margin-left: 4px;
 }
