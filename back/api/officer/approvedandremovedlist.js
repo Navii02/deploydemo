@@ -59,6 +59,7 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
     const { bankDetails } = student;
     const { achievements } = student;
     const { qualify } = student;
+    const{marks } = student;
     const photoUrl = photo ? `${req.protocol}://${req.get('host')}/ApprovedRemoved/image/${encodeURIComponent(photo)}` : null;
     res.json({
       studentDetails: {
@@ -115,7 +116,13 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
           sports: achievements.sports,
           other: achievements.other,
         },
+        marks: {
+          boardType:marks.boardType,
+          physics:marks.physics,
+          chemistry:marks.chemistry,
+          maths:marks.maths,
       }
+    }
     });
   } catch (error) {
     console.error('Error fetching student details:', error);
@@ -170,6 +177,29 @@ router.get('/ApprovedRemoved/image/:path', async (req, res) => {
   } catch (error) {
     console.error('Error fetching image URL:', error);
     res.status(500).send('Error fetching image');
+  }
+});
+router.delete('/deleteStudent/:id', async (req, res) => {
+  const studentId = req.params.id;
+
+  try {
+    // Find and verify the student
+    const student = await ApprovedStudent.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Create a new entry in RemovedStudent collection
+    const notAdmittedStudent = new RemovedStudent(student.toJSON());
+    await notAdmittedStudent.save();
+
+    // Remove the student from ApprovedStudent collection
+    await ApprovedStudent.findByIdAndRemove(studentId);
+
+    res.json({ message: 'Student declined and moved to Not Admitted Students collection' });
+  } catch (error) {
+    console.error('Error declining student:', error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 });
 

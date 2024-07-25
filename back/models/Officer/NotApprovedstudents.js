@@ -103,6 +103,15 @@ const notAdmittedStudentSchema = new mongoose.Schema({
     type: Date,
    // Set the default value to the current date and time
   },
+  attendance: [
+    {
+    date: { type: String, required: true },
+    subject: { type: String, required: true },
+    hour: { type: String, required: true },
+    teachername: { type: String, required: true },
+    status: { type: String, required: true }
+    }
+  ],
   installmentsPaid: [Number],
   registerNumber: String,
   collegemail: {
@@ -111,10 +120,35 @@ const notAdmittedStudentSchema = new mongoose.Schema({
    
   },
   marks:{
-    physics:String,
-    chemistry: String,
-    maths: String,
-  }
+    boardType: { type: String, default: 'Nil' },
+    physics:{ type: String, default: 'Nil' },
+    chemistry:{ type: String, default: 'Nil' },
+    maths: { type: String, default: 'Nil' },
+  },
+  lab: { type: String,default:'lab 1'},
+  subjectPercentages: [{
+    subject: { type: String, required: true },
+    percentage: { type: Number, required: true }
+  }],
+  submissionDate: {
+    type: Date,
+   // Set the default value to the current date and time
+  },
+  certificates: {
+    tenth: { type: Boolean, default: false },
+    plusTwo: { type: Boolean, default: false },
+    tcandconduct: { type: Boolean, default: false },
+    allotmentmemo: { type: Boolean, default: false },
+    Datasheet: { type: Boolean, default: false },
+    physicalfitness: { type: Boolean, default: false },
+    passportsizephoto: { type: Boolean, default: false },
+    incomecertificates: { type: Boolean, default: false },
+    communitycertificate: { type: Boolean, default: false },
+    castecertificates: { type: Boolean, default: false },
+    aadhaar: { type: Boolean, default: false },
+    other: { type: Boolean, default: false },
+  },
+
 
   
 });

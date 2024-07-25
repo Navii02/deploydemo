@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import OfficerNavbar from "./OfficerNavbar";
 import { baseurl } from "../../url";
@@ -51,6 +51,12 @@ const initialFormData = {
     sports: "",
     other: "",
   },
+  marks: {
+    boardType: "",
+    physics: "",
+    chemistry: "",
+    maths: "",
+  },
 
   annualIncome: "",
   nativity: "",
@@ -66,13 +72,15 @@ const StudentListOfficer = () => {
   const [studentId, setStudentId] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("");
-  const [selectCourse,setSelectCourse]= useState("");
+  const [selectCourse, setSelectCourse] = useState("");
   const [alumniYears, setAlumniYears] = useState([]);
-  const [selectedAlumniYear, setSelectedAlumniYear] = useState('');
+  const [selectedAlumniYear, setSelectedAlumniYear] = useState("");
 
   const fetchApprovedStudents = useCallback(async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/officerstudent/approvedStudents`);
+      const response = await axios.get(
+        `${baseurl}/api/officerstudent/approvedStudents`
+      );
       const filteredStudents = selectedCourse
         ? response.data.filter((student) => student.course === selectedCourse)
         : response.data;
@@ -82,19 +90,21 @@ const StudentListOfficer = () => {
     }
   }, [selectedCourse]); // Include selectedCourse in the dependency array
 
-  const fetchAlumni = useCallback (async () => {
+  const fetchAlumni = useCallback(async () => {
     try {
       const response = await axios.get(`${baseurl}/api/officerstudent/alumni`);
       const filteredAluminiStudents = selectCourse
         ? response.data.filter((student) => student.course === selectCourse)
         : response.data;
       setAlumni(filteredAluminiStudents);
-      const uniqueYears = [...new Set(response.data.map(student => student.academicYear))];
+      const uniqueYears = [
+        ...new Set(response.data.map((student) => student.academicYear)),
+      ];
       setAlumniYears(uniqueYears);
     } catch (error) {
       console.error("Error fetching alumni details:", error);
     }
-  },[selectCourse]);
+  }, [selectCourse]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,9 +112,7 @@ const StudentListOfficer = () => {
       await fetchAlumni();
     };
     fetchData();
-  }, [fetchApprovedStudents,fetchAlumni]); // Include fetchApprovedStudents in the dependency array
-
-
+  }, [fetchApprovedStudents, fetchAlumni]); // Include fetchApprovedStudents in the dependency array
 
   const formatDateForInput = (dateString) => {
     if (!dateString) return "";
@@ -162,7 +170,16 @@ const StudentListOfficer = () => {
       });
     }
   };
-
+  const handleDelete = async (studentId) => {
+    try {
+      await axios.delete(`${baseurl}/api/officerstudent/deleteStudent/${studentId}`);
+      setApprovedStudents((prevStudents) =>
+        prevStudents.filter((student) => student._id !== studentId)
+      );
+    } catch (error) {
+      console.error("Error declining student:", error);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -414,6 +431,24 @@ const StudentListOfficer = () => {
   <td>CGPA</td>
   <td>${studentDetails.qualify?.cgpa}</td>
 </tr>
+<td colspan="2" style="text-align: center; font-weight: bold;">Plus Two Mark Details</td>
+</tr>
+<tr>
+  <td>Plus Two Board</td>
+  <td>${studentDetails.marks?.boardType ?? "Nil"}</td>
+</tr>
+<tr>
+  <td>Physcis</td>
+  <td>${studentDetails.marks?.physics ?? "Nil"}</td>
+</tr>
+<tr>
+  <td>chemistry</td>
+  <td>${studentDetails.marks?.chemistry ?? "Nil"}</td>
+</tr>
+<tr>
+  <td>Maths</td>
+  <td>${studentDetails.marks?.maths ?? "Nil"}</td>
+</tr>
 <tr>
 <td colspan="2" style="text-align: center; font-weight: bold;">Parents Details</td>
 </tr>
@@ -523,6 +558,12 @@ const StudentListOfficer = () => {
         sports: student.achievements.sports || "",
         other: student.achievements.other || "",
       },
+      marks: {
+        boardType: student.marks.boardType,
+        physics: student.marks.physics,
+        chemistry: student.marks.chemistry,
+        maths: student.marks.maths,
+      },
     });
     setStudentId(student._id);
     setEditMode(true);
@@ -564,589 +605,686 @@ const StudentListOfficer = () => {
     <div>
       <OfficerNavbar />
       <div className="student-display-container">
-      {!editMode ? (
-        <div>
-          <button onClick={() => setShowAlumni(!showAlumni)}>
-            {showAlumni ? "Show Approved Students" : "Show Alumni"}
-          </button>
-          {showAlumni ? (
-            <div>
+        {!editMode ? (
+          <div>
+            <button onClick={() => setShowAlumni(!showAlumni)}>
+              {showAlumni ? "Show Approved Students" : "Show Alumni"}
+            </button>
+            {showAlumni ? (
+              <div>
                 <div className="filter-container">
-                <label className="filter-label">Filter by Course:</label>
-                <select
-                  className="filter-dropdown"
-                  onChange={handleAluminCourseChange}
-                  value={selectCourse}
-                >
-                  <option value="">All Courses</option>
-                  <option value="B.Tech CSE">BTech CSE</option>
-                  <option value="B.Tech ECE">BTech ECE</option>
-                  <option value="BBA">BBA</option>
-                  <option value="MCA">MCA</option>
-                  <option value="BCA">BCA</option>
-                  {/* Add more courses as needed */}
-                </select>
-                &nbsp;
-            <label htmlFor="alumniYearSelect">Select Alumni Year: </label>
-            <select id="alumniYearSelect" value={selectedAlumniYear} onChange={handleAlumniYearChange}>
-              <option value="">All</option>
-              {alumniYears.map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-              </div>
-              <h2>Alumni</h2>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Admission Number</th>
-                    <th>Course</th>
-                    <th>MobileNo</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {alumni.map((student) => (
-                    <tr key={student._id}>
-                      <td>{student.name}</td>
-                      <td>{student.admissionNumber}</td>
-                      <td>{student.course}</td>
-                      <td>{student.mobileNo}</td>
+                  <label className="filter-label">Filter by Course:</label>
+                  <select
+                    className="filter-dropdown"
+                    onChange={handleAluminCourseChange}
+                    value={selectCourse}
+                  >
+                    <option value="">All Courses</option>
+                    <option value="B.Tech CSE">BTech CSE</option>
+                    <option value="B.Tech ECE">BTech ECE</option>
+                    <option value="BBA">BBA</option>
+                    <option value="MCA">MCA</option>
+                    <option value="BCA">BCA</option>
+                    {/* Add more courses as needed */}
+                  </select>
+                  &nbsp;
+                  <label htmlFor="alumniYearSelect">Select Alumni Year: </label>
+                  <select
+                    id="alumniYearSelect"
+                    value={selectedAlumniYear}
+                    onChange={handleAlumniYearChange}
+                  >
+                    <option value="">All</option>
+                    {alumniYears.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <h2>Alumni</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Admission Number</th>
+                      <th>Course</th>
+                      <th>MobileNo</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div>
-              <h2>Approved Students</h2>
-              <div className="filter-container">
-                <label className="filter-label">Filter by Course:</label>
-                <select
-                  className="filter-dropdown"
-                  onChange={handleCourseChange}
-                  value={selectedCourse}
-                >
-                  <option value="">All Courses</option>
-                  <option value="B.Tech CSE">BTech CSE</option>
-                  <option value="B.Tech ECE">BTech ECE</option>
-                  <option value="BBA">BBA</option>
-                  <option value="MCA">MCA</option>
-                  <option value="BCA">BCA</option>
-                  {/* Add more courses as needed */}
-                </select>
+                  </thead>
+                  <tbody>
+                    {alumni.map((student) => (
+                      <tr key={student._id}>
+                        <td>{student.name}</td>
+                        <td>{student.admissionNumber}</td>
+                        <td>{student.course}</td>
+                        <td>{student.mobileNo}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Admission Number</th>
-                    <th>Course</th>
-                    <th>MobileNo</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {approvedStudents.map((student) => (
-                    <tr key={student._id}>
-                      <td>{student.name}</td>
-                      <td>{student.admissionNumber}</td>
-                      <td>{student.course}</td>
-                      <td>{student.mobileNo}</td>
-                      <td>
-                        <button onClick={() => handleEdit(student)}>
-                          Edit
-                        </button>
-                        <button
-                          onClick={() =>
-                            handlePrintPreview(student._id, student.photo)
-                          }
-                        >
-                          Print
-                        </button>
-                      </td>
+            ) : (
+              <div>
+                <h2>Approved Students</h2>
+                <div className="filter-container">
+                  <label className="filter-label">Filter by Course:</label>
+                  <select
+                    className="filter-dropdown"
+                    onChange={handleCourseChange}
+                    value={selectedCourse}
+                  >
+                    <option value="">All Courses</option>
+                    <option value="B.Tech CSE">BTech CSE</option>
+                    <option value="B.Tech ECE">BTech ECE</option>
+                    <option value="BBA">BBA</option>
+                    <option value="MCA">MCA</option>
+                    <option value="BCA">BCA</option>
+                    {/* Add more courses as needed */}
+                  </select>
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Admission Number</th>
+                      <th>Course</th>
+                      <th>MobileNo</th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div>
-          <h2>Edit Student Details</h2>
-          <button onClick={() => setEditMode(false)}>
-            Back to Student Details
-          </button>
-          <div className="data-entry-container">
-          <div className="page-title">Admission Form</div>
-            <hr class="divider"></hr>
-            <form className="form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Fee Category:</label>
-              <select
-                name="feeCategory"
-                value={formData.feeCategory}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Fee Category</option>
-                <option value="Merit Lower Fee">Merit Lower Fee</option>
-                <option value="Merit Higher Fee">Merit Higher Fee</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Course:</label>
-              <select
-                name="course"
-                value={formData.course}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Course</option>
-                <option value="B.Tech CSE">B.Tech CSE</option>
-                <option value="B.Tech ECE">B.Tech ECE</option>
-                <option value="MCA">MCA</option>
-                <option value="BCA">BCA</option>
-                <option value="BBA">BBA</option>
-              </select>
-            </div>
-              <div className="form-group">
-                <label>Name:</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                />
+                  </thead>
+                  <tbody>
+                    {approvedStudents.map((student) => (
+                      <tr key={student._id}>
+                        <td>{student.name}</td>
+                        <td>{student.admissionNumber}</td>
+                        <td>{student.course}</td>
+                        <td>{student.mobileNo}</td>
+                        <td>
+                          <button onClick={() => handleEdit(student)}>
+                            Edit
+                          </button>
+                          <button
+                            onClick={() =>
+                              handlePrintPreview(student._id, student.photo)
+                            }
+                          >
+                            Print
+                          </button>
+                          <button onClick={() => handleDelete(student._id)}>Delete</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              <div className="form-group">
-                <label>Address:</label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label> Permanent Address:</label>
-                <input
-                  type="text"
-                  name="permanentAddress"
-                  value={formData.permanentAddress}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Pin Code:</label>
-                <input
-                  type="text"
-                  name="pincode"
-                  value={formData.pincode}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="row">
+            )}
+          </div>
+        ) : (
+          <div>
+            <h2>Edit Student Details</h2>
+            <button onClick={() => setEditMode(false)}>
+              Back to Student Details
+            </button>
+            <div className="data-entry-container">
+              <div className="page-title">Admission Form</div>
+              <hr class="divider"></hr>
+              <form className="form" onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label>Religion:</label>
+                  <label>Fee Category:</label>
+                  <select
+                    name="feeCategory"
+                    value={formData.feeCategory}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Select Fee Category</option>
+                    <option value="Merit Lower Fee">Merit Lower Fee</option>
+                    <option value="Merit Higher Fee">Merit Higher Fee</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label className="required"> Course:</label>
+                  <select
+                    value={formData.course}
+                    onChange={(e) =>
+                      setFormData({ ...formData, course: e.target.value })
+                    }
+                  >
+                    <option value="">Select Course</option>
+                    <option value="B.Tech CSE">B.Tech CSE</option>
+                    <option value="B.Tech ECE">B.Tech ECE</option>
+                    <option value="BBA">BBA</option>
+                    <option value="BCA">BCA</option>
+                    <option value="MCA">MCA</option>
+                    {/* Add other courses as needed */}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Name:</label>
                   <input
                     type="text"
-                    name="religion"
-                    value={formData.religion}
+                    name="name"
+                    value={formData.name}
                     onChange={handleInputChange}
                     required
                   />
                 </div>
                 <div className="form-group">
-                  <label>Community:</label>
+                  <label>Address:</label>
                   <input
                     type="text"
-                    name="community"
-                    value={formData.community}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="row">
-              <div className="form-group">
-              <label>Gender:</label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Transgender">Transgender</option>
-                <option value="Prefer to not say">Prefer to not say</option>
-              </select>
-            </div>
-                <div className="form-group">
-                  <label>Blood Group:</label>
-                  <input
-                    type="text"
-                    name="bloodGroup"
-                    value={formData.bloodGroup}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <label>Date Of Birth:</label>
-                <input
-                  type="date"
-                  name="dateOfBirth"
-                  value={formatDateForInput(formData.dateOfBirth)}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Mobile No:</label>
-                <input
-                  type="tel"
-                  name="mobileNo"
-                  value={formData.mobileNo}
-                  onChange={handleInputChange}
-                  required
-                  pattern="[0-9]{10}"
-                  title="Please enter a valid 10-digit phone number"
-                />
-              </div>
-              <div className="form-group">
-                <label>WhatsApp No:</label>
-                <input
-                  type="tel"
-                  name="whatsappNo"
-                  value={formData.whatsappNo}
-                  onChange={handleInputChange}
-                  required
-                  pattern="[0-9]{10}"
-                  title="Please enter a valid 10-digit phone number"
-                />
-              </div>
-              <div className="form-group">
-                <label>Email:</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Aadhar No:</label>
-                <input
-                  type="text"
-                  name="aadharNo"
-                  value={formData.aadharNo}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="parent-details-row">
-                <div className="form-group">
-                  <label>Entrance Exam Name:</label>
-                  <input
-                    type="text"
-                    name="entranceExam"
-                    value={formData.entranceExam}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Entrance Roll No:</label>
-                  <input
-                    type="text"
-                    name="entranceRollNo"
-                    value={formData.entranceRollNo}
+                    name="address"
+                    value={formData.address}
                     onChange={handleInputChange}
                     required
                   />
                 </div>
                 <div className="form-group">
-                  <label>Entrance Rank:</label>
+                  <label> Permanent Address:</label>
                   <input
                     type="text"
-                    name="entranceRank"
-                    value={formData.entranceRank}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="box">
-                <h4>Qualifying Examination Details</h4>
-                <div className="parent-details-row">
-                  <div className="form-group">
-                    <label>Qualification:</label>
-                    <input
-                      type="text"
-                      name="qualify.exam"
-                      value={formData.qualify.exam}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Board:</label>
-                    <input
-                      type="text"
-                      name="qualify.board"
-                      value={formData.qualify.board}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Institution:</label>
-                    <input
-                      type="text"
-                      name="qualify.institution"
-                      value={formData.qualify.institution}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Register No:</label>
-                    <input
-                      type="text"
-                      name="qualify.RegNo"
-                      value={formData.qualify.regNo}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Exam Month and Year:</label>
-                    <input
-                      type="text"
-                      name="plusTwo.examMonthYear"
-                      value={formData.qualify.examMonthYear}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Percentage:</label>
-                    <input
-                      type="text"
-                      name="plusTwo.percentage"
-                      value={formData.qualify.percentage}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>CGPA:</label>
-                    <input
-                      type="text"
-                      name="qualify.CGPA"
-                      value={formData.qualify.cgpa}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="box">
-                <h4>Parent Details</h4>
-                <div className="parent-details-row">
-                  <div className="form-group">
-                    <label>Father Name:</label>
-                    <input
-                      type="text"
-                      name="parentDetails.fatherName"
-                      value={formData.parentDetails.fatherName}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Mother Name:</label>
-                    <input
-                      type="text"
-                      name="parentDetails.motherName"
-                      value={formData.parentDetails.motherName}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Father Occupation:</label>
-                    <input
-                      type="text"
-                      name="parentDetails.fatherOccupation"
-                      value={formData.parentDetails.fatherOccupation}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Mother Occupation:</label>
-                    <input
-                      type="text"
-                      name="parentDetails.motherOccupation"
-                      value={formData.parentDetails.motherOccupation}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Father Mobile No:</label>
-                    <input
-                      type="tel"
-                      name="parentDetails.fatherMobileNo"
-                      value={formData.parentDetails.fatherMobileNo}
-                      onChange={handleInputChange}
-                      required
-                      pattern="[0-9]{10}"
-                      title="Please enter a valid 10-digit phone number"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Mother Mobile No:</label>
-                    <input
-                      type="tel"
-                      name="parentDetails.motherMobileNo"
-                      value={formData.parentDetails.motherMobileNo}
-                      onChange={handleInputChange}
-                      required
-                      pattern="[0-9]{10}"
-                      title="Please enter a valid 10-digit phone number"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="form-group">
-                  <label>Annual Income:</label>
-                  <input
-                    type="text"
-                    name="annualIncome"
-                    value={formData.annualIncome}
+                    name="permanentAddress"
+                    value={formData.permanentAddress}
                     onChange={handleInputChange}
                     required
                   />
                 </div>
                 <div className="form-group">
-                  <label>Nativity:</label>
+                  <label>Pin Code:</label>
                   <input
                     type="text"
-                    name="nativity"
-                    value={formData.nativity}
+                    name="pincode"
+                    value={formData.pincode}
                     onChange={handleInputChange}
                     required
                   />
                 </div>
-              </div>
-              <div className="box">
-                <h4>Bank Details</h4>
-                <div className="parent-details-row">
-                  <div className="form-group">
-                    <label>Bank Name:</label>
-                    <input
-                      type="text"
-                      name="bankDetails.bankName"
-                      value={formData.bankDetails.bankName}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Branch:</label>
-                    <input
-                      type="text"
-                      name="bankDetails.branch"
-                      value={formData.bankDetails.branch}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Account No:</label>
-                    <input
-                      type="text"
-                      name="bankDetails.accountNo"
-                      value={formData.bankDetails.accountNo}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>IFSC Code:</label>
-                    <input
-                      type="text"
-                      name="bankDetails.ifscCode"
-                      value={formData.bankDetails.ifscCode}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="box">
-                <h4>Achievements</h4>
                 <div className="row">
                   <div className="form-group">
-                    <label>Arts:</label>
+                    <label>Religion:</label>
                     <input
                       type="text"
-                      name="achievements.arts"
-                      value={formData.achievements.arts}
+                      name="religion"
+                      value={formData.religion}
                       onChange={handleInputChange}
+                      required
                     />
                   </div>
                   <div className="form-group">
-                    <label>sports:</label>
+                    <label>Community:</label>
                     <input
                       type="text"
-                      name="achivements.sports"
-                      value={formData.achievements.sports}
+                      name="community"
+                      value={formData.community}
                       onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Other:</label>
-                    <input
-                      type="text"
-                      name="achivements.other"
-                      value={formData.achievements.other}
-                      onChange={handleInputChange}
+                      required
                     />
                   </div>
                 </div>
-              </div>
-              <div className="button-container">
-              <button class="submit-button" onClick={handleSave}>
-                Save
-              </button>
-              <button class="clear-button" onClick={handleCancel}>
-                Cancel
-              </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+                <div className="row">
+                  <div className="form-group">
+                    <label>Gender:</label>
+                    <select
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Transgender">Transgender</option>
+                      <option value="Prefer to not say">
+                        Prefer to not say
+                      </option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Blood Group:</label>
+                    <input
+                      type="text"
+                      name="bloodGroup"
+                      value={formData.bloodGroup}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Date Of Birth:</label>
+                  <input
+                    type="date"
+                    name="dateOfBirth"
+                    value={formatDateForInput(formData.dateOfBirth)}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Mobile No:</label>
+                  <input
+                    type="tel"
+                    name="mobileNo"
+                    value={formData.mobileNo}
+                    onChange={handleInputChange}
+                    required
+                    pattern="[0-9]{10}"
+                    title="Please enter a valid 10-digit phone number"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>WhatsApp No:</label>
+                  <input
+                    type="tel"
+                    name="whatsappNo"
+                    value={formData.whatsappNo}
+                    onChange={handleInputChange}
+                    required
+                    pattern="[0-9]{10}"
+                    title="Please enter a valid 10-digit phone number"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email:</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Aadhar No:</label>
+                  <input
+                    type="text"
+                    name="aadharNo"
+                    value={formData.aadharNo}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="parent-details-row">
+                  <div className="form-group">
+                    <label>Entrance Exam Name:</label>
+                    <input
+                      type="text"
+                      name="entranceExam"
+                      value={formData.entranceExam}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
 
-      {isSuccess && <p>Update successful!</p>}
-    </div>
+                  <div className="form-group">
+                    <label>Entrance Roll No:</label>
+                    <input
+                      type="text"
+                      name="entranceRollNo"
+                      value={formData.entranceRollNo}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Entrance Rank:</label>
+                    <input
+                      type="text"
+                      name="entranceRank"
+                      value={formData.entranceRank}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="box">
+                  <h4>Qualifying Examination Details</h4>
+                  <div className="parent-details-row">
+                    <div className="form-group">
+                      <label>Qualification:</label>
+                      <input
+                        type="text"
+                        name="qualify.exam"
+                        value={formData.qualify.exam}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Board:</label>
+                      <input
+                        type="text"
+                        name="qualify.board"
+                        value={formData.qualify.board}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Institution:</label>
+                      <input
+                        type="text"
+                        name="qualify.institution"
+                        value={formData.qualify.institution}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Register No:</label>
+                      <input
+                        type="text"
+                        name="qualify.RegNo"
+                        value={formData.qualify.regNo}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Exam Month and Year:</label>
+                      <input
+                        type="text"
+                        name="plusTwo.examMonthYear"
+                        value={formData.qualify.examMonthYear}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Percentage:</label>
+                      <input
+                        type="text"
+                        name="plusTwo.percentage"
+                        value={formData.qualify.percentage}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>CGPA:</label>
+                      <input
+                        type="text"
+                        name="qualify.CGPA"
+                        value={formData.qualify.cgpa}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {formData.course === "B.Tech CSE" ||
+                formData.course === "B.Tech ECE" ? (
+                  <>
+                    <div className="form-group">
+                      <div className="box">
+                        <h4>Plus Two Mark</h4>
+                        <label className="required">
+                          (Please Enter Plus Two Mark Only)
+                        </label>
+                        <div className="radio-group-row">
+                          <label>
+                            <input
+                              type="radio"
+                              name="marks.boardType"
+                              value="State"
+                              checked={formData.marks.boardType === "State"}
+                              onChange={handleInputChange}
+                            />
+                            <span></span> State
+                          </label>
+                          <label>
+                            <input
+                              type="radio"
+                              name="marks.boardType"
+                              value="CBSE"
+                              checked={formData.marks.boardType === "CBSE"}
+                              onChange={handleInputChange}
+                            />
+                            <span></span> CBSE
+                          </label>
+                          <label>
+                            <input
+                              type="radio"
+                              name="marks.boardType"
+                              value="ICSE"
+                              checked={formData.marks.boardType === "ICSE"}
+                              onChange={handleInputChange}
+                            />
+                            <span></span> ICSE
+                          </label>
+                          <label>
+                            <input
+                              type="radio"
+                              name="marks.boardType"
+                              value="Others"
+                              checked={formData.marks.boardType === "Others"}
+                              onChange={handleInputChange}
+                            />
+                            <span></span> Others
+                          </label>
+                        </div>
+
+                        <div className="row">
+                          <label>
+                            Physics Marks:
+                            <input
+                              type="number"
+                              name="marks.physics"
+                              value={formData.marks.physics}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+
+                          <label>
+                            Chemistry Marks:
+                            <input
+                              type="number"
+                              name="marks.chemistry"
+                              value={formData.marks.chemistry}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+
+                          <label>
+                            Maths Marks:
+                            <input
+                              type="number"
+                              name="marks.maths"
+                              value={formData.marks.maths}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : null}
+                <div className="box">
+                  <h4>Parent Details</h4>
+                  <div className="parent-details-row">
+                    <div className="form-group">
+                      <label>Father Name:</label>
+                      <input
+                        type="text"
+                        name="parentDetails.fatherName"
+                        value={formData.parentDetails.fatherName}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Mother Name:</label>
+                      <input
+                        type="text"
+                        name="parentDetails.motherName"
+                        value={formData.parentDetails.motherName}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Father Occupation:</label>
+                      <input
+                        type="text"
+                        name="parentDetails.fatherOccupation"
+                        value={formData.parentDetails.fatherOccupation}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Mother Occupation:</label>
+                      <input
+                        type="text"
+                        name="parentDetails.motherOccupation"
+                        value={formData.parentDetails.motherOccupation}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Father Mobile No:</label>
+                      <input
+                        type="tel"
+                        name="parentDetails.fatherMobileNo"
+                        value={formData.parentDetails.fatherMobileNo}
+                        onChange={handleInputChange}
+                        required
+                        pattern="[0-9]{10}"
+                        title="Please enter a valid 10-digit phone number"
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Mother Mobile No:</label>
+                      <input
+                        type="tel"
+                        name="parentDetails.motherMobileNo"
+                        value={formData.parentDetails.motherMobileNo}
+                        onChange={handleInputChange}
+                        required
+                        pattern="[0-9]{10}"
+                        title="Please enter a valid 10-digit phone number"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="form-group">
+                    <label>Annual Income:</label>
+                    <input
+                      type="text"
+                      name="annualIncome"
+                      value={formData.annualIncome}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Nativity:</label>
+                    <input
+                      type="text"
+                      name="nativity"
+                      value={formData.nativity}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="box">
+                  <h4>Bank Details</h4>
+                  <div className="parent-details-row">
+                    <div className="form-group">
+                      <label>Bank Name:</label>
+                      <input
+                        type="text"
+                        name="bankDetails.bankName"
+                        value={formData.bankDetails.bankName}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Branch:</label>
+                      <input
+                        type="text"
+                        name="bankDetails.branch"
+                        value={formData.bankDetails.branch}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Account No:</label>
+                      <input
+                        type="text"
+                        name="bankDetails.accountNo"
+                        value={formData.bankDetails.accountNo}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>IFSC Code:</label>
+                      <input
+                        type="text"
+                        name="bankDetails.ifscCode"
+                        value={formData.bankDetails.ifscCode}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="box">
+                  <h4>Achievements</h4>
+                  <div className="row">
+                    <div className="form-group">
+                      <label>Arts:</label>
+                      <input
+                        type="text"
+                        name="achievements.arts"
+                        value={formData.achievements.arts}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>sports:</label>
+                      <input
+                        type="text"
+                        name="achivements.sports"
+                        value={formData.achievements.sports}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Other:</label>
+                      <input
+                        type="text"
+                        name="achivements.other"
+                        value={formData.achievements.other}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="button-container">
+                  <button class="submit-button" onClick={handleSave}>
+                    Save
+                  </button>
+                  <button class="clear-button" onClick={handleCancel}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {isSuccess && <p>Update successful!</p>}
+      </div>
     </div>
   );
 };

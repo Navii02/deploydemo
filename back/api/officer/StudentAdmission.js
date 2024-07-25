@@ -5,11 +5,11 @@ const mongoose = require("mongoose");
 const { storage, ref, uploadBytes, getDownloadURL } = require("../../firebase"); // Import Firebase Storage methods
 
 const Student = require("../../models/Officer/StudentAdmission");
+const ApprovedStudent = require("../../models/Officer/ApprovedStudents");
 
 const router = express.Router();
 
 const upload = multer({ storage: multer.memoryStorage() });
-
 router.post("/studentadmission", upload.single("photo"), async (req, res) => {
   try {
     let photoUrl = "";
@@ -22,6 +22,21 @@ router.post("/studentadmission", upload.single("photo"), async (req, res) => {
       );
       const snapshot = await uploadBytes(storageRef, req.file.buffer);
       photoUrl = await getDownloadURL(snapshot.ref);
+    }
+
+
+    // Check if student is already registered by email and course in both collections
+    const existingStudent = await Student.findOne({
+      email: req.body.email,
+      course: req.body.course
+    });
+    const existingApprovedStudent = await ApprovedStudent.findOne({
+      email: req.body.email,
+      course: req.body.course
+    });
+
+    if (existingStudent || existingApprovedStudent) {
+      return res.status(400).json({ message: "Student is already registered for this course" });
     }
 
     // Generate new admission ID
@@ -103,5 +118,6 @@ router.post("/studentadmission", upload.single("photo"), async (req, res) => {
     res.status(500).json({ message: "Error saving student data", error });
   }
 });
+
 
 module.exports = router;

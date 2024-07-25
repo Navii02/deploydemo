@@ -59,6 +59,51 @@ h1 {
   margin-bottom: 20px;
   text-transform: uppercase;
 }
+.no-admissions-message {
+  text-align: center;
+  margin-top: 50px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+.no-admissions-message h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #444;
+  margin: 0;
+  padding: 0;
+}
+
+.no-admissions-message .emoji {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.no-admissions-message .description {
+  font-size: 1.25rem;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .no-admissions-message {
+    padding: 15px;
+  }
+
+  .no-admissions-message h2 {
+    font-size: 1.5rem;
+  }
+
+  .no-admissions-message .emoji {
+    font-size: 2.5rem;
+  }
+}
+
 
 
 

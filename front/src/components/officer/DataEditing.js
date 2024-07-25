@@ -2,7 +2,10 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import Navbar from "./OfficerNavbar";
 import "./DataEditing.css";
+import Modal from "react-modal";
 import { baseurl } from "../../url";
+
+Modal.setAppElement("#root");
 
 const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   const initialFormData = {
@@ -60,7 +63,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     },
     course: "",
     marks: {
-      boardType:"",
+      boardType: "",
       physics: "",
       chemistry: "",
       maths: "",
@@ -84,6 +87,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   const [formData, setFormData] = useState({ ...initialFormData });
   const [copyClicked] = useState(false);
   const fileInputRef = useRef(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -259,13 +264,22 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       setFormData({ ...initialFormData });
       window.location.reload();
     } catch (error) {
-      console.error("Error submitting form:", error);
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data.message || "Error submitting form");
+      } else {
+        setErrorMessage("Error submitting form");
+      }
+      setModalIsOpen(true); // Open the modal when there is an error
     } finally {
       setLoading(false);
     }
   };
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
   return (
+    <div>
     <div>
       <Navbar />
       <div className="data-entry-container">
@@ -289,7 +303,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             </div>
 
             <div className="form-group">
-              <label className="required" >Allotment Category:</label>
+              <label className="required">Allotment Category:</label>
               <select
                 name="allotmentCategory"
                 value={formData.allotmentCategory}
@@ -314,7 +328,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               </select>
             </div>
             <div className="form-group">
-             <label className="required"> Course:</label>
+              <label className="required"> Course:</label>
               <select
                 value={formData.course}
                 onChange={(e) =>
@@ -322,8 +336,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 }
               >
                 <option value="">Select Course</option>
-                <option value="BTech CSE">BTech CSE</option>
-                <option value="BTech ECE">BTech ECE</option>
+                <option value="B.Tech CSE">B.Tech CSE</option>
+                <option value="B.Tech ECE">B.Tech ECE</option>
                 <option value="BBA">BBA</option>
                 <option value="BCA">BCA</option>
                 <option value="MCA">MCA</option>
@@ -544,88 +558,90 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             </div>
           </div>
 
-          {formData.course === "BTech CSE" ||
-          formData.course === "BTech ECE" ? (
+          {formData.course === "B.Tech CSE" ||
+          formData.course === "B.Tech ECE" ? (
             <>
-            <div className="form-group">
-            <div className="box">
-  <h4>Plus Two Mark</h4>
-  <label className="required" >(Please Enter Plus Two Mark Only)</label>
-  <div className="radio-group-row">
-    <label>
-      <input
-        type="radio"
-        name="marks.boardType"
-        value="State"
-        checked={formData.marks.boardType === "State"}
-        onChange={handleChange}
-      />
-      <span></span> State
-    </label>
-    <label>
-      <input
-        type="radio"
-        name="marks.boardType"
-        value="CBSE"
-        checked={formData.marks.boardType === "CBSE"}
-        onChange={handleChange}
-      />
-      <span></span> CBSE
-    </label>
-    <label>
-      <input
-        type="radio"
-        name="marks.boardType"
-        value="ICSE"
-        checked={formData.marks.boardType === "ICSE"}
-        onChange={handleChange}
-      />
-      <span></span> ICSE
-    </label>
-    <label>
-      <input
-        type="radio"
-        name="marks.boardType"
-        value="Others"
-        checked={formData.marks.boardType === "Others"}
-        onChange={handleChange}
-      />
-      <span></span> Others
-    </label>
-  </div>
- 
-<div className="row">
-              <label>
-                Physics Marks:
-                <input
-                  type="number"
-                  name="marks.physics"
-                  value={formData.marks.physics}
-                  onChange={handleChange}
-                />
-              </label>
+              <div className="form-group">
+                <div className="box">
+                  <h4>Plus Two Mark</h4>
+                  <label className="required">
+                    (Please Enter Plus Two Mark Only)
+                  </label>
+                  <div className="radio-group-row">
+                    <label>
+                      <input
+                        type="radio"
+                        name="marks.boardType"
+                        value="State"
+                        checked={formData.marks.boardType === "State"}
+                        onChange={handleChange}
+                      />
+                      <span></span> State
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="marks.boardType"
+                        value="CBSE"
+                        checked={formData.marks.boardType === "CBSE"}
+                        onChange={handleChange}
+                      />
+                      <span></span> CBSE
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="marks.boardType"
+                        value="ICSE"
+                        checked={formData.marks.boardType === "ICSE"}
+                        onChange={handleChange}
+                      />
+                      <span></span> ICSE
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="marks.boardType"
+                        value="Others"
+                        checked={formData.marks.boardType === "Others"}
+                        onChange={handleChange}
+                      />
+                      <span></span> Others
+                    </label>
+                  </div>
 
-              <label >
-                Chemistry Marks:
-                <input
-                  type="number"
-                  name="marks.chemistry"
-                  value={formData.marks.chemistry}
-                  onChange={handleChange}
-                />
-              </label>
+                  <div className="row">
+                    <label>
+                      Physics Marks:
+                      <input
+                        type="number"
+                        name="marks.physics"
+                        value={formData.marks.physics}
+                        onChange={handleChange}
+                      />
+                    </label>
 
-              <label >
-                Maths Marks:
-                <input
-                  type="number"
-                  name="marks.maths"
-                  value={formData.marks.maths}
-                  onChange={handleChange}
-                />
-              </label>
-              </div>
-              </div>
+                    <label>
+                      Chemistry Marks:
+                      <input
+                        type="number"
+                        name="marks.chemistry"
+                        value={formData.marks.chemistry}
+                        onChange={handleChange}
+                      />
+                    </label>
+
+                    <label>
+                      Maths Marks:
+                      <input
+                        type="number"
+                        name="marks.maths"
+                        value={formData.marks.maths}
+                        onChange={handleChange}
+                      />
+                    </label>
+                  </div>
+                </div>
               </div>
             </>
           ) : null}
@@ -710,7 +726,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   name="qualify.cgpa"
                   value={formData.qualify.cgpa}
                   onChange={handleChange}
-                
                 />
               </div>
             </div>
@@ -812,7 +827,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   name="bankDetails.bankName"
                   value={formData.bankDetails.bankName}
                   onChange={handleChange}
-                  
                 />
               </div>
               <div className="form-group">
@@ -822,7 +836,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   name="bankDetails.branch"
                   value={formData.bankDetails.branch}
                   onChange={handleChange}
-                  
                 />
               </div>
               <div className="form-group">
@@ -832,7 +845,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   name="bankDetails.accountNo"
                   value={formData.bankDetails.accountNo}
                   onChange={handleChange}
-               
                 />
               </div>
               <div className="form-group">
@@ -842,7 +854,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   name="bankDetails.ifscCode"
                   value={formData.bankDetails.ifscCode}
                   onChange={handleChange}
-                
                 />
               </div>
             </div>
@@ -880,9 +891,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             </div>
           </div>
           <div className="checkbox-container">
-          <label className="required">Submitted Certificates</label>
+            <label className="required">Submitted Certificates</label>
             <div className="checkbox-custom">
-              
               <input
                 type="checkbox"
                 id="tenth"
@@ -1033,7 +1043,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             </button>
           </div>
         </form>
-
+       
         {loading && (
           <div className="loading-overlay">
             <div className="loading-spinner"></div>
@@ -1041,6 +1051,20 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
           </div>
         )}
       </div>
+    
+    </div>
+      <Modal
+      isOpen={modalIsOpen}
+      onRequestClose={closeModal}
+      contentLabel="Error Modal"
+      className="modal"
+      overlayClassName="modal-overlay"
+    >
+ 
+      <h3>Error</h3>
+      <p>{errorMessage}</p>
+      <button onClick={closeModal}>Close</button>
+    </Modal>
     </div>
   );
 };

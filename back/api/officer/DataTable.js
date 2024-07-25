@@ -10,9 +10,19 @@ const ApprovedStudent = require('../../models/Officer/ApprovedStudents');
 const NotAdmittedStudent = require('../../models/Officer/NotApprovedstudents');
 
 const router = express.Router();
-
+router.put('/datatable/updateStudent/:studentId', async (req, res) => {
+  const studentId = req.params.studentId;
+  try {
+    const updatedStudent = await Student.findByIdAndUpdate(studentId, req.body, { new: true });
+    res.json(updatedStudent);
+  } catch (error) {
+    console.error('Error updating student details:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 // Fetch all student admissions
 router.get('/studentAdmission', async (req, res) => {
+  
   try {
     const students = await Student.find();
     res.json(students);
@@ -42,6 +52,8 @@ router.get('/studentDetails/:id', async (req, res) => {
     const { bankDetails } = student;
     const { achievements } = student;
     const { qualify } = student;
+    const {marks} = student;
+    const {certificates} = student;
     const photoUrl = photo ? `${req.protocol}://${req.get('host')}/${photo}` : null;
 
     res.json({
@@ -99,6 +111,27 @@ router.get('/studentDetails/:id', async (req, res) => {
           sports: achievements.sports,
           other: achievements.other,
         },
+        marks: {
+          boardType:marks.boardType,
+          physics:marks.physics,
+          chemistry:marks.chemistry,
+          maths:marks.maths,
+        },
+        certificates: {
+          tenth: certificates.tenth,
+          plusTwo: certificates.plusTwo,
+          tcandconduct:certificates.tcandconduct,
+          allotmentmemo: certificates.allotmentmemo,
+          Datasheet:certificates.DataSheet,
+          physicalfitness: certificates.physicalfitness,
+          passportsizephoto: certificates.passportsizephoto,
+          incomecertificates: certificates.incomecertificates,
+          communitycertificate: certificates.communitycertificate,
+          castecertificates: certificates.castecertificates,
+          aadhaar: certificates.aadhaar,
+          other:certificates.other,
+        },
+
         
         submissionDate,
       },
@@ -146,9 +179,10 @@ router.get('/image/:path', async (req, res) => {
 });
 
 // Approve student and move to ApprovedStudents collection
+
 router.post('/approve/:id', async (req, res) => {
   const studentId = req.params.id;
-  const { admissionNumber: providedAdmissionNumber } = req.body; // Get admissionNumber from the request body
+  const providedAdmissionNumber = req.body.admissionNumber; // Get admissionNumber from the request body
 
   try {
     const student = await Student.findById(studentId);
@@ -158,9 +192,9 @@ router.post('/approve/:id', async (req, res) => {
     }
 
     let semester;
-    if (student.admissionType === 'KEAM' || student.admissionType === 'SPOT') {
+    if (['KEAM', 'SPOT'].includes(student.admissionType)) {
       semester = 1;
-    } else if (student.course === 'MCA' || student.course === 'BBA' || student.course === 'BCA') {
+    } else if (['MCA', 'BBA', 'BCA'].includes(student.course)) {
       semester = 1;
     } else if (student.admissionType === 'LET') {
       semester = 3;
@@ -180,33 +214,67 @@ router.post('/approve/:id', async (req, res) => {
       academicYear = `${currentYear}-${endYear}`;
     }
 
-    // Determine the next admission number based on the course
+    // Determine the starting number based on the course
     let startingNumber;
     if (['B.Tech CSE', 'B.Tech ECE'].includes(student.course)) {
       startingNumber = 3434;
     } else if (['BCA'].includes(student.course)) {
-      startingNumber = 1;
+      startingNumber = 0;
     } else if (['MCA'].includes(student.course)) {
       startingNumber = 23;
     } else if (['BBA'].includes(student.course)) {
-      startingNumber = 10;
+      startingNumber = 0;
     } else {
       return res.status(400).json({ error: 'Invalid course' });
     }
 
-    const lastStudent = await ApprovedStudent.findOne({ course: student.course }).sort({ field: 'asc', _id: -1 }).limit(1);
-    let nextAdmissionNumber;
-    if (lastStudent) {
-      const lastAdmissionNumber = parseInt(lastStudent.admissionNumber.split('/')[0], 10);
-      nextAdmissionNumber = `${lastAdmissionNumber + 1}/${currentYear.toString().substring(2)}`;
+    let highestAdmissionNumber = null;
+
+    if (['B.Tech CSE', 'B.Tech ECE'].includes(student.course)) {
+      // Fetch the highest admission number for both BTech CSE and BTech ECE
+      const [cseStudent, eceStudent] = await Promise.all([
+        ApprovedStudent.findOne({ course: 'B.Tech CSE' })
+          .sort({ admissionNumber: -1 })
+          .limit(1),
+        ApprovedStudent.findOne({ course: 'B.Tech ECE' })
+          .sort({ admissionNumber: -1 })
+          .limit(1)
+      ]);
+
+      // Compare and set the highest admission number
+      const cseAdmissionNumber = cseStudent ? parseInt(cseStudent.admissionNumber.split('/')[0], 10) : startingNumber;
+      const eceAdmissionNumber = eceStudent ? parseInt(eceStudent.admissionNumber.split('/')[0], 10) : startingNumber;
+
+      highestAdmissionNumber = Math.max(cseAdmissionNumber, eceAdmissionNumber);
     } else {
-      nextAdmissionNumber = `${startingNumber}/${currentYear.toString().substring(2)}`;
+      // Fetch the highest admission number for the current course only
+      const lastStudent = await ApprovedStudent.findOne({ course: student.course })
+        .sort({ admissionNumber: -1 })
+        .limit(1);
+
+      if (lastStudent) {
+        highestAdmissionNumber = parseInt(lastStudent.admissionNumber.split('/')[0], 10);
+      } else {
+        // No previous records found, set startingNumber
+        highestAdmissionNumber = startingNumber;
+      }
     }
+
+    // Generate the next admission number
+    const nextAdmissionNumber = highestAdmissionNumber !== null
+      ? `${highestAdmissionNumber + 1}/${currentYear.toString().substring(2)}`
+      : `${startingNumber}/${currentYear.toString().substring(2)}`;
 
     // Use the provided admission number if it differs from the generated one
     const admissionNumber = providedAdmissionNumber && providedAdmissionNumber !== nextAdmissionNumber
       ? providedAdmissionNumber
       : nextAdmissionNumber;
+
+    // Check for duplicate admission number
+    const existingStudent = await ApprovedStudent.findOne({ admissionNumber });
+    if (existingStudent) {
+      return res.status(400).json({ error: 'Admission number already exists' });
+    }
 
     const approvedStudentData = {
       ...student.toJSON(),
@@ -227,14 +295,33 @@ router.post('/approve/:id', async (req, res) => {
   }
 });
 
+
+
 // Get the last admission number for a specific course
 router.post('/lastAdmissionNumbers', async (req, res) => {
   const { courses } = req.body;
-  
+  const currentYear = new Date().getFullYear();
+  const lastDigitOfCurrentYear = currentYear.toString().slice(-2);
+
   try {
     const numbers = await Promise.all(courses.map(async (course) => {
-      const lastStudent = await ApprovedStudent.findOne({ course }).sort({ admissionNumber: -1 }).limit(1);
-      const lastAdmissionNumber = lastStudent ? lastStudent.admissionNumber : '0';
+      const lastStudent = await ApprovedStudent.findOne({ course })
+        .sort({ admissionNumber: -1 })
+        .limit(1);
+      
+      let lastAdmissionNumber = lastStudent ? lastStudent.admissionNumber : '';
+      
+      // Set default admission numbers based on course if last admission number is empty
+      if (lastAdmissionNumber === '') {
+        if (course === 'B.Tech CSE' || course === 'B.Tech ECE') {
+          lastAdmissionNumber = `3434/${lastDigitOfCurrentYear}`;
+        } else if (course === 'MBA') {
+          lastAdmissionNumber = `23/${lastDigitOfCurrentYear}`;
+        } else {
+          lastAdmissionNumber = `0000/${lastDigitOfCurrentYear}`; // Default for other courses if needed
+        }
+      }
+
       return { course, lastAdmissionNumber };
     }));
 
@@ -244,4 +331,5 @@ router.post('/lastAdmissionNumbers', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 module.exports = router;

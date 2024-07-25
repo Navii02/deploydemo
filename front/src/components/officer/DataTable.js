@@ -12,6 +12,7 @@ const StudentList = () => {
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
+    admissionNumber: "",
     feeCategory: "",
     address: "",
     permanentAddress: "",
@@ -57,17 +58,25 @@ const StudentList = () => {
       sports: "",
       other: "",
     },
+    marks: {
+      boardType: "",
+      physics: "",
+      chemistry: "",
+      maths: "",
+    },
 
     annualIncome: "",
     nativity: "",
   });
   const [editMode, setEditMode] = useState(false);
   const [studentId, setStudentId] = useState("");
+
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`${baseurl}/api/studentAdmission`);
         const sortedStudents = response.data.sort(
           (a, b) => new Date(b.submissionDate) - new Date(a.submissionDate)
@@ -75,6 +84,9 @@ const StudentList = () => {
         setStudents(sortedStudents);
       } catch (error) {
         console.error("Error fetching students:", error);
+        setError("Failed to fetch students");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -82,9 +94,13 @@ const StudentList = () => {
   }, []);
 
   useEffect(() => {
+    if (students.length === 0) {
+      return; // Exit early if there are no students
+    }
+
     const fetchLastAdmissionNumbers = async () => {
       try {
-        const courses = [...new Set(students.map((student) => student.course))];
+        const courses = ["B.Tech CSE", "B.Tech ECE", "BBA", "BCA", "MCA"];
         const response = await axios.post(
           `${baseurl}/api/lastAdmissionNumbers`,
           { courses }
@@ -110,7 +126,7 @@ const StudentList = () => {
 
         // Variables to store last admission numbers for BTech CSE and BTech ECE
         let btechCseNumber = numbers["B.Tech CSE"] || "00/00";
-        let btechEceNumber = numbers["BTech ECE"] || "00/00";
+        let btechEceNumber = numbers["B.Tech ECE"] || "00/00";
 
         // Parse admission numbers to compare
         const parseAdmissionNumber = (admissionNumber) => {
@@ -139,7 +155,7 @@ const StudentList = () => {
 
         // Handle admission numbers for each course
         for (const course of courses) {
-          if (course === "B.Tech CSE" || course === "BTech ECE") {
+          if (course === "B.Tech CSE" || course === "B.Tech ECE") {
             // For B.Tech CSE and BTech ECE, use the common next admission number
             numbers[course] = nextAdmissionNumber;
           } else {
@@ -160,10 +176,9 @@ const StudentList = () => {
       }
     };
 
-    if (students.length > 0) {
-      fetchLastAdmissionNumbers();
-    }
+    fetchLastAdmissionNumbers();
   }, [students]);
+
   const formatDateForInput = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -204,6 +219,15 @@ const StudentList = () => {
           [bankField]: value,
         },
       }));
+    } else if (name.includes("marks")) {
+      const [, subField] = name.split(".");
+      setFormData({
+        ...formData,
+        marks: {
+          ...formData.marks,
+          [subField]: value,
+        },
+      });
     } else if (name.startsWith("achievements")) {
       const achievementField = name.split(".")[1];
       setFormData((prevFormData) => ({
@@ -224,7 +248,10 @@ const StudentList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`${baseurl}/api/updateStudent/${studentId}`, formData);
+      await axios.put(
+        `${baseurl}/api/datatable/updateStudent/${studentId}`,
+        formData
+      );
       setIsSuccess(true);
       setEditMode(false);
     } catch (error) {
@@ -234,7 +261,11 @@ const StudentList = () => {
 
   const handleApprove = async (studentId, course) => {
     try {
-      const admissionNumber = editableNumbers[course];
+      // Retrieve the admission number to send
+      const admissionNumber =
+        editableNumbers[course] || lastAdmissionNumbers[course];
+
+      // Send the admission number with the API request
       await axios.post(`${baseurl}/api/approve/${studentId}`, {
         admissionNumber,
       });
@@ -355,7 +386,7 @@ const StudentList = () => {
             </tr>
              <tr>
             <td colspan="2" style="font-weight:bold;">Admission No: ${
-              studentDetails.admissionNumber
+              studentDetails.admissionId
             }</td>
           </tr>
             <tr>
@@ -483,6 +514,25 @@ const StudentList = () => {
   <td>CGPA</td>
   <td>${studentDetails.qualify?.cgpa}</td>
 </tr>
+
+<td colspan="2" style="text-align: center; font-weight: bold;">Plus Two Mark Details</td>
+</tr>
+<tr>
+  <td>Plus Two Board</td>
+  <td>${studentDetails.marks?.boardType ?? "Nil"}</td>
+</tr>
+<tr>
+  <td>Physcis</td>
+  <td>${studentDetails.marks?.physics ?? "Nil"}</td>
+</tr>
+<tr>
+  <td>chemistry</td>
+  <td>${studentDetails.marks?.chemistry ?? "Nil"}</td>
+</tr>
+<tr>
+  <td>Maths</td>
+  <td>${studentDetails.marks?.maths ?? "Nil"}</td>
+</tr>
 <tr>
 <td colspan="2" style="text-align: center; font-weight: bold;">Parents Details</td>
 </tr>
@@ -548,6 +598,44 @@ const StudentList = () => {
       <td>Other</td>
       <td>${studentDetails.achievements.other ?? "Nil"}</td>
     </tr>
+     <tr>
+      <td colspan="2" style="text-align: center; font-weight: bold;">Certificate Provided</td>
+    </tr>
+       <tr>
+      <td>10th Certificate</td>
+      <td>${studentDetails.certificates.tenth ? "Yes" : "No"}</td>
+    </tr>
+    <tr>
+      <td>12th Certificate</td>
+      <td>${studentDetails.certificates.plusTwo ? "Yes" : "No"}</td>
+    </tr>
+    <tr>
+      <td>TC and Conduct Certificate</td>
+      <td>${studentDetails.certificates.tcandconduct ? "Yes" : "No"}</td>
+    </tr>
+    <tr>
+      <td>Allotment Memo</td>
+      <td>${studentDetails.certificates.allotmentmemo ? "Yes" : "No"}</td>
+    </tr>
+       <td>Data Sheet</td>
+      <td>${studentDetails.certificates.DataSheet ? "Yes" : "No"}</td>
+    </tr>   <td>Physical Fitness</td>
+      <td>${studentDetails.certificates.physicalfitness ? "Yes" : "No"}</td>
+    </tr>   <td>passportsize Photo (2 Nos)</td>
+      <td>${studentDetails.certificates.passportsizephoto ? "Yes" : "No"}</td>
+    </tr>   <td>Income Certificate</td>
+      <td>${studentDetails.certificates.incomecertificates ? "Yes" : "No"}</td>
+    </tr>   <td>Community Certificate</td>
+      <td>${
+        studentDetails.certificates.communitycertificate ? "Yes" : "No"
+      }</td>
+    </tr>   <td>caste Certificate</td>
+      <td>${studentDetails.certificates.castecertificates ? "Yes" : "No"}</td>
+    </tr>   <td> Copy Of Aadhaar Card</td>
+      <td>${studentDetails.certificates.aadhar ? "Yes" : "No"}</td>
+    </tr>   <td> Other Certificates</td>
+      <td>${studentDetails.certificates.other ? "Yes" : "No"}</td>
+    </tr>
             </table>
             <button class="hide-on-print" onclick="window.print()">Print</button>
           </body>
@@ -559,12 +647,8 @@ const StudentList = () => {
     }
   };
 
-  const handleEditableNumberChange = (course, newNumber) => {
-    setEditableNumbers((prevNumbers) => ({
-      ...prevNumbers,
-      [course]: newNumber,
-    }));
-  };
+ 
+
   const handleEdit = (student) => {
     const formattedDateOfBirth = new Date(student.dateOfBirth)
       .toISOString()
@@ -618,6 +702,12 @@ const StudentList = () => {
         sports: student.achievements.sports || "",
         other: student.achievements.other || "",
       },
+      marks: {
+        boardType: student.marks.boardType,
+        physics: student.marks.physics,
+        chemistry: student.marks.chemistry,
+        maths: student.marks.maths,
+      },
 
       annualIncome: student.annualIncome || "",
       nativity: student.nativity || "",
@@ -647,84 +737,83 @@ const StudentList = () => {
     <div>
       <Navbar />
       <div className="data-table-container">
-       
-       
         {!editMode ? (
           <div>
-             <h1> New Admission Student List</h1>
-            <div>
-              <table className="students-table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Admission ID</th>
-                    <th>Course</th>
-                    <th>submission Date</th>
-                    <th>Next Admission Number</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {students.map((student) => (
-                    <tr key={student._id}>
-                      <td>{student.name}</td>
-                      <td>{student.admissionId}</td>
-                      <td>{student.course}</td>
-                      <td>
-                        {student.submissionDate
-                          ? new Date(
-                              student.submissionDate
-                            ).toLocaleDateString()
-                          : "Not Provided"}
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          value={
-                            editableNumbers[student.course] ||
-                            lastAdmissionNumbers[student.course]
-                          }
-                          onChange={(e) =>
-                            handleEditableNumberChange(
-                              student.course,
-                              e.target.value
-                            )
-                          }
-                        />
-                      </td>
-                      <td>
-                        <button
-                          className="approve-btn"
-                          onClick={() => handleApprove(student._id)}
-                        >
-                          Approve
-                        </button>
-                        <button
-                          className="decline-btn"
-                          onClick={() => handleDecline(student._id)}
-                        >
-                          Decline
-                        </button>
-                        <button
-                          className="print-preview-btn"
-                          onClick={() =>
-                            handlePrintPreview(student._id, student.photo)
-                          }
-                        >
-                          Print Preview
-                        </button>
-
-                        <button onClick={() => handleEdit(student)}>
-                          Edit
-                        </button>
-                      </td>
+            <h1>New Admission Student List</h1>
+            {students.length > 0 ? (
+              <div>
+                <table className="students-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Admission ID</th>
+                      <th>Course</th>
+                      <th>Submission Date</th>
+                      <th>Next Admission Number</th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {students.map((student) => (
+                      <tr key={student._id}>
+                        <td>{student.name}</td>
+                        <td>{student.admissionId}</td>
+                        <td>{student.course}</td>
+                        <td>
+                          {student.submissionDate
+                            ? new Date(
+                                student.submissionDate
+                              ).toLocaleDateString()
+                            : "Not Provided"}
+                        </td>
+                        <td>
+                          <span>
+                            {editableNumbers[student.course] ||
+                              lastAdmissionNumbers[student.course]}
+                          </span>
+                        </td>
+
+                        <td>
+                          <button
+                            className="approve-btn"
+                            onClick={() => handleApprove(student._id)}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="decline-btn"
+                            onClick={() => handleDecline(student._id)}
+                          >
+                            Decline
+                          </button>
+                          <button
+                            className="print-preview-btn"
+                            onClick={() =>
+                              handlePrintPreview(student._id, student.photo)
+                            }
+                          >
+                            Print Preview
+                          </button>
+                          <button onClick={() => handleEdit(student)}>
+                            Edit
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="no-admissions-message">
+                <span className="emoji">📚</span>
+                <h2>No New Admissions</h2>
+                <p className="description">
+                  Currently, there are no new admissions to display. Please
+                  check back later.
+                </p>
+              </div>
+            )}
           </div>
-     
         ) : (
           <div>
             <h2>Edit Student Details</h2>
@@ -749,19 +838,20 @@ const StudentList = () => {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Course:</label>
+                  <label className="required"> Course:</label>
                   <select
-                    name="course"
                     value={formData.course}
-                    onChange={handleInputChange}
-                    required
+                    onChange={(e) =>
+                      setFormData({ ...formData, course: e.target.value })
+                    }
                   >
                     <option value="">Select Course</option>
                     <option value="B.Tech CSE">B.Tech CSE</option>
                     <option value="B.Tech ECE">B.Tech ECE</option>
-                    <option value="MCA">MCA</option>
-                    <option value="BCA">BCA</option>
                     <option value="BBA">BBA</option>
+                    <option value="BCA">BCA</option>
+                    <option value="MCA">MCA</option>
+                    {/* Add other courses as needed */}
                   </select>
                 </div>
                 <div className="form-group">
@@ -1017,6 +1107,95 @@ const StudentList = () => {
                     </div>
                   </div>
                 </div>
+
+                {formData.course === "B.Tech CSE" ||
+                formData.course === "B.Tech ECE" ? (
+                  <>
+                    <div className="form-group">
+                      <div className="box">
+                        <h4>Plus Two Mark</h4>
+                        <label className="required">
+                          (Please Enter Plus Two Mark Only)
+                        </label>
+                        <div className="radio-group-row">
+                          <label>
+                            <input
+                              type="radio"
+                              name="marks.boardType"
+                              value="State"
+                              checked={formData.marks.boardType === "State"}
+                              onChange={handleInputChange}
+                            />
+                            <span></span> State
+                          </label>
+                          <label>
+                            <input
+                              type="radio"
+                              name="marks.boardType"
+                              value="CBSE"
+                              checked={formData.marks.boardType === "CBSE"}
+                              onChange={handleInputChange}
+                            />
+                            <span></span> CBSE
+                          </label>
+                          <label>
+                            <input
+                              type="radio"
+                              name="marks.boardType"
+                              value="ICSE"
+                              checked={formData.marks.boardType === "ICSE"}
+                              onChange={handleInputChange}
+                            />
+                            <span></span> ICSE
+                          </label>
+                          <label>
+                            <input
+                              type="radio"
+                              name="marks.boardType"
+                              value="Others"
+                              checked={formData.marks.boardType === "Others"}
+                              onChange={handleInputChange}
+                            />
+                            <span></span> Others
+                          </label>
+                        </div>
+
+                        <div className="row">
+                          <label>
+                            Physics Marks:
+                            <input
+                              type="number"
+                              name="marks.physics"
+                              value={formData.marks.physics}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+
+                          <label>
+                            Chemistry Marks:
+                            <input
+                              type="number"
+                              name="marks.chemistry"
+                              value={formData.marks.chemistry}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+
+                          <label>
+                            Maths Marks:
+                            <input
+                              type="number"
+                              name="marks.maths"
+                              value={formData.marks.maths}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : null}
+
                 <div className="box">
                   <h4>Parent Details</h4>
                   <div className="parent-details-row">

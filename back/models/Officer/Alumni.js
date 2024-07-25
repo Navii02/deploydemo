@@ -94,10 +94,11 @@ const AlumniSchema = new mongoose.Schema({
    // Set the default value to the current date and time
   },
   marks:{
-    physics:String,
-    chemistry: String,
-    maths: String,
-  }
+    boardType: { type: String, default: 'Nil' },
+    physics:{ type: String, default: 'Nil' },
+    chemistry:{ type: String, default: 'Nil' },
+    maths: { type: String, default: 'Nil' },
+  },
 });
 
 

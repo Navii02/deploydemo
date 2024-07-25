@@ -56,13 +56,14 @@ const ApprovedStudentSchema = new mongoose.Schema({
   },
   achievements: {
     arts: { type: String, default: 'Nil' },
-    sports: { type: String, default: 'Nil' },
+    sports:  { type: String, default: 'Nil' },
     other: { type: String, default: 'Nil' },
   },
   marks:{
-    physics:String,
-    chemistry: String,
-    maths: String,
+    boardType: { type: String, default: 'Nil' },
+    physics:{ type: String, default: 'Nil' },
+    chemistry:{ type: String, default: 'Nil' },
+    maths: { type: String, default: 'Nil' },
   },
   
   certificates: {
