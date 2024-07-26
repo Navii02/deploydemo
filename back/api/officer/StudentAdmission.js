@@ -117,6 +117,7 @@ router.post("/studentadmission", upload.single("photo"), async (req, res) => {
     console.error("Error saving student data:", error);
     res.status(500).json({ message: "Error saving student data", error });
   }
+  
 });
 
 

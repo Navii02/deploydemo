@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
-import OfficerNavbar from "./OfficerNavbar";
+
 import "./DataEditing.css";
 import Modal from "react-modal";
 import { baseurl } from "../../url";
@@ -152,7 +152,6 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       console.error("Error accessing camera:", error);
     }
   };
-  
   const handleCopyAddress = () => {
     // Toggle the copy address option
     setCopyAddressOption((prevOption) => {
@@ -285,7 +284,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
   return (
     <div>
     <div>
-      <OfficerNavbar/>
+      
       <div className="adata-entry-container">
         <div className="apage-title">Admission Form </div>
         <hr class="adivider"></hr>

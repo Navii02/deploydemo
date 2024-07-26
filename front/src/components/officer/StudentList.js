@@ -171,6 +171,12 @@ const StudentListOfficer = () => {
     }
   };
   const handleDelete = async (studentId) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this student?");
+    
+    if (!isConfirmed) {
+      return; // Exit if the user cancels the deletion
+    }
+  
     try {
       await axios.delete(`${baseurl}/api/officerstudent/deleteStudent/${studentId}`);
       setApprovedStudents((prevStudents) =>
@@ -180,6 +186,7 @@ const StudentListOfficer = () => {
       console.error("Error declining student:", error);
     }
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -711,7 +718,7 @@ const StudentListOfficer = () => {
                           >
                             Print
                           </button>
-                          <button onClick={() => handleDelete(student._id)}>Delete</button>
+                          <button className="delete-button" onClick={() => handleDelete(student._id)}>Delete</button>
                         </td>
                       </tr>
                     ))}

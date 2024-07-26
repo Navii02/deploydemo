@@ -9,6 +9,32 @@
   margin-bottom: 10px;
   margin-right: 10px;
 }
+.delete-button {
+  background-color: #ff4c4c; /* Red background for delete */
+  color: #fff; /* White text color */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 20px; /* Padding */
+  font-size: 16px; /* Font size */
+  font-weight: 500; /* Medium weight font */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.delete-button:hover {
+  background-color: #e43d3d; /* Darker red on hover */
+}
+
+.delete-button:active {
+  background-color: #c13232; /* Even darker red on active */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Slightly reduced shadow */
+}
+
+.delete-button:focus {
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 0 3px rgba(255, 76, 76, 0.4); /* Custom focus outline */
+}
 
 
 

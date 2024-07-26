@@ -16,6 +16,29 @@
   position: relative; /* Required for backdrop-filter */
   z-index: 0; /* Ensure the blur is behind other content */
 }
+.office-home-page {
+  position: relative;
+  padding: 20px;
+}
+
+.admission-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.admission-button:hover {
+  background-color: #0056b3;
+}
+
 
 /* Hide the scrollbar on the home page */
 html.homepage, body.homepage {

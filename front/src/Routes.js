@@ -13,6 +13,7 @@ import ScholarshipDetails from './components/student/ScholarshipDetails';
 import Reminders from './components/student/reminders';
 import CertificateRecieve from './components/student/CertificateRecieve';
 import SForgotPassword from './components/student/StudentForgot';
+import Admission from './components/officer/AdmissionPage';
 
 import OfficerSignup from './components/officer/OfficerSignup';
 import Officerlogin from './components/officer/Officerlogin';
@@ -249,6 +250,7 @@ function RoutesComp() {
         />
 
         {/* Admin Routes */}
+      <Route path='/admission'element={<Admission />}/>
         <Route path='/adminlogin' element={<AdminLogin />} />
         <Route path='/adminsignup' element={<AdminSignup />} />
         <Route

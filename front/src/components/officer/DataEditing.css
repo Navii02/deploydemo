@@ -6,23 +6,23 @@ body, html {
   overflow-x: hidden; /* Prevent horizontal scrollbar on the entire page */
   font-family: Arial, sans-serif;
   background-color: #ffffff; /* Light cyan background */
-  color: #333;
+  color: #151414;
   line-height: 1.6;
   margin: 0;
   padding: 0;
 }
 
-.approvedandremoved-list-container{
+.aapprovedandremoved-list-container{
   margin: 100px 20px 20px 20px;
 }
 
 /* Header container styling */
-.header-container {
+.aheader-container {
   text-align: center;
   margin: 30px 0 20px; /* Adjusted margin */
 }
-.page-title {
-  font-size: 2em; /* Adjust size as needed */
+.apage-title {
+  font-size: 3em; /* Adjust size as needed */
   font-weight: bold;
   margin: 0;
   padding: 0;
@@ -32,15 +32,15 @@ body, html {
 
 
 
-.header-container h3 {
+.aheader-container h3 {
   font-size: 3em;
   color: #333;
   margin-bottom: 10px;
   font-family: 'Roboto', sans-serif;
 }
 
-.header-container .divider {
-  width: 80%;
+.aheader-container .adivider {
+  width: 90%;
   margin: 0 auto;
   border: 0;
   height: 1px;
@@ -48,7 +48,7 @@ body, html {
 }
 
 /* Container for data entry form */
-.data-entry-container {
+.adata-entry-container {
   width: 85%;
   background: #ffffff; /* White background for the form */
   margin: 80px auto 20px auto;
@@ -58,9 +58,9 @@ body, html {
 }
 
 /* Form elements */
-.data-entry-container input,
-.data-entry-container select,
-.data-entry-container textarea {
+.adata-entry-container input,
+.adata-entry-container select,
+.adata-entry-container textarea {
   margin-top: 5px;
   height: 40px;
   width: 100%;
@@ -72,15 +72,15 @@ body, html {
   box-sizing: border-box; /* Ensure padding is included in width */
 }
 
-.data-entry-container input:focus,
-.data-entry-container select:focus,
-.data-entry-container textarea:focus {
+.adata-entry-container input:focus,
+.adata-entry-container select:focus,
+.adata-entry-container textarea:focus {
   border-color: #03a9f4; /* Soft blue focus color */
   outline: none;
 }
 
 /* Label styling */
-.data-entry-container label {
+.adata-entry-container label {
   display: block;
   font-weight: bold;
   color: #030202; /* Dark grey color */
@@ -88,12 +88,12 @@ body, html {
 }
 
 /* Select box styling */
-.data-entry-container select {
+.adata-entry-container select {
   color: #333;
   height: 40px;
 }
 /* Button styling */
-.data-entry-container .capture-button ,.data-entry-container .upload-button {
+.adata-entry-container .acapture-button ,.adata-entry-container .aupload-button {
   padding: 10px 20px; /* Ensure consistent padding */
   margin: 0 5px; /* Adjust margin */
   cursor: pointer;
@@ -106,59 +106,59 @@ body, html {
 }
 
 /* Ensure preview canvas does not affect button size */
-.data-entry-container .preview-canvas {
+.adata-entry-container .apreview-canvas {
   max-width: 100%; /* Adjust as needed */
   max-height: 100%; /* Adjust as needed */
 }
 
-.data-entry-container .button-container {
+.adata-entry-container .abutton-container {
   display: flex;
   justify-content: space-evenly;
   margin-top: 20px;
 }
 
-.data-entry-container .submit-button {
+.adata-entry-container .asubmit-button {
   background-color: #03a9f4; /* Soft blue button */
   color: #fff;
 }
 
-.data-entry-container .submit-button:hover {
+.adata-entry-container .asubmit-button:hover {
   background-color: #0288d1; /* Darker blue on hover */
   transform: scale(1.05);
 }
 
-.data-entry-container .clear-button {
+.adata-entry-container .aclear-button {
   background-color: #f44336; /* Red button */
   color: #fff;
 }
 
-.data-entry-container .clear-button:hover {
+.adata-entry-container .aclear-button:hover {
   background-color: #d32f2f; /* Darker red on hover */
   transform: scale(1.05);
 }
 
-.data-entry-container .capture-button {
+.adata-entry-container .acapture-button {
   background-color: #264fa9; /* Green button */
   color: #fff;
 }
 
-.data-entry-container .capture-button:hover {
-  background-color: #3a30e9; /* Darker green on hover */
+.adata-entry-container .acapture-button:hover {
+  background-color: #4865f8; /* Darker green on hover */
   transform: scale(1.05);
 }
 
-.data-entry-container .upload-button {
-  background-color: #264fa9; /* Another green button */
+.adata-entry-container .aupload-button {
+  background-color: #2c69ed; /* Another green button */
   color: #fff;
 }
 
-.data-entry-container .upload-button:hover {
-  background-color: #3a30e9;; /* Darker green on hover */
+.adata-entry-container .aupload-button:hover {
+  background-color: #0e2b66;; /* Darker green on hover */
   transform: scale(1.05);
 }
 
 /* Box container styling */
-.data-entry-container .box {
+.adata-entry-container .abox {
   width: 100%;
   background-color: #f0f0f0;
   padding: 15px;
@@ -167,20 +167,20 @@ body, html {
   margin-bottom: 15px;
 }
 
-.data-entry-container .box-container {
+.adata-entry-container .abox-container {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
 }
 
 /* Heading styling */
-.data-entry-container h4 {
+.adata-entry-container h4 {
   color: #1a1919;
   margin-bottom: 15px;
 }
 
 /* Photo preview styling */
-.data-entry-container .photo-preview {
+.adata-entry-container .aphoto-preview {
   width: 150px;
   height: 200px;
   margin-bottom: 30px;
@@ -190,78 +190,78 @@ body, html {
 }
 
 /* Form group styling */
-.data-entry-container .form-group {
+.adata-entry-container .aform-group {
   margin-bottom: 15px;
 }
 
 /* Form container styling */
-.data-entry-container .form {
-  max-width: 100%;
+.adata-entry-container .aform {
+  max-width: 900%;
   overflow-x: hidden;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 /* Add some hover effects for inputs */
-.data-entry-container input:hover,
-.data-entry-container select:hover,
-.data-entry-container textarea:hover {
+.adata-entry-container input:hover,
+.adata-entry-container select:hover,
+.adata-entry-container textarea:hover {
   border-color: #03a9f4; /* Soft blue border on hover */
 }
 
-.data-entry-container .pincode-input {
+.adata-entry-container .apincode-input {
   width: 100px; /* Adjust width as needed */
 }
 
 /* Enhance textarea for achievements */
-.data-entry-container textarea {
+.adata-entry-container textarea {
   height: auto;
   resize: vertical;
   min-height: 100px;
 }
 
 /* Parent details section styling */
-.parent-details-row {
+.aparent-details-row {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
 }
 
-.parent-details-row .form-group {
+.aparent-details-row .aform-group {
   flex: 1 1 calc(50% - 15px); /* Take full width on small screens, half on larger screens */
   min-width: 250px;
 }
-.qualified-details-row .form-group{
+.aqualified-details-row .aform-group{
   flex: 1 1 calc(50% - 15px); /* Take full width on small screens, half on larger screens */
   min-width: 250px;
 }
 /* Styling for elements in a row */
-.data-entry-container .row {
+.adata-entry-container .arow {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 15px;
 }
 
-.data-entry-container .row .form-group {
+.adata-entry-container .arow .aform-group {
   flex: 1;
   min-width: 200px;
   margin-right: 10px;
 }
 
-.data-entry-container .row .form-group:last-child {
+.adata-entry-container .arow .aform-group:last-child {
   margin-right: 0;
 }
 
 /* Styling for form headings */
-.data-entry-container h1 {
+.adata-entry-container h1 {
   text-align: center;
   font-size: 3em;
   margin-bottom: 20px;
   color: #333;
 }
 /* Radio button styling */
-.data-entry-container input[type="radio"] {
+.adata-entry-container input[type="radio"] {
   height: 16px; /* Adjust height */
   width: 16px; /* Adjust width */
   margin-top: 10px; /* Adjust margin */
@@ -273,23 +273,23 @@ body, html {
   cursor: pointer; /* Add cursor pointer */
 }
 
-.radio-label {
+.aradio-label {
   margin-right: 2px; /* Adjust margin between radio button and text */
 }
 
 /* Radio button checked state */
-.data-entry-container input[type="radio"]:checked {
+.adata-entry-container input[type="radio"]:checked {
   background-color: #03a9f4; /* Change background color when checked */
   border-color: #03a9f4; /* Change border color when checked */
 }
-.capture-button, .upload-button {
+.acapture-button, .upload-button {
   width: 120px; /* Adjust width as needed */
   height: 40px; /* Adjust height as needed */
   font-size: 16px; 
 }
 
 
-.submit-button, .clear-button
+.asubmit-button, .aclear-button
  {
   padding: 10px 20px;
   margin: 0 10px; /* Adjust margin between buttons */
@@ -305,7 +305,7 @@ body, html {
 }
 
 /* Loading Overlay */
-.loading-overlay {
+.aloading-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -318,7 +318,7 @@ body, html {
   z-index: 9999;
 }
 
-.loading-spinner {
+.aloading-spinner {
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */
   border-radius: 50%;
@@ -334,25 +334,25 @@ body, html {
 
 
 /* Optional: Adjust text style */
-.loading-overlay p {
+.aloading-overlay p {
   color: #fff;
   font-size: 1.5rem;
   margin-top: 20px;
 }
 /* Style the container for checkboxes */
-.checkbox-container {
+.acheckbox-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 /* Hide default checkbox appearance */
-.checkbox-container input[type="checkbox"] {
+.acheckbox-container input[type="checkbox"] {
   display: none;
 }
 
 /* Style the custom checkbox container */
-.checkbox-custom {
+.acheckbox-custom {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -361,7 +361,7 @@ body, html {
 }
 
 /* Style the box */
-.checkbox-custom .checkmark {
+.acheckbox-custom .acheckmark {
   position: relative;
   width: 20px;
   height: 20px;
@@ -376,12 +376,12 @@ body, html {
 }
 
 /* Hide the box when checked */
-.checkbox-custom input[type="checkbox"]:checked + .checkmark {
+.acheckbox-custom input[type="checkbox"]:checked + .acheckmark {
   display: none;
 }
 
 /* Add a checkmark icon */
-.checkbox-custom input[type="checkbox"]:checked + .checkmark::after {
+.acheckbox-custom input[type="checkbox"]:checked + .acheckmark::after {
   content: '';
   position: absolute;
   width: 8px;
@@ -396,10 +396,10 @@ body, html {
 }
 
 /* Style the label text */
-.checkbox-custom label {
+.acheckbox-custom label {
   font-size: 16px;
 }
-.box {
+.abox {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -408,14 +408,14 @@ body, html {
 }
 
 /* Style the heading */
-.box h4 {
+.abox h4 {
   margin: 0;
   font-size: 18px;
   margin-bottom: 10px;
 }
 
 /* Style the label inside the box */
-.box label {
+.abox label {
   display: block;
   font-size: 14px;
   margin-bottom: 10px;
@@ -423,13 +423,13 @@ body, html {
 }
 
 /* Style the container for the radio group row */
-.radio-group-row {
+.aradio-group-row {
   display: flex;
   gap: 20px; /* Space between each radio button */
 }
 
 /* Style each radio label */
-.radio-group-row label {
+.aradio-group-row label {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -437,12 +437,12 @@ body, html {
 }
 
 /* Hide default radio button appearance */
-.radio-group-row input[type="radio"] {
+.aradio-group-row input[type="radio"] {
   display: none;
 }
 
 /* Style the custom radio button */
-.radio-group-row input[type="radio"] + span {
+.aradio-group-row input[type="radio"] + span {
   position: relative;
   display: inline-block;
   width: 20px;
@@ -455,13 +455,13 @@ body, html {
 }
 
 /* Style the radio button when checked */
-.radio-group-row input[type="radio"]:checked + span {
+.aradio-group-row input[type="radio"]:checked + span {
   background-color: #4caf50;
   border-color: #4caf50;
 }
 
 /* Add a checkmark when checked */
-.radio-group-row input[type="radio"]:checked + span::after {
+.aradio-group-row input[type="radio"]:checked + span::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -474,7 +474,7 @@ body, html {
 }
 
 /* Style the label text */
-.radio-group-row label span {
+.aradio-group-row label span {
   margin-left: 10px;
 }
  label {
@@ -484,7 +484,7 @@ body, html {
   color: #666;
 }
 /* Styles for the modal overlay */
-.modal-overlay {
+.amodal-overlay {
   background: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
@@ -497,7 +497,7 @@ body, html {
 }
 
 /* Styles for the modal */
-.modal {
+.amodal {
   background: white;
   padding: 20px;
   border-radius: 4px;
@@ -509,8 +509,13 @@ body, html {
 
 
 /* Style the required field with a red asterisk */
- label.required::after {
+ label.arequired::after {
   content: '*';
   color: red;
   margin-left: 4px;
+}
+label.arequired h4 {
+  font-size: 1.5em; /* Adjust the font size of h4 as needed */
+  /* Remove default margin */
+  color: #333; /* Text color */
 }
