@@ -212,13 +212,12 @@ const StudentListOfficer = () => {
     }
   };
 
+ 
   const handlePrintPreview = async (_id, photoPath) => {
     try {
-      const photoUrl = `${baseurl}/api/officerstudent/image/${encodeURIComponent(
-        photoPath
-      )}`;
+      const photoUrl = `${baseurl}/api/image/${encodeURIComponent(photoPath)}`;
       const response = await axios.get(
-        `${baseurl}/api/officerstudent/approvedstudentDetails/${_id}`
+        `${baseurl}/api/approvedstudentDetails/${_id}`
       );
       const studentDetails = response.data.studentDetails;
 
@@ -226,6 +225,22 @@ const StudentListOfficer = () => {
         console.error("Error: Invalid student details received");
         return;
       }
+
+      function getTodaysDate() {
+        const today = new Date();
+        
+        // Get the year, month, and day
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so +1 is used
+        const day = String(today.getDate()).padStart(2, '0');
+        
+        // Return the date in YYYY-MM-DD format
+        return `${day}-${month}-${year}`;
+      }
+      
+      // Example usage
+      console.log(getTodaysDate()); // Outputs something like "2024-07-27"
+      
 
       const formatDate = (dateString) => {
         const dateOfBirth = new Date(dateString);
@@ -252,292 +267,373 @@ const StudentListOfficer = () => {
 
       const printWindow = window.open("", "_blank");
       printWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>${studentDetails.name}'s Details</title>
-          <style>
-            body {
-              margin: 0;
-              padding: 0;
-              font-family: Calibri, sans-serif;
-              font-size: 11pt;
-            }
-            h1 {
-              font-weight: bold;
-              text-align: center;
-            }
-            table {
-              border-collapse: collapse;
-              width: 100%;
-            }
-            td, th {
-              border: 1pt solid black;
-              padding: 5pt;
-            }
-            .header {
-              text-align: center;
-              position: relative;
-            }
-            .logo {
-              position: absolute;
-              left: 10px;
-              top: 5px;
-            }
-            .photo {
-              position: absolute;
-              right: 0px;
-              top: 0px;
-            }
-            @media print {
-              .hide-on-print {
-                display: none;
-              }
-              .print-table {
-                page-break-inside: avoid;
-              }
-            }
-            @page {
-              size: A4;
-            }
-          </style>
-        </head>
-        <body>
-          <table class="print-table">
-            <tr style="height: 100px;">
-              <td colspan="2" class="header">
-                <img src="/images/college__2_-removebg-preview.png" alt="College Logo" class="logo" width="100">
-                COLLEGE OF ENGINEERING POONJAR
-                <br />
-                Managed by IHRD, Govt. of Kerala
-                <br />
-                Poonjar Thekkekara P.O. Kottayam Dist. PIN 686 582
-                <br/>
-                Academic Year: ${academicYear}
-                <img src="${photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
-              </td>
-            </tr>
-             <tr>
-            <td colspan="2" style="font-weight:bold;">Admission No: ${
-              studentDetails.admissionNumber
-            }</td>
-          </tr>
-          <tr>
-            <td>Admission Type</td>
-            <td>${studentDetails.admissionType}</td>
-          </tr>
-          <tr>
-            <td>Allotment Category</td>
-            <td>${studentDetails.allotmentCategory}</td>
-          </tr>
-          <tr>
-            <td>Fee Category</td>
-            <td>${studentDetails.feeCategory}</td>
-          </tr>
-          <tr>
-            <td>Course</td>
-            <td>${studentDetails.course}</td>
-          </tr>
-          <tr>
-          <td colspan="2" style="text-align: center; font-weight: bold;">Student Details</td>
-        </tr>
-          <tr>
-            <td>Name of the Candidate</td>
-            <td>${studentDetails.name}</td>
-          </tr>
-          <tr>
-            <td>Address</td>
-            <td>${studentDetails.address}</td>
-          </tr>
-          <tr>
-            <td>Permanent Address</td>
-            <td>${studentDetails.permanentAddress ?? "Nil"}</td>
-          </tr>
-          <tr>
-            <td>Pin Code</td>
-            <td>${studentDetails.pincode}</td>
-          </tr>
-          <tr>
-          <td>Religion</td>
-          <td>${studentDetails.religion}</td>
-        </tr>
-        <tr>
-          <td>Community</td>
-          <td>${studentDetails.community}</td>
-        </tr>
-        <tr>
-          <td>Gender</td>
-          <td>${studentDetails.gender}</td>
-        </tr>
-        <tr>
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>${studentDetails.name}'s Details</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Calibri, sans-serif;
+      font-size: 12pt;
+    }
+    h1, h2 {
+      font-weight: bold;
+      text-align: center;
+      margin: 5pt 0;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 11pt;
+      table-layout: auto;
+    }
+    td, th {
+      border: 1.5pt solid black;
+      padding: 8pt;
+    }
+    .header {
+      text-align: center;
+      position: relative;
+      padding: 10pt 0;
+      font-size: 14pt;
+      font-weight: bold;
+    }
+    .logo {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+    }
+    .photo {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+    .header-content {
+      margin-top: 30px;
+    }
+    .header-content p {
+      margin: 5pt 0;
+    }
+    .declaration {
+      margin: 10px;
+      font-size: 11pt;
+    }
+    .declaration p {
+      margin: 3px 0;
+    }
+    .declaration .heading {
+      text-align: center;
+      font-weight: bold;
+      font-size: 16pt;
+      margin-bottom: 5pt;
+    }
+    .declaration .content {
+      text-align: left;
+      font-size: 13pt;
+    }
+    .signature {
+      margin-top: 20px;
+      font-size: 11pt;
+      display: flex;
+      justify-content: space-between;
+    }
+    .signature .left, .signature .right {
+      width: 48%; /* Adjust width as needed */
+    }
+    .signature .left {
+      text-align: left;
+    }
+    .signature .right {
+      text-align: right;
+    }
+    .signature .field {
+      margin-top: 15px;
+    }
+    @media print {
+      .hide-on-print {
+        display: none;
+      }
+    }
+    @page {
+      size: A4;
+      margin: 10mm;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Section -->
+  <div class="header">
+    <img src="/images/college__2_-removebg-preview.png" alt="College Logo" class="logo" width="100" height="125">
+    <img src="${photoUrl}" alt="Student Photo" class="photo" width="91" height="129.5">
+    <div class="header-content">
+      <p>COLLEGE OF ENGINEERING POONJAR</p>
+      <p>Managed by IHRD, Govt. of Kerala</p>
+      <p>Poonjar Thekkekara P.O. Kottayam Dist. PIN 686 582</p>
+      <p>Academic Year: ${academicYear}</p>
+    </div>
+  </div>
+
+   <table class="print-table">
+  
+    <tr>
+      <td colspan="2" style="font-weight:bold;">Admission No: ${studentDetails.admissionNumber}</td>
+      <td colspan="2" style="text-align: left;">Submission Date: ${formatDate(studentDetails.submissionDate)}</td>
+    </tr>
+    <tr>
+      <td>Admission Type</td>
+      <td>${studentDetails.admissionType}</td>
+      <td>Allotment Category</td>
+      <td>${studentDetails.allotmentCategory}</td>
+    </tr>
+    <tr>
+      <td>Fee Category</td>
+      <td>${studentDetails.feeCategory}</td>
+      <td>Course</td>
+      <td>${studentDetails.course}</td>
+    </tr>
+    <tr>
+      <td colspan="4" style="text-align: center; font-weight: bold;">Student Details</td>
+    </tr>
+    <tr>
+      <td>Name</td>
+      <td>${studentDetails.name}</td>
+      <td>Address</td>
+      <td>${studentDetails.address}</td>
+    </tr>
+    <tr>
+      <td>Permanent Address</td>
+      <td>${studentDetails.permanentAddress ?? "Nil"}</td>
+      <td>Pin Code</td>
+      <td>${studentDetails.pincode}</td>
+    </tr>
+    <tr>
+      <td>Religion</td>
+      <td>${studentDetails.religion}</td>
+      <td>Community</td>
+      <td>${studentDetails.community}</td>
+    </tr>
+    <tr>
+      <td>Gender</td>
+      <td>${studentDetails.gender}</td>
       <td>Date of Birth</td>
       <td>${formatDate(studentDetails.dateOfBirth)}</td>
     </tr>
     <tr>
       <td>Blood Group</td>
       <td>${studentDetails.bloodGroup}</td>
-    </tr>
-    <tr>
       <td>Mobile No</td>
       <td>${studentDetails.mobileNo}</td>
     </tr>
     <tr>
       <td>WhatsApp No</td>
       <td>${studentDetails.whatsappNo}</td>
-    </tr>
-    <tr>
       <td>Email</td>
       <td>${studentDetails.email}</td>
     </tr>
     <tr>
       <td>Aadhar No</td>
       <td>${studentDetails.aadharNo}</td>
-    </tr>
-    <tr>
       <td>Nativity</td>
       <td>${studentDetails.nativity}</td>
     </tr>
     <tr>
-    <td colspan="2" style="text-align: center; font-weight: bold;">Entrance Exam Details</td>
-  </tr>
-  <tr>
-  <td>Exam Name</td>
-<td>${studentDetails.entranceExam}</td>
-</tr>
-<tr>
-<td>Roll No</td>
-<td>${studentDetails.entranceRollNo}</td>
-</tr>
-<tr>
-<td>Rank</td>
-<td>${studentDetails.entranceRank}</td>
-</tr>
-<tr>
-<td colspan="2" style="text-align: center; font-weight: bold;">Qualifying Examination Details</td>
-</tr>
-<tr>
-  <td>Qualification</td>
-  <td>${studentDetails.qualify?.exam ?? "Nil"}</td>
-</tr>
-<tr>
-  <td>Exam Board</td>
-  <td>${studentDetails.qualify?.board}</td>
-</tr>
-<tr>
-  <td>Institution Name</td>
-  <td>${studentDetails.qualify?.institution}</td>
-</tr>
-<tr>
-  <td>Register No</td>
-  <td>${studentDetails.qualify?.regNo}</td>
-</tr>
-<tr>
-  <td>Exam Month and Year</td>
-  <td>${studentDetails.qualify?.examMonthYear}</td>
-</tr>
-<tr>
-  <td>Percentage</td>
-  <td>${studentDetails.qualify?.percentage}</td>
-</tr>
-<tr>
-  <td>CGPA</td>
-  <td>${studentDetails.qualify?.cgpa}</td>
-</tr>
-<td colspan="2" style="text-align: center; font-weight: bold;">Plus Two Mark Details</td>
-</tr>
-<tr>
-  <td>Plus Two Board</td>
-  <td>${studentDetails.marks?.boardType ?? "Nil"}</td>
-</tr>
-<tr>
-  <td>Physcis</td>
-  <td>${studentDetails.marks?.physics ?? "Nil"}</td>
-</tr>
-<tr>
-  <td>chemistry</td>
-  <td>${studentDetails.marks?.chemistry ?? "Nil"}</td>
-</tr>
-<tr>
-  <td>Maths</td>
-  <td>${studentDetails.marks?.maths ?? "Nil"}</td>
-</tr>
-<tr>
-<td colspan="2" style="text-align: center; font-weight: bold;">Parents Details</td>
-</tr>
-<tr>
-<td>Father's Name</td>
-<td>${studentDetails.parentDetails?.fatherName ?? "Nil"}</td>
-</tr>
-<tr>
-<td>Father's Occupation</td>
-<td>${studentDetails.parentDetails?.fatherOccupation ?? "Nil"}</td>
-</tr>
-<tr>
-<td>Father's Mobile No</td>
-<td>${studentDetails.parentDetails?.fatherMobileNo ?? "Nil"}</td>
-</tr>
-<tr>
-<td>Mother's Name</td>
-<td>${studentDetails.parentDetails?.motherName ?? "Nil"}</td>
-</tr>
-<tr>
-<td>Mother's Occupation</td>
-<td>${studentDetails.parentDetails?.motherOccupation ?? "Nil"}</td>
-</tr>
-<tr>
-<td>Mother's Mobile No</td>
-<td>${studentDetails.parentDetails?.motherMobileNo ?? "Nil"}</td>
-</tr>
-<tr>
+      <td colspan="4" style="text-align: center; font-weight: bold;">Entrance Exam Details</td>
+    </tr>
+    <tr>
+      <td>Exam Name</td>
+      <td>${studentDetails.entranceExam}</td>
+      <td>Roll No</td>
+      <td>${studentDetails.entranceRollNo}</td>
+    </tr>
+    <tr>
+      <td>Rank</td>
+      <td>${studentDetails.entranceRank}</td>
+    </tr>
+    <tr>
+      <td colspan="4" style="text-align: center; font-weight: bold;">Qualifying Examination Details</td>
+    </tr>
+    <tr>
+      <td>Qualification</td>
+      <td>${studentDetails.qualify?.exam ?? "Nil"}</td>
+      <td>Exam Board</td>
+      <td>${studentDetails.qualify?.board}</td>
+    </tr>
+    <tr>
+      <td>Institution Name</td>
+      <td>${studentDetails.qualify?.institution}</td>
+      <td>Register No</td>
+      <td>${studentDetails.qualify?.regNo}</td>
+    </tr>
+    <tr>
+      <td>Exam Month and Year</td>
+      <td>${studentDetails.qualify?.examMonthYear}</td>
+      <td>Percentage</td>
+      <td>${studentDetails.qualify?.percentage}</td>
+    </tr>
+    <tr>
+      <td>CGPA</td>
+      <td>${studentDetails.qualify?.cgpa ?? "Nil"}</td>
+    </tr>
+    <tr>
+      <td colspan="4" style="text-align: center; font-weight: bold;">Plus Two Mark Details</td>
+    </tr>
+    <tr>
+      <td>Plus Two Board</td>
+      <td>${studentDetails.marks?.boardType ?? "Nil"}</td>
+      <td>Physics</td>
+      <td>${studentDetails.marks?.physics ?? "Nil"}</td>
+    </tr>
+    <tr>
+      <td>Chemistry</td>
+      <td>${studentDetails.marks?.chemistry ?? "Nil"}</td>
+      <td>Maths</td>
+      <td>${studentDetails.marks?.maths ?? "Nil"}</td>
+    </tr>
+    <tr>
+      <td colspan="4" style="text-align: center; font-weight: bold;">Parents Details</td>
+    </tr>
+    <tr>
+      <td>Father's Name</td>
+      <td>${studentDetails.parentDetails?.fatherName ?? "Nil"}</td>
+      <td>Mother's Name</td>
+      <td>${studentDetails.parentDetails?.motherName ?? "Nil"}</td>
+   
+    </tr>
+    <tr>
+      <td>Mobile No</td>
+      <td>${studentDetails.parentDetails?.fatherMobileNo ?? "Nil"}</td>
+      <td>Mobile No</td>
+      <td>${studentDetails.parentDetails?.motherMobileNo ?? "Nil"}</td>
+    </tr>
+    <tr>
+      <td>Occupation</td>
+      <td>${studentDetails.parentDetails?.fatherOccupation ?? "Nil"}</td>
+      <td>Occupation</td>
+      <td>${studentDetails.parentDetails?.motherOccupation ?? "Nil"}</td>
+    
+     
+    </tr>
+    <tr>
       <td>Annual Income</td>
       <td>${studentDetails.annualIncome}</td>
     </tr>
     <tr>
-    <td colspan="2" style="text-align: center; font-weight: bold;">Bank Account Details</td>
-  </tr>
+      <td colspan="4" style="text-align: center; font-weight: bold;">Bank Account Details</td>
+    </tr>
     <tr>
       <td>Bank Name</td>
-      <td>${studentDetails.bankDetails.bankName}</td>
+      <td>${studentDetails.bankDetails.bankName ?? "Nil"}</td>
+      <td>Branch</td>
+      <td>${studentDetails.bankDetails.branch ?? "Nil"}</td>
     </tr>
     <tr>
-      <td>Bank Branch</td>
-      <td>${studentDetails.bankDetails.branch}</td>
-    </tr>
-    <tr>
-      <td>Bank Account No</td>
-      <td>${studentDetails.bankDetails.accountNo}</td>
-    </tr>
-    <tr>
+      <td>Account No</td>
+      <td>${studentDetails.bankDetails.accountNo ?? "Nil"}</td>
       <td>IFSC Code</td>
-      <td>${studentDetails.bankDetails.ifscCode}</td>
+      <td>${studentDetails.bankDetails.ifscCode ?? "Nil"}</td>
     </tr>
     <tr>
-    <td colspan="2" style="text-align: center; font-weight: bold;">Achievements</td>
-  </tr>
-  <tr>
-      <td>Arts</td>
-      <td>${studentDetails.achievements.arts ?? "Nil"}</td>
+      <td colspan="4" style="text-align: center; font-weight: bold;">Achievements</td>
     </tr>
-    <tr>
-      <td>Sports</td>
-      <td>${studentDetails.achievements.sports ?? "Nil"}</td>
-    </tr>
-    <tr>
-      <td>Other</td>
+   
+      <tr>
+        <td>Arts</td>
+        <td>${studentDetails.achievements.arts ?? "Nil"}</td>
+        <td>Sports</td>
+        <td>${studentDetails.achievements.sports ?? "Nil"}</td>
+      </tr>
+      <tr>
+        <td>Other</td>
       <td>${studentDetails.achievements.other ?? "Nil"}</td>
+      </tr>
+    
+      <tr>
+        <td colspan="4" style="text-align: center; font-weight: bold;">Certificates Provided</td>
+      </tr>
+      <tr>
+        <td>Allotment Memo</td>
+        <td>${studentDetails.certificates.allotmentmemo ? "Yes" : "No"}</td>
+        <td>10th Certificate</td>
+        <td>${studentDetails.certificates.tenth ? "Yes" : "No"}</td>
+       
+      </tr>
+      <tr>
+        <td>12th Certificate</td>
+        <td>${studentDetails.certificates.plusTwo ? "Yes" : "No"}</td>
+        <td>TC and Conduct Certificate</td>
+        <td>${studentDetails.certificates.tcandconduct ? "Yes" : "No"}</td>
+      </tr>
+      </tr>
+      <tr>
+        <td>Data Sheet</td>
+        <td>${studentDetails.certificates.DataSheet ? "Yes" : "No"}</td>
+        <td>Physical Fitness</td>
+        <td>${studentDetails.certificates.physicalfitness ? "Yes" : "No"}</td>
+      </tr>
+    <tr>  
+       <td>passportsize Photo (2 Nos)</td>
+    <td>${studentDetails.certificates.passportsizephoto ? "Yes" : "No"}</td>
+   <td>Income Certificate</td>
+    
+   <td>${studentDetails.certificates.incomecertificates ? "Yes" : "No"}</td>
+   </tr>
+   <tr> 
+   <td>Community Certificate</td>
+    <td> ${studentDetails.certificates.communitycertificate ? "Yes" : "No"}</td>
+   <td>caste Certificate</td>
+    <td>${studentDetails.certificates.castecertificates ? "Yes" : "No"}</td>
+   </tr>
+   <tr> 
+    <td> Copy Of Aadhaar Card</td>
+    <td>${studentDetails.certificates.aadhar ? "Yes" : "No"}</td>
+    <td> Other Certificates</td>
+    <td>${studentDetails.certificates.other ? "Yes" : "No"}</td>
     </tr>
-            </table>
+
+  </table>
+
+
+ 
+
+             <div class="declaration">
+    <p class="heading">Remarks:</p>
+<br/>
+    
+    
+<p class="content">.............................................................................................................................................................................................................................................................................................................................................................................</p>
+   <br/>
+<p class="content">.............................................................................................................................................................................................................................................................................................................................................................................  </p>
+      
+    <br/><p class="content">.............................................................................................................................................................................................................................................................................................................................................................................  </p>
+ <br/>
+ <br/>
+    
+  </div>
+  <div class="signature">
+      <div class="left">
+        <p><strong>Name:</strong> ...........................................</p>
+        <p><strong>Signature:</strong> ...........................................</p>
+      </div>
+      <div class="right">
+        <p><strong>Place:</strong>Poonjar</p>
+        <p><strong>Date:</strong>${getTodaysDate()}</p>
+        <p>Principal</p>
+      </div>
+    </div>
+  </div>
             <button class="hide-on-print" onclick="window.print()">Print</button>
           </body>
         </html>
       `);
       printWindow.document.close();
-      printWindow.focus();
     } catch (error) {
       console.error("Error generating print preview:", error);
     }
   };
+
 
   const handleEdit = (student) => {
     setFormData({
