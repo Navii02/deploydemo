@@ -62,6 +62,20 @@ const ApprovedAndRemoved = () => {
       chemistry: "",
       maths: "",
     },
+    certificates: {
+      tenth: false,
+      plusTwo: false,
+      tcandconduct: false,
+      allotmentmemo: false,
+      Datasheet: false,
+      physicalfitness: false,
+      passportsizephoto: false,
+      incomecertificates: false,
+      communitycertificate: false,
+      castecertificate: false,
+      aadhaar: false,
+      other: false,
+    },
 
     annualIncome: "",
     nativity: "",
@@ -104,7 +118,7 @@ const ApprovedAndRemoved = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, checked, type } = e.target;
 
     // Handle nested state updates
     if (name.startsWith("qualify")) {
@@ -134,6 +148,14 @@ const ApprovedAndRemoved = () => {
           [bankField]: value,
         },
       }));
+    } else if (type === "checkbox") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        certificates: {
+          ...prevFormData.certificates,
+          [name]: checked,
+        },
+      }));
     } else if (name.includes("marks")) {
       const [, subField] = name.split(".");
       setFormData({
@@ -160,11 +182,17 @@ const ApprovedAndRemoved = () => {
     }
   };
   const handleDelete = async (studentId) => {
+    const confirm = window.confirm(
+      "Are you sure you want to delete this student?"
+    );
+    if (!confirm) return;
+
     try {
       await axios.delete(`${baseurl}/api/deleteStudent/${studentId}`);
       setApprovedStudents((prevStudents) =>
         prevStudents.filter((student) => student._id !== studentId)
       );
+      alert("Student deleted successfully.");
     } catch (error) {
       console.error("Error declining student:", error);
     }
@@ -212,11 +240,17 @@ const ApprovedAndRemoved = () => {
 
       const admissionID = studentDetails.admissionId;
       const getAcademicYear = (admissionID) => {
-        const year = parseInt(admissionID.split("/")[1]);
+        const yearPart = admissionID.split("/")[1];
+        let year = parseInt(yearPart, 10);
+
+        // If yearPart has only two digits, assume it's in the 2000s
+        if (yearPart.length === 2) {
+          year += 2000;
+        }
+
         const nextYear = year + 1;
         return `${year}-${nextYear.toString().slice(-2)}`;
       };
-
       const academicYear = getAcademicYear(admissionID);
 
       const printWindow = window.open("", "_blank");
@@ -233,11 +267,6 @@ const ApprovedAndRemoved = () => {
               font-family: Calibri, sans-serif;
               font-size: 11pt;
             }
-                .content-wrapper {
-      transform: scale(0.75); /* Adjust the scale as needed */
-      transform-origin: top left;
-      width: 133.33%; /* 1 / 0.75 to compensate for scaling */
-    }
             h1 {
               font-weight: bold;
               text-align: center;
@@ -264,6 +293,18 @@ const ApprovedAndRemoved = () => {
               right: 0px;
               top: 0px;
             }
+                 .declaration p {
+      margin: 10px 0;
+    }
+    .declaration .heading {
+      text-align: center; /* Center only the headings */
+      font-weight: bold;
+      font-size: 15pt;
+    }
+    .declaration .content {
+      text-align: left;
+      font-size: 14pt; /* Align the content to the left */
+    }
             @media print {
               .hide-on-print {
                 display: none;
@@ -296,6 +337,10 @@ const ApprovedAndRemoved = () => {
             <td colspan="2" style="font-weight:bold;">Admission No: ${
               studentDetails.admissionNumber
             }</td>
+          </tr>
+            <tr>
+            <td>Submission Date</td>
+            <td>${formatDate(studentDetails.submissionDate)}</td>
           </tr>
           <tr>
             <td>Admission Type</td>
@@ -418,6 +463,7 @@ const ApprovedAndRemoved = () => {
   <td>CGPA</td>
   <td>${studentDetails.qualify?.cgpa}</td>
 </tr>
+
 <td colspan="2" style="text-align: center; font-weight: bold;">Plus Two Mark Details</td>
 </tr>
 <tr>
@@ -501,7 +547,66 @@ const ApprovedAndRemoved = () => {
       <td>Other</td>
       <td>${studentDetails.achievements.other ?? "Nil"}</td>
     </tr>
+     <tr>
+      <td colspan="2" style="text-align: center; font-weight: bold;">Certificate Provided</td>
+    </tr>
+       <tr>
+      <td>10th Certificate</td>
+      <td>${studentDetails.certificates.tenth ? "Yes" : "No"}</td>
+    </tr>
+    <tr>
+      <td>12th Certificate</td>
+      <td>${studentDetails.certificates.plusTwo ? "Yes" : "No"}</td>
+    </tr>
+    <tr>
+      <td>TC and Conduct Certificate</td>
+      <td>${studentDetails.certificates.tcandconduct ? "Yes" : "No"}</td>
+    </tr>
+    <tr>
+      <td>Allotment Memo</td>
+      <td>${studentDetails.certificates.allotmentmemo ? "Yes" : "No"}</td>
+    </tr>
+       <td>Data Sheet</td>
+      <td>${studentDetails.certificates.DataSheet ? "Yes" : "No"}</td>
+    </tr>   <td>Physical Fitness</td>
+      <td>${studentDetails.certificates.physicalfitness ? "Yes" : "No"}</td>
+    </tr>   <td>passportsize Photo (2 Nos)</td>
+      <td>${studentDetails.certificates.passportsizephoto ? "Yes" : "No"}</td>
+    </tr>   <td>Income Certificate</td>
+      <td>${studentDetails.certificates.incomecertificates ? "Yes" : "No"}</td>
+    </tr>   <td>Community Certificate</td>
+      <td>${
+        studentDetails.certificates.communitycertificate ? "Yes" : "No"
+      }</td>
+    </tr>   <td>caste Certificate</td>
+      <td>${studentDetails.certificates.castecertificates ? "Yes" : "No"}</td>
+    </tr>   <td> Copy Of Aadhaar Card</td>
+      <td>${studentDetails.certificates.aadhar ? "Yes" : "No"}</td>
+    </tr>   <td> Other Certificates</td>
+      <td>${studentDetails.certificates.other ? "Yes" : "No"}</td>
+    </tr>
             </table>
+                     <div class="declaration">
+    <p class="heading">Remarks:</p>
+    <p class="content">.............................................................................................................................................................................................................................................................................................................................................................................</p>
+    <p class="content">.............................................................................................................................................................................................................................................................................................................................................................................  </p>
+        <p class="content">.............................................................................................................................................................................................................................................................................................................................................................................  </p>
+    &nbsp;
+     &nbsp;
+      &nbsp;
+
+    <p class="heading">Declaration of Student:</p>
+    <p class="content">
+      I .......................................................................... hereby undertake on being admitted to the college to abide by the rules and regulations of the college during the course of my study. I will not engage in any undesirable activity either inside or outside the college that will adversely affect orderly working, discipline, and the regulations of the college.
+    </p>
+     &nbsp;
+      &nbsp;
+    <p class="heading">Declaration of Parent:</p>
+    <p class="content">
+      I .................................................................................. hereby declare that my son / daughter / ward ................................................ will abide by the rules and regulations of this institution.
+    </p>
+
+  </div>
             <button class="hide-on-print" onclick="window.print()">Print</button>
           </body>
         </html>
@@ -571,6 +676,21 @@ const ApprovedAndRemoved = () => {
         physics: student.marks.physics,
         chemistry: student.marks.chemistry,
         maths: student.marks.maths,
+      },
+
+      certificates: {
+        tenth: student.certificates.tenth,
+        plusTwo: student.certificates.plusTwo,
+        tcandconduct: student.certificates.tcandconduct,
+        allotmentmemo: student.certificates.allotmentmemo,
+        Datasheet: student.certificates.datasheet,
+        physicalfitness: student.certificates.physicalfitness,
+        passportsizephoto: student.certificates.passportsizephoto,
+        incomecertificates: student.certificates.incomecertificates,
+        communitycertificate: student.certificates.communitycert,
+        castecertificate: student.certificates.castecertificate,
+        aadhaar: student.certificates.aadhaar,
+        other: student.certificates.other,
       },
 
       annualIncome: student.annualIncome || "",
@@ -665,8 +785,10 @@ const ApprovedAndRemoved = () => {
                           >
                             Print
                           </button>
-                       
-                        <button onClick={() => handleDelete(student._id)}>Delete</button>
+
+                          <button onClick={() => handleDelete(student._id)}>
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -1224,6 +1346,150 @@ const ApprovedAndRemoved = () => {
                         onChange={handleInputChange}
                       />
                     </div>
+                  </div>
+                </div>
+                <div className="checkbox-container">
+                  <label className="required">Submitted Certificates</label>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="tenth"
+                      name="tenth"
+                      checked={formData.certificates.tenth}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="tenth">10th Certificate</label>
+                  </div>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="plusTwo"
+                      name="plusTwo"
+                      checked={formData.certificates.plusTwo}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="plusTwo">12th Certificate</label>
+                  </div>
+
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="tcandconduct"
+                      name="tcandconduct"
+                      checked={formData.certificates.tcandconduct}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="tcandconduct">
+                      TC and Conduct Certificate
+                    </label>
+                  </div>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="allotmentmemo"
+                      name="allotmentmemo"
+                      checked={formData.certificates.allotmentmemo}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="allotmentmemo">Allotment Memo</label>
+                  </div>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="Datasheet"
+                      name="Datasheet"
+                      checked={formData.certificates.Datasheet}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="Datasheet">Data Sheet</label>
+                  </div>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="physicalfitness"
+                      name="physicalfitness"
+                      checked={formData.certificates.physicalfitness}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="physicalfitness">physicalfitness</label>
+                  </div>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="aadhaar"
+                      name="aadhaar"
+                      checked={formData.certificates.aadhaar}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="aadhaar">Copy of Aadhaar Card</label>
+                  </div>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="passportsizephoto"
+                      name="passportsizephoto"
+                      checked={formData.certificates.passportsizephoto}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="passportsizephoto">
+                      Passportsize Photo(2 Nos)
+                    </label>
+                  </div>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="incomecertificates"
+                      name="incomecertificates"
+                      checked={formData.certificates.incomecertificates}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="incomecertificates">
+                      Income Certificate
+                    </label>
+                  </div>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="communitycertificate"
+                      name="communitycertificate"
+                      checked={formData.certificates.communitycertificate}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="communitycertificate">
+                      Community Certificate
+                    </label>
+                  </div>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="castecertificate"
+                      name="castecertificate"
+                      checked={formData.certificates.castecertificate}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="castecertificate">Caste Certificate</label>
+                  </div>
+                  <div className="checkbox-custom">
+                    <input
+                      type="checkbox"
+                      id="other"
+                      name="other"
+                      checked={formData.certificates.other}
+                      onChange={handleInputChange}
+                    />
+                    <span className="checkmark"></span>
+                    <label htmlFor="other">Other</label>
                   </div>
                 </div>
                 <div className="button-container">

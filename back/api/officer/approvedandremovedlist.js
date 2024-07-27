@@ -59,7 +59,8 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
     const { bankDetails } = student;
     const { achievements } = student;
     const { qualify } = student;
-    const{marks } = student;
+    const { marks } = student;
+    const { certificates } = student;
     const photoUrl = photo ? `${req.protocol}://${req.get('host')}/ApprovedRemoved/image/${encodeURIComponent(photo)}` : null;
     res.json({
       studentDetails: {
@@ -121,7 +122,21 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
           physics:marks.physics,
           chemistry:marks.chemistry,
           maths:marks.maths,
-      }
+        },
+      certificates: {
+        tenth: certificates.tenth,
+        plusTwo: certificates.plusTwo,
+        tcandconduct:certificates.tcandconduct,
+        allotmentmemo: certificates.allotmentmemo,
+        Datasheet:certificates.DataSheet,
+        physicalfitness: certificates.physicalfitness,
+        passportsizephoto: certificates.passportsizephoto,
+        incomecertificates: certificates.incomecertificates,
+        communitycertificate: certificates.communitycertificate,
+        castecertificates: certificates.castecertificates,
+        aadhaar: certificates.aadhaar,
+        other:certificates.other,
+      },
     }
     });
   } catch (error) {

@@ -23,12 +23,17 @@
   padding: 10px;
 }
 
-.approve-btn, .decline-btn, .print-preview-btn {
+
+.approve-btn, .decline-btn, .print-preview-btn,.Edit-btn{
   cursor: pointer;
   padding: 6px 10px;
   margin-right: 5px;
   border: none;
   border-radius: 4px;
+}
+.Edit-btn {
+  background-color: rgb(88, 103, 120);
+  color: #fff;
 }
 
 .approve-btn {
@@ -113,7 +118,7 @@ h1 {
     display: inline-block;
   }
 
-  .approve-btn, .decline-btn, .print-preview-btn {
+  .approve-btn, .decline-btn, .print-preview-btn, .Edit-btn{
     display: none;
   }
 }

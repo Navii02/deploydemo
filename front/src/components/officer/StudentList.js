@@ -237,11 +237,17 @@ const StudentListOfficer = () => {
 
       const admissionID = studentDetails.admissionId;
       const getAcademicYear = (admissionID) => {
-        const year = parseInt(admissionID.split("/")[1]);
+        const yearPart = admissionID.split("/")[1];
+        let year = parseInt(yearPart, 10);
+      
+        // If yearPart has only two digits, assume it's in the 2000s
+        if (yearPart.length === 2) {
+          year += 2000;
+        }
+      
         const nextYear = year + 1;
         return `${year}-${nextYear.toString().slice(-2)}`;
       };
-
       const academicYear = getAcademicYear(admissionID);
 
       const printWindow = window.open("", "_blank");

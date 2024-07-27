@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
-
+import Navbar from "./OfficerNavbar";
 import "./DataEditing.css";
 import Modal from "react-modal";
 import { baseurl } from "../../url";
@@ -152,20 +152,17 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       console.error("Error accessing camera:", error);
     }
   };
+
   const handleCopyAddress = () => {
-    // Toggle the copy address option
-    setCopyAddressOption((prevOption) => {
-      // If the option is being enabled, copy the address
-      if (!prevOption) {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          permanentAddress: prevFormData.address,
-        }));
-      }
-      return !prevOption;
-    });
+    setCopyAddressOption(!copyAddressOption);
+    if (!copyAddressOption) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        permanentAddress: prevFormData.address,
+      }));
+    }
   };
-  
+
   const handleFileInputChange = (event) => {
     const { name, files } = event.target;
     if (name === "photo") {
@@ -237,14 +234,14 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       setFormData({ ...formData, [name]: value });
     }
   };
-  console.log("Form Data:", formData);
+ 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-
+  
     const sendData = new FormData();
-    console.log("senting", sendData);
+   
     // Append form data
     for (const key in formData) {
       if (formData[key] instanceof Object && !(formData[key] instanceof File)) {
@@ -255,45 +252,47 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
         sendData.append(key, formData[key] ? formData[key] : "nil");
       }
     }
-
+  
     try {
       const response = await axios.post(
         `${baseurl}/api/studentadmission`,
         sendData,
-
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       console.log("Data submitted successfully:", response.data);
       setFormData({ ...initialFormData });
-      window.location.reload();
+      setErrorMessage("Data submitted successfully"); // Use the same state variable for success message
+      setModalIsOpen(true); // Open the modal on success
     } catch (error) {
       if (error.response && error.response.data) {
         setErrorMessage(error.response.data.message || "Error submitting form");
       } else {
         setErrorMessage("Error submitting form");
       }
-      setModalIsOpen(true); // Open the modal when there is an error
+      setModalIsOpen(true); // Open the modal on error
     } finally {
       setLoading(false);
     }
   };
+  
   const closeModal = () => {
     setModalIsOpen(false);
+    window.location.reload();
   };
 
   return (
     <div>
     <div>
-      
-      <div className="adata-entry-container">
-        <div className="apage-title">Admission Form </div>
-        <hr class="adivider"></hr>
-        <form className="aform" onSubmit={handleSubmit}>
-          <div className="arow">
-            <div className="aform-group">
-              <label className="arequired">Admission Type:</label>
+      <Navbar />
+      <div className="data-entry-container">
+        <div className="page-title">Admission Form</div>
+        <hr class="divider"></hr>
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="row">
+            <div className="form-group">
+              <label className="required">Admission Type:</label>
               <select
-                name="aadmissionType"
+                name="admissionType"
                 value={formData.admissionType}
                 onChange={handleChange}
                 required
@@ -305,10 +304,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               </select>
             </div>
 
-            <div className="aform-group">
-              <label className="arequired">Allotment Category:</label>
+            <div className="form-group">
+              <label className="required">Allotment Category:</label>
               <select
-                name="aallotmentCategory"
+                name="allotmentCategory"
                 value={formData.allotmentCategory}
                 onChange={handleChange}
                 required
@@ -317,10 +316,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 <option value="State Merit">SM</option>
               </select>
             </div>
-            <div className="aform-group">
-              <label className="arequired">Fee Category:</label>
+            <div className="form-group">
+              <label className="required">Fee Category:</label>
               <select
-                name="afeeCategory"
+                name="feeCategory"
                 value={formData.feeCategory}
                 onChange={handleChange}
                 required
@@ -328,11 +327,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 <option value="">Select Fee Category</option>
                 <option value="Merit Lower Fee">Merit Lower Fee</option>
                 <option value="Merit Higher Fee">Merit Higher Fee</option>
-                <option value="FW">Fee waiver</option>
               </select>
             </div>
-            <div className="aform-group">
-              <label className="arequired"> Course:</label>
+            <div className="form-group">
+              <label className="required"> Course:</label>
               <select
                 value={formData.course}
                 onChange={(e) =>
@@ -349,8 +347,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               </select>
             </div>
           </div>
-          <div className="aform-group">
-            <label className="arequired">Name:</label>
+          <div className="form-group">
+            <label className="required">Name:</label>
             <input
               type="text"
               name="name"
@@ -359,9 +357,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               required
             />
           </div>
-          <div className="aform-group">
-            <label className="arequired">Photo:</label>
-            <div className="abutton-container">
+          <div className="form-group">
+            <label className="required">Photo:</label>
+            <div className="button-container">
               <input
                 ref={fileInputRef}
                 type="file"
@@ -372,22 +370,21 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               />
               <button
                 type="button"
-                className="acapture-button"
+                className="capture-button"
                 onClick={handleCameraCapture}
               >
                 Capture Photo
               </button>
-              OR
               <button
                 type="button"
-                className="aupload-button"
+                className="upload-button"
                 onClick={() => fileInputRef.current.click()}
               >
                 Upload Photo
               </button>
               {formData.photo && (
                 <img
-                  className="aphoto-preview"
+                  className="photo-preview"
                   src={URL.createObjectURL(formData.photo)}
                   alt="Uploaded"
                 />
@@ -397,37 +394,37 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             <video ref={videoRef} style={{ display: "none" }}></video>
             <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
           </div>
-          <div className="aform-group">
-  <label className="arequired">Address:</label>
-  <textarea
-    name="address"
-    value={formData.address}
-    onChange={handleChange}
-    required
-  ></textarea>
-</div>
-<div className="aform-group">
-  <label className="aradio-label">
-    <input
-      type="radio"
-      checked={copyAddressOption}
-      onChange={handleCopyAddress}
-    />
-    Copy Address
-  </label>
-  <label>Permanent Address:</label>
-  <textarea
-    name="permanentAddress"
-    value={formData.permanentAddress}
-    onChange={handleChange}
-    disabled={!copyAddressOption} // Disabled if copyAddressOption is false
-    required
-  />
-</div>
 
+          <div className="form-group">
+            <label className="required">Address:</label>
+            <textarea
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            ></textarea>
+          </div>
+          <div className="form-group">
+            <label className="radio-label">
+              <input
+                type="radio"
+                checked={copyAddressOption}
+                onChange={handleCopyAddress}
+              />
+              Copy Address
+            </label>
+            <label>Permanent Address:</label>
+            <textarea
+              name="permanentAddress"
+              value={formData.permanentAddress}
+              onChange={handleChange}
+              disabled={copyAddressOption}
+              required
+            />
+          </div>
 
-          <div className="aform-group">
-            <label className="arequired">pincode:</label>
+          <div className="form-group">
+            <label className="required">pincode:</label>
             <input
               type="text"
               name="pincode"
@@ -436,9 +433,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               required
             />
           </div>
-          <div className="arow">
-            <div className="aform-group">
-              <label className="arequired">Religion:</label>
+          <div className="row">
+            <div className="form-group">
+              <label className="required">Religion:</label>
               <input
                 type="text"
                 name="religion"
@@ -447,8 +444,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               />
             </div>
-            <div className="aform-group">
-              <label className="arequired">Community:</label>
+            <div className="form-group">
+              <label className="required">Community:</label>
               <input
                 type="text"
                 name="community"
@@ -458,9 +455,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               />
             </div>
           </div>
-          <div className="arow">
-            <div className="aform-group">
-              <label className="arequired">Date Of Birth:</label>
+          <div className="row">
+            <div className="form-group">
+              <label className="required">Date Of Birth:</label>
               <input
                 type="date"
                 name="dateOfBirth"
@@ -469,8 +466,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               />
             </div>
-            <div className="aform-group">
-              <label className="arequired">Gender:</label>
+            <div className="form-group">
+              <label className="required">Gender:</label>
               <select
                 name="gender"
                 value={formData.gender}
@@ -485,8 +482,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               </select>
             </div>
 
-            <div className="aform-group">
-              <label className="arequired">Blood Group:</label>
+            <div className="form-group">
+              <label className="required">Blood Group:</label>
               <input
                 type="text"
                 name="bloodGroup"
@@ -496,8 +493,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               />
             </div>
           </div>
-          <div className="aform-group">
-            <label className="arequired">Mobile No:</label>
+          <div className="form-group">
+            <label className="required">Mobile No:</label>
             <input
               type="tel"
               name="mobileNo"
@@ -508,8 +505,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               title="Please enter a valid 10-digit phone number"
             />
           </div>
-          <div className="aform-group">
-            <label className="arequired">WhatsApp No:</label>
+          <div className="form-group">
+            <label className="required">WhatsApp No:</label>
             <input
               type="tel"
               name="whatsappNo"
@@ -520,8 +517,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               title="Please enter a valid 10-digit phone number"
             />
           </div>
-          <div className="aform-group">
-            <label className="arequired">Email:</label>
+          <div className="form-group">
+            <label className="required">Email:</label>
             <input
               type="email"
               name="email"
@@ -530,8 +527,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               required
             />
           </div>
-          <div className="aform-group">
-            <label className="arequired">Entrance Exam Name:</label>
+          <div className="form-group">
+            <label className="required">Entrance Exam Name:</label>
             <input
               type="text"
               name="entranceExam"
@@ -540,9 +537,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               required
             />
           </div>
-          <div className="aparent-details-row">
-            <div className="aform-group">
-              <label className="arequired">Entrance Roll No:</label>
+          <div className="parent-details-row">
+            <div className="form-group">
+              <label className="required">Entrance Roll No:</label>
               <input
                 type="text"
                 name="entranceRollNo"
@@ -551,8 +548,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               />
             </div>
-            <div className="aform-group">
-              <label className="arequired">Entrance Rank:</label>
+            <div className="form-group">
+              <label className="required">Entrance Rank:</label>
               <input
                 type="text"
                 name="entranceRank"
@@ -566,13 +563,13 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
           {formData.course === "B.Tech CSE" ||
           formData.course === "B.Tech ECE" ? (
             <>
-              <div className="aform-group">
-                <div className="abox">
+              <div className="form-group">
+                <div className="box">
                   <h4>Plus Two Mark</h4>
-                  <label className="arequired">
+                  <label className="required">
                     (Please Enter Plus Two Mark Only)
                   </label>
-                  <div className="aradio-group-row">
+                  <div className="radio-group-row">
                     <label>
                       <input
                         type="radio"
@@ -615,7 +612,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                     </label>
                   </div>
 
-                  <div className="arow">
+                  <div className="row">
                     <label>
                       Physics Marks:
                       <input
@@ -650,8 +647,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               </div>
             </>
           ) : null}
-          <div className="aform-group">
-            <label className="arequired">Aadhar No:</label>
+          <div className="form-group">
+            <label className="required">Aadhar No:</label>
             <input
               type="text"
               name="aadharNo"
@@ -662,10 +659,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               required
             />
           </div>
-          <div className="abox">
-            <div className="aparent-details-row">
-              <div className="aform-group">
-                <label className="arequired">Qualifying Exam:</label>
+          <div className="box">
+            <div className="parent-details-row">
+              <div className="form-group">
+                <label className="required">Qualifying Exam:</label>
                 <input
                   type="text"
                   name="qualify.exam"
@@ -674,8 +671,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   required
                 />
               </div>
-              <div className="aform-group">
-                <label className="arequired">Board:</label>
+              <div className="form-group">
+                <label className="required">Board:</label>
                 <input
                   type="text"
                   name="qualify.board"
@@ -684,8 +681,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   required
                 />
               </div>
-              <div className="aform-group">
-                <label className="arequired">Institution:</label>
+              <div className="form-group">
+                <label className="required">Institution:</label>
                 <input
                   type="text"
                   name="qualify.institution"
@@ -694,8 +691,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   required
                 />
               </div>
-              <div className="aform-group">
-                <label className="arequired">Reg No:</label>
+              <div className="form-group">
+                <label className="required">Reg No:</label>
                 <input
                   type="text"
                   name="qualify.regNo"
@@ -704,8 +701,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   required
                 />
               </div>
-              <div className="aform-group">
-                <label className="arequired">Exam Month/Year:</label>
+              <div className="form-group">
+                <label className="required">Exam Month/Year:</label>
                 <input
                   type="text"
                   name="qualify.examMonthYear"
@@ -714,8 +711,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   required
                 />
               </div>
-              <div className="aform-group">
-                <label className="arequired">Percentage:</label>
+              <div className="form-group">
+                <label className="required">Percentage:</label>
                 <input
                   type="text"
                   name="qualify.percentage"
@@ -724,7 +721,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   required
                 />
               </div>
-              <div className="aform-group">
+              <div className="form-group">
                 <label>CGPA:</label>
                 <input
                   type="text"
@@ -736,10 +733,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
             </div>
           </div>
 
-          <div className="abox">
+          <div className="box">
             <h4>Parents Details</h4>
-            <div className="aparent-details-row">
-              <div className="aform-group">
+            <div className="parent-details-row">
+              <div className="form-group">
                 <label>Father's Name:</label>
                 <input
                   type="text"
@@ -748,7 +745,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="aform-group">
+              <div className="form-group">
                 <label>Mother's Name:</label>
                 <input
                   type="text"
@@ -757,7 +754,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="aform-group">
+              <div className="form-group">
                 <label>Father's Occupation:</label>
                 <input
                   type="text"
@@ -766,7 +763,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="aform-group">
+              <div className="form-group">
                 <label>Mother's Occupation:</label>
                 <input
                   type="text"
@@ -775,7 +772,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="aform-group">
+              <div className="form-group">
                 <label>Father's Mobile No:</label>
                 <input
                   type="tel"
@@ -787,7 +784,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 />
               </div>
 
-              <div className="aform-group">
+              <div className="form-group">
                 <label>Mother's Mobile No:</label>
                 <input
                   type="tel"
@@ -800,9 +797,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               </div>
             </div>
           </div>
-          <div className="arow">
-            <div className="aform-group">
-              <label className="arequired">Annual Income:</label>
+          <div className="row">
+            <div className="form-group">
+              <label className="required">Annual Income:</label>
               <input
                 type="text"
                 name="annualIncome"
@@ -811,8 +808,8 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 required
               />
             </div>
-            <div className="aform-group">
-              <label className="arequired">Nativity:</label>
+            <div className="form-group">
+              <label className="required">Nativity:</label>
               <input
                 type="text"
                 name="nativity"
@@ -822,10 +819,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               />
             </div>
           </div>
-          <div className="abox">
+          <div className="box">
             <h4>Bank Details</h4>
-            <div className="aparent-details-row">
-              <div className="aform-group">
+            <div className="parent-details-row">
+              <div className="form-group">
                 <label>Bank Name:</label>
                 <input
                   type="text"
@@ -834,7 +831,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="aform-group">
+              <div className="form-group">
                 <label>Branch:</label>
                 <input
                   type="text"
@@ -843,7 +840,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="aform-group">
+              <div className="form-group">
                 <label>Account No:</label>
                 <input
                   type="text"
@@ -852,7 +849,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="aform-group">
+              <div className="form-group">
                 <label>IFSC Code:</label>
                 <input
                   type="text"
@@ -863,10 +860,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               </div>
             </div>
           </div>
-          <div className="abox">
+          <div className="box">
             <h4>Achievements</h4>
-            <div className="arow">
-              <div className="aform-group">
+            <div className="row">
+              <div className="form-group">
                 <label>Arts:</label>
                 <input
                   type="text"
@@ -875,7 +872,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="aform-group">
+              <div className="form-group">
                 <label>Sports:</label>
                 <input
                   type="text"
@@ -884,7 +881,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="aform-group">
+              <div className="form-group">
                 <label>Other:</label>
                 <input
                   type="text"
@@ -895,9 +892,9 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
               </div>
             </div>
           </div>
-          <div className="acheckbox-container">
-            <label className="arequired"><h4>Submitted Certificates</h4></label>
-            <div className="acheckbox-custom">
+          <div className="checkbox-container">
+            <label className="required">Submitted Certificates</label>
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="tenth"
@@ -905,10 +902,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.tenth}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="tenth">10th Certificate</label>
             </div>
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="plusTwo"
@@ -916,11 +913,11 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.plusTwo}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="plusTwo">12th Certificate</label>
             </div>
 
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="tcandconduct"
@@ -928,10 +925,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.tcandconduct}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="tcandconduct">TC and Conduct Certificate</label>
             </div>
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="allotmentmemo"
@@ -939,10 +936,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.allotmentmemo}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="allotmentmemo">Allotment Memo</label>
             </div>
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="Datasheet"
@@ -950,10 +947,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.Datasheet}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="Datasheet">Data Sheet</label>
             </div>
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="physicalfitness"
@@ -961,10 +958,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.physicalfitness}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
-              <label htmlFor="physicalfitness">physical Fitness</label>
+              <span className="checkmark"></span>
+              <label htmlFor="physicalfitness">physicalfitness</label>
             </div>
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="aadhaar"
@@ -972,10 +969,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.aadhaar}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="aadhaar">Copy of Aadhaar Card</label>
             </div>
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="passportsizephoto"
@@ -983,12 +980,12 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.passportsizephoto}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="passportsizephoto">
-                Passport Size Photo(2 Nos)
+                Passportsize Photo(2 Nos)
               </label>
             </div>
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="incomecertificates"
@@ -996,10 +993,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.incomecertificates}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="incomecertificates">Income Certificate</label>
             </div>
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="communitycertificate"
@@ -1007,12 +1004,12 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.communitycertificate}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="communitycertificate">
                 Community Certificate
               </label>
             </div>
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="castecertificate"
@@ -1020,10 +1017,10 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.castecertificate}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="castecertificate">Caste Certificate</label>
             </div>
-            <div className="acheckbox-custom">
+            <div className="checkbox-custom">
               <input
                 type="checkbox"
                 id="other"
@@ -1031,17 +1028,17 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 checked={formData.certificates.other}
                 onChange={handleChange}
               />
-              <span className="acheckmark"></span>
+              <span className="checkmark"></span>
               <label htmlFor="other">Other</label>
             </div>
           </div>
-          <div className="abutton-container">
-            <button type="submit" className="asubmit-button">
+          <div className="button-container">
+            <button type="submit" className="submit-button">
               Submit
             </button>
             <button
               type="button"
-              className="aclear-button"
+              className="clear-button"
               onClick={() => setFormData({ ...initialFormData })}
             >
               Clear
@@ -1050,26 +1047,26 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
         </form>
        
         {loading && (
-          <div className="aloading-overlay">
-            <div className="aloading-spinner"></div>
+          <div className="loading-overlay">
+            <div className="loading-spinner"></div>
             <p>Saving...</p>
           </div>
         )}
       </div>
     
     </div>
-      <Modal
-      isOpen={modalIsOpen}
-      onRequestClose={closeModal}
-      contentLabel="Error Modal"
-      className="amodal"
-      overlayClassName="amodal-overlay"
-    >
- 
-      <h3>Error</h3>
-      <p>{errorMessage}</p>
-      <button onClick={closeModal}>Close</button>
-    </Modal>
+   
+<Modal
+  isOpen={modalIsOpen}
+  onRequestClose={closeModal}
+  contentLabel="Message Modal"
+  className="modal"
+  overlayClassName="modal-overlay"
+>
+  <h3>{errorMessage === "Data submitted successfully" ? "Success" : "Error"}</h3>
+  <p>{errorMessage}</p>
+  <button onClick={closeModal}>Close</button>
+</Modal>
     </div>
   );
 };
