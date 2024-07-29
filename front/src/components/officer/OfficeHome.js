@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './OfficerNavbar';
 import './OfficeHome.css';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
 
 function OfficeHome() {
   const [officerName, setOfficerName] = useState('');
@@ -27,7 +27,7 @@ function OfficeHome() {
         const { name, post } = response.data;
 
         setOfficerName(name);
-        setPosition(post); // Set post directly as position (string)
+        setPosition(post);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching officer profile:', error);
@@ -44,7 +44,9 @@ function OfficeHome() {
       <div className="officer-home-container">
         <div className="welcome-section">
           {loading ? (
-            <p>Loading...</p>
+            <div className="loading-spinner">
+              <p>Loading...</p>
+            </div>
           ) : (
             <>
               <h1 className="welcome-header">Welcome, {officerName}!</h1>
@@ -54,8 +56,7 @@ function OfficeHome() {
               <div className="associated-data">
                 <h2>Your Associated Data:</h2>
                 <p>
-                  <strong>Position:</strong>{' '}
-                  {position ? position : 'No position available'}
+                  <strong>Position:</strong> {position ? position : 'No position available'}
                 </p>
               </div>
             </>

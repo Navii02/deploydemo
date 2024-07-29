@@ -79,6 +79,9 @@ function OfficerNavbar() {
               <Link to='/certificate-distribution' className='dropdown-link' onClick={closeMobileMenu}>
                 Certificates
               </Link>
+              <Link to='/feeDetails' className='dropdown-link' onClick={closeMobileMenu}>
+               Fee Details
+              </Link>
               <Link to='/feepayment' className='dropdown-link' onClick={closeMobileMenu}>
                 Payments
               </Link>

@@ -223,7 +223,9 @@ const ApprovedAndRemoved = () => {
       const response = await axios.get(
         `${baseurl}/api/approvedstudentDetails/${_id}`
       );
+      
       const studentDetails = response.data.studentDetails;
+      const feeDetails = response.data.studentDetails.feeDetails;
 
       if (!studentDetails || !studentDetails.parentDetails) {
         console.error("Error: Invalid student details received");
@@ -243,8 +245,22 @@ const ApprovedAndRemoved = () => {
       }
       
       // Example usage
-      console.log(getTodaysDate()); // Outputs something like "2024-07-27"
-      
+     // Outputs something like "2024-07-27"
+     const calculateTotalFee = () => {
+      return (
+        (parseFloat(feeDetails.admissionFee) || 0) +
+        (parseFloat(feeDetails.tuitionFee) || 0) +
+        (parseFloat(feeDetails.groupInsuranceandidCard) || 0) +
+        (parseFloat(feeDetails.ktuSportsArts) || 0) +
+        (parseFloat(feeDetails.ktuAdminFee) || 0) +
+        (parseFloat(feeDetails.ktuAffiliationFee) || 0) +
+        (parseFloat(feeDetails.cautionDeposit) || 0) +
+        (parseFloat(feeDetails.pta) || 0) +
+        (parseFloat(feeDetails.busFund) || 0) +
+        (parseFloat(feeDetails.trainingPlacement) || 0)
+      );
+    };
+  
 
       const formatDate = (dateString) => {
         const dateOfBirth = new Date(dateString);
@@ -275,7 +291,9 @@ const ApprovedAndRemoved = () => {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${studentDetails.name}'s Details</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -356,9 +374,46 @@ const ApprovedAndRemoved = () => {
     .signature .field {
       margin-top: 15px;
     }
+    .centered-table {
+      width: 80%; /* Adjust the width of the table as needed */
+      margin-left: auto;
+      margin-right: auto;
+      border-collapse: collapse; /* Optional: for cleaner table borders */
+      font-size: 12pt; /* Adjust font size */
+    }
+    .centered-table td {
+      padding: 10px; /* Adjust padding */
+    }
+    .first-col {
+      width: 60%; /* Adjust the width percentage of the first column */
+    }
+    .second-col {
+      width: 40%;
+      text-align: center; /* Adjust the width percentage of the second column */
+    }
+   .cutting-symbol {
+  display: inline-block;
+  margin-right: 10px; /* Space between the icon and the text */
+  vertical-align: middle; /* Align with the middle of the text */
+}
+
+.cutting-symbol i {
+  font-size: 24px; /* Adjust the size as needed */
+  color: #000; /* Change color if needed */
+}
+
+.dotted-line {
+  display: inline-block;
+  width: 100%; /* Adjust width as needed */
+  border-bottom: 1px dotted black; /* Style for the dotted line */
+  vertical-align: middle; /* Align with the middle of the icon */
+}
     @media print {
       .hide-on-print {
         display: none;
+      }
+      .page-break {
+        page-break-before: always;
       }
     }
     @page {
@@ -640,6 +695,138 @@ const ApprovedAndRemoved = () => {
       </div>
     </div>
   </div>
+   <div class="page-break"></div>
+
+
+   <table class="print-table centered-table">
+   <tr style="padding-top: 20px; padding-bottom: 20px;">
+     <td colspan="2" style="text-align: center; font-weight: bold;">
+       ${studentDetails.course} ${studentDetails.feeCategory} Structure
+     </td>
+   </tr>
+ 
+   <tr>
+     <td class="first-col">Admission Fee (1st Year Only)</td>
+     <td class="second-col">${feeDetails.admissionFee}</td>
+   </tr>
+   <tr>
+     <td class="first-col">Tuition Fee</td>
+     <td class="second-col">${feeDetails.tuitionFee}</td>
+   </tr>
+   <tr>
+     <td class="first-col">Group Insurance Fee and Id Card</td>
+     <td class="second-col">${feeDetails.groupInsuranceandidCard}</td>
+   </tr>
+   <tr>
+     <td class="first-col">KTU Sports and Arts Fee</td>
+     <td class="second-col">${feeDetails.ktuSportsArts}</td>
+   </tr>
+   <tr>
+     <td class="first-col">KTU Administration Fee (1st year only)</td>
+     <td class="second-col">${feeDetails.ktuAdminFee}</td>
+   </tr>
+   <tr>
+     <td class="first-col">KTU Affiliation Fee (1st year only)</td>
+     <td class="second-col">${feeDetails.ktuAffiliationFee}</td>
+   </tr>
+   <tr>
+     <td class="first-col">Caution Deposit (refundable) (1st year only)</td>
+     <td class="second-col">${feeDetails.cautionDeposit}</td>
+   </tr>
+   <tr>
+     <td class="first-col">PTA (One Time)</td>
+     <td class="second-col">${feeDetails.pta}</td>
+   </tr>
+   <tr>
+     <td class="first-col">Bus Fund (One Time)</td>
+     <td class="second-col">${feeDetails.busFund}</td>
+   </tr>
+   <tr>
+     <td class="first-col">Training and Placement Cell (One Time)</td>
+     <td class="second-col">${feeDetails.trainingPlacement}</td>
+   </tr>
+      <td class="first-col">Total</td>
+     <td class="second-col">${calculateTotalFee()}</td>
+   </tr>
+ </table>
+   <p class="content"style="text-align: center;">
+   Tution Fee ${feeDetails.tuitionFee}/- to be remitted in the start of 2nd semester
+   </p>
+ <br/>
+      <br/>
+       <br/>
+      <br/> <br/>
+      <br/> <br/>
+      <br/>
+<p class="content">
+  <span class="cutting-symbol">
+    <i class="fas fa-cut"></i> <!-- Font Awesome scissor icon -->
+  </span>
+  <span class="dotted-line"></span>
+</p>
+       <br/>
+      <br/> <br/>
+      <br/> <br/>
+      <br/> <br/>
+      <br/>
+
+
+
+
+ <table class="print-table centered-table">
+   <tr style="padding-top: 20px; padding-bottom: 20px;">
+     <td colspan="2" style="text-align: center; font-weight: bold;">
+       ${studentDetails.course} ${studentDetails.feeCategory} Structure
+     </td>
+   </tr>
+ 
+   <tr>
+     <td class="first-col">Admission Fee (1st Year Only)</td>
+     <td class="second-col">${feeDetails.admissionFee}</td>
+   </tr>
+   <tr>
+     <td class="first-col">Tuition Fee</td>
+     <td class="second-col">${feeDetails.tuitionFee}</td>
+   </tr>
+   <tr>
+     <td class="first-col">Group Insurance Fee and Id Card</td>
+     <td class="second-col">${feeDetails.groupInsuranceandidCard}</td>
+   </tr>
+   <tr>
+     <td class="first-col">KTU Sports and Arts Fee</td>
+     <td class="second-col">${feeDetails.ktuSportsArts}</td>
+   </tr>
+   <tr>
+     <td class="first-col">KTU Administration Fee (1st year only)</td>
+     <td class="second-col">${feeDetails.ktuAdminFee}</td>
+   </tr>
+   <tr>
+     <td class="first-col">KTU Affiliation Fee (1st year only)</td>
+     <td class="second-col">${feeDetails.ktuAffiliationFee}</td>
+   </tr>
+   <tr>
+     <td class="first-col">Caution Deposit (refundable) (1st year only)</td>
+     <td class="second-col">${feeDetails.cautionDeposit}</td>
+   </tr>
+   <tr>
+     <td class="first-col">PTA (One Time)</td>
+     <td class="second-col">${feeDetails.pta}</td>
+   </tr>
+   <tr>
+     <td class="first-col">Bus Fund (One Time)</td>
+     <td class="second-col">${feeDetails.busFund}</td>
+   </tr>
+   <tr>
+     <td class="first-col">Training and Placement Cell (One Time)</td>
+     <td class="second-col">${feeDetails.trainingPlacement}</td>
+   </tr>
+      <td class="first-col">Total</td>
+     <td class="second-col">${calculateTotalFee()}</td>
+   </tr>
+ </table>
+    <p class="content"style="text-align: center;">
+   Tution Fee ${feeDetails.tuitionFee}/- to be remitted in the start of 2nd semester
+   </p>
             <button class="hide-on-print" onclick="window.print()">Print</button>
           </body>
         </html>

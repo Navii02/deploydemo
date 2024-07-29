@@ -327,6 +327,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
                 <option value="">Select Fee Category</option>
                 <option value="Merit Lower Fee">Merit Lower Fee</option>
                 <option value="Merit Higher Fee">Merit Higher Fee</option>
+                <option value=" Fee wavier">FW</option>
               </select>
             </div>
             <div className="form-group">

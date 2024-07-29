@@ -1,60 +1,97 @@
-/* FacultyHome.css */
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f7fc;
+}
 
 .officer-home-container {
-   max-width: 100%;
-   margin: auto;
-   padding: 20px;
-   text-align: center;
-   background-image: url('../../../public/images/WhatsApp\ Image\ 2024-02-01\ at\ 14.57.55_0b5938a6.jpg');
-   background-size: cover;
-   background-position: center;
-   background-repeat: no-repeat;
-   width: 100%;
-   min-height: 100vh; /* Set a minimum height to ensure it covers the screen */
-   color: #fff;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   position: relative;
- }
- 
- .overlay {
-   background: rgba(255, 255, 255, 0.9); /* White background with less transparency */
-   border-radius: 8px;
-   padding: 20px;
-   width: 80%; /* Adjust the width as needed */
-   max-width: 800px; /* Set a maximum width for better readability */
- }
- 
- .welcome-header {
-   color: #333; /* Adjust the text color for better visibility */
-   font-size: 36px;
-   margin-bottom: 20px;
- }
- 
- .welcome-text {
-   color: #333; /* Adjust the text color for better visibility */
-   font-size: 18px;
-   line-height: 1.5;
- }
- 
- .associated-data {
-   margin-top: 40px;
- }
- 
- .associated-data h2 {
-   color: #333; /* Adjust the text color for better visibility */
-   font-size: 24px;
-   margin-bottom: 10px;
- }
- 
- .associated-data p {
-   color: #333; /* Adjust the text color for better visibility */
-   font-size: 16px;
-   margin-bottom: 8px;
- }
- 
- /* Additional styles for interactive and attractive elements can be added here */
- 
-   
-  
+  max-width: 100%;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+  background-image: url('../../../public/images/WhatsApp\ Image\ 2024-02-01\ at\ 14.57.55_0b5938a6.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  min-height: 100vh;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.overlay {
+  background: rgba(255, 255, 255, 0.9); /* White background with less transparency */
+  border-radius: 8px;
+  padding: 20px;
+  width: 80%; /* Adjust the width as needed */
+  max-width: 800px; /* Set a maximum width for better readability */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+}
+
+.welcome-header {
+  color: #333; /* Adjust the text color for better visibility */
+  font-size: 36px;
+  margin-bottom: 20px;
+  font-weight: 700; /* Bold the header */
+}
+
+.welcome-text {
+  color: #333; /* Adjust the text color for better visibility */
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.associated-data {
+  margin-top: 40px;
+}
+
+.associated-data h2 {
+  color: #333; /* Adjust the text color for better visibility */
+  font-size: 24px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.associated-data p {
+  color: #333; /* Adjust the text color for better visibility */
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* Button styles */
+button {
+  font-family: 'Roboto', sans-serif;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.loading-spinner p {
+  font-size: 1.5rem;
+  color: #007bff;
+}
+
+/* Additional styles for interactive and attractive elements can be added here */

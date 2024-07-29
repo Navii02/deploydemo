@@ -8,6 +8,7 @@ const { storage, ref, uploadBytes, getDownloadURL } = require('../../firebase');
 const Student = require('../../models/Officer/StudentAdmission');
 const ApprovedStudent = require('../../models/Officer/ApprovedStudents');
 const NotAdmittedStudent = require('../../models/Officer/NotApprovedstudents');
+const Fee = require('../../models/Officer/FeeDetails');
 
 const router = express.Router();
 router.put('/datatable/updateStudent/:studentId', async (req, res) => {
@@ -31,7 +32,9 @@ router.get('/studentAdmission', async (req, res) => {
   }
 });
 
-// Fetch student details by ID
+
+
+
 router.get('/studentDetails/:id', async (req, res) => {
   try {
     const studentId = req.params.id;
@@ -43,17 +46,31 @@ router.get('/studentDetails/:id', async (req, res) => {
       return res.status(404).json({ error: 'Student not found' });
     }
 
+    // Determine the course and fee category
+    const { course, feeCategory } = student;
+
+   
+    let feeDetails;
+
+    // Fetch fee details based on the student's course
+    if (course === 'B.Tech CSE' || course === 'B.Tech ECE') {
+      feeDetails = await Fee.findOne({ course: 'B.Tech', feeCategory });
+    } else {
+      feeDetails = await Fee.findOne({ course });
+    }
+
+    if (!feeDetails) {
+      return res.status(404).json({ error: 'Fee details not found for the given course and category' });
+    }
+
     // Extract necessary details for print preview
-    const { name, admissionType, admissionId, admissionNumber, allotmentCategory, 
-      feeCategory, address, permanentAddress, photo, pincode, religion, community, gender, 
-      dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo,
-       entranceRank, aadharNo, course, annualIncome, nativity,      submissionDate, } = student;
-    const { parentDetails } = student;
-    const { bankDetails } = student;
-    const { achievements } = student;
-    const { qualify } = student;
-    const {marks} = student;
-    const {certificates} = student;
+    const {
+      name, admissionType, admissionId, admissionNumber, allotmentCategory, address, permanentAddress,
+      photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email,
+      entranceExam, entranceRollNo, entranceRank, aadharNo, annualIncome, nativity, submissionDate,
+      parentDetails, bankDetails, achievements, qualify, marks, certificates
+    } = student;
+
     const photoUrl = photo ? `${req.protocol}://${req.get('host')}/${photo}` : null;
 
     res.json({
@@ -112,28 +129,38 @@ router.get('/studentDetails/:id', async (req, res) => {
           other: achievements.other,
         },
         marks: {
-          boardType:marks.boardType,
-          physics:marks.physics,
-          chemistry:marks.chemistry,
-          maths:marks.maths,
+          boardType: marks.boardType,
+          physics: marks.physics,
+          chemistry: marks.chemistry,
+          maths: marks.maths,
         },
         certificates: {
           tenth: certificates.tenth,
           plusTwo: certificates.plusTwo,
-          tcandconduct:certificates.tcandconduct,
+          tcandconduct: certificates.tcandconduct,
           allotmentmemo: certificates.allotmentmemo,
-          Datasheet:certificates.DataSheet,
+          DataSheet: certificates.DataSheet,
           physicalfitness: certificates.physicalfitness,
           passportsizephoto: certificates.passportsizephoto,
           incomecertificates: certificates.incomecertificates,
           communitycertificate: certificates.communitycertificate,
           castecertificates: certificates.castecertificates,
           aadhaar: certificates.aadhaar,
-          other:certificates.other,
+          other: certificates.other,
         },
-
-        
         submissionDate,
+        feeDetails: {
+          admissionFee: feeDetails.admissionFee,
+          tuitionFee: feeDetails.tuitionFee,
+          groupInsuranceandidCard: feeDetails.groupInsuranceandidCard,
+          ktuSportsArts: feeDetails.ktuSportsArts,
+          ktuAdminFee: feeDetails.ktuAdminFee,
+          ktuAffiliationFee: feeDetails.ktuAffiliationFee,
+          cautionDeposit: feeDetails.cautionDeposit,
+          pta: feeDetails.pta,
+          busFund: feeDetails.busFund,
+          trainingPlacement: feeDetails.trainingPlacement,
+        }
       },
     });
   } catch (error) {
@@ -141,6 +168,8 @@ router.get('/studentDetails/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 // Decline student by ID and move to NotAdmittedStudents
 router.post('/decline/:id', async (req, res) => {

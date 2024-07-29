@@ -33,6 +33,7 @@ const officerForget=require('./api/officer/officerForgot')
 const aprrovedLists = require('./api/officer/approvedandremovedlist')
 const FeePayment = require('./api/officer/FeePayment')
 const Officerhome = require('./api/officer/officerhome')
+const AdmissionFeeDetails = require('./api/officer/FeeDetails')
 
 
 const FaculityRoutes = require('./api/faculity/faculityRoutes')
@@ -174,6 +175,7 @@ app.use('/api',performance)
 app.use('/api',Slist)
 app.use('/api/student',FeeDetails)
 app.use('/api',HodPerformance)
+app.use('/api',AdmissionFeeDetails)
 
  app.use('/api',TutorHome)
  app.use('/api',DataTable)

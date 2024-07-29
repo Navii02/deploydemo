@@ -5,6 +5,7 @@ const path = require('path');
 const { storage, ref, uploadBytes, getDownloadURL } = require('../../firebase');
 const ApprovedStudent = require('../../models/Officer/ApprovedStudents');
 const RemovedStudent = require('../../models/Officer/NotApprovedstudents');
+const Fee = require('../../models/Officer/FeeDetails');
 
 // Multer setup for handling file uploads
 const upload = multer({
@@ -54,7 +55,23 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
-    const { name, admissionType, admissionId, admissionNumber, allotmentCategory, feeCategory, address, permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo, course, annualIncome, nativity } = student;
+    const { course, feeCategory } = student;
+
+
+    let feeDetails;
+
+    // Fetch fee details based on the student's course
+    if (course === 'B.Tech CSE' || course === 'B.Tech ECE') {
+      feeDetails = await Fee.findOne({ course: 'B.Tech', feeCategory });
+    } else {
+      feeDetails = await Fee.findOne({ course });
+    }
+
+    if (!feeDetails) {
+      return res.status(404).json({ error: 'Fee details not found for the given course and category' });
+    }
+
+    const { name, admissionType, admissionId, admissionNumber, allotmentCategory,  address, permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo,  annualIncome, nativity,submissionDate} = student;
     const { parentDetails } = student;
     const { bankDetails } = student;
     const { achievements } = student;
@@ -89,6 +106,7 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
         annualIncome,
         nativity,
         photoUrl,
+        submissionDate,
         qualify: {
           exam: qualify.exam,
           board: qualify.board,
@@ -137,6 +155,18 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
         aadhaar: certificates.aadhaar,
         other:certificates.other,
       },
+      feeDetails: {
+        admissionFee: feeDetails.admissionFee,
+        tuitionFee: feeDetails.tuitionFee,
+        groupInsuranceandidCard: feeDetails.groupInsuranceandidCard,
+        ktuSportsArts: feeDetails.ktuSportsArts,
+        ktuAdminFee: feeDetails.ktuAdminFee,
+        ktuAffiliationFee: feeDetails.ktuAffiliationFee,
+        cautionDeposit: feeDetails.cautionDeposit,
+        pta: feeDetails.pta,
+        busFund: feeDetails.busFund,
+        trainingPlacement: feeDetails.trainingPlacement,
+      }
     }
     });
   } catch (error) {

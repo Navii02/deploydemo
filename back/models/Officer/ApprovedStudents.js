@@ -118,7 +118,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
   }],
   submissionDate: {
     type: Date,
-   // Set the default value to the current date and time
+    // Set the default value to the current date and time
   },
 
 });

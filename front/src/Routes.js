@@ -28,6 +28,7 @@ import CertificateDistribution from './components/officer/CertificateDistributio
 import ApprovedAndRemoved from './components/officer/ApprovedAndRemoved';
 import FeePayment from './components/officer/FeePayment';
 import StudentListPage from './components/officer/StudentList';
+import AdmissionFeeDetails  from './components/officer/FeeDetails';
 
 import AdminDashboard from './components/admin/AdminDashboard';
 import AForgotPassword from './components/admin/AdminForgot';
@@ -237,6 +238,14 @@ function RoutesComp() {
           element={
             <PrivateRoute>
               <FeePayment />
+            </PrivateRoute>
+          }
+        />
+         <Route
+          path='/feeDetails'
+          element={
+            <PrivateRoute>
+              <AdmissionFeeDetails/>
             </PrivateRoute>
           }
         />
