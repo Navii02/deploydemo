@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import "./CertificateRecieve.css";
 import UserNavbar from './UserNavbar';
 import { baseurl } from '../../url';
 import Loading from './Loading'; // Import the Loading component
