@@ -810,7 +810,7 @@ const StudentList = () => {
      <td class="second-col">${feeDetails.admissionFee}</td>
    </tr>
    <tr>
-     <td class="first-col">Tuition Fee</td>
+     <td class="first-col">Tuition Fee(per Semester)</td>
      <td class="second-col">${feeDetails.tuitionFee}</td>
    </tr>
    <tr>
