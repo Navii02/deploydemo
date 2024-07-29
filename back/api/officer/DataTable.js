@@ -246,11 +246,11 @@ router.post('/approve/:id', async (req, res) => {
     // Determine the starting number based on the course
     let startingNumber;
     if (['B.Tech CSE', 'B.Tech ECE'].includes(student.course)) {
-      startingNumber = 3434;
+      startingNumber = 3433;
     } else if (['BCA'].includes(student.course)) {
       startingNumber = 0;
     } else if (['MCA'].includes(student.course)) {
-      startingNumber = 23;
+      startingNumber = 22;
     } else if (['BBA'].includes(student.course)) {
       startingNumber = 0;
     } else {

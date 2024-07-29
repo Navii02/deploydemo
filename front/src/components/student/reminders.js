@@ -16,6 +16,7 @@ const Reminders = () => {
   const course = localStorage.getItem('course');
   const semester = localStorage.getItem('semester');
   const currentYear = new Date().getFullYear(); // Get the current year
+  console.log(course, semester, currentYear);
 
   useEffect(() => {
     const categories = ['attendance', 'internalMarks', 'assignments', 'updates'];
@@ -61,7 +62,7 @@ const Reminders = () => {
         }
       } catch (error) {
         console.error(`Error fetching ${category} reminders:`, error);
-        setError(error.message);
+        setError('Failed to fetch reminders. Please try again later.');
       }
     };
 
@@ -74,8 +75,10 @@ const Reminders = () => {
     fetchAllReminders();
   }, [userEmail, course, semester, currentYear]);
 
-  const renderCategoryReminders = (categoryReminders) => {
-    const { category, data } = categoryReminders;
+  const renderCategoryReminders = (category, data) => {
+    if (data.message) { // Check for custom message in response
+      return <p>{data.message}</p>;
+    }
 
     if (!data || data.length === 0) {
       return <p>No reminders for this category.</p>;
@@ -85,7 +88,6 @@ const Reminders = () => {
       case 'attendance':
         return (
           <div>
-            <h3>Subject-wise Attendance</h3>
             <div className="attendance-container">
               {data.map((attendance, index) => (
                 <div className="attendance-item" key={index}>
@@ -107,7 +109,6 @@ const Reminders = () => {
       case 'internalMarks':
         return (
           <div>
-            <h3>Internal Marks</h3>
             <table className="internal-marks-table">
               <thead>
                 <tr>
@@ -128,14 +129,11 @@ const Reminders = () => {
         );
       case 'updates':
         return (
-          <div>
-            <h3>Updates</h3>
-            <ul className="updates">
-              {data.map((update, index) => (
-                <li key={index}>{update}</li>
-              ))}
-            </ul>
-          </div>
+          <ul className="updates">
+            {data.map((update, index) => (
+              <li key={index}>{update}</li>
+            ))}
+          </ul>
         );
       default:
         return (
@@ -152,7 +150,7 @@ const Reminders = () => {
 
   const renderReminderContent = (category, reminder) => {
     if (!reminder) {
-      return null; // Handle case where reminder is undefined or null
+      return <div>No data available</div>; // Handle case where reminder is undefined or null
     }
 
     switch (category) {
@@ -189,9 +187,9 @@ const Reminders = () => {
     <>
       <Navbar />
       <div className="reminder-page-container">
-        {assignmentReminders.length > 0 && (
-          <div className="reminder-category">
-            <h2>Assignments</h2>
+        <div className="reminder-category">
+          <h2>Assignments</h2>
+          {assignmentReminders.length > 0 ? (
             <table className="assignment-table">
               <thead>
                 <tr>
@@ -211,26 +209,22 @@ const Reminders = () => {
                   ))}
               </tbody>
             </table>
-          </div>
-        )}
-        {attendanceReminders.length > 0 && (
-          <div className="reminder-category">
-            <h2>Attendance</h2>
-            {renderCategoryReminders({ category: 'attendance', data: attendanceReminders })}
-          </div>
-        )}
-        {internalMarksReminders.length > 0 && (
-          <div className="reminder-category">
-            <h2>Internal Marks</h2>
-            {renderCategoryReminders({ category: 'internalMarks', data: internalMarksReminders })}
-          </div>
-        )}
-        {updatesReminders.length > 0 && (
-          <div className="reminder-category">
-            <h2>Updates</h2>
-            {renderCategoryReminders({ category: 'updates', data: updatesReminders })}
-          </div>
-        )}
+          ) : (
+            <p>No assignments available.</p>
+          )}
+        </div>
+        <div className="reminder-category">
+          <h2>Attendance</h2>
+          {renderCategoryReminders('attendance', attendanceReminders)}
+        </div>
+        <div className="reminder-category">
+          <h2>Internal Marks</h2>
+          {renderCategoryReminders('internalMarks', internalMarksReminders)}
+        </div>
+        <div className="reminder-category">
+          <h2>Updates</h2>
+          {renderCategoryReminders('updates', updatesReminders)}
+        </div>
       </div>
     </>
   );

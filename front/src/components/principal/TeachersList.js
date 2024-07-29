@@ -12,7 +12,7 @@ function TeacherPage() {
 
     const fetchTeacherData = async () => {
         try {
-            const response = await fetch(`${baseurl}/api/teachers1`);
+            const response = await fetch(`${baseurl}/api/teachers`);
             const data = await response.json();
             setTeachers(data); // Assuming the data is an array of teacher objects
         } catch (error) {

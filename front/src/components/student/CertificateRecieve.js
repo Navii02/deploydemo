@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './CertificateRecieve.css';
+
 import UserNavbar from './UserNavbar';
 import { baseurl } from '../../url';
 import Loading from './Loading'; // Import the Loading component
@@ -31,14 +31,14 @@ const CertificateRequestsPage = () => {
     }
   }, [userEmail]);
 
-  const handleDownload = async (fileUrl) => {
+  const handleDownload = async (fileName) => {
     try {
-      const response = await axios.get(fileUrl, { responseType: 'blob' });
+      const response = await axios.get(`${baseurl}/api/download/${fileName}`, { responseType: 'blob' });
       const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.setAttribute('download', `certificate_${requests._id}.pdf`);
+      link.setAttribute('download', fileName);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -69,7 +69,7 @@ const CertificateRequestsPage = () => {
                 <p>Selected Documents: {request.selectedDocuments.join(', ')}</p>
                 {request.HoDstatus === 'Declined' && <p>HoD Decline Reason: {request.hodDeclineReason}</p>}
                 {request.status === 'Approved' && (
-                  <button onClick={() => handleDownload(request.fileUrl)}>Download</button>
+                  <button onClick={() => handleDownload(`${request._id}.pdf`)}>Download</button>
                 )}
                 {request.status === 'Declined' && <p>Decline Reason: {request.declineReason}</p>}
               </li>

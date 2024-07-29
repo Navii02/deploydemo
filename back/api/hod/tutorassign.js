@@ -61,5 +61,23 @@ router.get('/assigned-tutors', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+router.post('/tutors/deassign', async (req, res) => {
+  try {
+    const { tutorId } = req.body;
+    const tutor = await Teacher.findById(tutorId);
+    if (!tutor) {
+      return res.status(404).json({ error: 'Tutor not found' });
+    }
 
+    tutor.academicYear = '';
+    tutor.tutorclass = '';
+    tutor.tutorassigned = false;
+    await tutor.save();
+
+    res.json({ message: 'Tutor de-assigned successfully' });
+  } catch (error) {
+    console.error('Error de-assigning tutor:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 module.exports = router;

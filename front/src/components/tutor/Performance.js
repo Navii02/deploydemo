@@ -39,7 +39,7 @@ const StudentPerformancePage = () => {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Roll Number</th>
+                <th>RegisterNo</th>
                 {studentData.length > 0 && studentData[0].subjects.map((subject, index) => (
                   <th key={index}>
                     <div>{subject.subject}</div>
@@ -53,7 +53,7 @@ const StudentPerformancePage = () => {
               {studentData.map((student, studentIndex) => (
                 <tr key={studentIndex}>
                   <td>{student.name}</td>
-                  <td>{student.rollNumber}</td>
+                  <td>{student.RegisterNo}</td>
                   {student.subjects.map((subject, subjectIndex) => (
                     <td key={subjectIndex}>
                       <div>{subject.internalMarks}</div>

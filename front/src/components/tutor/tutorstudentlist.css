@@ -1,14 +1,197 @@
-
-
-.student-list-container{
-  margin: 100px auto 20px auto;
-  width:80%;
-  padding: 0px 30px 20px 30px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
 }
 
-.student-list-container h1{
-  font-size: larger;
+.student-list-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+/* Success and Error Messages */
+.success-message {
+  color: green;
+  font-weight: bold;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Form Styles */
+.update-form {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.update-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.update-form input,
+.update-form select,
+.update-form button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.update-form input[type="text"],
+.update-form input[type="email"],
+.update-form input[type="date"],
+.update-form select {
+  font-size: 16px;
+}
+
+.update-form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-block;
+  width: auto;
+  padding: 10px 20px;
+}
+
+.update-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Student List Styles */
+.student-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-item {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.student-item p {
+  margin: 0;
+  padding: 5px 0;
+}
+
+.student-item strong {
+  color: #333;
+}
+
+.student-item button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.student-item button:hover {
+  background-color: #218838;
+}
+
+hr {
+  margin: 10px 0;
+}
+
+/* Form for Editing Student */
+.student-form {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.student-form input,
+.student-form select,
+.student-form button {
+  margin-bottom: 10px;
+}
+
+.student-form input[type="text"],
+.student-form input[type="email"],
+.student-form input[type="date"],
+.student-form select {
+  width: calc(100% - 22px);
+}
+
+.student-form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.student-form button:hover {
+  background-color: #0056b3;
+}
+
+.student-form .cancel-button {
+  background-color: #6c757d;
+  margin-left: 10px;
+}
+
+.student-form .cancel-button:hover {
+  background-color: #5a6268;
+}
+
+/* Buttons Container */
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .student-item {
+    padding: 10px;
+  }
+
+  .student-form input,
+  .student-form select,
+  .student-form button {
+    font-size: 14px;
+  }
+
+  .update-form input,
+  .update-form select,
+  .update-form button {
+    font-size: 14px;
+  }
+
+  .button-container {
+    flex-direction: column;
+  }
+
+  .button-container button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }

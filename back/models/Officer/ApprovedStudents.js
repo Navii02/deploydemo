@@ -88,9 +88,9 @@ const ApprovedStudentSchema = new mongoose.Schema({
   
   installmentsPaid: [Number],
  
- RegisterNo: { type: String },
+ RegisterNo: { type: String,default: 'Nil'},
   email: { type: String, required: true },
-  collegemail: String, // Array of strings (email addresses)
+  collegemail:{ type: String,default: 'Nil'}, // Array of strings (email addresses)
   tutormessage: [String], // Array of strings
   internalMarks: [
     {

@@ -774,8 +774,12 @@ const StudentList = () => {
     <p class="content">
       I .......................................................................... hereby undertake on being admitted to the college to abide by the rules and regulations of the college during the course of my study. I will not engage in any undesirable activity either inside or outside the college that will adversely affect orderly working, discipline, and the regulations of the college.
     </p>
-     <br/>
-      <br/>
+    <br><br>
+    
+    <p><strong>Name:</strong> ...........................................</p>
+    <p><strong>Signature:</strong> ...........................................</p>
+   
+       <br>  <br>   <br>
     <p class="heading">Declaration of Parent:</p>
      <br/>
     <p class="content">
@@ -794,6 +798,11 @@ const StudentList = () => {
         <p>Principal</p>
       </div>
     </div>
+    <br/>
+    <br>
+       <p><strong>Verifing Officer:</strong> ...........................................</p>
+       <br>
+       <p><strong>Signature:</strong> ...........................................</p>
   </div>
    <div class="page-break"></div>
 

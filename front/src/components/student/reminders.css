@@ -106,3 +106,8 @@
 .updates li:hover {
   background-color: #e0e0e0;
 }
+h2 {
+  text-align: center;
+  color: rgb(0, 0, 0);
+}
+

@@ -31,7 +31,7 @@ router.get('/student-performance/:department/:academicYear', async (req, res) =>
 
       return {
         name: student.name,
-        rollNumber: student.admissionNumber,
+        RegisterNo: student.RegisterNo,
         subjects: subjectsPerformance,
       };
     });

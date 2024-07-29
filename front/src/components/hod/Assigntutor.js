@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import HodNavbar from './HodNavbar';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
 import styles from './AssignTutorPage.module.css';
 
 function AssignTutorPage() {
@@ -11,6 +11,7 @@ function AssignTutorPage() {
   const [academicYear, setAcademicYear] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [assignSuccess, setAssignSuccess] = useState(false);
+  const [deassignSuccess, setDeassignSuccess] = useState(false);
   const department = localStorage.getItem('branch');
 
   const fetchTutors = useCallback(async () => {
@@ -47,9 +48,21 @@ function AssignTutorPage() {
       }
       await axios.post(`${baseurl}/api/tutors/assign`, { tutorId: selectedTutor, academicYear, tutorclass: selectedCourse });
       setAssignSuccess(true);
+      setDeassignSuccess(false);
       fetchAssignedTutors();
     } catch (error) {
       console.error('Error assigning tutor:', error);
+    }
+  };
+
+  const handleDeassignTutor = async (tutorId) => {
+    try {
+      await axios.post(`${baseurl}/api/tutors/deassign`, { tutorId });
+      setDeassignSuccess(true);
+      setAssignSuccess(false);
+      fetchAssignedTutors();
+    } catch (error) {
+      console.error('Error de-assigning tutor:', error);
     }
   };
 
@@ -60,7 +73,6 @@ function AssignTutorPage() {
         <div>
           <label className={styles.label} htmlFor="academicYear">Academic Year:
           <label>yyyy-yyyy</label> </label>
-          
           <input
             className={styles.input}
             type="text"
@@ -108,6 +120,7 @@ function AssignTutorPage() {
         </div>
         <button className={styles.button} onClick={handleAssignTutor}>Assign Tutor</button>
         {assignSuccess && <p className={styles.successMessage}>Tutor assigned successfully!</p>}
+        {deassignSuccess && <p className={styles.successMessage}>Tutor de-assigned successfully!</p>}
 
         <h1 className={styles.assignedTutorsHeader}>Assigned Tutors:</h1>
         <table className={styles.table}>
@@ -116,6 +129,7 @@ function AssignTutorPage() {
               <th>Name</th>
               <th>Academic Year</th>
               <th>Class</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -124,6 +138,9 @@ function AssignTutorPage() {
                 <td>{tutor.name}</td>
                 <td>{tutor.academicYear}</td>
                 <td>{tutor.tutorclass}</td>
+                <td>
+                  <button className={styles.deassignButton} onClick={() => handleDeassignTutor(tutor._id)}>De-Assign</button>
+                </td>
               </tr>
             ))}
           </tbody>

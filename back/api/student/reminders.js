@@ -58,12 +58,17 @@ router.get('/reminders/attendance', async (req, res) => {
     // Extract subject percentages from the student document
     const subjectPercentages = student.subjectPercentages;
 
+    if (!subjectPercentages || subjectPercentages.length === 0) {
+      return res.status(200).json({ message: 'No attendance data available' });
+    }
+
     res.status(200).json(subjectPercentages);
   } catch (error) {
     console.error('Error fetching subject-wise attendance percentages:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 // Route to fetch internal marks by user email and course
 router.get('/reminders/internalmarks', async (req, res) => {
@@ -80,12 +85,17 @@ router.get('/reminders/internalmarks', async (req, res) => {
     // Extract internal marks from the student document
     const internalMarks = student.internalMarks;
 
+    if (!internalMarks || internalMarks.length === 0) {
+      return res.status(200).json({ message: 'No internal marks data available' });
+    }
+
     res.status(200).json(internalMarks);
   } catch (error) {
     console.error('Error fetching internal marks:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 // Route to fetch fee installment reminders based on semester
 router.get('/reminders/feeinstallments', async (req, res) => {
@@ -128,6 +138,3 @@ router.get('/reminders/feeinstallments', async (req, res) => {
 });
 
 module.exports = router;
-
-
-

@@ -153,7 +153,7 @@ const TeacherList = () => {
                 placeholder="Email"
                 value={newHod.email}
                 onChange={handleAddHodChange}
-                required
+              
               />
               <input
                 type="text"
@@ -161,13 +161,13 @@ const TeacherList = () => {
                 placeholder="Branches"
                 value={newHod.branches}
                 onChange={handleAddHodChange}
-                required
+             
               />
               <select
                 name="semesters"
                 value={newHod.semesters}
                 onChange={handleAddHodChange}
-                required
+             
               >
                 <option value="">Select Semester</option>
                 <option value="1">Semester 1</option>
@@ -183,7 +183,7 @@ const TeacherList = () => {
                 name="department"
                 value={newHod.department}
                 onChange={handleAddHodChange}
-                required
+              required
               >
                 <option value="">Select Department</option>
                 <option value="CS">CS</option>
@@ -198,7 +198,7 @@ const TeacherList = () => {
                 placeholder="Subjects"
                 value={newHod.subjects}
                 onChange={handleAddHodChange}
-                required
+              
               />
               <input
                 type="text"
@@ -206,7 +206,7 @@ const TeacherList = () => {
                 placeholder="Subject Code"
                 value={newHod.subjectCode}
                 onChange={handleAddHodChange}
-                required
+              
               />
               
               <button type="submit">Add HOD</button>

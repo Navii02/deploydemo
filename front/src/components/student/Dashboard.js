@@ -77,15 +77,21 @@ function Dashboard() {
         {student ? (
           <div className="student-details">
             <div className="student-info">
-              <div className="student-image">
-                {student.photo && <img src={`${baseurl}/${student.photo}`} alt="Student" className="student-photo" />}
-              </div>
+
               <div className="student-table-container">
                 <table className="student-table">
                   <tbody>
                     <tr>
                       <td className="table-heading">Name:</td>
                       <td>{student.name}</td>
+                    </tr>
+                    <tr>
+                      <td className="table-heading"> Register No</td>
+                      <td>{student.RegisterNo}</td>
+                    </tr>
+                    <tr>
+                      <td className="table-heading">College Mail</td>
+                      <td>{student.collegemail}</td>
                     </tr>
                     <tr>
                       <td className="table-heading">Email:</td>
