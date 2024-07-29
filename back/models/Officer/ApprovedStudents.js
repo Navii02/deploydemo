@@ -108,10 +108,11 @@ const ApprovedStudentSchema = new mongoose.Schema({
     subject: { type: String, required: true },
     hour: { type: String, required: true },
     teachername: { type: String, required: true },
-    status: { type: String, required: true }
+    status: { type: String, required: true },
+    lab: { type: String},
     }
   ],
-  lab: { type: String,default:'lab 1'},
+  lab: { type: String,default:'Lab 1'},
   subjectPercentages: [{
     subject: { type: String, required: true },
     percentage: { type: Number, required: true }

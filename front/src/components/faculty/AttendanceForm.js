@@ -20,6 +20,7 @@ const AttendanceForm = () => {
   const [markedSubject, setMarkedSubject] = useState('');
   const [existingAttendance, setExistingAttendance] = useState([]);
   const [noStudentsMessage, setNoStudentsMessage] = useState(false);
+  const [lab, setLab] = useState(''); // New state for lab selection
 
   useEffect(() => {
     const fetchCoursesAndSemesters = async () => {
@@ -45,9 +46,12 @@ const AttendanceForm = () => {
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${baseurl}/api/attendance/fetch`, { course, semester});
+      const response = await axios.post(`${baseurl}/api/attendance/fetch`, {
+        course,
+        semester,
+        lab, // Include lab in the request
+      });
       setLoading(false);
-      //console.log(response);
       return response.data;
     } catch (error) {
       setLoading(false);
@@ -66,6 +70,7 @@ const AttendanceForm = () => {
         teachername,
         subject,
         course,
+        lab, // Include lab in the check request
       });
 
       if (checkResponse.data.isMarked) {
@@ -79,6 +84,7 @@ const AttendanceForm = () => {
             teachername,
             subject,
             course,
+            lab, // Include lab in the existing attendance request
           });
           setExistingAttendance(response.data);
           setStudents(response.data.map(record => ({
@@ -125,6 +131,7 @@ const AttendanceForm = () => {
           hour,
           teachername,
           attendance: student.attendance,
+          lab, // Include lab in the submission
         })
       ));
       alert('Attendance marked successfully!');
@@ -133,6 +140,7 @@ const AttendanceForm = () => {
       setSemester('');
       setSubject('');
       setHour('');
+      setLab(''); // Reset lab selection
       setStudents([]);
     } catch (error) {
       console.error('Error marking attendance:', error);
@@ -150,146 +158,162 @@ const AttendanceForm = () => {
     })));
   };
 
+  const shouldShowLabField = () => {
+    const lowerCaseSubject = subject.toLowerCase();
+    return lowerCaseSubject.includes('lab') || lowerCaseSubject.includes('project') || lowerCaseSubject.includes('seminar');
+  };
+
   return (
     <div>
       <Navbar />
       <div className="attendance-form">
-      <form onSubmit={handleSubmit}>
-        {/* Form fields */}
-        <label>
-          Course:
-          <select value={course} onChange={(e) => setCourse(e.target.value)}>
-            <option value="">Select Course</option>
-            {courses.map((course) => (
-              <option key={course} value={course}>{course}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Semester:
-          <select value={semester} onChange={(e) => setSemester(e.target.value)}>
-            <option value="">Select Semester</option>
-            {semesters.map((semester) => (
-              <option key={semester} value={semester}>{semester}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Subject:
-          <select value={subject} onChange={(e) => setSubject(e.target.value)}>
-            <option value="">Select Subject</option>
-            {subjects.map((subject) => (
-              <option key={subject} value={subject}>{subject}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Hour:
-          <select value={hour} onChange={(e) => setHour(e.target.value)}>
-            <option value="">Select Hour</option>
-            {[1, 2, 3, 4, 5, 6].map((hr) => (
-              <option key={hr} value={hr}>{`${hr} hour`}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Date:
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-        </label>
-        <button type="submit">Fetch Students</button>
-      </form>
-
-      {loading && <p>Loading...</p>}
-
-      {noStudentsMessage && <p>The selected subject and semester combination does not exist.</p>}
-
-      {alreadyMarked && existingAttendance.length > 0 && (
-        <div>
-          <p>Attendance for {hour} hour on {date} is already marked for subject {markedSubject} by you.</p>
-          <p>Existing Attendance Details:</p>
-          <table>
-            <thead>
-              <tr>
-                <th>Student Name</th>
-                <th>Present</th>
-                <th>Absent</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student) => (
-                <tr key={student._id}>
-                  <td>{student.name}</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={student.attendance === 'Present'}
-                      onChange={(e) => handleAttendanceChange(student._id, e.target.checked)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={student.attendance === 'Absent'}
-                      onChange={(e) => handleAttendanceChange(student._id, !e.target.checked)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <button onClick={submitAttendance}>Save Attendance</button>
-        </div>
-      )}
-
-      {alreadyMarked && existingAttendance.length === 0 && (
-        <p>Attendance for {hour} hour on {date} is already marked for a different subject.</p>
-      )}
-
-      {!loading && !alreadyMarked && students.length > 0 && (
-        <div>
+        <form onSubmit={handleSubmit}>
+          {/* Form fields */}
           <label>
-            <input
-              type="checkbox"
-              checked={markAllPresent}
-              onChange={handleMarkAllPresentChange}
-            />
-            Mark All as Present
-          </label>
-          <table>
-            <thead>
-              <tr>
-                <th>Student Name</th>
-                <th>Present</th>
-                <th>Absent</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student) => (
-                <tr key={student._id}>
-                  <td>{student.name}</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={student.attendance === 'Present'}
-                      onChange={(e) => handleAttendanceChange(student._id, e.target.checked)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={student.attendance === 'Absent'}
-                      onChange={(e) => handleAttendanceChange(student._id, !e.target.checked)}
-                    />
-                  </td>
-                </tr>
+            Course:
+            <select value={course} onChange={(e) => setCourse(e.target.value)}>
+              <option value="">Select Course</option>
+              {courses.map((course) => (
+                <option key={course} value={course}>{course}</option>
               ))}
-            </tbody>
-          </table>
-          <button onClick={submitAttendance}>Save Attendance</button>
-        </div>
-      )}
+            </select>
+          </label>
+          <label>
+            Semester:
+            <select value={semester} onChange={(e) => setSemester(e.target.value)}>
+              <option value="">Select Semester</option>
+              {semesters.map((semester) => (
+                <option key={semester} value={semester}>{semester}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Subject:
+            <select value={subject} onChange={(e) => setSubject(e.target.value)}>
+              <option value="">Select Subject</option>
+              {subjects.map((subject) => (
+                <option key={subject} value={subject}>{subject}</option>
+              ))}
+            </select>
+          </label>
+          {shouldShowLabField() && (
+            <label>
+              Lab:
+              <select value={lab} onChange={(e) => setLab(e.target.value)}>
+                <option value="">Select Lab</option>
+                <option value="Lab 1">Lab 1</option>
+                <option value="Lab 2">Lab 2</option>
+              </select>
+            </label>
+          )}
+          <label>
+            Hour:
+            <select value={hour} onChange={(e) => setHour(e.target.value)}>
+              <option value="">Select Hour</option>
+              {[1, 2, 3, 4, 5, 6].map((hr) => (
+                <option key={hr} value={hr}>{`${hr} hour`}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Date:
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+          </label>
+     
+          <button type="submit">Fetch Students</button>
+        </form>
+
+        {loading && <p>Loading...</p>}
+
+        {noStudentsMessage && <p>The selected subject, semester, and lab combination does not exist.</p>}
+
+        {alreadyMarked && existingAttendance.length > 0 && (
+          <div>
+            <p>Attendance for {hour} hour on {date} is already marked for subject {markedSubject} by you.</p>
+            <p>Existing Attendance Details:</p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Present</th>
+                  <th>Absent</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((student) => (
+                  <tr key={student._id}>
+                    <td>{student.name}</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={student.attendance === 'Present'}
+                        onChange={(e) => handleAttendanceChange(student._id, e.target.checked)}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={student.attendance === 'Absent'}
+                        onChange={(e) => handleAttendanceChange(student._id, !e.target.checked)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button onClick={submitAttendance}>Save Attendance</button>
+          </div>
+        )}
+
+        {alreadyMarked && existingAttendance.length === 0 && (
+          <p>Attendance for {hour} hour on {date} is already marked for a different subject.</p>
+        )}
+
+        {!loading && !alreadyMarked && students.length > 0 && (
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={markAllPresent}
+                onChange={handleMarkAllPresentChange}
+              />
+              Mark All Present
+            </label>
+            <table>
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Present</th>
+                  <th>Absent</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((student) => (
+                  <tr key={student._id}>
+                    <td>{student.name}</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={student.attendance === 'Present'}
+                        onChange={(e) => handleAttendanceChange(student._id, e.target.checked)}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={student.attendance === 'Absent'}
+                        onChange={(e) => handleAttendanceChange(student._id, !e.target.checked)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button onClick={submitAttendance}>Save Attendance</button>
+          </div>
+        )}
       </div>
-   </div>
+    </div>
   );
 };
 
