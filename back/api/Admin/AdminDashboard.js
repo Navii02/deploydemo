@@ -10,7 +10,7 @@ const Student = require('../../models/Officer/ApprovedStudents');
 // Route to fetch user statistics
 router.get('/user/stats', async (req, res) => {
   try {
-    // Query each schema separately and get the count of users for each role
+    // Query each schema separately to get the count of users for each role
     const principalCount = await Principal.countDocuments();
     const hodCount = await HOD.countDocuments();
     const classTutorCount = await ClassTutor.countDocuments();

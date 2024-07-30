@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Chart from 'chart.js';
-import {baseurl} from '../../url';
+import Chart from 'chart.js/auto'; // Ensure the correct import for Chart.js
+import { baseurl } from '../../url';
 import './AdminDashboard.css'; 
 import Navbar from './AdminNavbar';
 import axios from 'axios';
@@ -19,7 +19,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchUserStatistics = async () => {
       try {
-        const response = await axios.get(`${baseurl}/api/user/stats`); // Adjust the API endpoint accordingly
+        const response = await axios.get(`${baseurl}/api/user/stats`); 
         const data = response.data;
         setUserStats(data);
       } catch (error) {
@@ -32,14 +32,15 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (Object.values(userStats).some(val => val === 0)) {
-      // If the userStats data is not updated properly, return to avoid Chart.js setup
-      return;
+      return; // Avoid Chart.js setup if data is not fully updated
     }
-  
+
     const ctx = document.getElementById('userStatsChart');
-  
+
+    let userStatsChart;
+
     if (ctx) {
-      const userStatsChart = new Chart(ctx, {
+      userStatsChart = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: ['Principal', 'HOD', 'Class Tutor', 'Faculty', 'Officer', 'Student'],
@@ -76,75 +77,61 @@ const AdminDashboard = () => {
         },
         options: {
           indexAxis: 'y',
-          responsive: true, // Ensure responsiveness
+          responsive: true,
           scales: {
             x: {
               beginAtZero: true,
             },
             y: {
               beginAtZero: true,
-              max: 100, // Set a maximum value for the y-axis (adjust as needed)
+              max: 100,
             },
           },
           plugins: {
             legend: {
-              display: false, // Hide the legend
+              display: false,
             },
           },
         },
       });
   
-      // Add a resize listener to adjust the chart size when the window is resized
       const resizeChart = () => {
         userStatsChart.resize();
-        userStatsChart.update(); // Force a redraw of the chart
+        userStatsChart.update();
       };
-  
+
       window.addEventListener('resize', resizeChart);
-  
-      // Clean up the event listener on component unmount
+
       return () => {
         window.removeEventListener('resize', resizeChart);
+        userStatsChart.destroy();
       };
     }
   }, [userStats]);
-  
 
   return (
     <div>
       <Navbar />
       <div className="admin-dashboard">
+        <div className="dashboard-header">
+          <h1>User Statistics</h1>
+        </div>
+        <div className="stats-container">
+          <div className="stat-card total-users">
+            <h3>Total Users</h3>
+            <p>{userStats.totalUsers}</p>
+          </div>
+          {Object.entries(userStats).map(([key, value]) => (
+            key !== "totalUsers" && (
+              <div key={key} className={`stat-card ${key}`}>
+                <h3>{key.charAt(0).toUpperCase() + key.slice(1)}</h3>
+                <p>{value}</p>
+              </div>
+            )
+          ))}
+        </div>
         <div className="chart-container">
-          <h1>User Statistics:</h1>
-          <div>
-            <canvas id="userStatsChart"></canvas>
-          </div>
-          <div className="user-stats">
-            <div className="total-users">
-              &nbsp;
-              <h3>Total Users: {userStats.totalUsers}</h3>
-            </div>
-            <div className="user-stats-details">
-              <div className="user-stat-box principal">
-                <p>Principal: {userStats.principal}</p>
-              </div>
-              <div className="user-stat-box hod">
-                <p>HOD: {userStats.hod}</p>
-              </div>
-              <div className="user-stat-box class-tutor">
-                <p>Class Tutor: {userStats.classTutor}</p>
-              </div>
-              <div className="user-stat-box faculty">
-                <p>Faculty: {userStats.faculty}</p>
-              </div>
-              <div className="user-stat-box officer">
-                <p>Officer: {userStats.officer}</p>
-              </div>
-              <div className="user-stat-box student">
-                <p>Student: {userStats.student}</p>
-              </div>
-            </div>
-          </div>
+          <canvas id="userStatsChart"></canvas>
         </div>
         {/* Other analysis or data visualization components can be added here */}
       </div>

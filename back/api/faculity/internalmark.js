@@ -23,21 +23,43 @@ router.post('/data', async (req, res) => {
   }
 });
 
-// Route to fetch students based on semester and course
+// Route to fetch students based on semester, course, and subject
+
+
+// Route to get students' attendance percentage for a given course, semester, and subject
+const calculateAttendancePercentage = (attendanceRecords, subject) => {
+  const totalClasses = attendanceRecords.filter(record => record.subject === subject).length;
+  const attendedClasses = attendanceRecords.filter(record => record.subject === subject && record.status === 'Present').length;
+
+  return totalClasses > 0 ? (attendedClasses / totalClasses) * 100 : 0;
+};
+
+// Endpoint to fetch students with their marks and attendance percentage
 router.get('/students/faculty/:course/:semester/:subject', async (req, res) => {
   const { course, semester, subject } = req.params;
 
   try {
+    // Fetch students based on course and semester
     const students = await Student.find({ course, semester });
-    const studentsWithMarks = students.map(student => {
-      const subjectMarks = student.internalMarks.find(mark => mark.subject === subject) || { examMarks: 0, assignmentMarks: 0, attendance: 0, totalMarks: 0 };
-      return { ...student.toObject(), subjectMarks };
+
+    // Map students to include attendance percentage for the subject
+    const studentsWithAttendance = students.map(student => {
+      const attendancePercentage = calculateAttendancePercentage(student.attendance, subject);
+      const attendance=attendancePercentage/10;
+      
+      return {
+        ...student._doc,
+        subjectMarks: {
+          ...student.subjectMarks,
+          attendance: attendance
+        }
+      };
     });
 
-    res.json(studentsWithMarks);
+    res.json(studentsWithAttendance);
   } catch (error) {
     console.error('Error fetching students:', error);
-    res.status(500).json({ message: 'Error fetching students' });
+    res.status(500).json({ error: 'Error fetching students' });
   }
 });
 
@@ -52,9 +74,11 @@ router.post('/marks', async (req, res) => {
       return res.status(404).json({ error: 'Student not found' });
     }
 
+    // Find the index of the existing mark for the given subject
     const existingMarkIndex = student.internalMarks.findIndex(mark => mark.subject === subject);
 
-    const totalMarks = (marks.examMarks || 0) + (marks.assignmentMarks || 0) + (marks.attendance || 0);
+    // Include totalMarks from marks object
+    const totalMarks = marks.totalMarks;
 
     if (existingMarkIndex > -1) {
       student.internalMarks[existingMarkIndex] = {
@@ -74,5 +98,6 @@ router.post('/marks', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 module.exports = router;

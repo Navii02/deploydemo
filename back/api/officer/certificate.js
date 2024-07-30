@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const CertificateRequest = require('../../models/CertificateRequest');
-const StudentData = require('../../models/Student/StudentData');
+const StudentData = require('../../models/Officer/ApprovedStudents');
 
 const { storage, ref, uploadBytes, getDownloadURL } = require('../../firebase'); // Adjust path accordingly
 

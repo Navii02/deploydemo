@@ -94,12 +94,15 @@ const ApprovedStudentSchema = new mongoose.Schema({
   tutormessage: [String], // Array of strings
   internalMarks: [
     {
-      
       subject: String,
-      examMarks: Number,
-      assignmentMarks: Number,
-      attendance: Number,
-      totalMarks: String
+  examMarks1: { type: Number, default: 0 },
+  examMarks2: { type: Number, default: 0 },
+  assignmentMarks1: { type: Number, default: 0 },
+  assignmentMarks2: { type: Number, default: 0 },
+  attendance: { type: Number, default: 0 },
+  internalExam: { type: Number, default: 0 },
+  record: { type: Number, default: 0 },
+  totalMarks: { type: Number, default: 0 },
     }
   ],
   attendance: [

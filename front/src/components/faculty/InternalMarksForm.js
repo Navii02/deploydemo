@@ -68,8 +68,10 @@ const InternalMarksForm = () => {
           ...student.subjectMarks,
           [key]: parseFloat(value) || 0,
           totalMarks: calculateTotal(
-            key === 'examMarks' ? parseFloat(value) : student.subjectMarks.examMarks,
-            key === 'assignmentMarks' ? parseFloat(value) : student.subjectMarks.assignmentMarks,
+            key === 'examMarks1' ? parseFloat(value) : student.subjectMarks.examMarks1,
+            key === 'examMarks2' ? parseFloat(value) : student.subjectMarks.examMarks2,
+            key === 'assignmentMarks1' ? parseFloat(value) : student.subjectMarks.assignmentMarks1,
+            key === 'assignmentMarks2' ? parseFloat(value) : student.subjectMarks.assignmentMarks2,
             key === 'attendance' ? parseFloat(value) : student.subjectMarks.attendance
           )
         };
@@ -82,9 +84,18 @@ const InternalMarksForm = () => {
 
   const submitMarks = async (studentId, marks) => {
     try {
-      marks.examMarks = parseFloat(marks.examMarks) || 0;
-      marks.assignmentMarks = parseFloat(marks.assignmentMarks) || 0;
+      marks.examMarks1 = parseFloat(marks.examMarks1) || 0;
+      marks.examMarks2 = parseFloat(marks.examMarks2) || 0;
+      marks.assignmentMarks1 = parseFloat(marks.assignmentMarks1) || 0;
+      marks.assignmentMarks2 = parseFloat(marks.assignmentMarks2) || 0;
       marks.attendance = parseFloat(marks.attendance) || 0;
+      marks.totalMarks = calculateTotal(
+        marks.examMarks1,
+        marks.examMarks2,
+        marks.assignmentMarks1,
+        marks.assignmentMarks2,
+        marks.attendance
+      );
 
       await axios.post(`${baseurl}/api/marks`, { studentId, subject, marks });
       console.log('Marks submitted successfully!');
@@ -93,12 +104,84 @@ const InternalMarksForm = () => {
     }
   };
 
-  const calculateTotal = (examMarks, assignmentMarks, attendancePercentage) => {
-    return (parseFloat(examMarks) || 0) + (parseFloat(assignmentMarks) || 0) + (parseFloat(attendancePercentage) || 0);
+  const calculateTotal = (examMarks1, examMarks2, assignmentMarks1, assignmentMarks2, attendancePercentage) => {
+    const averageExamMarks = (parseFloat(examMarks1) + parseFloat(examMarks2)) / 4;
+    const averageAssignmentMarks = (parseFloat(assignmentMarks1) + parseFloat(assignmentMarks2)) / 2;
+    return averageExamMarks + averageAssignmentMarks + (parseFloat(attendancePercentage) || 0);
   };
 
+
   const handlePrint = () => {
-    window.print();
+    const printWindow = window.open('', '', 'height=600,width=800');
+  
+    const printContent = `
+      <html>
+        <head>
+          <title>Print Internal Marks</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+            .page-wrapper { border: 2px solid #000; padding: 20px; margin: 10px; }
+            h1 { text-align: center; margin-top: 0; font-size: 20px; font-weight: bold; }
+            h2 { text-align: center; margin: 10px 0; font-size: 16px; font-weight: normal; }
+            table { width: 100%; border-collapse: collapse; font-size: 12px; }
+            th, td { border: 1px solid #000; padding: 6px 10px; text-align: center; }
+            th { background-color: #f0f0f0; font-weight: bold; }
+            td { background-color: #fff; }
+            tr:nth-child(even) td { background-color: #f9f9f9; }
+          </style>
+        </head>
+        <body>
+          <div class="page-wrapper">
+            <h1>Internal Marks Report</h1>
+            <h2>Semester: ${semester}</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Course</th>
+                
+                  <th>Exam 1 Marks</th>
+                  <th>Exam 2 Marks</th>
+                  <th>Assignment 1 Marks</th>
+                  <th>Assignment 2 Marks</th>
+                  <th>Attendance</th>
+                  <th>Total Marks</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${students.map(student => {
+                  const subjectMarks = student.subjectMarks;
+                  return `
+                    <tr>
+                      <td>${student.name}</td>
+                      <td>${student.course}</td>
+                    
+                      <td>${subjectMarks.examMarks1 || ''}</td>
+                      <td>${subjectMarks.examMarks2 || ''}</td>
+                      <td>${subjectMarks.assignmentMarks1 || ''}</td>
+                      <td>${subjectMarks.assignmentMarks2 || ''}</td>
+                      <td>${subjectMarks.attendance || ''}</td>
+                      <td>${calculateTotal(
+                        subjectMarks.examMarks1,
+                        subjectMarks.examMarks2,
+                        subjectMarks.assignmentMarks1,
+                        subjectMarks.assignmentMarks2,
+                        subjectMarks.attendance
+                      )}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </body>
+      </html>
+    `;
+  
+    printWindow.document.open();
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.print();
   };
 
   return (
@@ -164,8 +247,10 @@ const InternalMarksForm = () => {
                   <th>Student Name</th>
                   <th>Course</th>
                   <th>Semester</th>
-                  <th>Exam Marks</th>
-                  <th>Assignment Marks</th>
+                  <th>Exam Mark 1</th>
+                  <th>Exam Mark 2</th>
+                  <th>Assignment Mark 1</th>
+                  <th>Assignment Mark 2</th>
                   <th>Attendance</th>
                   <th>Total Marks</th>
                 </tr>
@@ -181,42 +266,101 @@ const InternalMarksForm = () => {
                       <td>
                         <input
                           type="number"
-                          value={subjectMarks.examMarks || ''}
-                          onChange={(e) => handleInputChange(student._id, 'examMarks', e.target.value)}
+                          value={subjectMarks.examMarks1 || ''}
+                          onChange={(e) => handleInputChange(student._id, 'examMarks1', e.target.value)}
                           onBlur={(e) => submitMarks(student._id, {
                             ...subjectMarks,
-                            examMarks: e.target.value,
-                            assignmentMarks: subjectMarks.assignmentMarks,
-                            attendance: subjectMarks.attendance,
-                            totalMarks: calculateTotal(e.target.value, subjectMarks.assignmentMarks, subjectMarks.attendance)
+                            examMarks1: parseFloat(e.target.value),
+                            totalMarks: calculateTotal(
+                              parseFloat(e.target.value),
+                              subjectMarks.examMarks2,
+                              subjectMarks.assignmentMarks1,
+                              subjectMarks.assignmentMarks2,
+                              subjectMarks.attendance
+                            )
                           })}
                         />
                       </td>
                       <td>
                         <input
                           type="number"
-                          value={subjectMarks.assignmentMarks || ''}
-                          onChange={(e) => handleInputChange(student._id, 'assignmentMarks', e.target.value)}
+                          value={subjectMarks.examMarks2 || ''}
+                          onChange={(e) => handleInputChange(student._id, 'examMarks2', e.target.value)}
                           onBlur={(e) => submitMarks(student._id, {
                             ...subjectMarks,
-                            examMarks: subjectMarks.examMarks,
-                            assignmentMarks: e.target.value,
-                            attendance: subjectMarks.attendance,
-                            totalMarks: calculateTotal(subjectMarks.examMarks, e.target.value, subjectMarks.attendance)
+                            examMarks2: parseFloat(e.target.value),
+                            totalMarks: calculateTotal(
+                              subjectMarks.examMarks1,
+                              parseFloat(e.target.value),
+                              subjectMarks.assignmentMarks1,
+                              subjectMarks.assignmentMarks2,
+                              subjectMarks.attendance
+                            )
                           })}
                         />
                       </td>
-                      <td>{subjectMarks.attendance}</td>
-                      <td>{calculateTotal(subjectMarks.examMarks, subjectMarks.assignmentMarks, subjectMarks.attendance)}</td>
+                      <td>
+                        <input
+                          type="number"
+                          value={subjectMarks.assignmentMarks1 || ''}
+                          onChange={(e) => handleInputChange(student._id, 'assignmentMarks1', e.target.value)}
+                          onBlur={(e) => submitMarks(student._id, {
+                            ...subjectMarks,
+                            assignmentMarks1: parseFloat(e.target.value),
+                            totalMarks: calculateTotal(
+                              subjectMarks.examMarks1,
+                              subjectMarks.examMarks2,
+                              parseFloat(e.target.value),
+                              subjectMarks.assignmentMarks2,
+                              subjectMarks.attendance
+                            )
+                          })}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          value={subjectMarks.assignmentMarks2 || ''}
+                          onChange={(e) => handleInputChange(student._id, 'assignmentMarks2', e.target.value)}
+                          onBlur={(e) => submitMarks(student._id, {
+                            ...subjectMarks,
+                            assignmentMarks2: parseFloat(e.target.value),
+                            totalMarks: calculateTotal(
+                              subjectMarks.examMarks1,
+                              subjectMarks.examMarks2,
+                              subjectMarks.assignmentMarks1,
+                              parseFloat(e.target.value),
+                              subjectMarks.attendance
+                            )
+                          })}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          value={subjectMarks.attendance || ''}
+                          onChange={(e) => handleInputChange(student._id, 'attendance', e.target.value)}
+                          onBlur={(e) => submitMarks(student._id, {
+                            ...subjectMarks,
+                            attendance: parseFloat(e.target.value),
+                            totalMarks: calculateTotal(
+                              subjectMarks.examMarks1,
+                              subjectMarks.examMarks2,
+                              subjectMarks.assignmentMarks1,
+                              subjectMarks.assignmentMarks2,
+                              parseFloat(e.target.value)
+                            )
+                          })}
+                        />
+                      </td>
+                      <td>{subjectMarks.totalMarks || 0}</td>
                     </tr>
                   );
                 })}
               </tbody>
             </table>
           </div>
-          <div className={styles.printButtonContainer}>
-            <button onClick={handlePrint}>Print</button>
-          </div>
+          <button onClick={handlePrint}>Print</button>
         </div>
       )}
     </div>

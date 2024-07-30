@@ -14,7 +14,7 @@ const port = process.env.PORT || 5000;
 
 
 
-const StudentData = require('./api/student/studentData')
+
 const CertificateUser=require('./api/student/usercertificaterequest')
 const loginRouter = require('./api/student/studentRoutes')
 const Dashboard=require('./api/student/studentdashboard')
@@ -74,6 +74,8 @@ const TeachersDetail=require('./api/hod/TeachersDetails')
 const OfficerDetail=require('./api/Admin/OfficerDetails')
 const AdminForget=require('./api/Admin/AdminForgot')
 const AdminDashboard = require('./api/Admin/AdminDashboard')
+const Adminstudents = require('./api/Admin/student')
+const AdminTeacher = require('./api/Admin/teacher')
 
 
 const Feereminder = require('./api/feereminder')
@@ -82,7 +84,7 @@ const Feereminder = require('./api/feereminder')
 const app = express();
 const MAX_AGE = 1000 * 60 * 60 * 3 //3hrs
 const corsOptions = {
-  origin: 'https://cap-three.vercel.app',
+origin: 'https://cap-three.vercel.app',
   //origin: 'http://localhost:4000',
   optionSuccessStatus:200,
 }
@@ -133,7 +135,7 @@ app.use('/api',FaculityRoutes)
 app.use('/api',classtutorRoutes)
 
 
-app.use('/api',StudentData)
+
 app.use('/api',Notice)
 app.use('/api',CertificateUser)
 app.use('/api',Feereminder)
@@ -176,6 +178,8 @@ app.use('/api',Slist)
 app.use('/api/student',FeeDetails)
 app.use('/api',HodPerformance)
 app.use('/api',AdmissionFeeDetails)
+app.use('/api',Adminstudents)
+app.use('/api',AdminTeacher)
 
  app.use('/api',TutorHome)
  app.use('/api',DataTable)

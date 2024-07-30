@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const StudentData = require('../models/Student/StudentData');
+const StudentData = require('../models/Officer/ApprovedStudents');
 const emailTransporter = require('../../back/nodemailer');
 
 

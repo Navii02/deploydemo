@@ -37,6 +37,8 @@ import AdminLogin from './components/admin/AdminLogin';
 import AdminOfficersPage from './components/admin/AdminOfficersPage';
 import AdminTeachersPage from './components/hod/AdminTeachersPage';
 import AssignTutor from './components/hod/Assigntutor';
+import AdminStudent from './components/admin/adminstudent';
+import AdminTeacher from './components/admin/Teacher';
 
 import FacultyHome from './components/faculty/FacultyHome';
 import FaculitySignup from './components/faculty/faculitysignup';
@@ -275,6 +277,22 @@ function RoutesComp() {
           element={
             <PrivateRoute>
               <AdminOfficersPage />
+            </PrivateRoute>
+          }
+        />
+            <Route
+          path='/student-details'
+          element={
+            <PrivateRoute>
+              <AdminStudent />
+            </PrivateRoute>
+          }
+        />
+          <Route
+          path='/teacher-details'
+          element={
+            <PrivateRoute>
+              <AdminTeacher />
             </PrivateRoute>
           }
         />
