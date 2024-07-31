@@ -59,8 +59,7 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
 
 
     let feeDetails;
-
-    // Fetch fee details based on the student's course
+    if (feeCategory === 'Merit Higher Fee' || feeCategory === 'Merit Lower Fee') {
     if (course === 'B.Tech CSE' || course === 'B.Tech ECE') {
       feeDetails = await Fee.findOne({ course: 'B.Tech', feeCategory });
     } else {
@@ -70,6 +69,7 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
     if (!feeDetails) {
       return res.status(404).json({ error: 'Fee details not found for the given course and category' });
     }
+  }
 
     const { name, admissionType, admissionId, admissionNumber, allotmentCategory,  address, permanentAddress, photo, pincode, religion, community, gender, dateOfBirth, bloodGroup, mobileNo, whatsappNo, email, entranceExam, entranceRollNo, entranceRank, aadharNo,  annualIncome, nativity,submissionDate} = student;
     const { parentDetails } = student;
@@ -155,18 +155,20 @@ router.get('/approvedstudentDetails/:id', async (req, res) => {
         aadhaar: certificates.aadhaar,
         other:certificates.other,
       },
-      feeDetails: {
-        admissionFee: feeDetails.admissionFee,
-        tuitionFee: feeDetails.tuitionFee,
-        groupInsuranceandidCard: feeDetails.groupInsuranceandidCard,
-        ktuSportsArts: feeDetails.ktuSportsArts,
-        ktuAdminFee: feeDetails.ktuAdminFee,
-        ktuAffiliationFee: feeDetails.ktuAffiliationFee,
-        cautionDeposit: feeDetails.cautionDeposit,
-        pta: feeDetails.pta,
-        busFund: feeDetails.busFund,
-        trainingPlacement: feeDetails.trainingPlacement,
-      }
+      ...(feeDetails && {
+        feeDetails: {
+          admissionFee: feeDetails.admissionFee,
+          tuitionFee: feeDetails.tuitionFee,
+          groupInsuranceandidCard: feeDetails.groupInsuranceandidCard,
+          ktuSportsArts: feeDetails.ktuSportsArts,
+          ktuAdminFee: feeDetails.ktuAdminFee,
+          ktuAffiliationFee: feeDetails.ktuAffiliationFee,
+          cautionDeposit: feeDetails.cautionDeposit,
+          pta: feeDetails.pta,
+          busFund: feeDetails.busFund,
+          trainingPlacement: feeDetails.trainingPlacement,
+        }
+      })
     }
     });
   } catch (error) {

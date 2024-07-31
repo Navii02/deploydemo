@@ -284,10 +284,10 @@ const ApprovedAndRemoved = () => {
         return `${year}-${nextYear.toString().slice(-2)}`;
       };
       const academicYear = getAcademicYear(admissionID);
-
+      const showFeeDetails = studentDetails.feeCategory === "Merit Lower Fee" || studentDetails.feeCategory === "Merit Higher Fee";
       const printWindow = window.open("", "_blank");
       printWindow.document.write(`
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -438,7 +438,7 @@ const ApprovedAndRemoved = () => {
    <table class="print-table">
   
     <tr>
-      <td colspan="2" style="font-weight:bold;">Admission No: ${studentDetails.admissionNumber}</td>
+      <td colspan="2" style="font-weight:bold;">Admission No: ${studentDetails.admissionId}</td>
       <td colspan="2" style="text-align: left;">Submission Date: ${formatDate(studentDetails.submissionDate)}</td>
     </tr>
     <tr>
@@ -674,15 +674,12 @@ const ApprovedAndRemoved = () => {
     <p class="content">
       I .......................................................................... hereby undertake on being admitted to the college to abide by the rules and regulations of the college during the course of my study. I will not engage in any undesirable activity either inside or outside the college that will adversely affect orderly working, discipline, and the regulations of the college.
     </p>
-     <br/>
-       <br><br>
+    <br><br>
     
     <p><strong>Name:</strong> ...........................................</p>
-    <br>
     <p><strong>Signature:</strong> ...........................................</p>
    
        <br>  <br>   <br>
-      <br/>
     <p class="heading">Declaration of Parent:</p>
      <br/>
     <p class="content">
@@ -701,15 +698,17 @@ const ApprovedAndRemoved = () => {
         <p>Principal</p>
       </div>
     </div>
-     <br/>
+    <br/>
     <br>
        <p><strong>Verifing Officer:</strong> ...........................................</p>
+       <br>
        <p><strong>Signature:</strong> ...........................................</p>
   </div>
    <div class="page-break"></div>
 
 
    <table class="print-table centered-table">
+   ${showFeeDetails ? `
    <tr style="padding-top: 20px; padding-bottom: 20px;">
      <td colspan="2" style="text-align: center; font-weight: bold;">
        ${studentDetails.course} ${studentDetails.feeCategory} Structure
@@ -721,7 +720,7 @@ const ApprovedAndRemoved = () => {
      <td class="second-col">${feeDetails.admissionFee}</td>
    </tr>
    <tr>
-     <td class="first-col">Tuition Fee</td>
+     <td class="first-col">Tuition Fee(per Semester)</td>
      <td class="second-col">${feeDetails.tuitionFee}</td>
    </tr>
    <tr>
@@ -756,7 +755,7 @@ const ApprovedAndRemoved = () => {
      <td class="first-col">Training and Placement Cell (One Time)</td>
      <td class="second-col">${feeDetails.trainingPlacement}</td>
    </tr>
-      <td class="first-col">Total</td>
+     <td class="first-col">Total</td>
      <td class="second-col">${calculateTotalFee()}</td>
    </tr>
  </table>
@@ -785,6 +784,7 @@ const ApprovedAndRemoved = () => {
 
 
  <table class="print-table centered-table">
+  
    <tr style="padding-top: 20px; padding-bottom: 20px;">
      <td colspan="2" style="text-align: center; font-weight: bold;">
        ${studentDetails.course} ${studentDetails.feeCategory} Structure
@@ -838,6 +838,10 @@ const ApprovedAndRemoved = () => {
     <p class="content"style="text-align: center;">
    Tution Fee ${feeDetails.tuitionFee}/- to be remitted in the start of 2nd semester
    </p>
+      ` : `
+  
+    `}
+ 
             <button class="hide-on-print" onclick="window.print()">Print</button>
           </body>
         </html>
@@ -1049,6 +1053,7 @@ const ApprovedAndRemoved = () => {
                     <option value="">Select Fee Category</option>
                     <option value="Merit Lower Fee">Merit Lower Fee</option>
                     <option value="Merit Higher Fee">Merit Higher Fee</option>
+                    <option value=" Fee wavier">FW</option>
                   </select>
                 </div>
                 <div className="form-group">

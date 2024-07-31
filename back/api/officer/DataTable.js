@@ -49,18 +49,19 @@ router.get('/studentDetails/:id', async (req, res) => {
     // Determine the course and fee category
     const { course, feeCategory } = student;
 
-   
-    let feeDetails;
+    let feeDetails = null;
 
-    // Fetch fee details based on the student's course
-    if (course === 'B.Tech CSE' || course === 'B.Tech ECE') {
-      feeDetails = await Fee.findOne({ course: 'B.Tech', feeCategory });
-    } else {
-      feeDetails = await Fee.findOne({ course });
-    }
+    // Fetch fee details only if the feeCategory is "merit full fee" or "merit low fee"
+    if (feeCategory === 'Merit Higher Fee' || feeCategory === 'Merit Lower Fee') {
+      if (course === 'B.Tech CSE' || course === 'B.Tech ECE') {
+        feeDetails = await Fee.findOne({ course: 'B.Tech', feeCategory });
+      } else {
+        feeDetails = await Fee.findOne({ course });
+      }
 
-    if (!feeDetails) {
-      return res.status(404).json({ error: 'Fee details not found for the given course and category' });
+      if (!feeDetails) {
+        return res.status(404).json({ error: 'Fee details not found for the given course and category' });
+      }
     }
 
     // Extract necessary details for print preview
@@ -149,18 +150,20 @@ router.get('/studentDetails/:id', async (req, res) => {
           other: certificates.other,
         },
         submissionDate,
-        feeDetails: {
-          admissionFee: feeDetails.admissionFee,
-          tuitionFee: feeDetails.tuitionFee,
-          groupInsuranceandidCard: feeDetails.groupInsuranceandidCard,
-          ktuSportsArts: feeDetails.ktuSportsArts,
-          ktuAdminFee: feeDetails.ktuAdminFee,
-          ktuAffiliationFee: feeDetails.ktuAffiliationFee,
-          cautionDeposit: feeDetails.cautionDeposit,
-          pta: feeDetails.pta,
-          busFund: feeDetails.busFund,
-          trainingPlacement: feeDetails.trainingPlacement,
-        }
+        ...(feeDetails && {
+          feeDetails: {
+            admissionFee: feeDetails.admissionFee,
+            tuitionFee: feeDetails.tuitionFee,
+            groupInsuranceandidCard: feeDetails.groupInsuranceandidCard,
+            ktuSportsArts: feeDetails.ktuSportsArts,
+            ktuAdminFee: feeDetails.ktuAdminFee,
+            ktuAffiliationFee: feeDetails.ktuAffiliationFee,
+            cautionDeposit: feeDetails.cautionDeposit,
+            pta: feeDetails.pta,
+            busFund: feeDetails.busFund,
+            trainingPlacement: feeDetails.trainingPlacement,
+          }
+        })
       },
     });
   } catch (error) {
@@ -168,6 +171,7 @@ router.get('/studentDetails/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 

@@ -328,6 +328,7 @@ const StudentList = () => {
     
       const studentDetails = response.data.studentDetails;
       const feeDetails = response.data.studentDetails.feeDetails;
+    
      
 
       if (!studentDetails || !studentDetails.parentDetails) {
@@ -384,7 +385,7 @@ const StudentList = () => {
         return `${year}-${nextYear.toString().slice(-2)}`;
       };
       const academicYear = getAcademicYear(admissionID);
-
+      const showFeeDetails = studentDetails.feeCategory === "Merit Lower Fee" || studentDetails.feeCategory === "Merit Higher Fee";
       const printWindow = window.open("", "_blank");
       printWindow.document.write(`
 <!DOCTYPE html>
@@ -808,6 +809,7 @@ const StudentList = () => {
 
 
    <table class="print-table centered-table">
+   ${showFeeDetails ? `
    <tr style="padding-top: 20px; padding-bottom: 20px;">
      <td colspan="2" style="text-align: center; font-weight: bold;">
        ${studentDetails.course} ${studentDetails.feeCategory} Structure
@@ -883,6 +885,7 @@ const StudentList = () => {
 
 
  <table class="print-table centered-table">
+  
    <tr style="padding-top: 20px; padding-bottom: 20px;">
      <td colspan="2" style="text-align: center; font-weight: bold;">
        ${studentDetails.course} ${studentDetails.feeCategory} Structure
@@ -936,6 +939,10 @@ const StudentList = () => {
     <p class="content"style="text-align: center;">
    Tution Fee ${feeDetails.tuitionFee}/- to be remitted in the start of 2nd semester
    </p>
+      ` : `
+  
+    `}
+ 
             <button class="hide-on-print" onclick="window.print()">Print</button>
           </body>
         </html>
@@ -1154,6 +1161,7 @@ const StudentList = () => {
                     <option value="">Select Fee Category</option>
                     <option value="Merit Lower Fee">Merit Lower Fee</option>
                     <option value="Merit Higher Fee">Merit Higher Fee</option>
+                    <option value=" Fee wavier">FW</option>
                   </select>
                 </div>
                 <div className="form-group">
