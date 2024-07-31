@@ -14,6 +14,9 @@ const InternalMarksForm = () => {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [debounceTimeout, setDebounceTimeout] = useState(null);
 
   useEffect(() => {
     const fetchCoursesAndSemesters = async () => {
@@ -47,7 +50,9 @@ const InternalMarksForm = () => {
     setError('');
     try {
       const response = await axios.get(`${baseurl}/api/students/faculty/${course}/${semester}/${subject}`);
-      setStudents(response.data);
+      const sortedStudents = response.data.sort((a, b) => a.RollNo.localeCompare(b.RollNo, undefined, { numeric: true }));
+      setStudents(sortedStudents);
+      setAttendanceData(sortedStudents);
     } catch (error) {
       console.error('Error fetching students:', error);
       setError('Error fetching students');
@@ -58,62 +63,77 @@ const InternalMarksForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSuccessMessage(''); // Clear any previous success message
     fetchStudents();
   };
 
-  const handleInputChange = (studentId, key, value) => {
-    const updatedStudents = students.map(student => {
-      if (student._id === studentId) {
-        const updatedMarks = {
-          ...student.subjectMarks,
-          [key]: parseFloat(value) || 0,
-          totalMarks: calculateTotal(
-            key === 'examMarks1' ? parseFloat(value) : student.subjectMarks.examMarks1,
-            key === 'examMarks2' ? parseFloat(value) : student.subjectMarks.examMarks2,
-            key === 'assignmentMarks1' ? parseFloat(value) : student.subjectMarks.assignmentMarks1,
-            key === 'assignmentMarks2' ? parseFloat(value) : student.subjectMarks.assignmentMarks2,
-            key === 'attendance' ? parseFloat(value) : student.subjectMarks.attendance
-          )
-        };
-        return { ...student, subjectMarks: updatedMarks };
-      }
-      return student;
-    });
-    setStudents(updatedStudents);
+  const handleInputChange = (studentId, field, e) => {
+    const value = e.target.value;
+    setStudents(prevStudents =>
+      prevStudents.map(student => {
+        if (student._id === studentId) {
+          return {
+            ...student,
+            subjectMarks: {
+              ...student.subjectMarks,
+              [field]: parseFloat(value) || 0,
+              totalMarks: calculateTotal(
+                student.subjectMarks.examMarks1,
+                student.subjectMarks.examMarks2,
+                student.subjectMarks.assignmentMarks1,
+                student.subjectMarks.assignmentMarks2,
+                student.subjectMarks.attendance
+              )
+            }
+          };
+        }
+        return student;
+      })
+    );
+    
+    // Clear previous timeout
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+
+    // Set a new timeout
+    setDebounceTimeout(setTimeout(() => {
+      setSuccessMessage('All data has been saved successfully!');
+    }, 5000));
   };
 
   const submitMarks = async (studentId, marks) => {
     try {
-      marks.examMarks1 = parseFloat(marks.examMarks1) || 0;
-      marks.examMarks2 = parseFloat(marks.examMarks2) || 0;
-      marks.assignmentMarks1 = parseFloat(marks.assignmentMarks1) || 0;
-      marks.assignmentMarks2 = parseFloat(marks.assignmentMarks2) || 0;
-      marks.attendance = parseFloat(marks.attendance) || 0;
-      marks.totalMarks = calculateTotal(
-        marks.examMarks1,
-        marks.examMarks2,
-        marks.assignmentMarks1,
-        marks.assignmentMarks2,
-        marks.attendance
-      );
-
-      await axios.post(`${baseurl}/api/marks`, { studentId, subject, marks });
-      console.log('Marks submitted successfully!');
+      await axios.post(`${baseurl}/api/Marks/${studentId}`, marks);
     } catch (error) {
       console.error('Error submitting marks:', error);
+      setError('Error submitting marks');
     }
   };
 
-  const calculateTotal = (examMarks1, examMarks2, assignmentMarks1, assignmentMarks2, attendancePercentage) => {
-    const averageExamMarks = (parseFloat(examMarks1) + parseFloat(examMarks2)) / 4;
-    const averageAssignmentMarks = (parseFloat(assignmentMarks1) + parseFloat(assignmentMarks2)) / 2;
-    return averageExamMarks + averageAssignmentMarks + (parseFloat(attendancePercentage) || 0);
+  const handleBlur = async (studentId, subjectMarks) => {
+    await submitMarks(studentId, {
+      ...subjectMarks,
+      totalMarks: calculateTotal(
+        subjectMarks.examMarks1,
+        subjectMarks.examMarks2,
+        subjectMarks.assignmentMarks1,
+        subjectMarks.assignmentMarks2,
+        subjectMarks.attendance
+      )
+    });
   };
 
+  const calculateTotal = (examMarks1, examMarks2, assignmentMarks1, assignmentMarks2, attendancePercentage) => {
+    const averageExamMarks = (examMarks1 + examMarks2) / 4;
+    const averageAssignmentMarks = (assignmentMarks1 + assignmentMarks2) / 2;
+    const totalMarks = averageExamMarks + averageAssignmentMarks + attendancePercentage;
+    return totalMarks;
+  };
 
   const handlePrint = () => {
     const printWindow = window.open('', '', 'height=600,width=800');
-  
+
     const printContent = `
       <html>
         <head>
@@ -134,12 +154,14 @@ const InternalMarksForm = () => {
           <div class="page-wrapper">
             <h1>Internal Marks Report</h1>
             <h2>Semester: ${semester}</h2>
+            <h2>Course: ${course}</h2>
+            <h2>Subject: ${subject}</h2>
             <table>
               <thead>
                 <tr>
+                  <th>Roll No</th>
                   <th>Student Name</th>
                   <th>Course</th>
-                
                   <th>Exam 1 Marks</th>
                   <th>Exam 2 Marks</th>
                   <th>Assignment 1 Marks</th>
@@ -150,23 +172,27 @@ const InternalMarksForm = () => {
               </thead>
               <tbody>
                 ${students.map(student => {
-                  const subjectMarks = student.subjectMarks;
+                  const subjectMarks = student.subjectMarks || {};
+                  const attendancePercentage = attendanceData.find(
+                    data => data._id === student._id
+                  )?.attendancePercentage || 0;
+
                   return `
                     <tr>
+                      <td>${student.RollNo}</td>
                       <td>${student.name}</td>
                       <td>${student.course}</td>
-                    
                       <td>${subjectMarks.examMarks1 || ''}</td>
                       <td>${subjectMarks.examMarks2 || ''}</td>
                       <td>${subjectMarks.assignmentMarks1 || ''}</td>
                       <td>${subjectMarks.assignmentMarks2 || ''}</td>
-                      <td>${subjectMarks.attendance || ''}</td>
+                      <td>${attendancePercentage}</td>
                       <td>${calculateTotal(
                         subjectMarks.examMarks1,
                         subjectMarks.examMarks2,
                         subjectMarks.assignmentMarks1,
                         subjectMarks.assignmentMarks2,
-                        subjectMarks.attendance
+                        attendancePercentage
                       )}</td>
                     </tr>
                   `;
@@ -177,7 +203,7 @@ const InternalMarksForm = () => {
         </body>
       </html>
     `;
-  
+
     printWindow.document.open();
     printWindow.document.write(printContent);
     printWindow.document.close();
@@ -237,6 +263,7 @@ const InternalMarksForm = () => {
 
       {loading && <div>Loading...</div>}
       {error && <div className="error">{error}</div>}
+      {successMessage && <div className="success">{successMessage}</div>} {/* Display success message */}
 
       {students.length > 0 && (
         <div className={styles.tableContainer}>
@@ -244,6 +271,7 @@ const InternalMarksForm = () => {
             <table>
               <thead>
                 <tr>
+                  <th>Roll No</th>
                   <th>Student Name</th>
                   <th>Course</th>
                   <th>Semester</th>
@@ -258,8 +286,13 @@ const InternalMarksForm = () => {
               <tbody>
                 {students.map(student => {
                   const subjectMarks = student.subjectMarks;
+                  const attendancePercentage = attendanceData.find(
+                    data => data._id === student._id
+                  )?.attendancePercentage || 0;
+
                   return (
                     <tr key={student._id}>
+                      <td>{student.RollNo}</td>
                       <td>{student.name}</td>
                       <td>{student.course}</td>
                       <td>{student.semester}</td>
@@ -267,93 +300,42 @@ const InternalMarksForm = () => {
                         <input
                           type="number"
                           value={subjectMarks.examMarks1 || ''}
-                          onChange={(e) => handleInputChange(student._id, 'examMarks1', e.target.value)}
-                          onBlur={(e) => submitMarks(student._id, {
-                            ...subjectMarks,
-                            examMarks1: parseFloat(e.target.value),
-                            totalMarks: calculateTotal(
-                              parseFloat(e.target.value),
-                              subjectMarks.examMarks2,
-                              subjectMarks.assignmentMarks1,
-                              subjectMarks.assignmentMarks2,
-                              subjectMarks.attendance
-                            )
-                          })}
+                          onChange={(e) => handleInputChange(student._id, 'examMarks1', e)}
+                          onBlur={() => handleBlur(student._id, subjectMarks)}
                         />
                       </td>
                       <td>
                         <input
                           type="number"
                           value={subjectMarks.examMarks2 || ''}
-                          onChange={(e) => handleInputChange(student._id, 'examMarks2', e.target.value)}
-                          onBlur={(e) => submitMarks(student._id, {
-                            ...subjectMarks,
-                            examMarks2: parseFloat(e.target.value),
-                            totalMarks: calculateTotal(
-                              subjectMarks.examMarks1,
-                              parseFloat(e.target.value),
-                              subjectMarks.assignmentMarks1,
-                              subjectMarks.assignmentMarks2,
-                              subjectMarks.attendance
-                            )
-                          })}
+                          onChange={(e) => handleInputChange(student._id, 'examMarks2', e)}
+                          onBlur={() => handleBlur(student._id, subjectMarks)}
                         />
                       </td>
                       <td>
                         <input
                           type="number"
                           value={subjectMarks.assignmentMarks1 || ''}
-                          onChange={(e) => handleInputChange(student._id, 'assignmentMarks1', e.target.value)}
-                          onBlur={(e) => submitMarks(student._id, {
-                            ...subjectMarks,
-                            assignmentMarks1: parseFloat(e.target.value),
-                            totalMarks: calculateTotal(
-                              subjectMarks.examMarks1,
-                              subjectMarks.examMarks2,
-                              parseFloat(e.target.value),
-                              subjectMarks.assignmentMarks2,
-                              subjectMarks.attendance
-                            )
-                          })}
+                          onChange={(e) => handleInputChange(student._id, 'assignmentMarks1', e)}
+                          onBlur={() => handleBlur(student._id, subjectMarks)}
                         />
                       </td>
                       <td>
                         <input
                           type="number"
                           value={subjectMarks.assignmentMarks2 || ''}
-                          onChange={(e) => handleInputChange(student._id, 'assignmentMarks2', e.target.value)}
-                          onBlur={(e) => submitMarks(student._id, {
-                            ...subjectMarks,
-                            assignmentMarks2: parseFloat(e.target.value),
-                            totalMarks: calculateTotal(
-                              subjectMarks.examMarks1,
-                              subjectMarks.examMarks2,
-                              subjectMarks.assignmentMarks1,
-                              parseFloat(e.target.value),
-                              subjectMarks.attendance
-                            )
-                          })}
+                          onChange={(e) => handleInputChange(student._id, 'assignmentMarks2', e)}
+                          onBlur={() => handleBlur(student._id, subjectMarks)}
                         />
                       </td>
-                      <td>
-                        <input
-                          type="number"
-                          value={subjectMarks.attendance || ''}
-                          onChange={(e) => handleInputChange(student._id, 'attendance', e.target.value)}
-                          onBlur={(e) => submitMarks(student._id, {
-                            ...subjectMarks,
-                            attendance: parseFloat(e.target.value),
-                            totalMarks: calculateTotal(
-                              subjectMarks.examMarks1,
-                              subjectMarks.examMarks2,
-                              subjectMarks.assignmentMarks1,
-                              subjectMarks.assignmentMarks2,
-                              parseFloat(e.target.value)
-                            )
-                          })}
-                        />
-                      </td>
-                      <td>{subjectMarks.totalMarks || 0}</td>
+                      <td>{attendancePercentage}</td>
+                      <td>{calculateTotal(
+                        subjectMarks.examMarks1,
+                        subjectMarks.examMarks2,
+                        subjectMarks.assignmentMarks1,
+                        subjectMarks.assignmentMarks2,
+                        attendancePercentage
+                      )}</td>
                     </tr>
                   );
                 })}

@@ -26,78 +26,111 @@ router.post('/data', async (req, res) => {
 // Route to fetch students based on semester, course, and subject
 
 
-// Route to get students' attendance percentage for a given course, semester, and subject
+
 const calculateAttendancePercentage = (attendanceRecords, subject) => {
   const totalClasses = attendanceRecords.filter(record => record.subject === subject).length;
   const attendedClasses = attendanceRecords.filter(record => record.subject === subject && record.status === 'Present').length;
-
-  return totalClasses > 0 ? (attendedClasses / totalClasses) * 100 : 0;
+  const percentage = totalClasses > 0 ? (attendedClasses / totalClasses) * 100 : 0;
+  return percentage / 10; // Divide the percentage by 10
 };
 
-// Endpoint to fetch students with their marks and attendance percentage
 router.get('/students/faculty/:course/:semester/:subject', async (req, res) => {
-  const { course, semester, subject } = req.params;
-
   try {
-    // Fetch students based on course and semester
+    const { course, semester, subject } = req.params;
+
+    // Fetch students' internal marks
     const students = await Student.find({ course, semester });
 
-    // Map students to include attendance percentage for the subject
-    const studentsWithAttendance = students.map(student => {
-      const attendancePercentage = calculateAttendancePercentage(student.attendance, subject);
-      const attendance=attendancePercentage/10;
-      
+    // Fetch students' attendance records
+    const attendanceRecords = await Student.find({ course, semester });
+
+    // Process the data
+    const filteredStudents = students.map(student => {
+      // Find internal marks for the given subject
+      const internalMark = student.internalMarks.find(mark => mark.subject === subject);
+
+      // Find the corresponding attendance record
+      const attendanceRecord = attendanceRecords.find(record => record._id.equals(student._id));
+      const attendancePercentage = attendanceRecord ? calculateAttendancePercentage(attendanceRecord.attendance, subject) : 0;
+
       return {
-        ...student._doc,
-        subjectMarks: {
-          ...student.subjectMarks,
-          attendance: attendance
-        }
+        _id: student._id,
+        RollNo:student.RollNo,
+        name: student.name,
+        course: student.course,
+        semester: student.semester,
+        subjectMarks: internalMark || {
+          subject,
+          examMarks1: 0,
+          examMarks2: 0,
+          assignmentMarks1: 0,
+          assignmentMarks2: 0,
+          attendance: 0,
+          internalExam: 0,
+          record: 0,
+          totalMarks: 0
+        },
+        attendancePercentage // Add attendance percentage to the response
       };
     });
 
-    res.json(studentsWithAttendance);
+    res.json(filteredStudents);
   } catch (error) {
     console.error('Error fetching students:', error);
-    res.status(500).json({ error: 'Error fetching students' });
+    res.status(500).json({ message: 'Error fetching students' });
   }
 });
 
-// Route to submit or update internal marks
-router.post('/marks', async (req, res) => {
-  const { studentId, subject, marks } = req.body;
+router.post('/marks/:studentId', async (req, res) => {
+  const { studentId } = req.params;
+  const {
+    subject,
+    examMarks1,
+    examMarks2,
+    assignmentMarks1,
+    assignmentMarks2,
+    attendance,
+    internalExam = 0,  // Default value if not provided
+    record = 0,        // Default value if not provided
+    totalMarks
+  } = req.body;
 
   try {
     const student = await Student.findById(studentId);
-
-    if (!student) {
-      return res.status(404).json({ error: 'Student not found' });
-    }
-
-    // Find the index of the existing mark for the given subject
-    const existingMarkIndex = student.internalMarks.findIndex(mark => mark.subject === subject);
-
-    // Include totalMarks from marks object
-    const totalMarks = marks.totalMarks;
-
-    if (existingMarkIndex > -1) {
-      student.internalMarks[existingMarkIndex] = {
-        subject,
-        ...marks,
-        totalMarks
-      };
+    if (student) {
+      const internalMark = student.internalMarks.find(mark => mark.subject === subject);
+      if (internalMark) {
+        // Update existing internal mark entry
+        internalMark.examMarks1 = examMarks1;
+        internalMark.examMarks2 = examMarks2;
+        internalMark.assignmentMarks1 = assignmentMarks1;
+        internalMark.assignmentMarks2 = assignmentMarks2;
+        internalMark.attendance = attendance;
+        internalMark.internalExam = internalExam;
+        internalMark.record = record;
+        internalMark.totalMarks = totalMarks;
+      } else {
+        // Add new internal mark entry
+        student.internalMarks.push({
+          subject,
+          examMarks1,
+          examMarks2,
+          assignmentMarks1,
+          assignmentMarks2,
+          attendance,
+          internalExam,
+          record,
+          totalMarks
+        });
+      }
+      await student.save();
+      res.json({ success: true });
     } else {
-      student.internalMarks.push({ subject, ...marks, totalMarks });
+      res.status(404).json({ error: 'Student not found' });
     }
-
-    await student.save();
-
-    res.json({ message: 'Marks submitted successfully' });
   } catch (error) {
-    console.error('Error submitting marks:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 module.exports = router;
