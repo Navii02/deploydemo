@@ -27,6 +27,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
   physics: String,
   chemistry: String,
   maths: String,
+  RollNo: String,
   boardType:String, 
   course: String,
   qualify: {
@@ -46,13 +47,13 @@ const ApprovedStudentSchema = new mongoose.Schema({
     motherOccupation: { type: String, default: 'Nil' },
     motherMobileNo: { type: String, default: 'Nil' },
   },
-  annualIncome: String,
-  nativity: String,
+  annualIncome: { type: String, default: 'N/A' },
+  nativity:  { type: String, default: 'N/A' },
   bankDetails: {
-    bankName: String,
-    branch: String,
-    accountNo: String,
-    ifscCode: String,
+    bankName: { type: String, default: 'N/A' },
+    branch:  { type: String, default: 'N/A' },
+    accountNo:  { type: String, default: 'N/A' },
+    ifscCode:  { type: String, default: 'N/A' },
   },
   achievements: {
     arts: { type: String, default: 'Nil' },

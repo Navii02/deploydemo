@@ -49,40 +49,37 @@ router.post('/attendance/fetch', async (req, res) => {
 });
 
 // Route to mark attendance
+// Route to mark attendance
+// Route to mark attendance
 router.post('/attendance', async (req, res) => {
   const { studentId, date, subject, hour, teachername, attendance, course, lab } = req.body;
 
   try {
-    // Check if attendance is already marked by the same teacher for a different subject in the same hour
-    const conflictingAttendance = await Student.findOne({
-      'attendance.date': date,
-      'attendance.hour': hour,
-      'attendance.teachername': teachername,
-      course,
-      'attendance.subject': { $ne: subject },
-      ...(lab && { lab })
-    });
-
-    if (conflictingAttendance) {
-      return res.status(400).json({ error: 'Attendance already marked for a different subject in this hour by the same teacher.' });
-    }
-
+    // Fetch the student
     const student = await Student.findById(studentId);
 
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
 
-    const existingAttendance = student.attendance.find(
-      record => record.date === date && record.subject === subject && record.hour === hour && record.teachername === teachername && student.course === course && (!lab || student.lab === lab)
+    // Check if there's any attendance record that matches the criteria
+    const existingAttendanceIndex = student.attendance.findIndex(
+      record => record.date === date &&
+                record.subject === subject &&
+                record.hour === hour &&
+                record.teachername === teachername &&
+                (!lab || record.lab === lab) // Ensure lab is matched if provided
     );
 
-    if (existingAttendance) {
-      existingAttendance.status = attendance;
+    if (existingAttendanceIndex !== -1) {
+      // Update existing record
+      student.attendance[existingAttendanceIndex].status = attendance;
     } else {
-      student.attendance.push({ date, subject, hour, teachername, status: attendance });
+      // Add new record if it does not exist
+      student.attendance.push({ date, subject, hour, teachername, status: attendance, ...(lab && { lab }) });
     }
 
+    // Update subject percentage
     let foundSubjectPercentage = false;
     for (let i = 0; i < student.subjectPercentages.length; i++) {
       if (student.subjectPercentages[i].subject === subject) {
@@ -97,13 +94,16 @@ router.post('/attendance', async (req, res) => {
     }
 
     await student.save();
-    res.json({ message: 'Attendance marked successfully!' });
+    res.json({ message: 'Attendance updated successfully!' });
   } catch (error) {
     console.error('Error marking attendance:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
+
+
+// Route to check if attendance is already marked
 // Route to check if attendance is already marked
 router.post('/attendance/check', async (req, res) => {
   const { date, hour, teachername, subject, course, lab } = req.body;
@@ -112,21 +112,57 @@ router.post('/attendance/check', async (req, res) => {
     const query = {
       'attendance.date': date,
       'attendance.hour': hour,
-      'attendance.teachername': teachername,
-      course
+      course,
     };
 
     if (lab) {
       query.lab = lab;
     }
 
-    const existingAttendance = await Student.findOne({
+    // Check if attendance is already marked for the same subject and hour
+    const existingSubjectAttendance = await Student.findOne({
       ...query,
-      'attendance.subject': { $ne: subject }
+      'attendance.subject': subject,
+      'attendance.teachername': teachername
     });
 
-    if (existingAttendance) {
-      return res.json({ isMarked: true, teachername, markedSubject: existingAttendance.attendance.find(record => record.date === date && record.hour === hour && record.teachername === teachername).subject });
+    if (existingSubjectAttendance) {
+      return res.json({ 
+        isMarked: true, 
+        type: 'sameSubject',
+        message: 'Attendance already marked for the same subject in this hour.',
+        data: existingSubjectAttendance.attendance.find(record => record.date === date && record.hour === hour && record.subject === subject)
+      });
+    }
+
+    // Check if attendance is already marked for a different subject but in the same hour
+    const existingDifferentSubjectAttendance = await Student.findOne({
+      ...query,
+      'attendance.subject': { $ne: subject },
+      'attendance.teachername': teachername
+    });
+
+    if (existingDifferentSubjectAttendance) {
+      return res.json({ 
+        isMarked: true, 
+        type: 'differentSubject', 
+        message: 'Attendance already marked for a different subject in this hour by the same teacher.' 
+      });
+    }
+
+    // Check if attendance is marked by a different teacher
+    const existingAttendanceByOtherTeacher = await Student.findOne({
+      ...query,
+      'attendance.hour': hour,
+      'attendance.teachername': { $ne: teachername }
+    });
+
+    if (existingAttendanceByOtherTeacher) {
+      return res.json({ 
+        isMarked: true, 
+        type: 'differentTeacher', 
+        message: 'Attendance already marked for this hour by another teacher.' 
+      });
     }
 
     res.json({ isMarked: false });
@@ -135,6 +171,7 @@ router.post('/attendance/check', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 // Route to fetch existing attendance records
 router.post('/attendance/existing', async (req, res) => {
@@ -146,7 +183,7 @@ router.post('/attendance/existing', async (req, res) => {
       'attendance.hour': hour,
       'attendance.teachername': teachername,
       'attendance.subject': subject,
-      'course': course
+      course
     };
 
     if (lab) {
@@ -169,6 +206,7 @@ router.post('/attendance/existing', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 // Route to get attendance summary
 router.post('/attendance/summary', async (req, res) => {

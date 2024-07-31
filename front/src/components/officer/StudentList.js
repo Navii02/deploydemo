@@ -221,7 +221,7 @@ const StudentListOfficer = () => {
       );
       const studentDetails = response.data.studentDetails;
 
-      if (!studentDetails || !studentDetails.parentDetails) {
+      if (!studentDetails ) {
         console.error("Error: Invalid student details received");
         return;
       }

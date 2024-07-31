@@ -51,18 +51,26 @@ const AttendanceForm = () => {
         semester,
         lab, // Include lab in the request
       });
+      
+      // Assuming each student object has a `rollNo` field that can be used to sort
+      const sortedStudents = response.data.sort((a, b) => {
+        if (a.RollNo < b.RollNo) return -1;
+        if (a.RollNo > b.RollNo) return 1;
+        return 0;
+      });
+  
       setLoading(false);
-      return response.data;
+      return sortedStudents;
     } catch (error) {
       setLoading(false);
       console.error('Error fetching students:', error);
     }
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const checkResponse = await axios.post(`${baseurl}/api/attendance/check`, {
         date,
@@ -70,29 +78,42 @@ const AttendanceForm = () => {
         teachername,
         subject,
         course,
-        lab, // Include lab in the check request
+        lab,
       });
-
+  
       if (checkResponse.data.isMarked) {
-        setAlreadyMarked(true);
-        setMarkedSubject(checkResponse.data.markedSubject);
-
-        if (checkResponse.data.teachername === teachername && checkResponse.data.markedSubject === subject) {
-          const response = await axios.post(`${baseurl}/api/attendance/existing`, {
+        if (checkResponse.data.type === 'sameSubject') {
+          // Show existing attendance for the same subject and hour
+          const existingAttendanceResponse = await axios.post(`${baseurl}/api/attendance/existing`, {
             date,
             hour,
             teachername,
             subject,
             course,
-            lab, // Include lab in the existing attendance request
+            lab,
           });
-          setExistingAttendance(response.data);
-          setStudents(response.data.map(record => ({
-            ...record.student,
+  
+          setExistingAttendance(existingAttendanceResponse.data);
+          setStudents(existingAttendanceResponse.data.map(record => ({
+            _id: record.student._id,
+            name: record.student.name,
             attendance: record.status
           })));
-        } else {
+          setNoStudentsMessage(false);
+        } else if (checkResponse.data.type === 'differentSubject') {
+          // Show message for different subject with the same hour
+          setAlreadyMarked(true);
+          setNoStudentsMessage(false);
+          alert(checkResponse.data.message);
           setExistingAttendance([]);
+          setStudents([]);
+        } else if (checkResponse.data.type === 'differentTeacher') {
+          // Show message for different teacher
+          setAlreadyMarked(true);
+          setNoStudentsMessage(false);
+          alert(checkResponse.data.message);
+          setExistingAttendance([]);
+          setStudents([]);
         }
       } else {
         const fetchedStudents = await fetchStudents();
@@ -112,29 +133,26 @@ const AttendanceForm = () => {
     }
   };
 
-  const handleAttendanceChange = (studentId, isPresent) => {
-    setStudents(prevStudents =>
-      prevStudents.map((student) =>
-        student._id === studentId ? { ...student, attendance: isPresent ? 'Present' : 'Absent' } : student
-      )
-    );
-  };
-
   const submitAttendance = async () => {
     setLoading(true);
     try {
-      await Promise.all(students.map((student) =>
-        axios.post(`${baseurl}/api/attendance`, {
-          studentId: student._id,
-          date,
-          subject,
-          hour,
-          teachername,
-          attendance: student.attendance,
-          lab, // Include lab in the submission
-        })
+      // Map students to ensure we have updated status
+      const updatedStudents = students.map((student) => ({
+        studentId: student._id,
+        date,
+        subject,
+        hour,
+        teachername,
+        attendance: student.attendance,
+        lab, // Include lab in the submission
+      }));
+  
+      // Send update request
+      await Promise.all(updatedStudents.map(student =>
+        axios.post(`${baseurl}/api/attendance`, student)
       ));
-      alert('Attendance marked successfully!');
+  
+      alert('Attendance updated successfully!');
       // Reset the form after successful submission
       setCourse('');
       setSemester('');
@@ -148,6 +166,18 @@ const AttendanceForm = () => {
       setLoading(false);
     }
   };
+  
+  
+  
+  const handleAttendanceChange = (studentId, isPresent) => {
+    setStudents(prevStudents =>
+      prevStudents.map((student) =>
+        student._id === studentId ? { ...student, attendance: isPresent ? 'Present' : 'Absent' } : student
+      )
+    );
+  };
+  
+
 
   const handleMarkAllPresentChange = (e) => {
     const isChecked = e.target.checked;
