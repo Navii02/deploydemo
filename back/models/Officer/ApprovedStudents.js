@@ -101,9 +101,19 @@ const ApprovedStudentSchema = new mongoose.Schema({
   assignmentMarks1: { type: Number, default: 0 },
   assignmentMarks2: { type: Number, default: 0 },
   attendance: { type: Number, default: 0 },
-  internalExam: { type: Number, default: 0 },
-  record: { type: Number, default: 0 },
+  internalMarks: { type: Number, default: 0 },
+  recordMarks: { type: Number, default: 0 },
   totalMarks: { type: Number, default: 0 },
+    }
+  ],
+  LabInternal:[
+    {
+      subject:String,
+      attendance: { type: Number, default: 0 },
+  internalMarks: { type: Number, default: 0 },
+  recordMarks: { type: Number, default: 0 },
+  totalMarks: { type: Number, default: 0 },
+
     }
   ],
   attendance: [
