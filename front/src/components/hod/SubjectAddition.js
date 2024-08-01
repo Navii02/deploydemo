@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
 import HodNavbar from './HodNavbar';
 import styles from './AddSubjectForm.module.css';
 
@@ -8,36 +8,29 @@ const ShowAddedSubjects = ({ selectedSemester, selectedCourse }) => {
   const [addedSubjects, setAddedSubjects] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
   const [editedSubjects, setEditedSubjects] = useState([]);
+
   const fetchAddedSubjects = useCallback(async () => {
     try {
-        let response;
-        const branch = localStorage.getItem('branch');
-        if (selectedSemester && selectedSemester >= 1 && selectedCourse) {
-            if (!branch) {
-                console.error('Branch not found in localStorage.');
-                return;
-            }
-            response = await axios.get(`${baseurl}/api/hod/subjects`, {
-                params: {
-                    semester: selectedSemester,
-                    course: selectedCourse, // Pass course as a query parameter
-                }
-            });
-        } else {
-            response = await axios.get(`${baseurl}/api/hod/subjects`, {
-                params: {
-                    semester: selectedSemester,
-                    course: selectedCourse // Send request with course
-                }
-            });
+      const branch = localStorage.getItem('branch');
+      if (selectedSemester && selectedSemester >= 1 && selectedCourse) {
+        if (!branch) {
+          console.error('Branch not found in localStorage.');
+          return;
         }
-
+        const response = await axios.get(`${baseurl}/api/hod/subjects`, {
+          params: {
+            semester: selectedSemester,
+            course: selectedCourse,
+            branch: branch,
+          }
+        });
         setAddedSubjects(response.data);
         setEditedSubjects(response.data);
+      }
     } catch (error) {
-        console.error('Error fetching added subjects:', error);
+      console.error('Error fetching added subjects:', error);
     }
-}, [selectedSemester, selectedCourse]);
+  }, [selectedSemester, selectedCourse]);
 
   useEffect(() => {
     fetchAddedSubjects();
@@ -49,9 +42,11 @@ const ShowAddedSubjects = ({ selectedSemester, selectedCourse }) => {
 
   const handleSaveSubject = async (index) => {
     try {
-      await axios.put(`${baseurl}/api/hod/subjects/${addedSubjects[index]._id}`, editedSubjects[index]);
+      const subjectId = addedSubjects[index]._id;
+      await axios.put(`${baseurl}/api/hod/subjects/${subjectId}`, editedSubjects[index]);
       alert('Subject details updated successfully!');
       setEditingIndex(null);
+      fetchAddedSubjects(); // Refresh data after saving
     } catch (error) {
       console.error('Error updating subject details:', error);
     }
@@ -132,12 +127,12 @@ const AddSubjectForm = () => {
   const [minorSubject, setMinorSubject] = useState('');
   const [minorSubjectCode, setMinorSubjectCode] = useState('');
   const [branch, setBranch] = useState('');
-  const [course, setCourse] = useState('');
   const [courses, setCourses] = useState([]);
 
   const handleChangeSemester = (e) => {
-    setSelectedSemester(e.target.value);
-    setSemester(e.target.value);
+    const value = e.target.value;
+    setSelectedSemester(value);
+    setSemester(value);
     setSubjects([{ subjectName: '', subjectCode: '' }]);
     setMinorSubject('');
     setMinorSubjectCode('');
@@ -145,7 +140,6 @@ const AddSubjectForm = () => {
 
   const handleChangeCourse = (e) => {
     setSelectedCourse(e.target.value);
-    setCourse(e.target.value);
   };
 
   useEffect(() => {
@@ -172,10 +166,12 @@ const AddSubjectForm = () => {
   };
 
   const handleAddColumn = () => {
-    if (subjects.length < 6) {
+    if (semester < 7 && subjects.length < 6) {
+      setSubjects([...subjects, { subjectName: '', subjectCode: '' }]);
+    } else if (semester === '8' && subjects.length < 8) {
       setSubjects([...subjects, { subjectName: '', subjectCode: '' }]);
     } else {
-      alert('You can only add up to 6 columns.');
+      alert('You can only add up to 6 columns for semesters 1-7 and 8 columns for semester 8.');
     }
   };
 
@@ -188,120 +184,122 @@ const AddSubjectForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/hod/subjects', { semester, subjects, minorSubject, minorSubjectCode, branch, course });
+      await axios.post(`${baseurl}/api/hod/subjects`, { semester, subjects, minorSubject, minorSubjectCode, branch, course: selectedCourse });
       alert('Subjects added successfully!');
       setSemester('');
       setSubjects([{ subjectName: '', subjectCode: '' }]);
       setMinorSubject('');
       setMinorSubjectCode('');
+      setShowAddForm(false); // Hide form after submission
     } catch (err) {
-      console.error(err);
+      console.error('Error adding subjects:', err);
       alert('Error adding subjects.');
     }
   };
 
   return (
-    <div>
-      <HodNavbar />
-      <div className={styles.container}>
-        {branch && (
-          <>
-            <label htmlFor="courseFilter">Select Course:</label>
-            <select id="courseFilter" value={selectedCourse} onChange={handleChangeCourse}>
-              <option value="">Select Course</option>
-              {courses.map((course, index) => (
-                <option key={index} value={course}>
-                  {course}
-                </option>
-              ))}
-            </select>
-          </>
+ 
+      <div>
+        <HodNavbar />
+        <div className={styles.container}>
+          {/* Content of the page */}
+          {branch && (
+            <>
+              <label className={styles.label} htmlFor="courseFilter">Select Course:</label>
+              <select className={styles.select} id="courseFilter" value={selectedCourse} onChange={handleChangeCourse}>
+                <option value="">Select Course</option>
+                {courses.map((course, index) => (
+                  <option key={index} value={course}>{course}</option>
+                ))}
+              </select>
+            </>
+          )}
+       
+          <label className={styles.label} htmlFor="semesterFilter">Select Semester:</label>
+          <select className={styles.select} id="semesterFilter" value={selectedSemester} onChange={handleChangeSemester}>
+            <option value="">Select Semester</option>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+              <option key={sem} value={sem}>Semester {sem}</option>
+            ))}
+          </select>
+        </div>
+        {showAddForm && selectedSemester && selectedCourse && (
+          <div className={styles.container}>
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <div>
+                {subjects.map((subject, index) => (
+                  <div key={index} className={styles.subjectRow}>
+                    <div>
+                      <label className={styles.label} htmlFor={`subjectName${index}`}>Subject Name:</label>
+                      <input
+                        className={styles.inputText}
+                        type="text"
+                        id={`subjectName${index}`}
+                        name="subjectName"
+                        value={subject.subjectName}
+                        onChange={(e) => handleChange(index, e)}
+                      />
+                    </div>
+                    <div>
+                      <label className={styles.label} htmlFor={`subjectCode${index}`}>Subject Code:</label>
+                      <input
+                        className={styles.inputText}
+                        type="text"
+                        id={`subjectCode${index}`}
+                        name="subjectCode"
+                        value={subject.subjectCode}
+                        onChange={(e) => handleChange(index, e)}
+                      />
+                    </div>
+                    {index > 0 && (
+                      <button type="button" className={styles.buttonRemove} onClick={() => handleRemoveColumn(index)}>
+                        Remove subject
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {semester >= 3 && semester <= 6 && (
+                  <div>
+                    <div>
+                      <label className={styles.label} htmlFor="minorSubject">Minor Subject:</label>
+                      <input
+                        className={styles.inputText}
+                        type="text"
+                        id="minorSubject"
+                        value={minorSubject}
+                        onChange={(e) => setMinorSubject(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className={styles.label} htmlFor="minorSubjectCode">Minor Subject Code:</label>
+                      <input
+                        className={styles.inputText}
+                        type="text"
+                        id="minorSubjectCode"
+                        value={minorSubjectCode}
+                        onChange={(e) => setMinorSubjectCode(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                )}
+                {subjects.length < 8 && (
+                  <button type="button" className={styles.button} onClick={handleAddColumn}>
+                    Add Subject
+                  </button>
+                )}
+                <button type="submit" className={styles.button}>Add Subjects</button>
+              </div>
+            </form>
+          </div>
         )}
+        {!showAddForm && selectedSemester && selectedCourse && (
+          <div className={styles.container}>
+            <button className={styles.button} onClick={() => setShowAddForm(true)}>Add Subject</button>
+          </div>
+        )}
+        {selectedSemester && selectedCourse && <ShowAddedSubjects selectedSemester={selectedSemester} selectedCourse={selectedCourse} />}
       </div>
-      <div className={styles.container}>
-        <label htmlFor="semesterFilter">Select Semester:</label>
-        <select id="semesterFilter" value={selectedSemester} onChange={handleChangeSemester}>
-          <option value="">Select Semester</option>
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
-            <option key={sem} value={sem}>
-              Semester {sem}
-            </option>
-          ))}
-        </select>
-      </div>
-      {showAddForm && selectedSemester && selectedCourse && (
-        <div className={styles.container}>
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div>
-              {subjects.map((subject, index) => (
-                <div key={index}>
-                  <div>
-                    <label htmlFor={`subjectName${index}`}>Subject Name:</label>
-                    <input
-                      type="text"
-                      id={`subjectName${index}`}
-                      name="subjectName"
-                      value={subject.subjectName}
-                      onChange={(e) => handleChange(index, e)}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor={`subjectCode${index}`}>Subject Code:</label>
-                    <input
-                      type="text"
-                      id={`subjectCode${index}`}
-                      name="subjectCode"
-                      value={subject.subjectCode}
-                      onChange={(e) => handleChange(index, e)}
-                    />
-                  </div>
-                  {index > 0 && (
-                    <button type="button" onClick={() => handleRemoveColumn(index)}>
-                      Remove Column
-                    </button>
-                  )}
-                </div>
-              ))}
-              {semester >= 3 && semester <= 6 && (
-                <div>
-                  <div>
-                    <label htmlFor="minorSubject">Minor Subject:</label>
-                    <input
-                      type="text"
-                      id="minorSubject"
-                      value={minorSubject}
-                      onChange={(e) => setMinorSubject(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="minorSubjectCode">Minor Subject Code:</label>
-                    <input
-                      type="text"
-                      id="minorSubjectCode"
-                      value={minorSubjectCode}
-                      onChange={(e) => setMinorSubjectCode(e.target.value)}
-                    />
-                  </div>
-                </div>
-              )}
-              {subjects.length < 6 && (
-                <button type="button" onClick={handleAddColumn}>
-                  Add Column
-                </button>
-              )}
-              <button type="submit">Add Subjects</button>
-            </div>
-          </form>
-        </div>
-      )}
-      {!showAddForm && selectedSemester && selectedCourse && (
-        <div className={styles.container}>
-          <button onClick={() => setShowAddForm(true)}>Add Subject</button>
-        </div>
-      )}
-      {selectedSemester && selectedCourse && <ShowAddedSubjects selectedSemester={selectedSemester} selectedCourse={selectedCourse} />}
-    </div>
-  );
-};
-
-export default AddSubjectForm;
+    );
+  };
+  
+  export default AddSubjectForm;

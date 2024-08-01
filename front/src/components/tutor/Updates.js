@@ -11,25 +11,23 @@ const TutorUpdates = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
- 
-    useEffect(() => {
-      const tutorclass = localStorage.getItem('tutorclass');
-      
-      const academicYear = localStorage.getItem('academicYear');
-      if (tutorclass && academicYear) {
-        fetchStudents(tutorclass, academicYear);
-      }
-      console.log(tutorclass, academicYear);
-    }, []);
-  
-  
-
+  useEffect(() => {
+    const tutorclass = localStorage.getItem('tutorclass');
+    const academicYear = localStorage.getItem('academicYear');
+    if (tutorclass && academicYear) {
+      fetchStudents(tutorclass, academicYear);
+    }
+    console.log(tutorclass, academicYear);
+  }, []);
 
   const fetchStudents = async (tutorclass, academicYear) => {
     try {
       const response = await axios.get(`${baseurl}/api/students/${tutorclass}/${academicYear}`);
-      setStudents(response.data);
-      console.log(response.data);
+      const sortedStudents = response.data.sort((a, b) =>
+        a.RollNo.localeCompare(b.RollNo)
+      );
+      setStudents(sortedStudents);
+     
     } catch (error) {
       console.error('Error fetching students:', error);
       setErrorMessage('Error fetching students');
@@ -51,6 +49,11 @@ const TutorUpdates = () => {
   };
 
   const handleSendMessage = async () => {
+    if (!message.trim()) {
+      setErrorMessage('Message cannot be empty');
+      return;
+    }
+
     try {
       const response = await axios.post(`${baseurl}/api/sendMessage`, {
         selectedStudents,
@@ -78,6 +81,7 @@ const TutorUpdates = () => {
             placeholder="Type your message here..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            required
           />
         </label>
         <div className="student-selection">
@@ -105,7 +109,11 @@ const TutorUpdates = () => {
             </div>
           ))}
         </div>
-        <button className="submit-button" onClick={handleSendMessage}>
+        <button
+          className="submit-button"
+          onClick={handleSendMessage}
+          disabled={!message.trim()}
+        >
           Send Message
         </button>
         {successMessage && <p className="success-message">{successMessage}</p>}

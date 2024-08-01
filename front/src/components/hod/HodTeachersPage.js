@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
-import {baseurl} from '../../url';
-import './AdminTeachersPage.css'; // Assuming this CSS file exists
+import { baseurl } from '../../url';
+import './HodTeachersPage.css'; // Assuming this CSS file exists
 import HodNavbar from './HodNavbar';
 
 const branchOptions = [
-  { value: "BTech CSE", label: "BTech CSE" },
-  { value: "BTech ECE", label: "BTech ECE" },
+  { value: "B.Tech CSE", label: "B.Tech CSE" },
+  { value: "B.Tech ECE", label: "B.Tech ECE" },
   { value: "MCA", label: "MCA" },
   { value: "BBA", label: "BBA" },
-  { value: "BCA", label: "BCA" },
-  
- 
+  { value: "BCA", label: "BCA" }
+];
+
+const semesterOptions = [
+  { value: "1", label: "1" },
+  { value: "2", label: "2" },
+  { value: "3", label: "3" },
+  { value: "4", label: "4" },
+  { value: "5", label: "5" },
+  { value: "6", label: "6" },
+  { value: "7", label: "7" },
+  { value: "8", label: "8" }
 ];
 
 const AdminTeachersPage = () => {
@@ -20,21 +29,20 @@ const AdminTeachersPage = () => {
   const [newTeacher, setNewTeacher] = useState({
     teachername: '',
     email: '',
-    subjects: [], // Change to array
-    subjectCode: [], // Change to array
-    branches: [], // Change to array
-    semesters: [], // Change to array
-    course: ''
+    MobNo: '',
+    branches: [],
+    semesters: [],
+    subjects: []
   });
   const [editingTeacher, setEditingTeacher] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [showAddTeacher, setShowAddTeacher] = useState(false); // State to toggle add teacher section visibility
-  
+  const [showAddTeacher, setShowAddTeacher] = useState(false);
+  const [subjectOptions, setSubjectOptions] = useState([]);
+
   const fetchTeachers = async () => {
     try {
       const storedBranch = localStorage.getItem('branch');
       const response = await axios.get(`${baseurl}/api/admin/teachers?branch=${storedBranch}`);
-      console.log(storedBranch);
       setTeachers(response.data.teachers);
     } catch (error) {
       setErrorMessage(error.response?.data?.message || 'Error fetching teachers');
@@ -45,23 +53,35 @@ const AdminTeachersPage = () => {
     fetchTeachers();
   }, []);
 
+  const fetchSubjects = async (branches, semesters) => {
+    try {
+      const response = await axios.get(`${baseurl}/api/subjects`, {
+        params: {
+          branches: branches.join(','),
+          semesters: semesters.join(',')
+        }
+      });
+      // Format subjects to include only names
+      setSubjectOptions(response.data.subjects.map(subject => ({ value: subject.subjectName, label: subject.subjectName })));
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || 'Error fetching subjects');
+    }
+  };
+
   const handleAddTeacher = async () => {
     try {
       const department = localStorage.getItem('branch');
       await axios.post(`${baseurl}/api/admin/addTeacher`, { ...newTeacher, department: department });
       fetchTeachers();
-      
-      // Resetting form fields
       setNewTeacher({
         teachername: '',
         email: '',
-        subjects: [],
-        subjectCode: [],
+        MobNo: '',
         branches: [],
         semesters: [],
-        course: ''
+        subjects: []
       });
-      setShowAddTeacher(false); // Hide the add teacher section after adding
+      setShowAddTeacher(false);
     } catch (error) {
       setErrorMessage(error.response?.data?.message || 'Error adding teacher');
     }
@@ -86,21 +106,31 @@ const AdminTeachersPage = () => {
     }
   };
 
-  // Helper function to handle array input change
-  const handleArrayInputChange = (fieldName, e) => {
-    // Convert comma-separated values into an array
-    const newArray = e.target.value.split(',').map(item => item.trim());
-    setNewTeacher({ ...newTeacher, [fieldName]: newArray });
+  const handleEditingBranchesChange = (selectedOptions) => {
+    const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
+    setEditingTeacher({ ...editingTeacher, branches: selectedValues });
+    if (selectedValues.length && editingTeacher.semesters.length) {
+      fetchSubjects(selectedValues, editingTeacher.semesters);
+    }
   };
 
-  const handleBranchesChange = (selectedOptions) => {
+  const handleEditingSemestersChange = (selectedOptions) => {
     const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-    setNewTeacher({ ...newTeacher, branches: selectedValues });
+    setEditingTeacher({ ...editingTeacher, semesters: selectedValues });
+    if (editingTeacher.branches.length && selectedValues.length) {
+      fetchSubjects(editingTeacher.branches, selectedValues);
+    }
+  };
+
+  const handleEditingSubjectsChange = (selectedOptions) => {
+    const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
+    setEditingTeacher({ ...editingTeacher, subjects: selectedValues });
   };
 
   return (
     <div>
       <HodNavbar />
+      <div>
       <div className="admin-teachers-page">
         <div className="teachers-list-section">
           {teachers.length === 0 ? (
@@ -111,10 +141,10 @@ const AdminTeachersPage = () => {
                 <tr>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Subjects</th>
-                  <th>Subject Code</th>
+                  <th>Number</th>
                   <th>Branches</th>
                   <th>Semesters</th>
+                  <th>Subjects</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -140,30 +170,32 @@ const AdminTeachersPage = () => {
                         <td>
                           <input
                             type="text"
-                            value={editingTeacher.subjects.join(', ')} // Display as comma-separated string
-                            onChange={(e) => setEditingTeacher({ ...editingTeacher, subjects: e.target.value.split(',').map(item => item.trim()) })}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="text"
-                            value={editingTeacher.subjectCode.join(', ')} // Display as comma-separated string
-                            onChange={(e) => setEditingTeacher({ ...editingTeacher, subjectCode: e.target.value.split(',').map(item => item.trim()) })}
+                            value={editingTeacher.MobNo}
+                            onChange={(e) => setEditingTeacher({ ...editingTeacher, MobNo: e.target.value })}
                           />
                         </td>
                         <td>
                           <Select
                             isMulti
                             value={branchOptions.filter(option => editingTeacher.branches.includes(option.value))}
-                            onChange={(selectedOptions) => setEditingTeacher({ ...editingTeacher, branches: selectedOptions.map(option => option.value) })}
+                            onChange={handleEditingBranchesChange}
                             options={branchOptions}
                           />
                         </td>
                         <td>
-                          <input
-                            type="text"
-                            value={editingTeacher.semesters.join(', ')} // Display as comma-separated string
-                            onChange={(e) => setEditingTeacher({ ...editingTeacher, semesters: e.target.value.split(',').map(item => item.trim()) })}
+                          <Select
+                            isMulti
+                            value={semesterOptions.filter(option => editingTeacher.semesters.includes(option.value))}
+                            onChange={handleEditingSemestersChange}
+                            options={semesterOptions}
+                          />
+                        </td>
+                        <td>
+                          <Select
+                            isMulti
+                            value={subjectOptions.filter(option => editingTeacher.subjects.includes(option.value))}
+                            onChange={handleEditingSubjectsChange}
+                            options={subjectOptions}
                           />
                         </td>
                         <td>
@@ -174,10 +206,10 @@ const AdminTeachersPage = () => {
                       <>
                         <td>{teacher.teachername}</td>
                         <td>{teacher.email}</td>
-                        <td>{teacher.subjects.join(', ')}</td> {/* Display as comma-separated string */}
-                        <td>{teacher.subjectCode.join(', ')}</td> {/* Display as comma-separated string */}
-                        <td>{teacher.branches.join(', ')}</td> {/* Display as comma-separated string */}
-                        <td>{teacher.semesters.join(', ')}</td> {/* Display as comma-separated string */}
+                        <td>{teacher.MobNo}</td>
+                        <td>{teacher.branches.join(', ')}</td>
+                        <td>{teacher.semesters.join(', ')}</td>
+                        <td>{teacher.subjects.join(', ')}</td>
                         <td>
                           <button onClick={() => setEditingTeacher(teacher)}>Edit</button>
                           <button onClick={() => handleDeleteTeacher(teacher._id)}>Delete</button>
@@ -214,45 +246,47 @@ const AdminTeachersPage = () => {
               />
             </label>
             <label>
+              Number:
+              <input
+                type="text"
+                value={newTeacher.MobNo}
+                onChange={(e) => setNewTeacher({ ...newTeacher, MobNo: e.target.value })}
+              />
+            </label>
+            <label>
               Branches:
               <Select
                 isMulti
                 value={branchOptions.filter(option => newTeacher.branches.includes(option.value))}
-                onChange={handleBranchesChange}
+                onChange={(selectedOptions) => setNewTeacher({ ...newTeacher, branches: selectedOptions.map(option => option.value) })}
                 options={branchOptions}
               />
             </label>
             <label>
-              Semesters (comma-separated):
-              <input
-                type="text"
-                value={newTeacher.semesters.join(', ')} // Display as comma-separated string
-                onChange={(e) => handleArrayInputChange('semesters', e)}
+              Semesters:
+              <Select
+                isMulti
+                value={semesterOptions.filter(option => newTeacher.semesters.includes(option.value))}
+                onChange={(selectedOptions) => setNewTeacher({ ...newTeacher, semesters: selectedOptions.map(option => option.value) })}
+                options={semesterOptions}
               />
             </label>
             <label>
-              Subjects (comma-separated):
-              <input
-                type="text"
-                value={newTeacher.subjects.join(', ')} // Display as comma-separated string
-                onChange={(e) => handleArrayInputChange('subjects', e)}
+              Subjects:
+              <Select
+                isMulti
+                value={subjectOptions.filter(option => newTeacher.subjects.includes(option.value))}
+                onChange={(selectedOptions) => setNewTeacher({ ...newTeacher, subjects: selectedOptions.map(option => option.value) })}
+                options={subjectOptions}
               />
             </label>
-            <label>
-              Subject Code (comma-separated):
-              <input
-                type="text"
-                value={newTeacher.subjectCode.join(', ')} // Display as comma-separated string
-                onChange={(e) => handleArrayInputChange('subjectCode', e)}
-              />
-            </label>
-            
             <button onClick={handleAddTeacher}>Add Teacher</button>
           </div>
         )}
 
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
+    </div>
     </div>
   );
 };

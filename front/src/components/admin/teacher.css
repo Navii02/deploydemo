@@ -1,38 +1,71 @@
-/* AdminPage.css */
+/* teacher.css */
 
+/* General styles for the admin page */
 .admin-page {
-    padding: 20px;
-  }
-  
-  .tabs {
-    margin-bottom: 20px;
-  }
-  
-  .tabs button {
-    margin-right: 10px;
-    padding: 10px 20px;
-    border: none;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  .tabs button:hover {
-    background-color: #0056b3;
-  }
-  
-  .content {
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    padding: 8px 0;
-  }
-  
+  font-family: Arial, sans-serif;
+  margin: 100px 20px 20px 20px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tabs button:hover {
+  background-color: #0056b3;
+}
+
+.content {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.content h2 {
+  margin-top: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #c82333;
+}

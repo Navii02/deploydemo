@@ -1,0 +1,116 @@
+
+/* HodTeachersPage.css */
+
+/* General container styling */
+.admin-teachers-page {
+  font-family: 'Arial', sans-serif;
+  margin: 100px 20px 0px 20px;
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.teachers-list-section {
+  margin-bottom: 50px;
+ 
+}
+.teachers-list {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+ 
+}
+
+.teachers-list th, .teachers-list td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.teachers-list th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  color: #333;
+}
+
+.teachers-list tr:hover {
+  background-color: #f9f9f9;
+}
+
+.teachers-list button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.teachers-list button:hover {
+  background-color: #0056b3;
+}
+
+.add-new-teacher-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 10px 0;
+}
+
+.add-new-teacher-btn:hover {
+  background-color: #218838;
+}
+
+.add-teacher-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.add-teacher-section h3 {
+  margin-top: 0;
+}
+
+.add-teacher-section label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.add-teacher-section input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.add-teacher-section Select {
+  margin-top: 5px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+
+/* Responsive styling */
+@media (max-width: 1000px) {
+  .teachers-list th, .teachers-list td {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .add-teacher-section input {
+    padding: 6px;
+  }
+}

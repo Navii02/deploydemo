@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { baseurl } from '../../url';
 import Navbar from './AdminNavbar';
+import './AdminOfficerPage.css';
+
 import Loading from './Loading'; // Assuming you have a Loading component
 
 const AdminOfficersPage = () => {
@@ -10,6 +12,7 @@ const AdminOfficersPage = () => {
   const [editingOfficer, setEditingOfficer] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true); // State for loading indicator
+  const [isAddFormVisible, setIsAddFormVisible] = useState(false); // State for form visibility
 
   const fetchOfficers = async () => {
     try {
@@ -31,6 +34,7 @@ const AdminOfficersPage = () => {
       await axios.post(`${baseurl}/api/admin/addOfficer`, newOfficer);
       fetchOfficers();
       setNewOfficer({ name: '', post: '', email: '', number: '' });
+      setIsAddFormVisible(false); // Hide the form after adding an officer
     } catch (error) {
       setErrorMessage(error.response.data.message);
     }
@@ -60,46 +64,53 @@ const AdminOfficersPage = () => {
   }
 
   return (
-    <div className="admin-officers-page">
-      <Navbar/>
-      <div>
+    <div>
+      <Navbar />
+      <div className="admin-officers-page">
         &nbsp;
-        <h3>Add New Officer</h3>
-        <label>
-          Name:
-          <input
-            type="text"
-            value={newOfficer.name}
-            onChange={(e) => setNewOfficer({ ...newOfficer, name: e.target.value })}
-          />
-        </label>
-        <label>
-          Post:
-          <input
-            type="text"
-            value={newOfficer.post}
-            onChange={(e) => setNewOfficer({ ...newOfficer, post: e.target.value })}
-          />
-        </label>
-        <label>
-          Number:
-          <input
-            type="text"
-            value={newOfficer.number}
-            onChange={(e) => setNewOfficer({ ...newOfficer, number: e.target.value })}
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="text"
-            value={newOfficer.email}
-            onChange={(e) => setNewOfficer({ ...newOfficer, email: e.target.value })}
-          />
-        </label>
-        <button onClick={handleAddOfficer}>Add Officer</button>
+        <button onClick={() => setIsAddFormVisible(!isAddFormVisible)}>
+          {isAddFormVisible ? 'Cancel' : 'Add Officer'}
+        </button>
+        {isAddFormVisible && (
+          <>
+            <h3>Add New Officer</h3>
+            <label>
+              Name:
+              <input
+                type="text"
+                value={newOfficer.name}
+                onChange={(e) => setNewOfficer({ ...newOfficer, name: e.target.value })}
+              />
+            </label>
+            <label>
+              Post:
+              <input
+                type="text"
+                value={newOfficer.post}
+                onChange={(e) => setNewOfficer({ ...newOfficer, post: e.target.value })}
+              />
+            </label>
+            <label>
+              Number:
+              <input
+                type="text"
+                value={newOfficer.number}
+                onChange={(e) => setNewOfficer({ ...newOfficer, number: e.target.value })}
+              />
+            </label>
+            <label>
+              Email:
+              <input
+                type="text"
+                value={newOfficer.email}
+                onChange={(e) => setNewOfficer({ ...newOfficer, email: e.target.value })}
+              />
+            </label>
+            <button onClick={handleAddOfficer}>Add Officer</button>
+          </>
+        )}
       </div>
-        &nbsp;
+      &nbsp;
       <div>
         &nbsp;
         <h3>Officers List</h3>
@@ -122,7 +133,7 @@ const AdminOfficersPage = () => {
                       setEditingOfficer({ ...editingOfficer, post: e.target.value })
                     }
                   />
-                   <input
+                  <input
                     type="text"
                     value={editingOfficer.number}
                     onChange={(e) =>
@@ -140,9 +151,14 @@ const AdminOfficersPage = () => {
                 </>
               ) : (
                 <>
-                  {officer.name} - {officer.post} - {officer.email}-{officer.number}
-                  <button onClick={() => setEditingOfficer(officer)}>Edit</button>
-                  <button onClick={() => handleDeleteOfficer(officer._id)}>Delete</button>
+                  <div className="admin-officers-page">
+                    <p>Name: {officer.name}</p>
+                    <p>Post: {officer.post}</p>
+                    <p>Email: {officer.email}</p>
+                    <p>Number: {officer.number}</p>
+                    <button onClick={() => setEditingOfficer(officer)}>Edit</button>
+                    <button onClick={() => handleDeleteOfficer(officer._id)}>Delete</button>
+                  </div>
                 </>
               )}
             </li>

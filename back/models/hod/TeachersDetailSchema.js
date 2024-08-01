@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const teacherSchema = new mongoose.Schema({
   teachername: String,
   email: String,
+  MobNo: String,
   subjects: [String],
   subjectCode: [String],
   branches: [String],

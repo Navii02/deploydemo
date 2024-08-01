@@ -10,7 +10,7 @@ router.use(express.json());
 
 router.get('/student-performance/:department/:academicYear', async (req, res) => {
   const { department, academicYear } = req.params;
-  console.log(department,academicYear);
+ 
 
   try {
     const students = await Student.find({ course: department, academicYear });
@@ -32,6 +32,7 @@ router.get('/student-performance/:department/:academicYear', async (req, res) =>
       return {
         name: student.name,
         RegisterNo: student.RegisterNo,
+        RollNo: student.RollNo,
         subjects: subjectsPerformance,
       };
     });

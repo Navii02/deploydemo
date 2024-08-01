@@ -81,7 +81,7 @@ const ApprovedStudentSchema = new mongoose.Schema({
     aadhaar: { type: Boolean, default: false },
     other: { type: Boolean, default: false },
   },
-
+  RollNo: { type: String,default: 'Nil'},
   academicYear: String,
   semester: String,
   assignments: { type: String, default: 'Not Assigned' },

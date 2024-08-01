@@ -3,89 +3,44 @@ const router = express.Router();
 const Subject = require('../../models/hod/SubjectAddition');
 
 // Route to add subjects
-router.post('/hod/subjects', async (req, res) => {
-    const { semester, subjects, minorSubject, minorSubjectCode,branch,course} = req.body;
-
-    // Validate request body
-    if (!semester || !subjects || !Array.isArray(subjects)) {
-        return res.status(400).json({ error: 'Invalid data. Semester and subjects are required.' });
-    }
-
-    try {
-        const newSubject = new Subject({
-            semester,
-            subjects,
-            minorSubject,
-            minorSubjectCode,
-            branch,
-            course,
-        });
-
-        await newSubject.save();
-
-        res.status(201).json({ message: 'Subjects added successfully' });
-    } catch (err) {
-        console.error('Error saving subjects to the database:', err);
-        res.status(500).json({ error: 'An error occurred while saving subjects' });
-    }
-});
-
-// Route to update subjects
-router.put('/hod/subjects/:id', async (req, res) => {
-    const { id } = req.params;
-    const { subjects, minorSubject, minorSubjectCode } = req.body;
-
-    // Validate request body
-    if (!subjects || !Array.isArray(subjects)) {
-        return res.status(400).json({ error: 'Invalid data. Subjects must be an array.' });
-    }
-
-    try {
-        await Subject.findByIdAndUpdate(id, {
-            subjects,
-            minorSubject,
-            minorSubjectCode,
-        });
-
-        res.json({ message: 'Subject details updated successfully' });
-    } catch (err) {
-        console.error('Error updating subject details:', err);
-        res.status(500).json({ error: 'An error occurred while updating subject details' });
-    }
-});
-
 router.get('/hod/subjects', async (req, res) => {
-    const { semester, course } = req.query;
-
     try {
-        // Create a query object to filter subjects
-        const query = {};
-
-        // Add semester filter if provided
-        if (semester) {
-            query.semester = parseInt(semester, 10);
-        }
-
-        // Add branch filter if provided
-        if (course) {
-            query.branch = course;
-        }
-
-        // If branch is not provided, retrieve all subjects
-        if (!course) {
-            const subjects = await Subject.find(query);
-            res.json(subjects);
-        } else {
-            // If branch is provided, retrieve subjects based on both semester and branch
-            const subjects = await Subject.find(query);
-            res.json(subjects);
-        }
+      const { semester, course, branch } = req.query;
+      const subjects = await Subject.find({ semester, course, branch });
+      res.json(subjects);
     } catch (err) {
-        console.error('Error retrieving subjects from the database:', err);
-        res.status(500).json({ error: 'An error occurred while retrieving subjects' });
+      res.status(500).json({ message: err.message });
     }
-});
-
+  });
+  
+  // Add new subjects
+  router.post('/hod/subjects', async (req, res) => {
+    try {
+      const { semester, subjects, minorSubject, minorSubjectCode, branch, course } = req.body;
+      const newSubject = new Subject({
+        semester,
+        subjects,
+        minorSubject,
+        minorSubjectCode,
+        branch,
+        course
+      });
+      await newSubject.save();
+      res.status(201).json(newSubject);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+  
+  // Update existing subject
+  router.put('/hod/subjects/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updatedSubject = await Subject.findByIdAndUpdate(id, req.body, { new: true });
+      res.json(updatedSubject);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
 
 module.exports = router;
-

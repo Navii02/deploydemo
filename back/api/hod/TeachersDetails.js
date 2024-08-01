@@ -58,16 +58,45 @@ router.delete('/admin/deleteTeacher/:id', async (req, res) => {
   }
 });
 
-router.get('/subjects/:department/:semester', async (req, res) => {
-  const { department, semester } = req.params;
+router.get('/subjects', async (req, res) => {
   try {
-    const subjects = await Subject.find({ course: department, semester: semester });
-    res.json({ subjects });
+    const { branches, semesters } = req.query;
+
+    // Convert comma-separated values into arrays
+    const branchArray = branches ? branches.split(',') : [];
+    const semesterArray = semesters ? semesters.split(',').map(Number) : [];
+
+    // Find subjects based on the provided branch and semester arrays
+    const subjects = await Subject.find({
+      course: { $in: branchArray },
+      semester: { $in: semesterArray }
+    });
+
+    // Extract only the subject names
+    const formattedSubjects = subjects.flatMap(subject =>
+      subject.subjects.map(sub => ({
+        semester: subject.semester,
+        subjectName: sub.subjectName,
+        subjectCode: sub.subjectCode,
+        minorSubject: subject.minorSubject,
+        minorSubjectCode: subject.minorSubjectCode,
+        branch: subject.branch,
+        course: subject.course
+      }))
+    );
+
+    // Format the subjects to include only subject names
+    const subjectsByName = formattedSubjects.map(subject => ({
+      subjectName: subject.subjectName
+    }));
+
+    res.json({ subjects: subjectsByName });
   } catch (error) {
     console.error('Error fetching subjects:', error);
-    res.status(500).json({ message: 'Failed to fetch subjects' });
+    res.status(500).json({ message: 'Error fetching subjects' });
   }
 });
+
 
 
 module.exports = router;

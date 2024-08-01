@@ -8,7 +8,7 @@ const Student = require('../../models/Officer/ApprovedStudents'); // Import your
 router.get('/tutor', async (req, res) => {
   const course = req.query.department;
   const academicYear = req.query.academicYear;
-console.log(course,academicYear);
+
 
   try {
     const students = await Student.find({ course, academicYear });
@@ -65,7 +65,7 @@ router.put('/students/:id', async (req, res) => {
 
 router.get('/students/tutor/:department/:academicYear', async (req, res) => {
   const { department, academicYear } = req.params;
-  console.log(department,academicYear);
+  //console.log(department,academicYear);
 
   try {
     const students = await Student.find({ course: department, academicYear });
@@ -79,7 +79,7 @@ router.put('/students/semester/:department/:academicYear', async (req, res) => {
   const { department, academicYear } = req.params;
   const { semester } = req.body;
 
-  console.log(`Updating semester for department: ${department}, academicYear: ${academicYear} to ${semester}`);
+ // console.log(`Updating semester for department: ${department}, academicYear: ${academicYear} to ${semester}`);
 
   try {
     const result = await Student.updateMany(
@@ -126,7 +126,7 @@ router.put('/bulk-update-register-numbers/:tutorclass/:academicYear', async (req
 });
 router.put('/students/lab-assignment/:department/:academicYear', async (req, res) => {
   const { department, academicYear } = req.params;
-  console.log(`Received request to update lab assignments for department: ${department}, academicYear: ${academicYear}`);
+  //console.log(`Received request to update lab assignments for department: ${department}, academicYear: ${academicYear}`);
 
   try {
     const students = await Student.find({ course: department, academicYear }).sort({ name: 1 });
@@ -174,6 +174,39 @@ router.put('/students/initialize-emails', async (req, res) => {
     res.status(500).json({ message: 'Error initializing college emails' });
   }
 });
+
+router.put('/students/roll-numbers/:tutorclass/:academicYear', async (req, res) => {
+  const { tutorclass, academicYear } = req.params;
+  const rollNumberPrefix = req.body.rollNumberPrefix;
+
+  try {
+    // Fetch students by tutorclass and academicYear
+    const students = await Student.find({course: tutorclass, academicYear });
+
+    if (students.length === 0) {
+      return res.status(404).json({ error: "No students found for the specified tutor class and academic year" });
+    }
+
+    // Sort students by name in alphabetical order
+    students.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Assign register numbers in order
+    const updatedStudents = students.map((student, index) => {
+      const RollNo = rollNumberPrefix.slice(0, -1) + 
+        String(parseInt(rollNumberPrefix.slice(-1)) + index).padStart(1, '0');
+      student.RollNo = RollNo;
+      return student.save();
+    });
+
+    await Promise.all(updatedStudents);
+
+    res.json({ message: "Register numbers assigned based on alphabetical order successfully!" });
+  } catch (error) {
+    console.error("Error assigning register numbers:", error);
+    res.status(500).json({ error: "Error assigning register numbers" });
+  }
+});
+
 
 // routes/students.js or equivalent
 // Bulk update semester for all students

@@ -8,6 +8,7 @@ const TutorUpdates = () => {
   const [students, setStudents] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [semester, setSemester] = useState("");
+
   const [registerNumberPrefix, setRegisterNumberPrefix] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [formData, setFormData] = useState({
@@ -48,7 +49,7 @@ const TutorUpdates = () => {
         `${baseurl}/api/students/tutor/${tutorclass}/${academicYear}`
       );
       const sortedStudents = response.data.sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.RollNo.localeCompare(b.RollNo)
       );
       setStudents(sortedStudents);
     } catch (error) {
@@ -125,10 +126,31 @@ const TutorUpdates = () => {
     }
   };
 
+  const handleAlphabeticalRollNumberAssignment = async () => {
+    const tutorclass = localStorage.getItem("tutorclass");
+    const academicYear = localStorage.getItem("academicYear");
+  
+    try {
+      const rollNumberPrefix = "1"; // Set your register number prefix here
+      await axios.put(
+        `${baseurl}/api/students/roll-numbers/${encodeURIComponent(tutorclass)}/${academicYear}`,
+        { rollNumberPrefix }
+      );
+  
+      fetchStudents(tutorclass, academicYear); // Refresh the list after updating
+      setSuccessMessage("Roll numbers assigned based on alphabetical order successfully!");
+    } catch (error) {
+      console.error("Error assigning roll numbers:", error);
+      setErrorMessage("Error assigning roll numbers");
+    }
+  };
+  
+  
   const handleEdit = (student) => {
     setSelectedStudent(student._id);
     setFormData({
       id: student._id,
+      RollNo: student.RollNo,
       name: student.name,
       semester: student.semester,
       academicYear: student.academicYear,
@@ -144,6 +166,7 @@ const TutorUpdates = () => {
       lab: student.lab,
     });
   };
+
   const handleLabAssignment = async () => {
     const tutorclass = localStorage.getItem("tutorclass");
     const academicYear = localStorage.getItem("academicYear");
@@ -159,6 +182,7 @@ const TutorUpdates = () => {
       setErrorMessage("Error updating lab assignments");
     }
   };
+
   const handleEmailInitialization = async () => {
     const tutorclass = localStorage.getItem("tutorclass");
     const academicYear = localStorage.getItem("academicYear");
@@ -182,7 +206,6 @@ const TutorUpdates = () => {
       setErrorMessage("Error initializing college emails");
     }
   };
-
 
   const resetFormData = () => {
     setFormData({
@@ -230,6 +253,7 @@ const TutorUpdates = () => {
       setErrorMessage("Error updating student");
     }
   };
+
 
   return (
     <>
@@ -279,12 +303,14 @@ const TutorUpdates = () => {
 <div className="button-container">
   <button onClick={handleLabAssignment}>Assign Labs to Students</button>
   <button onClick={handleEmailInitialization}>Initialize College Emails</button>
+  <button onClick={handleAlphabeticalRollNumberAssignment}>Assign Roll Numbers </button>
 </div>
 
           {/* Show the list of students only if no student is selected for editing */}
           {selectedStudent === null &&
             students.map((student) => (
               <div key={student._id} className="student-item">
+                <p><strong>Roll No:</strong>{student.RollNo}</p>
                 <p><strong>Name:</strong> {student.name}</p>
                 <p><strong>Admission Number:</strong> {student.admissionNumber}</p>
                 <p><strong>RegisterNo:</strong> {student.RegisterNo}</p>
@@ -330,6 +356,13 @@ const TutorUpdates = () => {
                 value={formData.RegisterNo}
                 onChange={handleInputChange}
                 placeholder="Register Number"
+              />
+               <input
+                type="text"
+                name="RollNo"
+                value={formData.RollNo}
+                onChange={handleInputChange}
+                placeholder="Roll No"
               />
               <input
                 type="text"

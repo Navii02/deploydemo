@@ -1,8 +1,7 @@
-// AdminPage.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
+import Navbar from './AdminNavbar';
 import './teacher.css'; // Import your CSS file for styling
 
 const AdminPage = () => {
@@ -17,7 +16,7 @@ const AdminPage = () => {
       try {
         const [facultyResponse, tutorResponse, hodResponse] = await Promise.all([
           axios.get(`${baseurl}/api/faculty`),
-          axios.get(`${baseurl}/api/tutors`),
+          axios.get(`${baseurl}/api/admin/tutors`),
           axios.get(`${baseurl}/api/hods`)
         ]);
 
@@ -32,6 +31,43 @@ const AdminPage = () => {
     fetchData();
   }, []);
 
+  const handleDelete = async (id, type) => {
+    try {
+      await axios.delete(`${baseurl}/api/${type}/${id}`);
+      // Update the state to remove the deleted item
+      switch (type) {
+        case 'faculty':
+          setFacultyData(facultyData.filter(item => item._id !== id));
+          break;
+        case 'tutor':
+          setTutorData(tutorData.filter(item => item._id !== id));
+          break;
+        case 'hod':
+          setHodData(hodData.filter(item => item._id !== id));
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error('Error deleting data', error);
+    }
+  };
+
+  const formatDate = (date) => {
+    if (!date) {
+      return 'No date';
+    }
+    const d = new Date(date);
+    if (isNaN(d.getTime())) {
+      console.error('Invalid date:', date);
+      return 'Invalid date';
+    }
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const renderSection = () => {
     switch (activeSection) {
       case 'faculty':
@@ -40,7 +76,15 @@ const AdminPage = () => {
             <h2>Faculty Details</h2>
             <ul>
               {facultyData.map(faculty => (
-                <li key={faculty.id}>{faculty.name} - {faculty.role}</li>
+                <li key={faculty._id}>
+                        <div>
+                <p>Name: {faculty.name}</p> 
+                 <p>Email:{faculty.email} </p> 
+                  <p>Role:{faculty.role} </p>  
+                  <p>Created Date:{formatDate(faculty.date)}</p> 
+                  <button onClick={() => handleDelete(faculty._id, 'faculty')}>Delete</button>
+                  </div>
+                </li>
               ))}
             </ul>
           </div>
@@ -51,7 +95,16 @@ const AdminPage = () => {
             <h2>Tutor Details</h2>
             <ul>
               {tutorData.map(tutor => (
-                <li key={tutor.id}>{tutor.name} - {tutor.role}</li>
+                <li key={tutor._id}>
+                  <div>
+                <p>Name: {tutor.name}</p> 
+                 <p>Email:{tutor.email} </p> 
+                  <p>Role:{tutor.role} </p>  
+                  <p>Created Date:{formatDate(tutor.date)}</p> 
+                  <button onClick={() => handleDelete(tutor._id, 'tutor')}>Delete</button>
+                  </div>
+                </li>
+                
               ))}
             </ul>
           </div>
@@ -62,7 +115,15 @@ const AdminPage = () => {
             <h2>HOD Details</h2>
             <ul>
               {hodData.map(hod => (
-                <li key={hod.id}>{hod.name} - {hod.role}</li>
+                <li key={hod._id}>
+                      <div>
+                <p>Name: {hod.name}</p> 
+                 <p>Email:{hod.email} </p> 
+                  <p>Role:{hod.role} </p>  
+                  <p>Created Date:{formatDate(hod.date)}</p> 
+                  <button onClick={() => handleDelete(hod._id, 'hod')}>Delete</button>
+                  </div>
+                </li>
               ))}
             </ul>
           </div>
@@ -73,6 +134,8 @@ const AdminPage = () => {
   };
 
   return (
+    <div>
+      <Navbar/>
     <div className="admin-page">
       <nav className="tabs">
         <button onClick={() => setActiveSection('faculty')}>Faculty</button>
@@ -82,6 +145,7 @@ const AdminPage = () => {
       <div className="content">
         {renderSection()}
       </div>
+    </div>
     </div>
   );
 };
