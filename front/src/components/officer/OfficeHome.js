@@ -8,11 +8,11 @@ function OfficeHome() {
   const [officerName, setOfficerName] = useState('');
   const [position, setPosition] = useState('');
   const [loading, setLoading] = useState(true);
+  const [approvalStatus, setApprovalStatus] = useState(false);
 
   useEffect(() => {
     const fetchOfficerProfile = async () => {
       const userEmail = localStorage.getItem('email');
-      console.log('User Email:', userEmail);
 
       if (!userEmail) {
         console.error('User email not found in localStorage');
@@ -22,13 +22,15 @@ function OfficeHome() {
 
       try {
         const response = await axios.get(`${baseurl}/api/officerprofile/${userEmail}`);
-        console.log('Officer Profile Response:', response.data);
-
         const { name, post } = response.data;
 
         setOfficerName(name);
         setPosition(post);
         setLoading(false);
+
+        // Fetch approval status
+        const statusResponse = await axios.get(`${baseurl}/api/status`);
+        setApprovalStatus(statusResponse.data.isApproved);
       } catch (error) {
         console.error('Error fetching officer profile:', error);
         setLoading(false);
@@ -37,6 +39,17 @@ function OfficeHome() {
 
     fetchOfficerProfile();
   }, []);
+
+  const handleToggleApproval = async () => {
+    try {
+      await axios.post(`${baseurl}/api/status/update`, {
+        isApproved: !approvalStatus,
+      });
+      setApprovalStatus(!approvalStatus);
+    } catch (error) {
+      console.error('Error toggling approval status:', error);
+    }
+  };
 
   return (
     <div>
@@ -59,6 +72,9 @@ function OfficeHome() {
                   <strong>Position:</strong> {position ? position : 'No position available'}
                 </p>
               </div>
+               <button className="approval-button" onClick={handleToggleApproval}>
+                {approvalStatus ? 'Close Application Form' : 'Close Application Form'}
+              </button>
             </>
           )}
         </div>

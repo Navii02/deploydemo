@@ -9,7 +9,7 @@ body {
 
 .officer-home-container {
   max-width: 100%;
-  margin: auto;
+  margin: 80px 1px 1px 1px;
   padding: 20px;
   text-align: center;
   background-image: url('../../../public/images/WhatsApp\ Image\ 2024-02-01\ at\ 14.57.55_0b5938a6.jpg');
@@ -92,6 +92,22 @@ button:hover {
 .loading-spinner p {
   font-size: 1.5rem;
   color: #007bff;
+}
+/* Button positioning */
+.approval-button {
+  position: absolute;
+  top: 20px;  /* Distance from the top of the container */
+  right: 20px; /* Distance from the right of the container */
+  padding: 10px 20px;
+  background-color: #007bff; /* Button background color */
+  color: white; /* Button text color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.approval-button:hover {
+  background-color: #0056b3; /* Darker background on hover */
 }
 
 /* Additional styles for interactive and attractive elements can be added here */

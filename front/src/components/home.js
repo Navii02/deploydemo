@@ -1,11 +1,28 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css'; // Import the CSS file
+import axios from 'axios';
+import { baseurl } from '../url';
 
 const HomePage = () => {
+  const navigate = useNavigate();
+  const [isApproved, setIsApproved] = useState(false);
+
   useEffect(() => {
     // Add 'homepage' class to body
     document.documentElement.classList.add('homepage');
     document.body.classList.add('homepage');
+
+    const checkApprovalStatus = async () => {
+      try {
+        const response = await axios.get(`${baseurl}/api/status`);
+        setIsApproved(response.data.isApproved);
+      } catch (error) {
+        console.error('Error fetching approval status:', error);
+      }
+    };
+
+    checkApprovalStatus();
 
     // Cleanup by removing the class when the component unmounts
     return () => {
@@ -18,25 +35,25 @@ const HomePage = () => {
     const selectedUser = event.target.value;
     switch (selectedUser) {
       case 'student':
-        window.location.href = '/studentlogin';
+        navigate('/studentlogin');
         break;
       case 'officer':
-        window.location.href = '/officerlogin';
+        navigate('/officerlogin');
         break;
       case 'faculty':
-        window.location.href = '/facultylogin'; // Corrected typo
+        navigate('/facultylogin');
         break;
       case 'classTutor':
-        window.location.href = '/classtutorlogin';
+        navigate('/classtutorlogin');
         break;
       case 'hod':
-        window.location.href = '/hodlogin';
+        navigate('/hodlogin');
         break;
       case 'principal':
-        window.location.href = '/principallogin';
+        navigate('/principallogin');
         break;
       case 'admin':
-        window.location.href = '/adminlogin';
+        navigate('/adminlogin');
         break;
       default:
         break;
@@ -44,6 +61,10 @@ const HomePage = () => {
 
     // Reset the dropdown value to the default option after selection
     event.target.value = '';
+  };
+
+  const handleAdmission = () => {
+    navigate('/admission'); // Redirect to the admissions page
   };
 
   return (
@@ -63,6 +84,11 @@ const HomePage = () => {
           <option value="admin">Admin</option>
         </select>
       </div>
+      {isApproved && (
+        <button className="admission-button" onClick={handleAdmission}>
+          Application Form
+        </button>
+      )}
     </div>
   );
 };

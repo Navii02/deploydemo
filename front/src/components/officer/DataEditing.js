@@ -234,7 +234,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       setFormData({ ...formData, [name]: value });
     }
   };
-  console.log("Form Data:", formData);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -254,12 +254,12 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
     }
   
     try {
-      const response = await axios.post(
+     await axios.post(
         `${baseurl}/api/studentadmission`,
         sendData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      console.log("Data submitted successfully:", response.data);
+      
       setFormData({ ...initialFormData });
       setErrorMessage("Data submitted successfully"); // Use the same state variable for success message
       setModalIsOpen(true); // Open the modal on success
@@ -286,7 +286,7 @@ const DataEntryForm = ({ fetchStudents, onDataEntered }) => {
       <Navbar />
       <div className="data-entry-container">
         <div className="page-title">Admission Form</div>
-        <hr class="divider"></hr>
+        <hr className="divider"></hr>
         <form className="form" onSubmit={handleSubmit}>
           <div className="row">
             <div className="form-group">

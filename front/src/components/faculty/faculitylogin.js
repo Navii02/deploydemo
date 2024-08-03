@@ -79,10 +79,10 @@ function FacultyLogin() {
         localStorage.setItem('email', data.email);
         localStorage.setItem('branch', data.branch);
         // Retrieve the email from local storage
-        const userEmail = localStorage.getItem('email');
-        console.log('User Email:', userEmail);
-        const branch = localStorage.getItem('branch');
-        console.log('Branch:', branch);
+        //const userEmail = localStorage.getItem('email');
+        //console.log('User Email:', userEmail);
+        //const branch = localStorage.getItem('branch');
+        //console.log('Branch:', branch);
   
 
         // Redirect the user to the dashboard page

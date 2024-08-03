@@ -17,7 +17,7 @@ function Cards() {
       const response = await axios.get(`${baseurl}/api/notices`);
       const reversedNotices = response.data.notices.reverse();
       setNotices(reversedNotices.slice(0, 3));
-      console.log(response.data);
+      //console.log(response.data);
     } catch (error) {
       console.error('Error fetching notices:', error);
     }

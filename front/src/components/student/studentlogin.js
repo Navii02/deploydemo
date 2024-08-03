@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import validator from 'validator';
 import { regexPassword } from '../../utils';
 import '../Login.css'; // Add your CSS file if needed
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
 
 function StudentLogin() {
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
+  const isMounted = useRef(true);
 
   const [values, setValues] = useState({
     email: '',
@@ -20,6 +21,12 @@ function StudentLogin() {
     fetchError: false,
     fetchErrorMsg: '',
   });
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const handleChange = (fieldName) => (event) => {
     const currValue = event.target.value;
@@ -42,9 +49,9 @@ function StudentLogin() {
     });
   };
 
-  const handleForgotPassword = () => {
-    // Navigate to the Forgot Password page
-    Navigate('/sforgot');
+  const handleForgotPassword = (event) => {
+    event.preventDefault();
+    navigate('/sforgot');
   };
 
   const handleSubmit = async (event) => {
@@ -64,44 +71,49 @@ function StudentLogin() {
 
       if (!res.ok) {
         const error = await res.json();
-        return setErrors({
-          ...errors,
-          fetchError: true,
-          fetchErrorMsg: error.msg,
-        });
+        if (isMounted.current) {
+          setErrors({
+            ...errors,
+            fetchError: true,
+            fetchErrorMsg: error.msg,
+          });
+        }
+        return;
       }
       const data = await res.json();
 
       if (data) {
         // Save the email to local storage
         localStorage.setItem('email', data.email);
-        console.log('Email saved to local storage:', data.email,data.role);
+        //console.log('Email saved to local storage:', data.email, data.role);
         localStorage.setItem('role', data.role);
         // Retrieve the email from local storage
-        const userEmail = localStorage.getItem('email');
-        console.log('User Email:', userEmail); 
-      
+        //const userEmail = localStorage.getItem('email');
+       // console.log('User Email:', userEmail);
 
         // Redirect the user to the dashboard page
-        Navigate('/user');
+        navigate('/user');
       } else {
         alert('Login failed');
         window.location.href = '/studentlogin';
       }
 
-      setValues({
-        email: '',
-        password: '',
-        showPassword: false,
-      });
-      return;
+      if (isMounted.current) {
+        setValues({
+          email: '',
+          password: '',
+          showPassword: false,
+        });
+      }
     } catch (error) {
-      setErrors({
-        ...errors,
-        fetchError: true,
-        fetchErrorMsg:
-          'There was a problem with our server, please try again later',
-      });
+      if (isMounted.current) {
+        setErrors({
+          ...errors,
+          fetchError: true,
+          fetchErrorMsg:
+            'There was a problem with our server, please try again later',
+        });
+      }
     }
   };
 
@@ -142,19 +154,16 @@ function StudentLogin() {
                     onChange={handleChange('password')}
                     className={errors.password ? 'login-error' : ''}
                   />
-                 
-                  
                 </div>
-                </div>
+              </div>
               <div className="forgot-show-password-links">
-              <span className="show-password-link" onClick={handleShowPassword}>
+                <span className="show-password-link" onClick={handleShowPassword}>
                   {values.showPassword ? 'Hide' : 'Show'} Password
                 </span>
                 <a href="/sforgot" onClick={handleForgotPassword} className="forgot-password-link">
                   Forgot Password?
                 </a>
-               
-                       </div>
+              </div>
               <div className="login-button-container">
                 <button
                   type="submit"

@@ -82,10 +82,10 @@ function useStudentSignup() {
         });
       }
 
-      const data = await res.json();
+     
 
       // Handle successful registration (redirect or show a success message)
-      console.log(data);
+     
 
       setValues({
         name: '',

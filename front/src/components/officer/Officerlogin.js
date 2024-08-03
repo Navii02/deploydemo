@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import validator from 'validator';
 import { regexPassword } from '../../utils';
-import {baseurl} from '../../url';
+import { baseurl } from '../../url';
 import '../Login.css'; // Add your CSS file if needed
 
 function OfficerLogin() {
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
+  const isMounted = useRef(true); // Create a ref to store the mounted state
 
   const [values, setValues] = useState({
     email: '',
@@ -21,6 +22,16 @@ function OfficerLogin() {
     fetchErrorMsg: '',
   });
 
+  useEffect(() => {
+    // Set isMounted to true when the component is mounted
+    isMounted.current = true;
+
+    return () => {
+      // Set isMounted to false when the component is unmounted
+      isMounted.current = false;
+    };
+  }, []);
+
   const handleChange = (fieldName) => (event) => {
     const currValue = event.target.value;
     let isCorrectValue =
@@ -29,22 +40,21 @@ function OfficerLogin() {
         : regexPassword.test(currValue);
 
     isCorrectValue
-      ? setErrors({ ...errors, [fieldName]: false })
-      : setErrors({ ...errors, [fieldName]: true });
+      ? setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: false }))
+      : setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: true }));
 
-    setValues({ ...values, [fieldName]: event.target.value });
+    setValues((prevValues) => ({ ...prevValues, [fieldName]: event.target.value }));
   };
 
   const handleShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
+    setValues((prevValues) => ({
+      ...prevValues,
+      showPassword: !prevValues.showPassword,
+    }));
   };
 
   const handleForgotPassword = () => {
-    // Navigate to the Forgot Password page
-    Navigate('/oforgot');
+    navigate('/oforgot');
   };
 
   const handleSubmit = async (event) => {
@@ -64,45 +74,47 @@ function OfficerLogin() {
 
       if (!res.ok) {
         const error = await res.json();
-        return setErrors({
-          ...errors,
-          fetchError: true,
-          fetchErrorMsg: error.msg,
-        });
+        if (isMounted.current) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            fetchError: true,
+            fetchErrorMsg: error.msg,
+          }));
+        }
+        return;
       }
 
       const data = await res.json();
 
       if (data) {
-        // Save the email to local storage
         localStorage.setItem('email', data.email);
         localStorage.setItem('role', data.role);
 
-        // Retrieve the email from local storage
-        const userEmail = localStorage.getItem('email');
-        console.log('User Email:', userEmail);
+        //const userEmail = localStorage.getItem('email');
+        //console.log('User Email:', userEmail);
 
-
-        // Redirect the officer to the office page
-        Navigate('/office');
+        navigate('/office');
       } else {
         alert('Login failed');
         window.location.href = '/officerlogin';
       }
 
-      setValues({
-        email: '',
-        password: '',
-        showPassword: false,
-      });
-      return;
+      if (isMounted.current) {
+        setValues({
+          email: '',
+          password: '',
+          showPassword: false,
+        });
+      }
     } catch (error) {
-      setErrors({
-        ...errors,
-        fetchError: true,
-        fetchErrorMsg:
-          'There was a problem with our server, please try again later',
-      });
+      if (isMounted.current) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          fetchError: true,
+          fetchErrorMsg:
+            'There was a problem with our server, please try again later',
+        }));
+      }
     }
   };
 
@@ -143,20 +155,16 @@ function OfficerLogin() {
                     onChange={handleChange('password')}
                     className={errors.password ? 'login-error' : ''}
                   />
-                 
-                  
                 </div>
-                 </div>
+              </div>
               <div className="forgot-show-password-links">
-              <span className="show-password-link" onClick={handleShowPassword}>
+                <span className="show-password-link" onClick={handleShowPassword}>
                   {values.showPassword ? 'Hide' : 'Show'} Password
                 </span>
                 <a href="/oforgot" onClick={handleForgotPassword} className="forgot-password-link">
                   Forgot Password?
                 </a>
-               
               </div>
-
               <div className="login-button-container">
                 <button
                   type="submit"

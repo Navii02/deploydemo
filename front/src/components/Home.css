@@ -192,4 +192,15 @@ html.homepage, body.homepage {
   .office-home-page h6 {
     font-size: 30px;
   }
-}
+  .admission-button {
+    position: absolute; /* Position the button absolutely */
+    bottom: 20px; /* Adjust the distance from the bottom edge */
+    right: 20px; /* Adjust the distance from the right edge */
+    padding: 10px 20px; /* Optional padding for the button */
+    background-color: #1d27e7; /* Optional background color */
+    color: white; /* Optional text color */
+    border: none; /* Optional border removal */
+    border-radius: 5px; /* Optional rounded corners */
+    cursor: pointer; /* Indicate clickable button */
+  }
+}  

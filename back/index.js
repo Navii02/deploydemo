@@ -84,8 +84,8 @@ const Feereminder = require('./api/feereminder')
 const app = express();
 const MAX_AGE = 1000 * 60 * 60 * 3 //3hrs
 const corsOptions = {
-origin: 'https://cap-three.vercel.app',
-   //origin: 'http://localhost:4000',
+  origin: 'https://cap-three.vercel.app',
+   //origin: 'http://localhost:3000',
   optionSuccessStatus:200,
 }
 mongoose.Promise = global.Promise

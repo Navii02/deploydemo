@@ -16,7 +16,7 @@ const Reminders = () => {
   const course = localStorage.getItem('course');
   const semester = localStorage.getItem('semester');
   const currentYear = new Date().getFullYear(); // Get the current year
-  console.log(course, semester, currentYear);
+  //console.log(course, semester, currentYear);
 
   useEffect(() => {
     const categories = ['attendance', 'internalMarks', 'assignments', 'updates'];
@@ -42,7 +42,7 @@ const Reminders = () => {
         const response = await axios.get(apiEndpoint);
         const fetchedReminders = response.data;
 
-        console.log(`Fetched ${category} reminders:`, fetchedReminders);
+        //console.log(`Fetched ${category} reminders:`, fetchedReminders);
 
         switch (category) {
           case 'attendance':

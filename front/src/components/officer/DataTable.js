@@ -1148,7 +1148,7 @@ const StudentList = () => {
             </button>
             <div className="data-entry-container">
               <div className="page-title">Admission Form</div>
-              <hr class="divider"></hr>
+              <hr className="divider"></hr>
               <form className="form" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label>Fee Category:</label>
@@ -1834,10 +1834,10 @@ const StudentList = () => {
             </div>
           </div>
                 <div className="button-container">
-                  <button class="submit-button" onClick={handleSave}>
+                  <button className="submit-button" onClick={handleSave}>
                     Save
                   </button>
-                  <button class="clear-button" onClick={handleCancel}>
+                  <button className="clear-button" onClick={handleCancel}>
                     Cancel
                   </button>
                 </div>

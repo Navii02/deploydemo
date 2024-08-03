@@ -2,7 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const OfficerProfile = require('../../models/Admin/OfficersDetailSchema'); // Assuming this is your Mongoose model
+const OfficerProfile = require('../../models/Admin/OfficersDetailSchema');
+const ApprovalStatus = require('../../models/ApprovalStatus');
+ // Assuming this is your Mongoose model
 
 // Route to fetch officer profile by email
 router.get('/officerprofile/:email', async (req, res) => {
@@ -24,6 +26,33 @@ router.get('/officerprofile/:email', async (req, res) => {
   } catch (error) {
     console.error('Error fetching officer profile:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+router.post('/status/update', async (req, res) => {
+  const { isApproved } = req.body;
+
+  try {
+    const result = await ApprovalStatus.findOneAndUpdate(
+      {},
+      { isApproved },
+      { new: true, upsert: true }
+    );
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get approval status
+router.get('/status', async (req, res) => {
+  try {
+    const status = await ApprovalStatus.findOne({});
+    if (!status) {
+      return res.status(404).json({ message: 'Approval status not found' });
+    }
+    res.json(status);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

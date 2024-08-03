@@ -239,7 +239,7 @@ const StudentListOfficer = () => {
       }
       
       // Example usage
-      console.log(getTodaysDate()); // Outputs something like "2024-07-27"
+      //console.log(getTodaysDate()); // Outputs something like "2024-07-27"
       
 
       const formatDate = (dateString) => {
@@ -837,7 +837,7 @@ const StudentListOfficer = () => {
             </button>
             <div className="data-entry-container">
               <div className="page-title">Admission Form</div>
-              <hr class="divider"></hr>
+              <hr className="divider"></hr>
               <form className="form" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label>Fee Category:</label>
@@ -1381,10 +1381,10 @@ const StudentListOfficer = () => {
                   </div>
                 </div>
                 <div className="button-container">
-                  <button class="submit-button" onClick={handleSave}>
+                  <button className="submit-button" onClick={handleSave}>
                     Save
                   </button>
-                  <button class="clear-button" onClick={handleCancel}>
+                  <button className="clear-button" onClick={handleCancel}>
                     Cancel
                   </button>
                 </div>
