@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Cards.css';
 import CardItem from './CardItem';
 import axios from 'axios';
-import { baseurl } from '../../url';
+
 
 
 function Cards() {
@@ -14,7 +14,7 @@ function Cards() {
 
   const fetchNotices = async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/notices`);
+      const response = await axios.get(`/api/notices`);
       const reversedNotices = response.data.notices.reverse();
       setNotices(reversedNotices.slice(0, 3));
       console.log(response.data);

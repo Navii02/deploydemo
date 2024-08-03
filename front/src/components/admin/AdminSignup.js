@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';  // Updated import statement
 import validator from 'validator';
-import {baseurl} from '../../url';
+
 import '../signup.css';
 
 function useAdminSignup() {
@@ -60,7 +60,7 @@ function useAdminSignup() {
     event.preventDefault();
 
     try {
-      const res = await fetch(`${baseurl}/api/adminregister`, {
+      const res = await fetch(`/api/adminregister`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

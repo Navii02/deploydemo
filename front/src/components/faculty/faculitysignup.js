@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Updated import statement
 import validator from 'validator';
-import {baseurl} from '../../url';
+
 import '../signup.css';
 
 function useFacultySignup() {
@@ -60,7 +60,7 @@ function useFacultySignup() {
     event.preventDefault();
 
     try {
-      const res = await fetch(`${baseurl}/api/faculityregister`, {
+      const res = await fetch(`/api/faculityregister`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { baseurl } from '../../url';
+
 import UserNavbar from './UserNavbar';
 import './FeeDetails.css';
 import Loading from './Loading';
@@ -25,7 +25,7 @@ function InstallmentPage() {
       setCourse(storedCourse);
     
       try {
-        const response = await axios.post(`${baseurl}/api/student/fetch-installments`, {
+        const response = await axios.post(`/api/student/fetch-installments`, {
           email,
           course: storedCourse,
         });

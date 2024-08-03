@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { baseurl } from '../../url';
+
 import Navbar from './FacultyNavbar';
 import './AttendanceForm.css';
 
@@ -22,7 +22,7 @@ const AttendanceSummary = () => {
       const email = localStorage.getItem('email');
 
       try {
-        const response = await axios.post(`${baseurl}/api/data/attendance`, { email });
+        const response = await axios.post(`/api/data/attendance`, { email });
         const { subjects, semesters, branches } = response.data;
         setCourses(branches || []);
         setSemesters(semesters || []);
@@ -43,7 +43,7 @@ const AttendanceSummary = () => {
 
     try {
       const endpoint = viewMode === 'monthly' ? '/api/attendance/summary/monthly' : '/api/attendance/summary';
-      const response = await axios.post(`${baseurl}${endpoint}`, { course, semester, subject, startDate, endDate });
+      const response = await axios.post(`${endpoint}`, { course, semester, subject, startDate, endDate });
       setStudents(response.data.students || []);
       setAttendanceData(response.data.attendance || []);
     } catch (error) {

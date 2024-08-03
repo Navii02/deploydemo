@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import UserNavbar from "./UserNavbar";
 import "./CertificateRequest.css";
-import { baseurl } from "../../url";
+
 import Loading from "./Loading";
 
 function StudentCertificateRequestPage() {
@@ -26,7 +26,7 @@ function StudentCertificateRequestPage() {
     const fetchStudentDetails = async () => {
       try {
         const response = await axios.get(
-          `${baseurl}/api/student/details/${userEmail}`
+          `/api/student/details/${userEmail}`
         );
         const {
           
@@ -74,7 +74,7 @@ function StudentCertificateRequestPage() {
     setLoading(true); // Set loading to true before submission
     try {
       const response = await axios.post(
-        `${baseurl}/api/student/submitRequest`,
+        `/api/student/submitRequest`,
         {
           userEmail,
           reason,

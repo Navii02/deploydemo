@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import validator from 'validator';
 import { regexPassword } from '../../utils';
 import '../Login.css';
-import {baseurl} from '../../url';
+
 
 function PrincipalLogin() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ function PrincipalLogin() {
     event.preventDefault();
 
     try {
-      const res = await fetch(`${baseurl}/api/principallogin`, {
+      const res = await fetch(`/api/principallogin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

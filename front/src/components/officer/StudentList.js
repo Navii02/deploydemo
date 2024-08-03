@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import OfficerNavbar from "./OfficerNavbar";
-import { baseurl } from "../../url";
+
 import "./DataEditing.css";
 import "./StudentList.css";
 
@@ -79,7 +79,7 @@ const StudentListOfficer = () => {
   const fetchApprovedStudents = useCallback(async () => {
     try {
       const response = await axios.get(
-        `${baseurl}/api/officerstudent/approvedStudents`
+        `/api/officerstudent/approvedStudents`
       );
       const filteredStudents = selectedCourse
         ? response.data.filter((student) => student.course === selectedCourse)
@@ -92,7 +92,7 @@ const StudentListOfficer = () => {
 
   const fetchAlumni = useCallback(async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/officerstudent/alumni`);
+      const response = await axios.get(`/api/officerstudent/alumni`);
       const filteredAluminiStudents = selectCourse
         ? response.data.filter((student) => student.course === selectCourse)
         : response.data;
@@ -178,7 +178,7 @@ const StudentListOfficer = () => {
     }
   
     try {
-      await axios.delete(`${baseurl}/api/officerstudent/deleteStudent/${studentId}`);
+      await axios.delete(`/api/officerstudent/deleteStudent/${studentId}`);
       setApprovedStudents((prevStudents) =>
         prevStudents.filter((student) => student._id !== studentId)
       );
@@ -191,14 +191,14 @@ const StudentListOfficer = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `${baseurl}/api/officerstudent/updateStudent/${studentId}`,
+        `/api/officerstudent/updateStudent/${studentId}`,
         formData
       );
       setIsSuccess(true);
       setEditMode(false);
       // Refetch the student data instead of reloading the page
       const response = await axios.get(
-        `${baseurl}/api/officerstudent/approvedStudents`
+        `/api/officerstudent/approvedStudents`
       );
       setApprovedStudents(
         response.data.filter(
@@ -215,9 +215,9 @@ const StudentListOfficer = () => {
  
   const handlePrintPreview = async (_id, photoPath) => {
     try {
-      const photoUrl = `${baseurl}/api/image/${encodeURIComponent(photoPath)}`;
+      const photoUrl = `/api/image/${encodeURIComponent(photoPath)}`;
       const response = await axios.get(
-        `${baseurl}/api/approvedstudentDetails/${_id}`
+        `/api/approvedstudentDetails/${_id}`
       );
       const studentDetails = response.data.studentDetails;
 
@@ -694,10 +694,10 @@ const StudentListOfficer = () => {
 
   const handleSave = async () => {
     try {
-      await axios.put(`${baseurl}/api/updateStudent/${studentId}`, formData);
+      await axios.put(`/api/updateStudent/${studentId}`, formData);
       setIsSuccess(true);
       setEditMode(false);
-      const response = await axios.get(`${baseurl}/api/approvedStudents`);
+      const response = await axios.get(`/api/approvedStudents`);
       setApprovedStudents(
         response.data.filter(
           (student) =>

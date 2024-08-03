@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { baseurl } from '../../url';
+
 import Navbar from './AdminNavbar';
 import './AdminOfficerPage.css';
 
@@ -16,7 +16,7 @@ const AdminOfficersPage = () => {
 
   const fetchOfficers = async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/admin/officers`);
+      const response = await axios.get(`/api/admin/officers`);
       setOfficers(response.data.officers);
       setLoading(false); // Set loading to false once data is fetched
     } catch (error) {
@@ -31,7 +31,7 @@ const AdminOfficersPage = () => {
 
   const handleAddOfficer = async () => {
     try {
-      await axios.post(`${baseurl}/api/admin/addOfficer`, newOfficer);
+      await axios.post(`/api/admin/addOfficer`, newOfficer);
       fetchOfficers();
       setNewOfficer({ name: '', post: '', email: '', number: '' });
       setIsAddFormVisible(false); // Hide the form after adding an officer
@@ -42,7 +42,7 @@ const AdminOfficersPage = () => {
 
   const handleUpdateOfficer = async () => {
     try {
-      await axios.put(`${baseurl}/api/admin/updateOfficer/${editingOfficer._id}`, editingOfficer);
+      await axios.put(`/api/admin/updateOfficer/${editingOfficer._id}`, editingOfficer);
       fetchOfficers();
       setEditingOfficer(null);
     } catch (error) {
@@ -52,7 +52,7 @@ const AdminOfficersPage = () => {
 
   const handleDeleteOfficer = async (officerId) => {
     try {
-      await axios.delete(`${baseurl}/api/admin/deleteOfficer/${officerId}`);
+      await axios.delete(`/api/admin/deleteOfficer/${officerId}`);
       fetchOfficers();
     } catch (error) {
       setErrorMessage(error.response.data.message);

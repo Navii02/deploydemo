@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import './PaymentAndReminders.css'; // Make sure to import the CSS file
 import Navbar from './OfficerNavbar';
-import {baseurl} from '../../url';
+
 
 const OfficerPaymentPage = () => {
   const [payments, setPayments] = useState([]);
@@ -12,7 +12,7 @@ const OfficerPaymentPage = () => {
     // Fetch the list of payments from the server
     const fetchPayments = async () => {
       try {
-        const response = await fetch(`${baseurl}/api/officer/payments`);
+        const response = await fetch(`/api/officer/payments`);
         if (!response.ok) {
           throw new Error('Failed to fetch payments');
         }

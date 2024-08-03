@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Updated import statement
 import validator from 'validator';
 import '../signup.css';
-import {baseurl} from '../../url';
+
 
 function useHODSignup() {
   const navigate = useNavigate(); // Updated hook
@@ -60,7 +60,7 @@ function useHODSignup() {
     event.preventDefault();
 
     try {
-      const res = await fetch(`${baseurl}/api/hodregister`, {
+      const res = await fetch(`/api/hodregister`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./StudentList.css";
 import OfficerNavbar from "./OfficerNavbar";
-import { baseurl } from "../../url";
+
 import "./DataEditing.css";
 
 const ApprovedAndRemoved = () => {
@@ -88,10 +88,10 @@ const ApprovedAndRemoved = () => {
     const fetchStudents = async () => {
       try {
         const approvedResponse = await axios.get(
-          `${baseurl}/api/approvedStudents`
+          `/api/approvedStudents`
         );
         const removedResponse = await axios.get(
-          `${baseurl}/api/removedStudents`
+          `/api/removedStudents`
         );
 
         const currentYear = new Date().getFullYear().toString().slice(-2);
@@ -188,7 +188,7 @@ const ApprovedAndRemoved = () => {
     if (!confirm) return;
 
     try {
-      await axios.delete(`${baseurl}/api/deleteStudent/${studentId}`);
+      await axios.delete(`/api/deleteStudent/${studentId}`);
       setApprovedStudents((prevStudents) =>
         prevStudents.filter((student) => student._id !== studentId)
       );
@@ -200,11 +200,11 @@ const ApprovedAndRemoved = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`${baseurl}/api/updateStudent/${studentId}`, formData);
+      await axios.put(`/api/updateStudent/${studentId}`, formData);
       setIsSuccess(true);
       setEditMode(false);
       // Refetch the student data instead of reloading the page
-      const response = await axios.get(`${baseurl}/api/approvedStudents`);
+      const response = await axios.get(`/api/approvedStudents`);
       setApprovedStudents(
         response.data.filter(
           (student) =>
@@ -219,9 +219,9 @@ const ApprovedAndRemoved = () => {
 
   const handlePrintPreview = async (_id, photoPath) => {
     try {
-      const photoUrl = `${baseurl}/api/image/${encodeURIComponent(photoPath)}`;
+      const photoUrl = `/api/image/${encodeURIComponent(photoPath)}`;
       const response = await axios.get(
-        `${baseurl}/api/approvedstudentDetails/${_id}`
+        `/api/approvedstudentDetails/${_id}`
       );
       
       const studentDetails = response.data.studentDetails;
@@ -941,10 +941,10 @@ const ApprovedAndRemoved = () => {
 
   const handleSave = async () => {
     try {
-      await axios.put(`${baseurl}/api/updateStudent/${studentId}`, formData);
+      await axios.put(`/api/updateStudent/${studentId}`, formData);
       setIsSuccess(true);
       setEditMode(false);
-      const response = await axios.get(`${baseurl}/api/approvedStudents`);
+      const response = await axios.get(`/api/approvedStudents`);
       setApprovedStudents(
         response.data.filter(
           (student) =>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import HodNavbar from './HodNavbar';
-import { baseurl } from '../../url';
+
 import styles from './AssignTutorPage.module.css';
 
 function AssignTutorPage() {
@@ -16,7 +16,7 @@ function AssignTutorPage() {
 
   const fetchTutors = useCallback(async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/tutors?department=${department}`);
+      const response = await axios.get(`/api/tutors?department=${department}`);
       setTutors(response.data);
     } catch (error) {
       console.error('Error fetching tutors:', error);
@@ -25,7 +25,7 @@ function AssignTutorPage() {
 
   const fetchAssignedTutors = useCallback(async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/assigned-tutors?department=${department}`);
+      const response = await axios.get(`/api/assigned-tutors?department=${department}`);
       setAssignedTutors(response.data);
     } catch (error) {
       console.error('Error fetching assigned tutors:', error);
@@ -46,7 +46,7 @@ function AssignTutorPage() {
         console.error('Please select tutor, academic year, and class');
         return;
       }
-      await axios.post(`${baseurl}/api/tutors/assign`, { tutorId: selectedTutor, academicYear, tutorclass: selectedCourse });
+      await axios.post(`/api/tutors/assign`, { tutorId: selectedTutor, academicYear, tutorclass: selectedCourse });
       setAssignSuccess(true);
       setDeassignSuccess(false);
       fetchAssignedTutors();
@@ -57,7 +57,7 @@ function AssignTutorPage() {
 
   const handleDeassignTutor = async (tutorId) => {
     try {
-      await axios.post(`${baseurl}/api/tutors/deassign`, { tutorId });
+      await axios.post(`/api/tutors/deassign`, { tutorId });
       setDeassignSuccess(true);
       setAssignSuccess(false);
       fetchAssignedTutors();

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./CertificateRecieve.css";
 import UserNavbar from './UserNavbar';
-import { baseurl } from '../../url';
+
 import Loading from './Loading'; // Import the Loading component
 
 const CertificateRequestsPage = () => {
@@ -17,7 +17,7 @@ const CertificateRequestsPage = () => {
 
     const fetchRequests = async () => {
       try {
-        const response = await axios.get(`${baseurl}/api/student/certificateRequests/${userEmailFromLocalStorage}`);
+        const response = await axios.get(`/api/student/certificateRequests/${userEmailFromLocalStorage}`);
         setRequests(response.data.requests);
       } catch (error) {
         setErrorMessage(error.response?.data?.message || 'Error fetching requests');
@@ -33,7 +33,7 @@ const CertificateRequestsPage = () => {
 
   const handleDownload = async (fileName) => {
     try {
-      const response = await axios.get(`${baseurl}/api/download/${fileName}`, { responseType: 'blob' });
+      const response = await axios.get(`/api/download/${fileName}`, { responseType: 'blob' });
       const blob = new Blob([response.data], { type: response.headers['content-type'] });
 
       const link = document.createElement('a');

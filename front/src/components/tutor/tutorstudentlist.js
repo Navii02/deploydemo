@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { baseurl } from "../../url";
+
 import Navbar from "./TutorNavbar";
 import "./tutorstudentlist.css";
 
@@ -46,7 +46,7 @@ const TutorUpdates = () => {
   const fetchStudents = async (tutorclass, academicYear) => {
     try {
       const response = await axios.get(
-        `${baseurl}/api/students/tutor/${tutorclass}/${academicYear}`
+        `/api/students/tutor/${tutorclass}/${academicYear}`
       );
       const sortedStudents = response.data.sort((a, b) =>
         a.RollNo.localeCompare(b.RollNo)
@@ -74,7 +74,7 @@ const TutorUpdates = () => {
 
     try {
       await axios.put(
-        `${baseurl}/api/students/semester/${tutorclass}/${academicYear}`,
+        `/api/students/semester/${tutorclass}/${academicYear}`,
         { semester }
       );
       fetchStudents(tutorclass, academicYear); // Refresh the list after updating
@@ -113,7 +113,7 @@ const TutorUpdates = () => {
 
       await Promise.all(
         updatedStudents.map((student) =>
-          axios.put(`${baseurl}/api/students/${student._id}`, student)
+          axios.put(`/api/students/${student._id}`, student)
         )
       );
 
@@ -133,7 +133,7 @@ const TutorUpdates = () => {
     try {
       const rollNumberPrefix = "1"; // Set your register number prefix here
       await axios.put(
-        `${baseurl}/api/students/roll-numbers/${encodeURIComponent(tutorclass)}/${academicYear}`,
+        `/api/students/roll-numbers/${encodeURIComponent(tutorclass)}/${academicYear}`,
         { rollNumberPrefix }
       );
   
@@ -173,7 +173,7 @@ const TutorUpdates = () => {
 
     try {
       await axios.put(
-        `${baseurl}/api/students/lab-assignment/${encodeURIComponent(tutorclass)}/${encodeURIComponent(academicYear)}`
+        `/api/students/lab-assignment/${encodeURIComponent(tutorclass)}/${encodeURIComponent(academicYear)}`
       );
       fetchStudents(tutorclass, academicYear); // Refresh the list after updating
       setSuccessMessage("Students' lab assignments updated successfully!");
@@ -195,7 +195,7 @@ const TutorUpdates = () => {
 
       await Promise.all(
         updatedStudents.map((student) =>
-          axios.put(`${baseurl}/api/students/${student._id}`, student)
+          axios.put(`/api/students/${student._id}`, student)
         )
       );
 
@@ -243,7 +243,7 @@ const TutorUpdates = () => {
     const { id, ...updateData } = formData;
 
     try {
-      await axios.put(`${baseurl}/api/students/${id}`, updateData);
+      await axios.put(`/api/students/${id}`, updateData);
       setSuccessMessage("Student updated successfully!");
       fetchStudents(localStorage.getItem("tutorclass"), localStorage.getItem("academicYear")); // Refresh the list after updating
       setSelectedStudent(null);

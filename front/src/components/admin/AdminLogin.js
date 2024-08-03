@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import validator from 'validator';
 import { regexPassword } from '../../utils';
-import {baseurl} from '../../url';
+
 import '../Login.css'; // Add your CSS file if needed
 
 
@@ -52,7 +52,7 @@ function AdminLogin() {
     event.preventDefault();
 
     try {
-      const res = await fetch(`${baseurl}/api/adminlogin`, {
+      const res = await fetch(`/api/adminlogin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
