@@ -12,7 +12,7 @@ router.get('/hod/subjects', async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   });
-  
+  //working
   // Add new subjects
   router.post('/hod/subjects', async (req, res) => {
     try {
