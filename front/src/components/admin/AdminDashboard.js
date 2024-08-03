@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Chart from 'chart.js/auto'; // Ensure the correct import for Chart.js
-import { baseurl } from '../../url';
+
 import './AdminDashboard.css'; 
 import Navbar from './AdminNavbar';
 import axios from 'axios';
@@ -19,7 +19,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchUserStatistics = async () => {
       try {
-        const response = await axios.get(`${baseurl}/api/user/stats`); 
+        const response = await axios.get(`/api/user/stats`); 
         const data = response.data;
         setUserStats(data);
       } catch (error) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import {baseurl} from '../../url';
+
 import Navbar from './HodNavbar'; // Assuming this is correctly imported
 
 const StudentPerformancePage = () => {
@@ -25,7 +25,7 @@ const StudentPerformancePage = () => {
       if (!selectedCourse) return;
 
       setLoading(true);
-      const response = await axios.get(`${baseurl}/api/student-performance/${selectedCourse}`);
+      const response = await axios.get(`/api/student-performance/${selectedCourse}`);
       let filteredStudents = response.data;
 
       if (selectedSemester && selectedSemester !== 'All') {

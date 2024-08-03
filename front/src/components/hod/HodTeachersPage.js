@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
-import { baseurl } from '../../url';
+
 import './HodTeachersPage.css'; // Assuming this CSS file exists
 import HodNavbar from './HodNavbar';
 
@@ -42,7 +42,7 @@ const AdminTeachersPage = () => {
   const fetchTeachers = async () => {
     try {
       const storedBranch = localStorage.getItem('branch');
-      const response = await axios.get(`${baseurl}/api/admin/teachers?branch=${storedBranch}`);
+      const response = await axios.get(`/api/admin/teachers?branch=${storedBranch}`);
       setTeachers(response.data.teachers);
     } catch (error) {
       setErrorMessage(error.response?.data?.message || 'Error fetching teachers');
@@ -55,7 +55,7 @@ const AdminTeachersPage = () => {
 
   const fetchSubjects = async (branches, semesters) => {
     try {
-      const response = await axios.get(`${baseurl}/api/subjects`, {
+      const response = await axios.get(`/api/subjects`, {
         params: {
           branches: branches.join(','),
           semesters: semesters.join(',')
@@ -71,7 +71,7 @@ const AdminTeachersPage = () => {
   const handleAddTeacher = async () => {
     try {
       const department = localStorage.getItem('branch');
-      await axios.post(`${baseurl}/api/admin/addTeacher`, { ...newTeacher, department: department });
+      await axios.post(`/api/admin/addTeacher`, { ...newTeacher, department: department });
       fetchTeachers();
       setNewTeacher({
         teachername: '',
@@ -89,7 +89,7 @@ const AdminTeachersPage = () => {
 
   const handleUpdateTeacher = async () => {
     try {
-      await axios.put(`${baseurl}/api/admin/updateTeacher/${editingTeacher._id}`, { ...editingTeacher });
+      await axios.put(`/api/admin/updateTeacher/${editingTeacher._id}`, { ...editingTeacher });
       fetchTeachers();
       setEditingTeacher(null);
     } catch (error) {
@@ -99,7 +99,7 @@ const AdminTeachersPage = () => {
 
   const handleDeleteTeacher = async (teacherId) => {
     try {
-      await axios.delete(`${baseurl}/api/admin/deleteTeacher/${teacherId}`);
+      await axios.delete(`/api/admin/deleteTeacher/${teacherId}`);
       fetchTeachers();
     } catch (error) {
       setErrorMessage(error.response?.data?.message || 'Error deleting teacher');

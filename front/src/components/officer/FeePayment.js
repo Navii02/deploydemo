@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './OfficerNavbar';
-import {baseurl} from '../../url';
+
 import './Feepayment.css';
 
 
@@ -15,7 +15,7 @@ function StudentDetailsPage() {
 
   const fetchStudentDetails = async () => {
     try {
-      const response = await fetch(`${baseurl}/api/officer/details`);
+      const response = await fetch(`/api/officer/details`);
       if (!response.ok) {
         throw new Error('Failed to fetch student details');
       }
@@ -28,7 +28,7 @@ function StudentDetailsPage() {
 
   const handleFeePayment = async (studentId, installmentIndex) => {
     try {
-      const response = await fetch(`${baseurl}/api/officer/fee-payment/${studentId}`, {
+      const response = await fetch(`/api/officer/fee-payment/${studentId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

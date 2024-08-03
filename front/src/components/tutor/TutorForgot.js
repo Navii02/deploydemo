@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { baseurl } from '../../url';
+
 import '.././ForgotPassword.css';
 
 function TForgotPassword() {
@@ -16,7 +16,7 @@ function TForgotPassword() {
 
   const handleSendVerificationCode = async () => {
     try {
-      const res = await fetch(`${baseurl}/api/tutor/sendverificationcode`, {
+      const res = await fetch(`/api/tutor/sendverificationcode`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ function TForgotPassword() {
 
   const handleVerifyCodeAndChangePassword = async () => {
     try {
-      const res = await fetch(`${baseurl}/api/tutor/verifycodeandchangepassword`, {
+      const res = await fetch(`/api/tutor/verifycodeandchangepassword`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { baseurl } from '../../url';
+
 import Navbar from './FacultyNavbar';
 
 const AttendanceForm = () => {
@@ -26,7 +26,7 @@ const AttendanceForm = () => {
     const fetchCoursesAndSemesters = async () => {
       const email = localStorage.getItem('email');
       try {
-        const response = await axios.post(`${baseurl}/api/data/attendance`, { email });
+        const response = await axios.post(`/api/data/attendance`, { email });
         const { subjects, semesters, branches, teachername } = response.data;
         setCourses(branches || []);
         setSemesters(semesters || []);
@@ -46,7 +46,7 @@ const AttendanceForm = () => {
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${baseurl}/api/attendance/fetch`, {
+      const response = await axios.post(`/api/attendance/fetch`, {
         course,
         semester,
         lab, // Include lab in the request
@@ -72,7 +72,7 @@ const AttendanceForm = () => {
     setLoading(true);
   
     try {
-      const checkResponse = await axios.post(`${baseurl}/api/attendance/check`, {
+      const checkResponse = await axios.post(`/api/attendance/check`, {
         date,
         hour,
         teachername,
@@ -84,7 +84,7 @@ const AttendanceForm = () => {
       if (checkResponse.data.isMarked) {
         if (checkResponse.data.type === 'sameSubject') {
           // Show existing attendance for the same subject and hour
-          const existingAttendanceResponse = await axios.post(`${baseurl}/api/attendance/existing`, {
+          const existingAttendanceResponse = await axios.post(`/api/attendance/existing`, {
             date,
             hour,
             teachername,
@@ -149,7 +149,7 @@ const AttendanceForm = () => {
   
       // Send update request
       await Promise.all(updatedStudents.map(student =>
-        axios.post(`${baseurl}/api/attendance`, student)
+        axios.post(`/api/attendance`, student)
       ));
   
       alert('Attendance updated successfully!');

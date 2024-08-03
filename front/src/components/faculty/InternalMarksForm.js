@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from "./FacultyNavbar";
-import { baseurl } from '../../url';
+
 import styles from './InternalMarksForm.module.css'; // Import the CSS module
 
 const InternalMarksForm = () => {
@@ -24,7 +24,7 @@ const InternalMarksForm = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await axios.post(`${baseurl}/api/data`, { email });
+        const response = await axios.post(`/api/data`, { email });
         const { subjects, semesters, branches } = response.data;
         setCourses(branches || []);
         setSemesters(semesters || []);
@@ -49,7 +49,7 @@ const InternalMarksForm = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get(`${baseurl}/api/students/faculty/${course}/${semester}/${subject}`);
+      const response = await axios.get(`/api/students/faculty/${course}/${semester}/${subject}`);
       const sortedStudents = response.data.sort((a, b) => a.RollNo.localeCompare(b.RollNo, undefined, { numeric: true }));
       setStudents(sortedStudents);
       setAttendanceData(sortedStudents);
@@ -104,7 +104,7 @@ const InternalMarksForm = () => {
 
   const submitMarks = async (studentId, marks) => {
     try {
-      await axios.post(`${baseurl}/api/Marks/${studentId}`, marks);
+      await axios.post(`/api/Marks/${studentId}`, marks);
     } catch (error) {
       console.error('Error submitting marks:', error);
       setError('Error submitting marks');

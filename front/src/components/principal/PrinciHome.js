@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './PrinciNavbar'; // Assuming you have a Navbar component for the Principal
 import './PrinciHome.css'; // Import your CSS file
-import {baseurl} from '../../url';
+
 
 function PrincipalHome() {
   
@@ -15,15 +15,15 @@ function PrincipalHome() {
       try {
    
         // Fetch total number of students
-        const responseStudents = await axios.get(`${baseurl}/api/total-students`);
+        const responseStudents = await axios.get(`/api/total-students`);
         setTotalStudents(responseStudents.data.totalStudents);
 
         // Fetch total number of officers
-        const responseOfficers = await axios.get(`${baseurl}/api/total-officers`);
+        const responseOfficers = await axios.get(`/api/total-officers`);
         setTotalOfficers(responseOfficers.data.totalOfficers);
 
         // Fetch total number of teachers
-        const responseTeachers = await axios.get(`${baseurl}/api/total-teachers`);
+        const responseTeachers = await axios.get(`/api/total-teachers`);
         setTotalTeachers(responseTeachers.data.totalTeachers);
       } catch (error) {
         console.error('Error fetching principal data:', error);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { baseurl } from '../../url';
+
 import './Updates.css';
 import Navbar from './TutorNavbar';
 
@@ -22,7 +22,7 @@ const TutorUpdates = () => {
 
   const fetchStudents = async (tutorclass, academicYear) => {
     try {
-      const response = await axios.get(`${baseurl}/api/students/${tutorclass}/${academicYear}`);
+      const response = await axios.get(`/api/students/${tutorclass}/${academicYear}`);
       const sortedStudents = response.data.sort((a, b) =>
         a.RollNo.localeCompare(b.RollNo)
       );
@@ -55,7 +55,7 @@ const TutorUpdates = () => {
     }
 
     try {
-      const response = await axios.post(`${baseurl}/api/sendMessage`, {
+      const response = await axios.post(`/api/sendMessage`, {
         selectedStudents,
         message,
       });

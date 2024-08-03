@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '.././ForgotPassword.css';
-import {baseurl} from '../../url';
+
 
 function OForgotPassword() {
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ function OForgotPassword() {
 
   const handleSendVerificationCode = async () => {
     try {
-      const res = await fetch(`${baseurl}/api/officer/sendverificationcode`, {
+      const res = await fetch(`/api/officer/sendverificationcode`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ function OForgotPassword() {
 
   const handleVerifyCodeAndChangePassword = async () => {
     try {
-      const res = await fetch(`${baseurl}/api/officer/verifycodeandchangepassword`, {
+      const res = await fetch(`/api/officer/verifycodeandchangepassword`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

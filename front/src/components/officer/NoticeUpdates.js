@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../../App.css';
 import './NoticeUpdates.css';
 import Navbar from './OfficerNavbar';
-import { baseurl } from '../../url';
+
 
 function NoticeUpdates() {
   const [notice, setNotice] = useState('');
@@ -20,7 +20,7 @@ function NoticeUpdates() {
 
   const fetchNotices = async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/notices`);
+      const response = await axios.get(`/api/notices`);
       setNotices(response.data.notices.reverse());
     } catch (error) {
       console.log(error);
@@ -37,7 +37,7 @@ function NoticeUpdates() {
       formData.append('notice', notice);
       formData.append('image', image);
 
-      const response = await axios.post(`${baseurl}/api/photos`, formData, {
+      const response = await axios.post(`/api/photos`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -78,7 +78,7 @@ function NoticeUpdates() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this notice?')) {
       try {
-        await axios.delete(`${baseurl}/api/notices/${id}`);
+        await axios.delete(`/api/notices/${id}`);
         setSuccessMessage('Notice deleted successfully');
         fetchNotices(); // Refresh notices list
       } catch (error) {

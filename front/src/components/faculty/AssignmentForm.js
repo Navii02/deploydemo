@@ -3,7 +3,7 @@ import axios from 'axios';
 import './AssignmentForm.css'; // Import your CSS file
 import Navbar from './FacultyNavbar';
 import Loading from './Loading'; // Import the Loading component
-import { baseurl } from '../../url';
+
 
 const AssignmentForm = () => {
   const [course, setCourse] = useState('');
@@ -22,7 +22,7 @@ const AssignmentForm = () => {
     const fetchTeacherDetails = async () => {
       try {
         const email = localStorage.getItem('email');
-        const response = await axios.get(`${baseurl}/api/teacher/by-email/${email}`);
+        const response = await axios.get(`/api/teacher/by-email/${email}`);
         const { subjects, semesters, branches, teachername } = response.data;
         setCourses(branches || []);
         setSemesters(semesters || []);
@@ -44,7 +44,7 @@ const AssignmentForm = () => {
 
     try {
       // Send assignment details to the backend
-      await axios.post(`${baseurl}/api/assignments`, {
+      await axios.post(`/api/assignments`, {
         course,
         semester,
         subject,

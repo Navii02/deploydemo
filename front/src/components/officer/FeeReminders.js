@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./FeeReminders.css"; // Import the CSS file
 import Navbar from "./OfficerNavbar";
-import {baseurl} from '../../url';
+
 
 function FeeReminders() {
   const [students, setStudents] = useState([]);
@@ -14,7 +14,7 @@ function FeeReminders() {
 
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(`${baseurl}/api/students`);
+      const response = await axios.get(`/api/students`);
       setStudents(response.data);
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -44,7 +44,7 @@ function FeeReminders() {
     try {
       // eslint-disable-next-line
       const { email } = student;
-      const response = await axios.post(`${baseurl}/api/send-email`, { student });
+      const response = await axios.post(`/api/send-email`, { student });
       console.log("Email sent successfully!");
       console.log("Response:", response.data);
       setSentMessage(`Email sent to ${student.name}`);

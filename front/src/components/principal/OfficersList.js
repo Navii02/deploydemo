@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PrinciNavbar from './PrinciNavbar';
-import {baseurl} from '../../url';
+
 
 function OfficerPage() {
     const [officers, setOfficers] = useState([]);
@@ -11,7 +11,7 @@ function OfficerPage() {
 
     const fetchOfficerData = async () => {
         try {
-            const response = await fetch(`${baseurl}/api/officers`);
+            const response = await fetch(`/api/officers`);
             const data = await response.json();
             setOfficers(data);
         } catch (error) {

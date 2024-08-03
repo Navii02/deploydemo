@@ -61,7 +61,7 @@ function OfficerLogin() {
     event.preventDefault();
 
     try {
-      const res = await fetch(`${baseurl}/api/officerlogin`, {
+      const res = await fetch(`/api/officerlogin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

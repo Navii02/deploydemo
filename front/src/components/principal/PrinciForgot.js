@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '.././ForgotPassword.css';
-import {baseurl} from '../../url';
+
 
 function PForgotPassword() {
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ function PForgotPassword() {
 
   const handleSendVerificationCode = async () => {
     try {
-      const res = await fetch(`${baseurl}/api/principal/sendverificationcode`, {
+      const res = await fetch(`/api/principal/sendverificationcode`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ function PForgotPassword() {
 
   const handleVerifyCodeAndChangePassword = async () => {
     try {
-      const res = await fetch(`${baseurl}/api/principal/verifycodeandchangepassword`, {
+      const res = await fetch(`/api/principal/verifycodeandchangepassword`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
