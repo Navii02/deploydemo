@@ -4,6 +4,7 @@ import validator from 'validator';
 import { regexPassword } from '../../utils';
 
 import '../Login.css'; // Add your CSS file if needed
+import { baseurl } from '../../url';
 
 function FacultyLogin() {
   const Navigate = useNavigate();
@@ -51,7 +52,7 @@ function FacultyLogin() {
     event.preventDefault();
 
     try {
-      const res = await fetch(`/api/faculitylogin`, {
+      const res = await fetch(`${baseurl }/api/faculitylogin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
